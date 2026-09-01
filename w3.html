@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab: 1D Kinematics - Physica</title>
+    <style>
+        /* CSS Variables */
+        :root[data-theme="light"] {
+            --bg-color: #f8fafc;
+            --panel-bg: #ffffff;
+            --panel-border: #e2e8f0;
+            --accent-color: #0284c7;
+            --accent-light: #e0f2fe;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --sensor-bg: #1e293b;
+            --sensor-text: #38bdf8;
+            --sensor-border: #0f172a;
+            --nav-btn-bg: #f1f5f9;
+            --nav-btn-border: #cbd5e1;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --toggle-bg: #e2e8f0;
+            --toggle-text: #0f172a;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --panel-border: #334155;
+            --accent-color: #38bdf8;
+            --accent-light: rgba(56, 189, 248, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --sensor-bg: #022c22;
+            --sensor-text: #4ade80;
+            --sensor-border: #065f46;
+            --nav-btn-bg: #0f172a;
+            --nav-btn-border: #334155;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --toggle-bg: #334155;
+            --toggle-text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--panel-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--panel-border);
+        }
+
+        header {
+            border-bottom: 2px solid var(--panel-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h1 { margin: 0; font-size: 1.6rem; color: var(--accent-color); }
+        .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
+        .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
+
+        .theme-toggle-btn {
+            background: var(--toggle-bg);
+            color: var(--toggle-text);
+            border: 1px solid var(--nav-btn-border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Menu Tabs Navigation */
+        .tab-menu {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-light);
+            color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Lab Layout Grid */
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 820px) {
+            .lab-grid { grid-template-columns: 1fr; }
+        }
+
+        .control-panel {
+            background: var(--bg-color);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #ffffff;
+            background-color: var(--accent-color);
+            transition: 0.2s;
+        }
+
+        .btn-reset { background-color: #ef4444; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Telemetry Dashboard */
+        .telemetry {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: var(--sensor-bg);
+            color: var(--sensor-text);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--sensor-border);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .telemetry div {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .telemetry div span {
+            display: block;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--sensor-text);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        canvas {
+            background-color: var(--bg-color);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            width: 100%;
+            display: block;
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>Virtual Lab: One-Dimensional Kinematics</h1>
+            <div class="subtitle">Lecturer: Nauval Franata, S.Si., M.T.</div>
+            <div class="univ-tag">Universitas Sultan Ageng Tirtayasa</div>
+        </div>
+        <div class="header-actions">
+            <a href="index.html" style="text-decoration: none; padding: 8px 14px; background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                🏠 Home
+            </a>
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Navigation Menu Tabs -->
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchTab('horizontalTab')">➡️ Horizontal Motion</button>
+        <button class="tab-btn" onclick="switchTab('verticalTab')">⬆️ Vertical Motion</button>
+    </div>
+
+    <!-- TAB 1: HORIZONTAL MOTION -->
+    <div id="horizontalTab" class="tab-content active">
+        <div class="lab-grid">
+            <div class="control-panel">
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Horizontal Parameters</h3>
+                
+                <div class="form-group">
+                    <label for="hMode">Motion Type:</label>
+                    <select id="hMode" onchange="toggleHAccGroup()">
+                        <option value="GLB">Uniform Linear Motion (a = 0)</option>
+                        <option value="GLBB" selected>Accelerated Motion (a ≠ 0)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hX0">Initial Position (x₀) [m]:</label>
+                    <input type="number" id="hX0" value="0" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="hV0">Initial Velocity (v₀) [m/s]:</label>
+                    <input type="number" id="hV0" value="5" step="0.5">
+                </div>
+
+                <div class="form-group" id="hAccGroup">
+                    <label for="hAcc">Acceleration (a) [m/s²]:</label>
+                    <input type="number" id="hAcc" value="2" step="0.5">
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--panel-border); margin: 15px 0;">
+
+                <div class="form-group">
+                    <label for="hPauseType">Auto-Pause Trigger:</label>
+                    <select id="hPauseType" onchange="toggleHPauseInput()">
+                        <option value="none">None (Continuous)</option>
+                        <option value="time">Pause at Target Time (t)</option>
+                        <option value="pos">Pause at Target Position (x)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="hPauseValGroup" style="display: none;">
+                    <label id="hPauseValLabel" for="hPauseVal">Target Value:</label>
+                    <input type="number" id="hPauseVal" value="5" step="0.5" min="0">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" id="hStartBtn" onclick="toggleHSim()">Start</button>
+                    <button class="btn btn-reset" onclick="resetHSim()">Reset</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="telemetry">
+                    <div>Time (t)<span id="hDispT">0.0 s</span></div>
+                    <div>Position (x)<span id="hDispX">0.0 m</span></div>
+                    <div>Velocity (v)<span id="hDispV">0.0 m/s</span></div>
+                </div>
+
+                <div class="canvas-container">
+                    <div>
+                        <div class="section-title">Visual Motion Animation (Horizontal Track)</div>
+                        <canvas id="hSimCanvas" height="130"></canvas>
+                    </div>
+                    <div>
+                        <div class="section-title">Position vs Time Graph (x - t)</div>
+                        <canvas id="hGraphCanvas" height="150"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: VERTICAL MOTION (Placeholder) -->
+    <div id="verticalTab" class="tab-content">
+        <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+            <h3>Vertical Motion Module Placeholder</h3>
+            <p>Silakan kirimkan prompt berikutnya untuk mengisi modul ini.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // System Theme Management
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateToggleBtnUI(savedTheme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateToggleBtnUI(newTheme);
+        resetHSim();
+    }
+
+    function updateToggleBtnUI(theme) {
+        document.getElementById('theme-icon').innerText = theme === 'dark' ? '☀️' : '🌙';
+        document.getElementById('theme-text').innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+
+    // Tab Navigation System
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        if (tabId === 'horizontalTab') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+        }
+        document.getElementById(tabId).classList.add('active');
+        
+        if (tabId === 'horizontalTab') {
+            resizeHCanvas();
+        }
+    }
+
+    // --- HORIZONTAL MOTION ENGINE ---
+    const hSimCanvas = document.getElementById('hSimCanvas');
+    const hSimCtx = hSimCanvas.getContext('2d');
+    const hGraphCanvas = document.getElementById('hGraphCanvas');
+    const hGraphCtx = hGraphCanvas.getContext('2d');
+
+    let isHRunning = false;
+    let hAnimId;
+    let hT = 0;
+    const hDt = 0.03;
+    let hGraphData = [];
+
+    function getHInputs() {
+        return {
+            mode: document.getElementById('hMode').value,
+            x0: parseFloat(document.getElementById('hX0').value) || 0,
+            v0: parseFloat(document.getElementById('hV0').value) || 0,
+            a: document.getElementById('hMode').value === 'GLB' ? 0 : (parseFloat(document.getElementById('hAcc').value) || 0),
+            pauseType: document.getElementById('hPauseType').value,
+            pauseVal: parseFloat(document.getElementById('hPauseVal').value) || 0
+        };
+    }
+
+    function toggleHAccGroup() {
+        const mode = document.getElementById('hMode').value;
+        document.getElementById('hAccGroup').style.display = mode === 'GLB' ? 'none' : 'block';
+        resetHSim();
+    }
+
+    function toggleHPauseInput() {
+        const pauseType = document.getElementById('hPauseType').value;
+        const group = document.getElementById('hPauseValGroup');
+        const label = document.getElementById('hPauseValLabel');
+
+        if (pauseType === 'none') {
+            group.style.display = 'none';
+        } else {
+            group.style.display = 'block';
+            label.innerText = pauseType === 'time' ? 'Pause at Time (t) [s]:' : 'Pause at Position (x) [m]:';
+        }
+    }
+
+    function drawHTrack() {
+        hSimCtx.clearRect(0, 0, hSimCanvas.width, hSimCanvas.height);
+        
+        hSimCtx.beginPath();
+        hSimCtx.moveTo(20, 80);
+        hSimCtx.lineTo(hSimCanvas.width - 20, 80);
+        hSimCtx.strokeStyle = '#cbd5e1';
+        hSimCtx.lineWidth = 4;
+        hSimCtx.stroke();
+
+        hSimCtx.fillStyle = '#64748b';
+        hSimCtx.font = '10px sans-serif';
+        for (let i = 0; i <= 100; i += 10) {
+            let xPx = 20 + (i / 100) * (hSimCanvas.width - 40);
+            hSimCtx.fillRect(xPx, 80, 2, 8);
+            hSimCtx.fillText(i + 'm', xPx - 8, 102);
+        }
+    }
+
+    function drawHBall(x, v) {
+        drawHTrack();
+        let xPx = 20 + Math.min(Math.max(x, 0), 100) / 100 * (hSimCanvas.width - 40);
+
+        hSimCtx.beginPath();
+        hSimCtx.arc(xPx, 65, 12, 0, Math.PI * 2);
+        hSimCtx.fillStyle = '#0284c7';
+        hSimCtx.fill();
+        hSimCtx.strokeStyle = '#0f172a';
+        hSimCtx.lineWidth = 2;
+        hSimCtx.stroke();
+
+        if (Math.abs(v) > 0.1) {
+            let vLength = Math.min(Math.abs(v) * 2, 40) * Math.sign(v);
+            hSimCtx.beginPath();
+            hSimCtx.moveTo(xPx, 65);
+            hSimCtx.lineTo(xPx + vLength, 65);
+            hSimCtx.strokeStyle = '#ef4444';
+            hSimCtx.lineWidth = 3;
+            hSimCtx.stroke();
+        }
+    }
+
+    function drawHGraph() {
+        hGraphCtx.clearRect(0, 0, hGraphCanvas.width, hGraphCanvas.height);
+        
+        hGraphCtx.beginPath();
+        hGraphCtx.moveTo(35, 10);
+        hGraphCtx.lineTo(35, hGraphCanvas.height - 20);
+        hGraphCtx.lineTo(hGraphCanvas.width - 10, hGraphCanvas.height - 20);
+        hGraphCtx.strokeStyle = '#94a3b8';
+        hGraphCtx.lineWidth = 1;
+        hGraphCtx.stroke();
+
+        hGraphCtx.fillStyle = '#64748b';
+        hGraphCtx.font = '10px sans-serif';
+        hGraphCtx.fillText('x(m)', 5, 15);
+        hGraphCtx.fillText('t(s)', hGraphCanvas.width - 20, hGraphCanvas.height - 5);
+
+        if (hGraphData.length < 2) return;
+        hGraphCtx.beginPath();
+        hGraphCtx.strokeStyle = '#0284c7';
+        hGraphCtx.lineWidth = 2;
+
+        for (let i = 0; i < hGraphData.length; i++) {
+            let pt = hGraphData[i];
+            let px = 35 + (pt.t / 10) * (hGraphCanvas.width - 45);
+            let py = (hGraphCanvas.height - 20) - (Math.min(Math.max(pt.x, 0), 100) / 100) * (hGraphCanvas.height - 30);
+            
+            if (i === 0) hGraphCtx.moveTo(px, py);
+            else hGraphCtx.lineTo(px, py);
+        }
+        hGraphCtx.stroke();
+    }
+
+    function updateHSim() {
+        const { x0, v0, a, pauseType, pauseVal } = getHInputs();
+
+        let x = x0 + (v0 * hT) + (0.5 * a * hT * hT);
+        let v = v0 + (a * hT);
+
+        let shouldAutoPause = false;
+        if (pauseType === 'time' && hT >= pauseVal) {
+            hT = pauseVal;
+            x = x0 + (v0 * hT) + (0.5 * a * hT * hT);
+            v = v0 + (a * hT);
+            shouldAutoPause = true;
+        } else if (pauseType === 'pos') {
+            if ((v0 >= 0 && x >= pauseVal) || (v0 < 0 && x <= pauseVal)) {
+                x = pauseVal;
+                shouldAutoPause = true;
+            }
+        }
+
+        document.getElementById('hDispT').innerText = hT.toFixed(2) + ' s';
+        document.getElementById('hDispX').innerText = Math.max(x, 0).toFixed(2) + ' m';
+        document.getElementById('hDispV').innerText = v.toFixed(2) + ' m/s';
+
+        drawHBall(x, v);
+        hGraphData.push({ t: hT, x: x });
+        drawHGraph();
+
+        if (shouldAutoPause || x >= 100 || x < 0 || hT >= 10) {
+            toggleHSim();
+            return;
+        }
+
+        hT += hDt;
+        if (isHRunning) {
+            hAnimId = requestAnimationFrame(updateHSim);
+        }
+    }
+
+    function toggleHSim() {
+        const startBtn = document.getElementById('hStartBtn');
+        if (isHRunning) {
+            isHRunning = false;
+            startBtn.innerText = 'Start';
+            cancelAnimationFrame(hAnimId);
+        } else {
+            isHRunning = true;
+            startBtn.innerText = 'Pause';
+            updateHSim();
+        }
+    }
+
+    function resetHSim() {
+        if (isHRunning) toggleHSim();
+        hT = 0;
+        hGraphData = [];
+        const { x0, v0 } = getHInputs();
+        document.getElementById('hDispT').innerText = '0.00 s';
+        document.getElementById('hDispX').innerText = x0.toFixed(2) + ' m';
+        document.getElementById('hDispV').innerText = v0.toFixed(2) + ' m/s';
+        drawHBall(x0, v0);
+        drawHGraph();
+    }
+
+    function resizeHCanvas() {
+        if (hSimCanvas.parentElement) {
+            hSimCanvas.width = hSimCanvas.parentElement.clientWidth;
+            hGraphCanvas.width = hGraphCanvas.parentElement.clientWidth;
+            resetHSim();
+        }
+    }
+
+    window.addEventListener('resize', resizeHCanvas);
+
+    // Initial Setup
+    initTheme();
+    resizeHCanvas();
+</script>
+
+</body>
+</html>

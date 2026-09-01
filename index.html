@@ -38,12 +38,12 @@
         }
 
         .logo-image {
-            width: 100%;             /* Mengikuti lebar maksimum */
-            max-width: 420px;        /* Batas lebar maksimum logo (bisa disesuaikan) */
-            height: auto;            /* Menjaga rasio gambar tetap proporsional */
+            max-height: 100px;
+            width: auto;
+            object-fit: contain;
             display: block;
-            margin: 0 auto 1.5rem;   /* Memberi jarak bawah antara logo dan teks di bawahnya */
-            mix-blend-mode: screen;  /* Menghilangkan sisa area gelap agar menyatu halus */
+            margin: 0 auto;
+            mix-blend-mode: screen; /* Efek magic untuk menyatukan gambar gelap dengan background */
         }
         
         .logo-icon {

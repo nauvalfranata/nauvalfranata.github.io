@@ -647,6 +647,234 @@
     // Initial Setup
     initTheme();
     resizeHCanvas();
+
+    // --- VERTICAL MOTION ENGINE ---
+    const vSimCanvas = document.getElementById('vSimCanvas');
+    const vSimCtx = vSimCanvas.getContext('2d');
+    const vGraphCanvas = document.getElementById('vGraphCanvas');
+    const vGraphCtx = vGraphCanvas.getContext('2d');
+
+    let isVRunning = false;
+    let vAnimId;
+    let vT = 0;
+    const vDt = 0.03;
+    let vGraphData = [];
+
+    function getVInputs() {
+        const mode = document.getElementById('vMode').value;
+        const rawV0 = Math.abs(parseFloat(document.getElementById('vV0').value) || 0);
+        
+        // Penentuan tanda kecepatan awal berdasarkan mode gerak
+        let v0 = 0;
+        if (mode === 'GVA') v0 = rawV0;       // Ke atas (+)
+        else if (mode === 'GVB') v0 = -rawV0;  // Ke bawah (-)
+        
+        return {
+            mode: mode,
+            y0: parseFloat(document.getElementById('vY0').value) || 0,
+            v0: v0,
+            g: parseFloat(document.getElementById('vGravity').value) || 9.8,
+            pauseType: document.getElementById('vPauseType').value,
+            pauseVal: parseFloat(document.getElementById('vPauseVal').value) || 0
+        };
+    }
+
+    function toggleVModeInputs() {
+        const mode = document.getElementById('vMode').value;
+        document.getElementById('vV0Group').style.display = (mode === 'GJB') ? 'none' : 'block';
+        resetVSim();
+    }
+
+    function toggleVPauseInput() {
+        const pauseType = document.getElementById('vPauseType').value;
+        const group = document.getElementById('vPauseValGroup');
+        const label = document.getElementById('vPauseValLabel');
+
+        if (pauseType === 'none') {
+            group.style.display = 'none';
+        } else {
+            group.style.display = 'block';
+            label.innerText = pauseType === 'time' ? 'Pause at Time (t) [s]:' : 'Pause at Height (y) [m]:';
+        }
+    }
+
+    function drawVTower() {
+        vSimCtx.clearRect(0, 0, vSimCanvas.width, vSimCanvas.height);
+        
+        // Garis Tanah
+        vSimCtx.beginPath();
+        vSimCtx.moveTo(20, vSimCanvas.height - 20);
+        vSimCtx.lineTo(vSimCanvas.width - 20, vSimCanvas.height - 20);
+        vSimCtx.strokeStyle = '#cbd5e1';
+        vSimCtx.lineWidth = 4;
+        vSimCtx.stroke();
+
+        // Mistar/Skala Ketinggian Vertikal (0m - 100m)
+        vSimCtx.fillStyle = '#64748b';
+        vSimCtx.font = '10px sans-serif';
+        const trackHeight = vSimCanvas.height - 40;
+
+        for (let i = 0; i <= 100; i += 20) {
+            let yPx = (vSimCanvas.height - 20) - (i / 100) * trackHeight;
+            vSimCtx.fillRect(35, yPx, 8, 2);
+            vSimCtx.fillText(i + 'm', 10, yPx + 3);
+        }
+    }
+
+    function drawVBall(y, v) {
+        drawVTower();
+        const trackHeight = vSimCanvas.height - 40;
+        let yPx = (vSimCanvas.height - 20) - (Math.min(Math.max(y, 0), 100) / 100) * trackHeight;
+        let xPx = vSimCanvas.width / 2;
+
+        // Bola
+        vSimCtx.beginPath();
+        vSimCtx.arc(xPx, yPx, 12, 0, Math.PI * 2);
+        vSimCtx.fillStyle = '#38bdf8';
+        vSimCtx.fill();
+        vSimCtx.strokeStyle = '#0f172a';
+        vSimCtx.lineWidth = 2;
+        vSimCtx.stroke();
+
+        // Vektor Kecepatan (Panah Merah)
+        if (Math.abs(v) > 0.1) {
+            let vLength = Math.min(Math.abs(v) * 1.5, 40) * (v > 0 ? -1 : 1); // v>0 panah ke atas (minus Y canvas)
+            vSimCtx.beginPath();
+            vSimCtx.moveTo(xPx, yPx);
+            vSimCtx.lineTo(xPx, yPx + vLength);
+            vSimCtx.strokeStyle = '#ef4444';
+            vSimCtx.lineWidth = 3;
+            vSimCtx.stroke();
+        }
+    }
+
+    function drawVGraph() {
+        vGraphCtx.clearRect(0, 0, vGraphCanvas.width, vGraphCanvas.height);
+        
+        // Sumbu Grafik
+        vGraphCtx.beginPath();
+        vGraphCtx.moveTo(35, 10);
+        vGraphCtx.lineTo(35, vGraphCanvas.height - 20);
+        vGraphCtx.lineTo(vGraphCanvas.width - 10, vGraphCanvas.height - 20);
+        vGraphCtx.strokeStyle = '#94a3b8';
+        vGraphCtx.lineWidth = 1;
+        vGraphCtx.stroke();
+
+        vGraphCtx.fillStyle = '#64748b';
+        vGraphCtx.font = '10px sans-serif';
+        vGraphCtx.fillText('y(m)', 5, 15);
+        vGraphCtx.fillText('t(s)', vGraphCanvas.width - 20, vGraphCanvas.height - 5);
+
+        if (vGraphData.length < 2) return;
+        vGraphCtx.beginPath();
+        vGraphCtx.strokeStyle = '#38bdf8';
+        vGraphCtx.lineWidth = 2;
+
+        for (let i = 0; i < vGraphData.length; i++) {
+            let pt = vGraphData[i];
+            let px = 35 + (pt.t / 10) * (vGraphCanvas.width - 45);
+            let py = (vGraphCanvas.height - 20) - (Math.min(Math.max(pt.y, 0), 100) / 100) * (vGraphCanvas.height - 30);
+            
+            if (i === 0) vGraphCtx.moveTo(px, py);
+            else vGraphCtx.lineTo(px, py);
+        }
+        vGraphCtx.stroke();
+    }
+
+    function updateVSim() {
+        const { y0, v0, g, pauseType, pauseVal } = getVInputs();
+
+        // Persamaan Kinematika Vertikal: y = y0 + v0*t - 0.5*g*t^2, v = v0 - g*t
+        let y = y0 + (v0 * vT) - (0.5 * g * vT * vT);
+        let v = v0 - (g * vT);
+
+        let shouldAutoPause = false;
+
+        if (pauseType === 'time' && vT >= pauseVal) {
+            vT = pauseVal;
+            y = y0 + (v0 * vT) - (0.5 * g * vT * vT);
+            v = v0 - (g * vT);
+            shouldAutoPause = true;
+        } else if (pauseType === 'pos') {
+            if (vT > 0 && Math.abs(y - pauseVal) <= 1.0) {
+                y = pauseVal;
+                shouldAutoPause = true;
+            }
+        }
+
+        document.getElementById('vDispT').innerText = vT.toFixed(2) + ' s';
+        document.getElementById('vDispY').innerText = Math.max(y, 0).toFixed(2) + ' m';
+        document.getElementById('vDispV').innerText = v.toFixed(2) + ' m/s';
+
+        drawVBall(y, v);
+        vGraphData.push({ t: vT, y: y });
+        drawVGraph();
+
+        // Kriteria Penghentian Simulasi (Menyentuh tanah y <= 0 atau melebihi batas tinggi/waktu)
+        if (shouldAutoPause || y <= 0 || y > 120 || vT >= 10) {
+            if (y <= 0) {
+                document.getElementById('vDispY').innerText = '0.00 m';
+            }
+            toggleVSim();
+            return;
+        }
+
+        vT += vDt;
+        if (isVRunning) {
+            vAnimId = requestAnimationFrame(updateVSim);
+        }
+    }
+
+    function toggleVSim() {
+        const startBtn = document.getElementById('vStartBtn');
+        if (isVRunning) {
+            isVRunning = false;
+            startBtn.innerText = 'Start';
+            cancelAnimationFrame(vAnimId);
+        } else {
+            isVRunning = true;
+            startBtn.innerText = 'Pause';
+            updateVSim();
+        }
+    }
+
+    function resetVSim() {
+        if (isVRunning) toggleVSim();
+        vT = 0;
+        vGraphData = [];
+        const { y0, v0 } = getVInputs();
+        document.getElementById('vDispT').innerText = '0.00 s';
+        document.getElementById('vDispY').innerText = y0.toFixed(2) + ' m';
+        document.getElementById('vDispV').innerText = v0.toFixed(2) + ' m/s';
+        drawVBall(y0, v0);
+        drawVGraph();
+    }
+
+    function resizeVCanvas() {
+        if (vSimCanvas.parentElement) {
+            vSimCanvas.width = vSimCanvas.parentElement.clientWidth;
+            vGraphCanvas.width = vGraphCanvas.parentElement.clientWidth;
+            resetVSim();
+        }
+    }
+
+    // Integrasi pemanggilan resize ke handler switchTab yang ada
+    const originalSwitchTab = switchTab;
+    switchTab = function(tabId) {
+        originalSwitchTab(tabId);
+        if (tabId === 'verticalTab') {
+            resizeVCanvas();
+        }
+    };
+
+    window.addEventListener('resize', () => {
+        resizeHCanvas();
+        resizeVCanvas();
+    });
+
+    // Inisialisasi awal saat load
+    toggleVModeInputs();
+    resizeVCanvas();
 </script>
 
 </body>

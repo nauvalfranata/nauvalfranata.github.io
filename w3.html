@@ -104,7 +104,6 @@
             gap: 6px;
         }
 
-        /* Menu Tabs Navigation */
         .tab-menu {
             display: flex;
             gap: 8px;
@@ -134,7 +133,6 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Lab Layout Grid */
         .lab-grid {
             display: grid;
             grid-template-columns: 320px 1fr;
@@ -194,7 +192,6 @@
         .btn-reset { background-color: #ef4444; }
         .btn:hover { opacity: 0.9; }
 
-        /* Telemetry Dashboard */
         .telemetry {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -221,7 +218,6 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* Summary Output Card (Historical / Peak Data) */
         .summary-card {
             background: var(--accent-light);
             border: 1px solid var(--accent-color);
@@ -246,7 +242,6 @@
             font-size: 1rem;
         }
 
-        /* Canvas Wrapper & Tooltip */
         .graph-wrapper {
             position: relative;
             width: 100%;
@@ -264,6 +259,17 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+        }
+
+        /* Responsive Dual Display for Vertical Motion */
+        .dual-canvas-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .dual-canvas-grid { grid-template-columns: 1fr; }
         }
 
         .section-title {
@@ -309,7 +315,6 @@
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
     <div class="tab-menu">
         <button class="tab-btn active" onclick="switchTab('horizontalTab')">➡️ Linear Motion</button>
         <button class="tab-btn" onclick="switchTab('verticalTab')">⬆️ Vertical Motion</button>
@@ -367,7 +372,7 @@
                     <div>
                         <div class="section-title">
                             <span>Position vs Time Graph (x - t)</span>
-                            <small style="color:var(--accent-color); font-weight:normal;">💡 Click/Hover graph to inspect point</small>
+                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover graph to inspect</small>
                         </div>
                         <div class="graph-wrapper">
                             <canvas id="hGraphCanvas" height="140"></canvas>
@@ -422,7 +427,6 @@
                     <div>Velocity (v)<span id="vDispV">0.00 m/s</span></div>
                 </div>
 
-                <!-- Summary Historical / Peak Metrics -->
                 <div class="summary-card">
                     <div class="summary-item">
                         <span>Max Height (y_max)</span>
@@ -438,14 +442,19 @@
                     </div>
                 </div>
 
-                <div class="canvas-container">
+                <!-- DUAL DISPLAY: SIMULASI VISUAL & GRAFIK GRAFIK Y-T -->
+                <div class="dual-canvas-grid">
+                    <div>
+                        <div class="section-title">Motion Track</div>
+                        <canvas id="vSimCanvas" height="220"></canvas>
+                    </div>
                     <div>
                         <div class="section-title">
                             <span>Height vs Time Graph (y - t)</span>
-                            <small style="color:var(--accent-color); font-weight:normal;">💡 Click/Hover graph to inspect point</small>
+                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover to inspect</small>
                         </div>
                         <div class="graph-wrapper">
-                            <canvas id="vGraphCanvas" height="150"></canvas>
+                            <canvas id="vGraphCanvas" height="220"></canvas>
                             <div id="vGraphTooltip" class="graph-tooltip"></div>
                         </div>
                     </div>
@@ -512,10 +521,10 @@
                     <div>
                         <div class="section-title">
                             <span>Trajectory Graph (y - x)</span>
-                            <small style="color:var(--accent-color); font-weight:normal;">💡 Click/Hover graph to inspect point</small>
+                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover graph to inspect point</small>
                         </div>
                         <div class="graph-wrapper">
-                            <canvas id="pSimCanvas" height="180"></canvas>
+                            <canvas id="pSimCanvas" height="220"></canvas>
                             <div id="pGraphTooltip" class="graph-tooltip"></div>
                         </div>
                     </div>
@@ -565,7 +574,6 @@
 </div>
 
 <script>
-    // Theme Management
     function initTheme() {
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
@@ -586,7 +594,6 @@
         document.getElementById('theme-text').innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
     }
 
-    // Tab Navigation
     function switchTab(tabId) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
@@ -633,7 +640,6 @@
         hGraphCtx.clearRect(0, 0, hGraphCanvas.width, hGraphCanvas.height);
         let padL = 35, padB = 20, W = hGraphCanvas.width - padL - 10, H = hGraphCanvas.height - padB - 10;
 
-        // Axes
         hGraphCtx.beginPath();
         hGraphCtx.moveTo(padL, 10); hGraphCtx.lineTo(padL, hGraphCanvas.height - padB);
         hGraphCtx.lineTo(hGraphCanvas.width - 10, hGraphCanvas.height - padB);
@@ -650,7 +656,6 @@
         }
         hGraphCtx.stroke();
 
-        // Crosshair / Hover Marker
         if (hHoverPt) {
             let px = padL + (hHoverPt.t / 10) * W;
             let py = (hGraphCanvas.height - padB) - (Math.min(hHoverPt.x, 100) / 100) * H;
@@ -712,7 +717,6 @@
         }
     }
 
-    // Graph Interaction (Horizontal)
     hGraphCanvas.addEventListener('mousemove', (e) => {
         if (hData.length < 2) return;
         const rect = hGraphCanvas.getBoundingClientRect();
@@ -740,6 +744,8 @@
 
 
     // --- 2. VERTICAL MOTION ---
+    const vSimCanvas = document.getElementById('vSimCanvas');
+    const vSimCtx = vSimCanvas.getContext('2d');
     const vGraphCanvas = document.getElementById('vGraphCanvas');
     const vGraphCtx = vGraphCanvas.getContext('2d');
     let isVRunning = false, vAnimId, vT = 0, vDt = 0.03, vData = [];
@@ -749,6 +755,43 @@
         const mode = document.getElementById('vMode').value;
         document.getElementById('vV0Group').style.display = (mode === 'GJB') ? 'none' : 'block';
         resetVSim();
+    }
+
+    function drawVBall(y) {
+        vSimCtx.clearRect(0, 0, vSimCanvas.width, vSimCanvas.height);
+        let centerX = vSimCanvas.width / 2;
+        let padB = 25, padT = 20;
+        let availableH = vSimCanvas.height - padB - padT;
+
+        // Ground line
+        vSimCtx.beginPath();
+        vSimCtx.moveTo(10, vSimCanvas.height - padB);
+        vSimCtx.lineTo(vSimCanvas.width - 10, vSimCanvas.height - padB);
+        vSimCtx.strokeStyle = '#cbd5e1';
+        vSimCtx.lineWidth = 3;
+        vSimCtx.stroke();
+
+        // Vertical Guide Line
+        vSimCtx.beginPath();
+        vSimCtx.setLineDash([3, 3]);
+        vSimCtx.moveTo(centerX, padT);
+        vSimCtx.lineTo(centerX, vSimCanvas.height - padB);
+        vSimCtx.strokeStyle = '#94a3b8';
+        vSimCtx.stroke();
+        vSimCtx.setLineDash([]);
+
+        // Calculate Y Pixel Position (0m -> Bottom, 100m -> Top)
+        let clampedY = Math.min(Math.max(y, 0), 100);
+        let yPx = (vSimCanvas.height - padB) - (clampedY / 100) * availableH;
+
+        // Draw Ball
+        vSimCtx.beginPath();
+        vSimCtx.arc(centerX, yPx, 10, 0, Math.PI * 2);
+        vSimCtx.fillStyle = '#38bdf8';
+        vSimCtx.fill();
+        vSimCtx.strokeStyle = '#0284c7';
+        vSimCtx.lineWidth = 2;
+        vSimCtx.stroke();
     }
 
     function drawVGraph() {
@@ -800,7 +843,6 @@
             yMax = y0 + (v0 * v0) / (2 * g);
         }
 
-        // Total time until y = 0
         let a = -0.5 * g, b = v0, c = y0;
         let det = b * b - 4 * a * c;
         let tTotal = 0;
@@ -829,6 +871,7 @@
         document.getElementById('vDispY').innerText = Math.max(y, 0).toFixed(2) + ' m';
         document.getElementById('vDispV').innerText = v.toFixed(2) + ' m/s';
 
+        drawVBall(y);
         vData.push({ t: vT, y: Math.max(y, 0) });
         drawVGraph();
 
@@ -851,11 +894,18 @@
         document.getElementById('vDispT').innerText = '0.00 s';
         document.getElementById('vDispY').innerText = y0.toFixed(2) + ' m';
         document.getElementById('vDispV').innerText = '0.00 m/s';
+        drawVBall(y0);
         calculateVSummary();
         drawVGraph();
     }
 
-    function resizeVCanvas() { if(vGraphCanvas.parentElement) { vGraphCanvas.width = vGraphCanvas.parentElement.clientWidth; resetVSim(); } }
+    function resizeVCanvas() {
+        if(vGraphCanvas.parentElement) {
+            vSimCanvas.width = vSimCanvas.parentElement.clientWidth;
+            vGraphCanvas.width = vGraphCanvas.parentElement.clientWidth;
+            resetVSim();
+        }
+    }
 
     vGraphCanvas.addEventListener('mousemove', (e) => {
         if (vData.length < 2) return;
@@ -1076,7 +1126,6 @@
 
     window.addEventListener('resize', resizeAllCanvases);
 
-    // Initial Setup
     initTheme();
     toggleHAccGroup();
     toggleVModeInputs();

@@ -106,15 +106,6 @@
         .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
         .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
 
-        .score-board {
-            background: var(--nav-btn-bg);
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--nav-btn-border);
-            font-weight: bold;
-            color: var(--warning-color);
-        }
-
         /* Theme Toggle Switch Button */
         .theme-toggle-btn {
             background: var(--toggle-bg);
@@ -307,7 +298,6 @@
             <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
             </button>
-            <div class="score-board">Total Score: <span id="total-score">0</span> / 100</div>
         </div>
     </header>
 
@@ -601,7 +591,6 @@
     let currentRawData = {};
     let currentDisplayStr = '';
     let selectedQuantityKey = 'current';
-    let scores = new Array(3).fill(0);
 
     function initNav() {
         const nav = document.getElementById('module-nav');
@@ -776,8 +765,14 @@
         return baseVal / toObj.factor;
     }
 
+    function showFeedback(type, message) {
+        const fb = document.getElementById('feedback');
+        fb.className = `feedback ${type}`;
+        fb.innerHTML = message;
+        fb.style.display = 'block';
+    }
+
     function submitAnalysis() {
-        const feedback = document.getElementById('feedback');
         const mod = modules[currentModIndex];
 
         if (mod.type === 'base-quantities-module') {
@@ -788,126 +783,81 @@
             const userSigFig = parseInt(document.getElementById('sigfig-input').value);
 
             if (isNaN(userSiVal) || isNaN(userRandomVal) || isNaN(userSigFig)) {
-                showFeedback('error', '⚠️ Silakan lengkapi seluruh kolom isian analisis!');
+                showFeedback('error', '⚠️ Silakan isi semua bidang konversi dan angka penting terlebih dahulu.');
                 return;
             }
 
-            const qData = baseQuantities[currentRawData.qKey];
-            const actualSiUnit = qData.siUnit;
+            const correctQKey = currentRawData.qKey;
+            const qData = baseQuantities[correctQKey];
+            const correctSiUnit = qData.siUnit;
+            const expectedSiVal = calculateConversion(currentRawData.val, currentRawData.unit, correctSiUnit, correctQKey);
+            const expectedRandomVal = calculateConversion(currentRawData.val, currentRawData.unit, currentRawData.targetRandomUnit, correctQKey);
+            const expectedSigFig = countSigFigs(currentDisplayStr);
 
-            const isQuantityCorrect = (userQ === currentRawData.qKey);
-            const isSelectedUnitSI = (userSiUnit === actualSiUnit);
+            let isQCorrect = (userQ === correctQKey);
+            let isSiUnitCorrect = (userSiUnit === correctSiUnit);
+            let isSiValCorrect = Math.abs((userSiVal - expectedSiVal) / expectedSiVal) < 0.02;
+            let isRandomValCorrect = Math.abs((userRandomVal - expectedRandomVal) / expectedRandomVal) < 0.02;
+            let isSigFigCorrect = (userSigFig === expectedSigFig);
 
-            const correctSiVal = calculateConversion(currentRawData.val, currentRawData.unit, actualSiUnit, currentRawData.qKey);
-            const correctRandomVal = calculateConversion(currentRawData.val, currentRawData.unit, currentRawData.targetRandomUnit, currentRawData.qKey);
-            const correctSigFig = countSigFigs(currentDisplayStr);
-
-            const isSiValueCorrect = Math.abs(userSiVal - correctSiVal) / Math.abs(correctSiVal || 1) < 0.015;
-            const isRandomValueCorrect = Math.abs(userRandomVal - correctRandomVal) / Math.abs(correctRandomVal || 1) < 0.015;
-            const isSigFigCorrect = userSigFig === correctSigFig;
-
-            if (isQuantityCorrect && isSelectedUnitSI && isSiValueCorrect && isRandomValueCorrect && isSigFigCorrect) {
-                scores[currentModIndex] = 20;
-                updateTotalScore();
-                showFeedback('success', `✅ <b>Analisis & Konversi Benar!</b><br>
-                    • Besaran Pokok: <b>${qData.name}</b><br>
-                    • Konversi Satuan SI (${actualSiUnit}): <b>${correctSiVal.toPrecision(5)} ${actualSiUnit}</b><br>
-                    • Konversi Satuan (${currentRawData.targetRandomUnit}): <b>${correctRandomVal.toPrecision(5)} ${currentRawData.targetRandomUnit}</b><br>
-                    • Jumlah Angka Penting: <b>${correctSigFig} AP</b>`);
+            if (isQCorrect && isSiUnitCorrect && isSiValCorrect && isRandomValCorrect && isSigFigCorrect) {
+                showFeedback('success', '🎉 <b>Jawaban Tepat Sekali!</b> Semua analisis besaran, konversi SI, konversi acak, dan angka penting sudah benar.');
             } else {
-                scores[currentModIndex] = 0;
-                updateTotalScore();
-                let errDetails = [];
-                if (!isQuantityCorrect) errDetails.push(`Pilihan besaran pokok kurang tepat (Seharusnya: ${qData.name}).`);
-                if (!isSelectedUnitSI) errDetails.push(`Satuan SI yang dipilih salah (Satuan SI untuk ${qData.name} bukan ${userSiUnit}).`);
-                else if (!isSiValueCorrect) errDetails.push(`Hasil perhitungan konversi ke Satuan SI salah (Seharusnya: ${correctSiVal.toPrecision(5)} ${actualSiUnit}).`);
-                if (!isRandomValueCorrect) errDetails.push(`Hasil konversi ke satuan ${currentRawData.targetRandomUnit} salah (Seharusnya: ${correctRandomVal.toPrecision(5)} ${currentRawData.targetRandomUnit}).`);
-                if (!isSigFigCorrect) errDetails.push(`Jumlah Angka Penting (AP) salah (Layar sensor menampilkan ${correctSigFig} AP).`);
-                
-                showFeedback('error', `❌ <b>Analisis Belum Tepat:</b><br>• ` + errDetails.join('<br>• '));
+                let msg = '<b>Analisis Belum Sepenuhnya Tepat:</b><br><ul>';
+                if (!isQCorrect) msg += `<li>Besaran Pokok seharusnya: <b>${qData.name}</b></li>`;
+                if (!isSiUnitCorrect) msg += `<li>Satuan SI untuk ${qData.name} adalah: <b>${correctSiUnit}</b></li>`;
+                if (!isSiValCorrect) msg += `<li>Nilai Konversi SI seharusnya: <b>${expectedSiVal.toPrecision(4)} ${correctSiUnit}</b></li>`;
+                if (!isRandomValCorrect) msg += `<li>Nilai Konversi ke ${currentRawData.targetRandomUnit} seharusnya: <b>${expectedRandomVal.toPrecision(4)} ${currentRawData.targetRandomUnit}</b></li>`;
+                if (!isSigFigCorrect) msg += `<li>Jumlah Angka Penting pada layar: <b>${expectedSigFig} AP</b></li>`;
+                msg += '</ul>';
+                showFeedback('warning', msg);
             }
+
         } else if (mod.type === 'exponential') {
-            const userCoef = parseFloat(document.getElementById('coef-input').value);
-            const userExp = parseInt(document.getElementById('exp-input').value);
+            const coef = parseFloat(document.getElementById('coef-input').value);
+            const exp = parseInt(document.getElementById('exp-input').value);
 
-            if (isNaN(userCoef) || isNaN(userExp)) {
-                showFeedback('error', '⚠️ Please enter both the multiplier (a) and exponent (b)!');
+            if (isNaN(coef) || isNaN(exp)) {
+                showFeedback('error', '⚠️ Silakan isi nilai pengali (a) dan eksponen (b).');
                 return;
             }
 
-            const expNotation = currentRawData.val.toExponential();
-            const [exactCoefStr, exactExpStr] = expNotation.split('e');
-            const exactCoef = parseFloat(exactCoefStr);
-            const exactExp = parseInt(exactExpStr);
+            const actualVal = currentRawData.val;
+            const userVal = coef * Math.pow(10, exp);
+            const isRangeCorrect = coef >= 1 && coef < 10;
+            const isValCorrect = Math.abs((userVal - actualVal) / actualVal) < 0.01;
 
-            const isCoefCorrect = Math.abs(userCoef - exactCoef) < 0.05 && userCoef >= 1 && userCoef < 10;
-            const isExpCorrect = userExp === exactExp;
-
-            if (isCoefCorrect && isExpCorrect) {
-                scores[currentModIndex] = 20;
-                updateTotalScore();
-                showFeedback('success', `✅ <b>Scientific Notation Correct!</b><br>
-                    • Standard Form: <b>${exactCoef.toFixed(2)} × 10<sup>${exactExp}</sup></b>`);
+            if (isValCorrect && isRangeCorrect) {
+                showFeedback('success', `🎉 <b>Tepat Sekali!</b> Bentuk notasi ilmiah ${coef} × 10<sup>${exp}</sup> sudah sesuai.`);
             } else {
-                scores[currentModIndex] = 0;
-                updateTotalScore();
-                showFeedback('error', `❌ <b>Incorrect Answer!</b><br>
-                    • Expected: <b>${exactCoef.toFixed(2)} × 10<sup>${exactExp}</sup></b><br>
-                    • Make sure the multiplier (a) satisfies 1 ≤ a < 10.`);
+                let msg = '<b>Analisis Belum Tepat:</b><br>';
+                if (!isRangeCorrect) msg += '• Pengali (a) harus memenuhi syarat 1 ≤ a < 10.<br>';
+                if (!isValCorrect) msg += '• Nilai total tidak sesuai dengan angka pada display.';
+                showFeedback('warning', msg);
             }
+
         } else if (mod.type === 'dimension-check') {
-            const userChoice = document.getElementById('dim-select').value;
-
-            if (!userChoice) {
-                showFeedback('error', '⚠️ Please select a dimensional validity option!');
+            const choice = document.getElementById('dim-select').value;
+            if (!choice) {
+                showFeedback('error', '⚠️ Silakan pilih opsi validitas dimensi.');
                 return;
             }
 
-            const isCorrectChoice = (userChoice === 'valid' && currentRawData.dimConsistent) || (userChoice === 'invalid' && !currentRawData.dimConsistent);
-
-            if (isCorrectChoice) {
-                scores[currentModIndex] = 20;
-                updateTotalScore();
-
-                if (currentRawData.dimConsistent && currentRawData.conceptuallyCorrect === false) {
-                    showFeedback('warning', `⚠️ <b>Dimensional Analysis Correct (Valid Dimension)!</b><br>
-                        • Left Side Dimension: <b>${currentRawData.dimLeft}</b><br>
-                        • Right Side Dimension: <b>${currentRawData.dimRight}</b><br>
-                        • Explanation: ${currentRawData.reason}`);
-                } else {
-                    showFeedback('success', `✅ <b>Dimensional Analysis Correct!</b><br>
-                        • Left Side Dimension: <b>${currentRawData.dimLeft}</b><br>
-                        • Right Side Dimension: <b>${currentRawData.dimRight}</b><br>
-                        • Explanation: ${currentRawData.reason}`);
-                }
+            const expectedChoice = currentRawData.dimConsistent ? 'valid' : 'invalid';
+            if (choice === expectedChoice) {
+                showFeedback('success', `🎉 <b>Tepat Sekali!</b><br>${currentRawData.reason}`);
             } else {
-                scores[currentModIndex] = 0;
-                updateTotalScore();
-                showFeedback('error', `❌ <b>Dimensional Analysis Incorrect!</b><br>
-                    • Left Side Dimension: <b>${currentRawData.dimLeft}</b><br>
-                    • Right Side Dimension: <b>${currentRawData.dimRight}</b><br>
-                    • Explanation: ${currentRawData.reason}`);
+                showFeedback('warning', `<b>Belum Tepat:</b><br>${currentRawData.reason}`);
             }
         }
     }
 
-    function showFeedback(type, htmlContent) {
-        const feedback = document.getElementById('feedback');
-        feedback.className = `feedback ${type}`;
-        feedback.innerHTML = htmlContent;
-        feedback.style.display = 'block';
-    }
-
-    function updateTotalScore() {
-        const total = scores.reduce((a, b) => a + b, 0);
-        document.getElementById('total-score').innerText = total;
-    }
-
     // Initialize Page
-    initTheme();
-    initNav();
-    generateNewData();
+    window.onload = () => {
+        initTheme();
+        initNav();
+        generateNewData();
+    };
 </script>
-
 </body>
 </html>

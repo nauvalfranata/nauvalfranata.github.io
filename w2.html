@@ -102,15 +102,6 @@
         .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
         .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
 
-        .score-board {
-            background: var(--nav-btn-bg);
-            padding: 8px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--nav-btn-border);
-            font-weight: bold;
-            color: var(--warning-color);
-        }
-
         .theme-toggle-btn {
             background: var(--toggle-bg);
             color: var(--toggle-text);
@@ -317,7 +308,6 @@
             <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()">
                 <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
             </button>
-            <div class="score-board">Total Score: <span id="total-score">0</span> / 100</div>
         </div>
     </header>
 
@@ -508,7 +498,6 @@
 
     let currentModIndex = 0;
     let currentRawData = {};
-    let scores = new Array(5).fill(0);
 
     function initNav() {
         const nav = document.getElementById('module-nav');
@@ -813,12 +802,8 @@
     function checkGameAnswer(userChoice) {
         const isCorrect = userChoice === currentRawData.type;
         if (isCorrect) {
-            scores[currentModIndex] = 20;
-            updateTotalScore();
             showFeedback(true, `✅ <b>Correct!</b><br><b>${currentRawData.name}</b> is a <b>${currentRawData.type.toUpperCase()} Quantity</b>.<br><i>Explanation:</i> ${currentRawData.desc}`);
         } else {
-            scores[currentModIndex] = 0;
-            updateTotalScore();
             showFeedback(false, `❌ <b>Incorrect!</b><br><b>${currentRawData.name}</b> is actually a <b>${currentRawData.type.toUpperCase()} Quantity</b>.<br><i>Explanation:</i> ${currentRawData.desc}`);
         }
     }
@@ -843,14 +828,10 @@
             const isDegCorrect = Math.abs(userDeg - exactDeg) < 1.0;
 
             if (isMagCorrect && isDegCorrect) {
-                scores[currentModIndex] = 20;
-                updateTotalScore();
                 showFeedback(true, `✅ <b>Analysis Correct!</b><br>
                     • Magnitude |A|: <b>${exactMag.toFixed(2)}</b><br>
                     • Angle θ: <b>${exactDeg.toFixed(2)}°</b>`);
             } else {
-                scores[currentModIndex] = 0;
-                updateTotalScore();
                 showFeedback(false, `❌ <b>Analysis Incorrect:</b><br>
                     • Expected Magnitude |A|: <b>${exactMag.toFixed(2)}</b><br>
                     • Expected Angle θ: <b>${exactDeg.toFixed(2)}°</b>`);
@@ -868,13 +849,9 @@
             const exactRy = currentRawData.isAdd ? currentRawData.ay + currentRawData.by : currentRawData.ay - currentRawData.by;
 
             if (userRx === exactRx && userRy === exactRy) {
-                scores[currentModIndex] = 20;
-                updateTotalScore();
                 showFeedback(true, `✅ <b>Resultant Vector Correct!</b><br>
                     • R = <b>${exactRx} i + ${exactRy} j</b>`);
             } else {
-                scores[currentModIndex] = 0;
-                updateTotalScore();
                 showFeedback(false, `❌ <b>Incorrect Resultant!</b><br>
                     • Expected: R = <b>${exactRx} i + ${exactRy} j</b>`);
             }
@@ -893,14 +870,10 @@
                                              geoState.endR.x === geoState.endB.x && geoState.endR.y === geoState.endB.y;
 
                 if (isValACorrect && isValBCorrect && isHeadToTail && isResultantConnected) {
-                    scores[currentModIndex] = 20;
-                    updateTotalScore();
                     showFeedback(true, `✅ <b>Perfect! Triangle Addition Correct!</b><br>
                         • Vectors A and B are correctly placed <i>head-to-tail</i>.<br>
                         • Resultant R = (${vecR.x}, ${vecR.y}).`);
                 } else {
-                    scores[currentModIndex] = 0;
-                    updateTotalScore();
                     let errMsg = "❌ <b>Triangle Method Arrangement Incorrect:</b><br>";
                     if (!isValACorrect) errMsg += "• Component values of Vector A are incorrect.<br>";
                     if (!isValBCorrect) errMsg += "• Component values of Vector B are incorrect.<br>";
@@ -916,14 +889,10 @@
                                          geoState.endR.y === (geoState.startA.y + currentRawData.ay + currentRawData.by);
 
                 if (isValACorrect && isValBCorrect && isTailToTail && isResultantOrigin && isDiagonalCorrect) {
-                    scores[currentModIndex] = 20;
-                    updateTotalScore();
                     showFeedback(true, `✅ <b>Perfect! Parallelogram Addition Correct!</b><br>
                         • Vectors A and B share the same initial point (<i>tail-to-tail</i>).<br>
                         • Resultant Vector R is drawn as the main diagonal R = (${vecR.x}, ${vecR.y}).`);
                 } else {
-                    scores[currentModIndex] = 0;
-                    updateTotalScore();
                     let errMsg = "❌ <b>Parallelogram Method Arrangement Incorrect:</b><br>";
                     if (!isValACorrect) errMsg += "• Component values of Vector A are incorrect.<br>";
                     if (!isValBCorrect) errMsg += "• Component values of Vector B are incorrect.<br>";
@@ -943,14 +912,10 @@
                                            geoState.startR.x === geoState.startA.x && geoState.startR.y === geoState.startA.y;
 
                 if (isValACorrect && isValBCorrect && isHeadToTail && isResultantCorrect) {
-                    scores[currentModIndex] = 20;
-                    updateTotalScore();
                     showFeedback(true, `✅ <b>Perfect! Geometric Subtraction (A - B) Correct!</b><br>
                         • Vectors A and B are placed head-to-tail with inverted vector -B.<br>
                         • Resultant R (A - B) = (${vecR.x}, ${vecR.y}).`);
                 } else {
-                    scores[currentModIndex] = 0;
-                    updateTotalScore();
                     let errMsg = "❌ <b>Geometric Subtraction (A - B) Incorrect:</b><br>";
                     if (!isValACorrect) errMsg += "• Component values of Vector A are incorrect.<br>";
                     if (!isValBCorrect) errMsg += "• Component values of Vector B are incorrect.<br>";
@@ -980,14 +945,10 @@
             const isCrossCorrect = Math.abs(userCrossMag - exactCrossMag) < 0.1;
 
             if (isDotCorrect && isCrossCorrect) {
-                scores[currentModIndex] = 20;
-                updateTotalScore();
                 showFeedback(true, `✅ <b>Vector Products Correct!</b><br>
                     • Dot Product (A · B): <b>${exactDot.toFixed(2)}</b><br>
                     • Cross Product Magnitude |A × B|: <b>${exactCrossMag.toFixed(2)}</b>`);
             } else {
-                scores[currentModIndex] = 0;
-                updateTotalScore();
                 showFeedback(false, `❌ <b>Vector Products Incorrect!</b><br>
                     • Expected Dot Product: <b>${exactDot.toFixed(2)}</b><br>
                     • Expected |A × B|: <b>${exactCrossMag.toFixed(2)}</b>`);
@@ -1000,11 +961,6 @@
         feedback.className = `feedback ${isSuccess ? 'success' : 'error'}`;
         feedback.innerHTML = htmlContent;
         feedback.style.display = 'block';
-    }
-
-    function updateTotalScore() {
-        const total = scores.reduce((a, b) => a + b, 0);
-        document.getElementById('total-score').innerText = total;
     }
 
     // Initialize Page & Touch Events

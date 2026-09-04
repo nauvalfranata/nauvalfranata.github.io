@@ -4,21 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">Virtual Lab: Besaran, Satuan, dan Pengukuran - Untirta</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* Light Theme Default Variables */
-        :root[data-theme="light"] {
-            --bg-color: #f8fafc;
-            --panel-bg: #ffffff;
-            --panel-border: #e2e8f0;
-            --accent-color: #0284c7;
-            --accent-light: #e0f2fe;
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --sensor-bg: #1e293b;
+        /* CSS Variables - Light Theme (Default) */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #38bdf8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sensor-bg: #0f172a;
             --sensor-text: #38bdf8;
-            --sensor-border: #0f172a;
-            --nav-btn-bg: #f1f5f9;
-            --nav-btn-border: #cbd5e1;
+            --sensor-border: #1e293b;
             --input-bg: #ffffff;
             --input-border: #cbd5e1;
             --success-bg: #dcfce7;
@@ -30,24 +36,22 @@
             --error-bg: #fee2e2;
             --error-color: #dc2626;
             --error-border: #fca5a5;
-            --toggle-bg: #e2e8f0;
-            --toggle-text: #0f172a;
         }
 
-        /* Dark Theme Variables */
-        :root[data-theme="dark"] {
-            --bg-color: #0f172a;
-            --panel-bg: #1e293b;
-            --panel-border: #334155;
-            --accent-color: #38bdf8;
-            --accent-light: rgba(56, 189, 248, 0.15);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
+        /* CSS Variables - Dark Theme */
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f8fafc;
+            --accent: #38bdf8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
             --sensor-bg: #022c22;
             --sensor-text: #4ade80;
             --sensor-border: #065f46;
-            --nav-btn-bg: #0f172a;
-            --nav-btn-border: #334155;
             --input-bg: #0f172a;
             --input-border: #475569;
             --success-bg: rgba(34, 197, 94, 0.15);
@@ -59,34 +63,100 @@
             --error-bg: rgba(239, 68, 68, 0.15);
             --error-color: #f87171;
             --error-border: #ef4444;
-            --toggle-bg: #334155;
-            --toggle-text: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            margin: 0;
-            padding: 20px;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            align-items: flex-start;
+            padding: 30px 20px;
+        }
+
+        /* FLOATING CONTROLS (POJOK KANAN ATAS) */
+        .floating-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .floating-lang-switch {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .floating-lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .floating-lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        }
+
+        .floating-theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .floating-theme-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
         }
 
         .container {
             max-width: 950px;
             width: 100%;
-            background: var(--panel-bg);
+            background: var(--card-bg);
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border: 1px solid var(--panel-border);
-            transition: background 0.3s ease, border-color 0.3s ease;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--card-border);
         }
 
         header {
-            border-bottom: 2px solid var(--panel-border);
+            border-bottom: 2px solid var(--card-border);
             padding-bottom: 15px;
             margin-bottom: 20px;
             display: flex;
@@ -102,30 +172,30 @@
             gap: 10px;
         }
 
-        h1 { margin: 0; font-size: 1.6rem; color: var(--accent-color); }
-        .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
-        .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
-
-        /* Control Toggle Buttons */
-        .toggle-btn {
-            background: var(--toggle-bg);
-            color: var(--toggle-text);
-            border: 1px solid var(--nav-btn-border);
-            padding: 8px 14px;
-            border-radius: 20px;
-            cursor: pointer;
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
             font-size: 0.85rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            border: 1px solid var(--card-border);
             transition: all 0.2s ease;
         }
 
-        .toggle-btn:hover {
-            opacity: 0.9;
-            transform: scale(1.03);
+        .btn-back:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
         }
+
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
+        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
+        .univ-tag { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
 
         /* Navigation Modules */
         .module-nav {
@@ -134,27 +204,28 @@
             overflow-x: auto;
             padding-bottom: 10px;
             margin-bottom: 20px;
-            border-bottom: 1px solid var(--panel-border);
+            border-bottom: 1px solid var(--card-border);
         }
 
         .mod-btn {
-            background: var(--nav-btn-bg);
-            color: var(--text-secondary);
-            border: 1px solid var(--nav-btn-border);
+            background: var(--bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
             padding: 10px 16px;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             white-space: nowrap;
             font-size: 0.9rem;
+            font-weight: 600;
             transition: all 0.2s;
         }
 
-        .mod-btn:hover { background: var(--accent-light); color: var(--accent-color); }
+        .mod-btn:hover { background: var(--card-border); color: var(--text-main); }
         .mod-btn.active {
-            background: var(--accent-color);
+            background: var(--primary);
             color: #ffffff;
-            font-weight: bold;
-            border-color: var(--accent-color);
+            font-weight: 700;
+            border-color: var(--primary);
         }
 
         .lab-grid {
@@ -168,9 +239,9 @@
         }
 
         .instrument-panel {
-            background: var(--bg-color);
-            border: 2px solid var(--panel-border);
-            border-radius: 8px;
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -199,22 +270,25 @@
         }
 
         .task-card {
-            background: var(--accent-light);
-            border-left: 4px solid var(--accent-color);
+            background: var(--bg);
+            border-left: 4px solid var(--primary);
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 8px;
             margin-bottom: 15px;
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
         }
 
-        .task-card h4 { margin: 0 0 8px 0; color: var(--text-primary); }
-        .task-card p { margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4; }
+        .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; }
+        .task-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 
         .symbol-legend {
             margin-top: 10px;
             padding-top: 10px;
-            border-top: 1px dashed var(--accent-color);
+            border-top: 1px dashed var(--primary);
             font-size: 0.85rem;
-            color: var(--text-primary);
+            color: var(--text-main);
         }
 
         .symbol-legend ul {
@@ -227,23 +301,23 @@
             margin-bottom: 12px;
         }
 
-        label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-secondary); font-weight: 600; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-muted); font-weight: 600; }
         
         input, select {
             width: 100%;
             padding: 10px 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid var(--input-border);
             background: var(--input-bg);
-            color: var(--text-primary);
+            color: var(--text-main);
             box-sizing: border-box;
             font-size: 0.9rem;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         .input-row {
@@ -254,24 +328,24 @@
 
         .btn-action {
             width: 100%;
-            background: var(--accent-color);
+            background: var(--primary);
             color: #ffffff;
             border: none;
             padding: 12px;
-            border-radius: 6px;
-            font-weight: bold;
+            border-radius: 8px;
+            font-weight: 700;
             cursor: pointer;
-            transition: 0.2s;
+            transition: all 0.2s;
             margin-top: 10px;
             font-size: 0.95rem;
         }
 
-        .btn-action:hover { opacity: 0.9; }
+        .btn-action:hover { background-color: var(--primary-dark); }
 
         .feedback {
             margin-top: 15px;
             padding: 12px;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.88rem;
             display: none;
             line-height: 1.4;
@@ -284,6 +358,18 @@
 </head>
 <body>
 
+    <!-- FLOATING CONTROLS (MELAYANG DI POJOK KANAN ATAS) -->
+    <div class="floating-controls">
+        <div class="floating-lang-switch">
+            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        
+        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
+            <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+    </div>
+
 <div class="container">
     <header>
         <div>
@@ -292,15 +378,9 @@
             <div class="univ-tag">Universitas Sultan Ageng Tirtayasa</div>
         </div>
         <div class="header-actions">
-            <a href="physica.html" style="text-decoration: none; padding: 8px 14px; background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); border-radius: 20px; font-size: 0.85rem; font-weight: 600;" id="home-link">
-                🏠 Beranda
+            <a href="physica.html" class="btn-back" id="home-link">
+                <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Beranda</span>
             </a>
-            <button class="toggle-btn" id="lang-toggle-btn" onclick="toggleLang()">
-                🌐 <span id="lang-text">EN</span>
-            </button>
-            <button class="toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()">
-                <span id="theme-icon">🌙</span> <span id="theme-text">Mode Gelap</span>
-            </button>
         </div>
     </header>
 
@@ -311,9 +391,9 @@
         <!-- Instrument / Virtual Sensor Panel -->
         <div class="instrument-panel">
             <div class="instrument-icon" id="inst-icon">⚙️</div>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;" id="inst-name">Panel Instrumen</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;" id="inst-name">Panel Instrumen</div>
             <div class="sensor-display" id="sensor-display">0.00</div>
-            <button class="btn-action" style="background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); padding: 8px;" onclick="generateNewData()" id="btn-new-sample">
+            <button class="btn-action" style="background: var(--bg); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px;" onclick="generateNewData()" id="btn-new-sample">
                 🔄 Dapatkan Sampel / Soal Baru
             </button>
         </div>
@@ -342,9 +422,7 @@
             pageTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran - Untirta",
             headerTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran",
             lecturer: "Dosen Pengampu: Nauval Franata, S.Si., M.T.",
-            home: "🏠 Beranda",
-            themeDark: "Mode Gelap",
-            themeLight: "Mode Terang",
+            homeText: "Kembali ke Beranda",
             defaultInstName: "Panel Instrumen",
             btnNewSample: "🔄 Dapatkan Sampel / Soal Baru",
             btnSubmit: "Kirim Data Analisis",
@@ -396,9 +474,7 @@
             pageTitle: "Virtual Lab: Quantities, Units, and Measurements - Untirta",
             headerTitle: "Virtual Lab: Quantities, Units, and Measurements",
             lecturer: "Lecturer: Nauval Franata, S.Si., M.T.",
-            home: "🏠 Home",
-            themeDark: "Dark Mode",
-            themeLight: "Light Mode",
+            homeText: "Back to Home",
             defaultInstName: "Instrument Panel",
             btnNewSample: "🔄 Get New Sample / Problem",
             btnSubmit: "Submit Analysis Data",
@@ -449,47 +525,54 @@
     };
 
     let currentLang = 'id';
+    let currentTheme = 'light';
 
-    // Theme & Lang Initialization
-    function initSettings() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        const savedLang = localStorage.getItem('lang') || 'id';
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('user_lang') || 'id';
+        setLanguage(savedLang);
 
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        document.documentElement.setAttribute('lang', savedLang);
+        const savedTheme = localStorage.getItem('user_theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        initNav();
+        generateNewData();
+    });
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('user_lang', lang);
         
-        currentLang = savedLang;
-        updateUIStaticText();
-        updateToggleBtnUI(savedTheme);
-    }
+        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        
+        document.documentElement.lang = lang;
 
-    function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateToggleBtnUI(newTheme);
-    }
-
-    function toggleLang() {
-        currentLang = currentLang === 'id' ? 'en' : 'id';
-        localStorage.setItem('lang', currentLang);
-        document.documentElement.setAttribute('lang', currentLang);
         updateUIStaticText();
         initNav();
         generateNewData();
     }
 
-    function updateToggleBtnUI(theme) {
+    function toggleTheme() {
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        localStorage.setItem('user_theme', theme);
+        
+        document.documentElement.setAttribute('data-theme', theme);
+        
         const icon = document.getElementById('theme-icon');
-        const text = document.getElementById('theme-text');
-        const t = translations[currentLang];
         if (theme === 'dark') {
-            icon.innerText = '☀️';
-            text.innerText = t.themeLight;
+            icon.className = 'fa-solid fa-sun';
         } else {
-            icon.innerText = '🌙';
-            text.innerText = t.themeDark;
+            icon.className = 'fa-solid fa-moon';
         }
     }
 
@@ -498,13 +581,9 @@
         document.getElementById('page-title').innerText = t.pageTitle;
         document.getElementById('header-title').innerText = t.headerTitle;
         document.getElementById('header-lecturer').innerText = t.lecturer;
-        document.getElementById('home-link').innerText = t.home;
-        document.getElementById('lang-text').innerText = currentLang === 'id' ? 'EN' : 'ID';
+        document.getElementById('home-text').innerText = t.homeText;
         document.getElementById('btn-new-sample').innerText = t.btnNewSample;
         document.getElementById('btn-submit').innerText = t.btnSubmit;
-        
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        updateToggleBtnUI(currentTheme);
     }
 
     // 7 Base Quantities Data
@@ -848,10 +927,10 @@
                         <label>${t.mod2Label}</label>
                         <div class="input-row">
                             <input type="number" id="coef-input" step="any" placeholder="${t.mod2PlaceholderCoef}" style="flex: 2;">
-                            <span style="font-weight: bold; color: var(--accent-color);">× 10</span>
+                            <span style="font-weight: bold; color: var(--primary);">× 10</span>
                             <input type="number" id="exp-input" placeholder="${t.mod2PlaceholderExp}" style="flex: 1;">
                         </div>
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">${t.mod2Hint}</small>
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">${t.mod2Hint}</small>
                     </div>
                 `;
             } else if (mod.type === 'dimension-check') {
@@ -989,13 +1068,6 @@
             }
         }
     }
-
-    // Initialize Page
-    window.onload = () => {
-        initSettings();
-        initNav();
-        generateNewData();
-    };
 </script>
 </body>
 </html>

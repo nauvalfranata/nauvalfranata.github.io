@@ -264,6 +264,12 @@
             gap: 1.5rem;
         }
 
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
         /* Card Styles */
         .card {
             background: var(--card-bg);
@@ -536,7 +542,7 @@
             <h3><i class="fa-solid fa-laptop-code" style="color: var(--primary);"></i> <span data-key="module_title">Media & Modul Pembelajaran Interaktif</span></h3>
         </div>
 
-        <div class="grid-2">
+        <div class="grid-3">
             <!-- Modul 1: Physica -->
             <div class="card card-interactive">
                 <div>
@@ -549,7 +555,19 @@
                 <a href="physica.html" class="btn"><span data-key="open_physica">Buka Physica</span> <i class="fa-solid fa-arrow-right"></i></a>
             </div>
 
-            <!-- Modul 2: Virtual Lab -->
+            <!-- Modul 2: PhysiCode -->
+            <div class="card card-interactive">
+                <div>
+                    <div class="card-icon">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h4>PhysiCode</h4>
+                    <p data-key="physicode_desc">Modul pembelajaran interaktif yang mengintegrasikan konsep sensor, transduser, dan sistem tertanam untuk menjembatani fenomena fisik dunia nyata dengan sistem komputasi digital.</p>
+                </div>
+                <a href="physicode.html" class="btn"><span data-key="open_physicode">Buka PhysiCode</span> <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Modul 3: Virtual Lab -->
             <div class="card card-interactive">
                 <div>
                     <div class="card-icon">
@@ -593,6 +611,8 @@
                 module_title: "Media & Modul Pembelajaran Interaktif",
                 physica_desc: "Platform web interaktif yang dirancang untuk pembelajaran Fisika Dasar, dilengkapi simulasi visual dan alat bantu untuk memahami konsep-konsep fisika secara intuitif.",
                 open_physica: "Buka Physica",
+                physicode_desc: "Modul pembelajaran interaktif yang mengintegrasikan konsep sensor, transduser, dan sistem tertanam untuk menjembatani fenomena fisik dunia nyata dengan sistem komputasi digital.",
+                open_physicode: "Buka PhysiCode",
                 vlab_title: "Laboratorium Virtual",
                 vlab_desc: "Panduan praktikum interaktif, simulasi pengambilan data eksperimen, dan alat ukur digital.",
                 coming_soon: "Segera Hadir"
@@ -616,6 +636,8 @@
                 module_title: "Interactive Learning Modules & Media",
                 physica_desc: "An interactive web platform designed for General Physics learning, featuring visual simulations and tools to understand physical concepts intuitively.",
                 open_physica: "Open Physica",
+                physicode_desc: "An interactive learning module integrating sensor, transducer, and embedded system concepts to bridge real-world physical phenomena with digital computing systems.",
+                open_physicode: "Open PhysiCode",
                 vlab_title: "Virtual Laboratory",
                 vlab_desc: "Interactive lab guides, experimental data collection simulations, and digital measuring tools.",
                 coming_soon: "Coming Soon"

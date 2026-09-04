@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhysiCode - Interactive Embedded Systems & Sensing Platform</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Light Theme (Default) */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #38bdf8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --hero-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #1e3a8a 100%);
+            --hero-text: #ffffff;
+            --hero-desc: #94a3b8;
+            --icon-bg: #eff6ff;
+            --footer-bg: #ffffff;
+        }
+
+        /* CSS Variables - Dark Theme */
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f8fafc;
+            --accent: #38bdf8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --hero-bg: linear-gradient(135deg, #020617 0%, #0f172a 60%, #172554 100%);
+            --hero-text: #ffffff;
+            --hero-desc: #cbd5e1;
+            --icon-bg: #1e293b;
+            --footer-bg: #0f172a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* FLOATING CONTROLS (POJOK KANAN ATAS) */
+        .floating-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .floating-lang-switch {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .floating-lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .floating-lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        }
+
+        .floating-theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .floating-theme-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        /* Header / Hero Style */
+        header {
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            padding: 3.5rem 1.5rem 6rem;
+            text-align: center;
+            position: relative;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--bg);
+            transform: skewY(-2deg);
+        }
+
+        .header-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-back-container {
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateX(-3px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .logo-image {
+            max-height: 90px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+        }
+
+        .author-info {
+            font-size: 0.95rem;
+            color: var(--hero-desc);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding-top: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Container & Cards */
+        .container {
+            max-width: 1000px;
+            margin: -2.5rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+            flex: 1;
+        }
+
+        .welcome-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--card-border);
+            border-left: 5px solid var(--primary);
+        }
+
+        .welcome-card h2 {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 0.6rem;
+            font-weight: 800;
+        }
+
+        .welcome-card p {
+            color: var(--text-muted);
+            font-size: 0.98rem;
+            line-height: 1.6;
+        }
+
+        /* Grid Topics */
+        .grid-simulasi {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.8rem;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--icon-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--card-border);
+        }
+
+        .card h3 {
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: 700;
+            margin-bottom: 0.6rem;
+            line-height: 1.4;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 0.65rem 1.2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            gap: 12px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--card-border);
+            background: var(--footer-bg);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLOATING CONTROLS (MELAYANG DI POJOK KANAN ATAS) -->
+    <div class="floating-controls">
+        <!-- Floating Language Switcher -->
+        <div class="floating-lang-switch">
+            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        
+        <!-- Floating Dark Mode Toggle Button -->
+        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
+            <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="btn-back-container">
+                <a href="index.html" class="btn-back" id="btn-home">
+                    <i class="fa-solid fa-arrow-left"></i> <span data-key="btn_home">Kembali ke Profile</span>
+                </a>
+            </div>
+            <div class="logo-container">
+                <img src="logo-physicode.png" alt="PhysiCode Logo" class="logo-image" onerror="this.style.display='none'">
+            </div>
+            <div class="author-info">
+                <p class="author-name">Nauval Franata, S.Si., M.T.</p>
+                <p>Universitas Sultan Ageng Tirtayasa</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-card">
+            <h2 id="welcome-title" data-key="welcome_title">Selamat Datang di PhysiCode!</h2>
+            <p id="welcome-desc" data-key="welcome_desc">Modul pembelajaran interaktif yang mengintegrasikan konsep sensor, transduser, dan sistem tertanam untuk menjembatani fenomena fisik dunia nyata dengan sistem komputasi digital.</p>
+        </div>
+
+        <!-- Topics Grid -->
+        <div class="grid-simulasi">
+            
+            <!-- Topic 1: Raspberry Pi -->
+            <div class="card">
+                <div>
+                    <div class="card-icon"><i class="fa-brands fa-raspberry-pi"></i></div>
+                    <h3 data-key="t1_title">Topik 1: Raspberry Pi</h3>
+                    <p data-key="t1_desc">Modul interaktif eksplorasi arsitektur, konfigurasi dasar, dan pemrosesan sistem tertanam menggunakan Raspberry Pi.</p>
+                </div>
+                <a href="code1.html" class="btn"><span data-key="explore">Jelajahi Topik 1</span> <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Topic 2 Placeholder -->
+            <div class="card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <h3><span data-key="topic_prefix">Topik</span> 2: -</h3>
+                    <p data-key="generic_desc">Modul interaktif pengenalan sensor dan transduser.</p>
+                </div>
+                <a href="code2.html" class="btn"><span data-key="explore_prefix">Jelajahi Topik</span> 2 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Topic 3 Placeholder -->
+            <div class="card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-network-wired"></i></div>
+                    <h3><span data-key="topic_prefix">Topik</span> 3: -</h3>
+                    <p data-key="generic_desc">Modul interaktif pengenalan sensor dan transduser.</p>
+                </div>
+                <a href="code3.html" class="btn"><span data-key="explore_prefix">Jelajahi Topik</span> 3 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Topic 4 Placeholder -->
+            <div class="card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-sliders"></i></div>
+                    <h3><span data-key="topic_prefix">Topik</span> 4: -</h3>
+                    <p data-key="generic_desc">Modul interaktif pengenalan sensor dan transduser.</p>
+                </div>
+                <a href="code4.html" class="btn"><span data-key="explore_prefix">Jelajahi Topik</span> 4 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Topic 5 Placeholder -->
+            <div class="card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-terminal"></i></div>
+                    <h3><span data-key="topic_prefix">Topik</span> 5: -</h3>
+                    <p data-key="generic_desc">Modul interaktif pengenalan sensor dan transduser.</p>
+                </div>
+                <a href="code5.html" class="btn"><span data-key="explore_prefix">Jelajahi Topik</span> 5 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Topic 6 Placeholder -->
+            <div class="card">
+                <div>
+                    <div class="card-icon"><i class="fa-solid fa-plug"></i></div>
+                    <h3><span data-key="topic_prefix">Topik</span> 6: -</h3>
+                    <p data-key="generic_desc">Modul interaktif pengenalan sensor dan transduser.</p>
+                </div>
+                <a href="code6.html" class="btn"><span data-key="explore_prefix">Jelajahi Topik</span> 6 <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p data-key="footer_text">&copy; 2026 PhysiCode — Universitas Sultan Ageng Tirtayasa. Dirancang sebagai platform pembelajaran sensor, transduser, dan sistem tertanam.</p>
+    </footer>
+
+    <!-- Script Multibahasa & Dark Mode -->
+    <script>
+        let currentLang = 'id';
+        let currentTheme = 'light';
+
+        const translations = {
+            id: {
+                btn_home: "Kembali ke Profile",
+                welcome_title: "Selamat Datang di PhysiCode!",
+                welcome_desc: "Modul pembelajaran interaktif yang mengintegrasikan konsep sensor, transduser, dan sistem tertanam untuk menjembatani fenomena fisik dunia nyata dengan sistem komputasi digital.",
+                t1_title: "Topik 1: Raspberry Pi",
+                t1_desc: "Modul interaktif eksplorasi arsitektur, konfigurasi dasar, dan pemrosesan sistem tertanam menggunakan Raspberry Pi.",
+                generic_desc: "Modul interaktif pengenalan sensor dan transduser.",
+                explore: "Jelajahi Topik 1",
+                explore_prefix: "Jelajahi Topik",
+                topic_prefix: "Topik",
+                footer_text: "&copy; 2026 PhysiCode — Universitas Sultan Ageng Tirtayasa. Dirancang sebagai platform pembelajaran sensor, transduser, dan sistem tertanam."
+            },
+            en: {
+                btn_home: "Back to Profile",
+                welcome_title: "Welcome to PhysiCode!",
+                welcome_desc: "An interactive learning module integrating sensor, transducer, and embedded system concepts to bridge real-world physical phenomena with digital computing systems.",
+                t1_title: "Topic 1: Raspberry Pi",
+                t1_desc: "Interactive module exploring architecture, basic setup, and embedded processing using Raspberry Pi.",
+                generic_desc: "Interactive module for sensors and transducers overview.",
+                explore: "Explore Topic 1",
+                explore_prefix: "Explore Topic",
+                topic_prefix: "Topic",
+                footer_text: "&copy; 2026 PhysiCode — Sultan Ageng Tirtayasa University. Designed as an interactive platform for sensors, transducers, and embedded systems."
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('user_lang') || 'id';
+            setLanguage(savedLang);
+
+            const savedTheme = localStorage.getItem('user_theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+        });
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('user_lang', lang);
+            
+            document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+        }
+
+        function toggleTheme() {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('user_theme', theme);
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            const icon = document.getElementById('theme-icon');
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun';
+            } else {
+                icon.className = 'fa-solid fa-moon';
+            }
+        }
+    </script>
+</body>
+</html>

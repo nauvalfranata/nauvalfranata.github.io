@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Lab: Quantities, Units, and Measurements - Untirta</title>
+    <title id="page-title">Virtual Lab: Besaran, Satuan, dan Pengukuran - Untirta</title>
     <style>
         /* Light Theme Default Variables */
         :root[data-theme="light"] {
@@ -99,15 +99,15 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         h1 { margin: 0; font-size: 1.6rem; color: var(--accent-color); }
         .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
         .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
 
-        /* Theme Toggle Switch Button */
-        .theme-toggle-btn {
+        /* Control Toggle Buttons */
+        .toggle-btn {
             background: var(--toggle-bg);
             color: var(--toggle-text);
             border: 1px solid var(--nav-btn-border);
@@ -122,7 +122,7 @@
             transition: all 0.2s ease;
         }
 
-        .theme-toggle-btn:hover {
+        .toggle-btn:hover {
             opacity: 0.9;
             transform: scale(1.03);
         }
@@ -287,16 +287,19 @@
 <div class="container">
     <header>
         <div>
-            <h1>Virtual Lab: Quantities, Units, and Measurements</h1>
-            <div class="subtitle">Lecturer: Nauval Franata, S.Si., M.T.</div>
+            <h1 id="header-title">Virtual Lab: Besaran, Satuan, dan Pengukuran</h1>
+            <div class="subtitle" id="header-lecturer">Dosen Pengampu: Nauval Franata, S.Si., M.T.</div>
             <div class="univ-tag">Universitas Sultan Ageng Tirtayasa</div>
         </div>
         <div class="header-actions">
-            <a href="physica.html" style="text-decoration: none; padding: 8px 14px; background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
-                🏠 Home
+            <a href="physica.html" style="text-decoration: none; padding: 8px 14px; background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); border-radius: 20px; font-size: 0.85rem; font-weight: 600;" id="home-link">
+                🏠 Beranda
             </a>
-            <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()">
-                <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
+            <button class="toggle-btn" id="lang-toggle-btn" onclick="toggleLang()">
+                🌐 <span id="lang-text">EN</span>
+            </button>
+            <button class="toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span> <span id="theme-text">Mode Gelap</span>
             </button>
         </div>
     </header>
@@ -308,35 +311,155 @@
         <!-- Instrument / Virtual Sensor Panel -->
         <div class="instrument-panel">
             <div class="instrument-icon" id="inst-icon">⚙️</div>
-            <div style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;" id="inst-name">Instrument Panel</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;" id="inst-name">Panel Instrumen</div>
             <div class="sensor-display" id="sensor-display">0.00</div>
-            <button class="btn-action" style="background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); padding: 8px;" onclick="generateNewData()">
-                🔄 Get New Sample / Problem
+            <button class="btn-action" style="background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); padding: 8px;" onclick="generateNewData()" id="btn-new-sample">
+                🔄 Dapatkan Sampel / Soal Baru
             </button>
         </div>
 
         <!-- Student Analysis Input Panel -->
         <div>
             <div class="task-card">
-                <h4 id="task-title">Module Title</h4>
-                <p id="task-desc">Task description goes here.</p>
+                <h4 id="task-title">Judul Modul</h4>
+                <p id="task-desc">Deskripsi tugas akan muncul di sini.</p>
                 <div id="symbol-legend-box" class="symbol-legend" style="display: none;"></div>
             </div>
 
             <!-- Dynamic Input Container -->
             <div id="dynamic-inputs"></div>
 
-            <button class="btn-action" onclick="submitAnalysis()">Submit Analysis Data</button>
+            <button class="btn-action" onclick="submitAnalysis()" id="btn-submit">Kirim Data Analisis</button>
             <div id="feedback" class="feedback"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // Theme Management
-    function initTheme() {
+    // System Translations
+    const translations = {
+        id: {
+            pageTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran - Untirta",
+            headerTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran",
+            lecturer: "Dosen Pengampu: Nauval Franata, S.Si., M.T.",
+            home: "🏠 Beranda",
+            themeDark: "Mode Gelap",
+            themeLight: "Mode Terang",
+            defaultInstName: "Panel Instrumen",
+            btnNewSample: "🔄 Dapatkan Sampel / Soal Baru",
+            btnSubmit: "Kirim Data Analisis",
+            modules: [
+                "1. 7 Besaran Pokok & Konversi Satuan",
+                "2. Notasi Ilmiah",
+                "3. Analisis Dimensi"
+            ],
+            mod1Title: "Modul: 7 Besaran Pokok & Konversi Satuan",
+            mod1Desc: "Pilih Besaran Pokok yang sesuai, lalu lakukan konversi nilai baik ke Satuan SI maupun ke Satuan Lain/Acak yang diminta.",
+            mod1Label1: "1. Pilih Besaran Pokok:",
+            mod1Label2: "2. Konversi Ke Satuan SI:",
+            mod1Label3: "3. Konversi Ke Satuan Acak [<b>{target}</b>]:",
+            mod1Label4: "4. Jumlah Angka Penting Pada Layar Sensor:",
+            mod1PlaceholderSI: "Nilai konversi SI",
+            mod1PlaceholderRandom: "Nilai konversi ke {target}",
+            mod1PlaceholderSigFig: "Masukkan jumlah AP",
+            mod2Title: "Modul: Notasi Ilmiah",
+            mod2Desc: "Ubah angka desimal/standar pada layar menjadi Notasi Ilmiah (a × 10ᵇ), di mana 1 ≤ a < 10.",
+            mod2Label: "Bentuk Notasi Ilmiah (a × 10ᵇ):",
+            mod2PlaceholderCoef: "Pengali (a)",
+            mod2PlaceholderExp: "Eksponen (b)",
+            mod2Hint: "Contoh: 1.000.000 = 1 × 10⁶ | 0,002 = 2 × 10⁻³",
+            mod3Title: "Modul: Analisis Dimensi",
+            mod3Desc: "Tentukan apakah persamaan fisika yang diberikan valid/konsisten secara dimensi.",
+            mod3SymbolTitle: "Definisi Simbol:",
+            mod3Label: "Apakah persamaan ini valid/konsisten secara dimensi?",
+            mod3SelectDefault: "-- Pilih Jawaban --",
+            mod3Valid: "VALID (Konsisten secara dimensi)",
+            mod3Invalid: "TIDAK VALID (Dimensi ruas kiri ≠ Dimensi ruas kanan)",
+            errFillAll: "⚠️ Silakan isi semua bidang konversi dan angka penting terlebih dahulu.",
+            errFillCoefExp: "⚠️ Silakan isi nilai pengali (a) dan eksponen (b).",
+            errSelectDim: "⚠️ Silakan pilih opsi validitas dimensi.",
+            successMod1: "🎉 <b>Jawaban Tepat Sekali!</b> Semua analisis besaran, konversi SI, konversi acak, dan angka penting sudah benar.",
+            warnMod1Title: "<b>Analisis Belum Sepenuhnya Tepat:</b><br><ul>",
+            warnMod1Q: "<li>Besaran Pokok seharusnya: <b>{val}</b></li>",
+            warnMod1SIUnit: "<li>Satuan SI untuk {name} adalah: <b>{val}</b></li>",
+            warnMod1SIVal: "<li>Nilai Konversi SI seharusnya: <b>{val} {unit}</b></li>",
+            warnMod1RandVal: "<li>Nilai Konversi ke {unit} seharusnya: <b>{val} {unit}</b></li>",
+            warnMod1SigFig: "<li>Jumlah Angka Penting pada layar: <b>{val} AP</b></li>",
+            successMod2: "🎉 <b>Tepat Sekali!</b> Bentuk notasi ilmiah {coef} × 10<sup>{exp}</sup> sudah sesuai.",
+            warnMod2Title: "<b>Analisis Belum Tepat:</b><br>",
+            warnMod2Range: "• Pengali (a) harus memenuhi syarat 1 ≤ a < 10.<br>",
+            warnMod2Val: "• Nilai total tidak sesuai dengan angka pada display.",
+            successMod3: "🎉 <b>Tepat Sekali!</b><br>{reason}",
+            warnMod3: "<b>Belum Tepat:</b><br>{reason}"
+        },
+        en: {
+            pageTitle: "Virtual Lab: Quantities, Units, and Measurements - Untirta",
+            headerTitle: "Virtual Lab: Quantities, Units, and Measurements",
+            lecturer: "Lecturer: Nauval Franata, S.Si., M.T.",
+            home: "🏠 Home",
+            themeDark: "Dark Mode",
+            themeLight: "Light Mode",
+            defaultInstName: "Instrument Panel",
+            btnNewSample: "🔄 Get New Sample / Problem",
+            btnSubmit: "Submit Analysis Data",
+            modules: [
+                "1. 7 Base Quantities & Unit Conversion",
+                "2. Scientific Notation",
+                "3. Dimensional Analysis"
+            ],
+            mod1Title: "Module: 7 Base Quantities & Unit Conversion",
+            mod1Desc: "Select the appropriate Base Quantity, then convert the value into both the SI Unit and the Random Target Unit.",
+            mod1Label1: "1. Select Base Quantity:",
+            mod1Label2: "2. Convert to SI Unit:",
+            mod1Label3: "3. Convert to Random Unit [<b>{target}</b>]:",
+            mod1Label4: "4. Significant Figures on Sensor Display:",
+            mod1PlaceholderSI: "SI conversion value",
+            mod1PlaceholderRandom: "Conversion value to {target}",
+            mod1PlaceholderSigFig: "Enter number of SFs",
+            mod2Title: "Module: Scientific Notation",
+            mod2Desc: "Convert the decimal/standard number on display into Scientific Notation (a × 10ᵇ), where 1 ≤ a < 10.",
+            mod2Label: "Scientific Notation Form (a × 10ᵇ):",
+            mod2PlaceholderCoef: "Multiplier (a)",
+            mod2PlaceholderExp: "Exponent (b)",
+            mod2Hint: "Example: 1,000,000 = 1 × 10⁶ | 0.002 = 2 × 10⁻³",
+            mod3Title: "Module: Dimensional Analysis",
+            mod3Desc: "Determine if the given physics equation is dimensionally valid/consistent.",
+            mod3SymbolTitle: "Symbol Definitions:",
+            mod3Label: "Is this equation dimensionally valid/consistent?",
+            mod3SelectDefault: "-- Select Choice --",
+            mod3Valid: "VALID (Dimensionally consistent)",
+            mod3Invalid: "INVALID (Left side dimension ≠ Right side dimension)",
+            errFillAll: "⚠️ Please fill in all conversion and significant figure fields first.",
+            errFillCoefExp: "⚠️ Please enter both multiplier (a) and exponent (b).",
+            errSelectDim: "⚠️ Please select a dimensional validity option.",
+            successMod1: "🎉 <b>Spot on!</b> All quantity analyses, SI conversions, random conversions, and significant figures are correct.",
+            warnMod1Title: "<b>Analysis Not Quite Correct:</b><br><ul>",
+            warnMod1Q: "<li>Base Quantity should be: <b>{val}</b></li>",
+            warnMod1SIUnit: "<li>SI Unit for {name} is: <b>{val}</b></li>",
+            warnMod1SIVal: "<li>SI Conversion Value should be: <b>{val} {unit}</b></li>",
+            warnMod1RandVal: "<li>Conversion Value to {unit} should be: <b>{val} {unit}</b></li>",
+            warnMod1SigFig: "<li>Significant Figures on display: <b>{val} SFs</b></li>",
+            successMod2: "🎉 <b>Spot on!</b> Scientific notation form {coef} × 10<sup>{exp}</sup> is correct.",
+            warnMod2Title: "<b>Analysis Not Quite Correct:</b><br>",
+            warnMod2Range: "• Multiplier (a) must satisfy 1 ≤ a < 10.<br>",
+            warnMod2Val: "• Total value does not match the displayed number.",
+            successMod3: "🎉 <b>Spot on!</b><br>{reason}",
+            warnMod3: "<b>Not Quite Correct:</b><br>{reason}"
+        }
+    };
+
+    let currentLang = 'id';
+
+    // Theme & Lang Initialization
+    function initSettings() {
         const savedTheme = localStorage.getItem('theme') || 'light';
+        const savedLang = localStorage.getItem('lang') || 'id';
+
         document.documentElement.setAttribute('data-theme', savedTheme);
+        document.documentElement.setAttribute('lang', savedLang);
+        
+        currentLang = savedLang;
+        updateUIStaticText();
         updateToggleBtnUI(savedTheme);
     }
 
@@ -348,24 +471,48 @@
         updateToggleBtnUI(newTheme);
     }
 
+    function toggleLang() {
+        currentLang = currentLang === 'id' ? 'en' : 'id';
+        localStorage.setItem('lang', currentLang);
+        document.documentElement.setAttribute('lang', currentLang);
+        updateUIStaticText();
+        initNav();
+        generateNewData();
+    }
+
     function updateToggleBtnUI(theme) {
         const icon = document.getElementById('theme-icon');
         const text = document.getElementById('theme-text');
+        const t = translations[currentLang];
         if (theme === 'dark') {
             icon.innerText = '☀️';
-            text.innerText = 'Light Mode';
+            text.innerText = t.themeLight;
         } else {
             icon.innerText = '🌙';
-            text.innerText = 'Dark Mode';
+            text.innerText = t.themeDark;
         }
     }
 
-    // 7 Base Quantities Data (Clean Unit Names without SI hints)
+    function updateUIStaticText() {
+        const t = translations[currentLang];
+        document.getElementById('page-title').innerText = t.pageTitle;
+        document.getElementById('header-title').innerText = t.headerTitle;
+        document.getElementById('header-lecturer').innerText = t.lecturer;
+        document.getElementById('home-link').innerText = t.home;
+        document.getElementById('lang-text').innerText = currentLang === 'id' ? 'EN' : 'ID';
+        document.getElementById('btn-new-sample').innerText = t.btnNewSample;
+        document.getElementById('btn-submit').innerText = t.btnSubmit;
+        
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        updateToggleBtnUI(currentTheme);
+    }
+
+    // 7 Base Quantities Data
     const baseQuantities = {
         current: {
-            name: 'Electric Current',
+            name: { id: 'Kuat Arus Listrik', en: 'Electric Current' },
             icon: '⚡',
-            instrument: 'Digital Ammeter',
+            instrument: { id: 'Amperemeter Digital', en: 'Digital Ammeter' },
             siUnit: 'A',
             units: [
                 { symbol: 'mA', name: 'Milliampere (mA)', factor: 1e-3, isSI: false },
@@ -374,9 +521,9 @@
             ]
         },
         length: {
-            name: 'Length',
+            name: { id: 'Panjang', en: 'Length' },
             icon: '📏',
-            instrument: 'Laser Distance Meter',
+            instrument: { id: 'Meteran Laser / Distance Meter', en: 'Laser Distance Meter' },
             siUnit: 'm',
             units: [
                 { symbol: 'mm', name: 'Millimeter (mm)', factor: 1e-3, isSI: false },
@@ -386,9 +533,9 @@
             ]
         },
         mass: {
-            name: 'Mass',
+            name: { id: 'Massa', en: 'Mass' },
             icon: '⚖️',
-            instrument: 'Digital Analytical Balance',
+            instrument: { id: 'Neraca Analitis Digital', en: 'Digital Analytical Balance' },
             siUnit: 'kg',
             units: [
                 { symbol: 'mg', name: 'Milligram (mg)', factor: 1e-6, isSI: false },
@@ -397,9 +544,9 @@
             ]
         },
         time: {
-            name: 'Time',
+            name: { id: 'Waktu', en: 'Time' },
             icon: '⏱️',
-            instrument: 'Digital Precision Timer',
+            instrument: { id: 'Stopwatch Digital Presisi', en: 'Digital Precision Timer' },
             siUnit: 's',
             units: [
                 { symbol: 'µs', name: 'Microsecond (µs)', factor: 1e-6, isSI: false },
@@ -408,9 +555,9 @@
             ]
         },
         temp: {
-            name: 'Temperature',
+            name: { id: 'Suhu', en: 'Temperature' },
             icon: '🌡️',
-            instrument: 'Pyrometer / Thermocouple',
+            instrument: { id: 'Pirometer / Termokopel', en: 'Pyrometer / Thermocouple' },
             siUnit: 'K',
             units: [
                 { symbol: '°C', name: 'Celsius (°C)', isTemp: true, isSI: false },
@@ -418,9 +565,9 @@
             ]
         },
         amount: {
-            name: 'Amount of Substance',
+            name: { id: 'Jumlah Zat', en: 'Amount of Substance' },
             icon: '🧪',
-            instrument: 'Mass Spectrometer Analyzer',
+            instrument: { id: 'Spektrometer Massa', en: 'Mass Spectrometer Analyzer' },
             siUnit: 'mol',
             units: [
                 { symbol: 'mmol', name: 'Millimole (mmol)', factor: 1e-3, isSI: false },
@@ -429,9 +576,9 @@
             ]
         },
         luminous: {
-            name: 'Luminous Intensity',
+            name: { id: 'Intensitas Cahaya', en: 'Luminous Intensity' },
             icon: '💡',
-            instrument: 'Digital Luxmeter / Photometer',
+            instrument: { id: 'Luxmeter Digital / Fotometer', en: 'Digital Luxmeter / Photometer' },
             siUnit: 'cd',
             units: [
                 { symbol: 'mcd', name: 'Millicandela (mcd)', factor: 1e-3, isSI: false },
@@ -445,14 +592,12 @@
     const modules = [
         {
             id: 'base-quantities',
-            name: '1. 7 Base Quantities & Unit Conversion',
             type: 'base-quantities-module'
         },
         {
             id: 'notation',
-            name: '2. Scientific Notation',
             icon: '🔢',
-            instrument: 'Scientific Notation Generator',
+            instrument: { id: 'Generator Notasi Ilmiah', en: 'Scientific Notation Generator' },
             type: 'exponential',
             generate: () => {
                 const isVeryLarge = Math.random() > 0.5;
@@ -469,117 +614,106 @@
         },
         {
             id: 'dimension',
-            name: '3. Dimensional Analysis',
             icon: '📐',
-            instrument: 'Dimensional Analyzer',
+            instrument: { id: 'Penganalisis Dimensi', en: 'Dimensional Analyzer' },
             type: 'dimension-check',
             generate: () => {
                 const equations = [
                     { 
                         eq: 'v = u + a · t', 
                         dimConsistent: true,
-                        conceptuallyCorrect: true, 
-                        dimLeft: '[L][T]⁻¹', 
-                        dimRight: '[L][T]⁻¹', 
-                        symbols: [
-                            '<b>v, u</b> = Velocity [m/s]',
-                            '<b>a</b> = Acceleration [m/s²]',
-                            '<b>t</b> = Time [s]'
-                        ],
-                        reason: 'Left side dimension [L][T]⁻¹ matches Right side dimension [L][T]⁻¹ + [L][T]⁻² · [T] = [L][T]⁻¹.' 
+                        symbols: {
+                            id: ['<b>v, u</b> = Kecepatan [m/s]', '<b>a</b> = Percepatan [m/s²]', '<b>t</b> = Waktu [s]'],
+                            en: ['<b>v, u</b> = Velocity [m/s]', '<b>a</b> = Acceleration [m/s²]', '<b>t</b> = Time [s]']
+                        },
+                        reason: {
+                            id: 'Dimensi ruas kiri [L][T]⁻¹ sama dengan ruas kanan [L][T]⁻¹ + [L][T]⁻² · [T] = [L][T]⁻¹.',
+                            en: 'Left side dimension [L][T]⁻¹ matches Right side dimension [L][T]⁻¹ + [L][T]⁻² · [T] = [L][T]⁻¹.'
+                        }
                     },
                     { 
                         eq: 'S = v · t + ½ a · t²', 
                         dimConsistent: true,
-                        conceptuallyCorrect: true, 
-                        dimLeft: '[L]', 
-                        dimRight: '[L]', 
-                        symbols: [
-                            '<b>S</b> = Displacement / Distance [m]',
-                            '<b>v</b> = Initial Velocity [m/s]',
-                            '<b>t</b> = Time [s]',
-                            '<b>a</b> = Acceleration [m/s²]'
-                        ],
-                        reason: 'Left side dimension [L] matches Right side terms [L][T]⁻¹ · [T] + [L][T]⁻² · [T]² = [L].' 
+                        symbols: {
+                            id: ['<b>S</b> = Perpindahan / Jarak [m]', '<b>v</b> = Kecepatan Awal [m/s]', '<b>t</b> = Waktu [s]', '<b>a</b> = Percepatan [m/s²]'],
+                            en: ['<b>S</b> = Displacement / Distance [m]', '<b>v</b> = Initial Velocity [m/s]', '<b>t</b> = Time [s]', '<b>a</b> = Acceleration [m/s²]']
+                        },
+                        reason: {
+                            id: 'Dimensi ruas kiri [L] sama dengan suku-suku ruas kanan [L][T]⁻¹ · [T] + [L][T]⁻² · [T]² = [L].',
+                            en: 'Left side dimension [L] matches Right side terms [L][T]⁻¹ · [T] + [L][T]⁻² · [T]² = [L].'
+                        }
                     },
                     { 
                         eq: 'F = m · v²', 
                         dimConsistent: false,
-                        conceptuallyCorrect: false, 
-                        dimLeft: '[M][L][T]⁻²', 
-                        dimRight: '[M][L]²[T]⁻²', 
-                        symbols: [
-                            '<b>F</b> = Force [N = kg·m/s²]',
-                            '<b>m</b> = Mass [kg]',
-                            '<b>v</b> = Velocity [m/s]'
-                        ],
-                        reason: 'Inconsistent! Left side Force has dimension [M][L][T]⁻², whereas right side m·v² has dimension [M][L]²[T]⁻² (Energy). Correct Force formula is F = m·a.' 
+                        symbols: {
+                            id: ['<b>F</b> = Gaya [N = kg·m/s²]', '<b>m</b> = Massa [kg]', '<b>v</b> = Kecepatan [m/s]'],
+                            en: ['<b>F</b> = Force [N = kg·m/s²]', '<b>m</b> = Mass [kg]', '<b>v</b> = Velocity [m/s]']
+                        },
+                        reason: {
+                            id: 'Tidak konsisten! Ruas kiri Gaya memiliki dimensi [M][L][T]⁻², sedangkan ruas kanan m·v² bernilai [M][L]²[T]⁻² (Energi). Rumus gaya yang benar adalah F = m·a.',
+                            en: 'Inconsistent! Left side Force has dimension [M][L][T]⁻², whereas right side m·v² has dimension [M][L]²[T]⁻² (Energy). Correct Force formula is F = m·a.'
+                        }
                     },
                     { 
                         eq: 'P = F · v', 
                         dimConsistent: true,
-                        conceptuallyCorrect: true, 
-                        dimLeft: '[M][L]²[T]⁻³', 
-                        dimRight: '[M][L]²[T]⁻³', 
-                        symbols: [
-                            '<b>P</b> = Power [Watt = J/s]',
-                            '<b>F</b> = Force [N]',
-                            '<b>v</b> = Velocity [m/s]'
-                        ],
-                        reason: 'Dimensionally consistent! Left side Power [M][L]²[T]⁻³ equals Right side Force × Velocity [M][L][T]⁻² · [L][T]⁻¹.' 
+                        symbols: {
+                            id: ['<b>P</b> = Daya [Watt = J/s]', '<b>F</b> = Gaya [N]', '<b>v</b> = Kecepatan [m/s]'],
+                            en: ['<b>P</b> = Power [Watt = J/s]', '<b>F</b> = Force [N]', '<b>v</b> = Velocity [m/s]']
+                        },
+                        reason: {
+                            id: 'Konsisten secara dimensi! Ruas kiri Daya [M][L]²[T]⁻³ sama dengan ruas kanan Gaya × Kecepatan [M][L][T]⁻² · [L][T]⁻¹.',
+                            en: 'Dimensionally consistent! Left side Power [M][L]²[T]⁻³ equals Right side Force × Velocity [M][L][T]⁻² · [L][T]⁻¹.'
+                        }
                     },
                     { 
                         eq: 'Ek = m · g · h', 
                         dimConsistent: true,
-                        conceptuallyCorrect: false, 
-                        dimLeft: '[M][L]²[T]⁻²', 
-                        dimRight: '[M][L]²[T]⁻²', 
-                        symbols: [
-                            '<b>Ek</b> = Kinetic Energy [Joule]',
-                            '<b>m</b> = Mass [kg]',
-                            '<b>g</b> = Gravitational Acceleration [m/s²]',
-                            '<b>h</b> = Height [m]'
-                        ],
-                        reason: 'Both sides have dimension [M][L]²[T]⁻² (Energy). <br>⚠️ <b>Physics Note:</b> Conceptually, m·g·h is Potential Energy (Ep), not Kinetic Energy (Ek). However, <b>dimensionally</b> it is correct because both represent Energy.' 
+                        symbols: {
+                            id: ['<b>Ek</b> = Energi Kinetik [Joule]', '<b>m</b> = Massa [kg]', '<b>g</b> = Percepatan Gravitasi [m/s²]', '<b>h</b> = Ketinggian [m]'],
+                            en: ['<b>Ek</b> = Kinetic Energy [Joule]', '<b>m</b> = Mass [kg]', '<b>g</b> = Gravitational Acceleration [m/s²]', '<b>h</b> = Height [m]']
+                        },
+                        reason: {
+                            id: 'Kedua ruas memiliki dimensi [M][L]²[T]⁻² (Energi). <br>⚠️ <b>Catatan Fisika:</b> Secara konsep, m·g·h adalah Energi Potensial (Ep). Namun secara <b>dimensi</b> tetap valid.',
+                            en: 'Both sides have dimension [M][L]²[T]⁻² (Energy). <br>⚠️ <b>Physics Note:</b> Conceptually m·g·h is Potential Energy (Ep), but <b>dimensionally</b> it is correct.'
+                        }
                     },
                     { 
                         eq: 'a = F / m', 
                         dimConsistent: true,
-                        conceptuallyCorrect: true, 
-                        dimLeft: '[L][T]⁻²', 
-                        dimRight: '[L][T]⁻²', 
-                        symbols: [
-                            '<b>a</b> = Acceleration [m/s²]',
-                            '<b>F</b> = Force [N]',
-                            '<b>m</b> = Mass [kg]'
-                        ],
-                        reason: 'Dimensionally consistent! Acceleration = Force / Mass.' 
+                        symbols: {
+                            id: ['<b>a</b> = Percepatan [m/s²]', '<b>F</b> = Gaya [N]', '<b>m</b> = Massa [kg]'],
+                            en: ['<b>a</b> = Acceleration [m/s²]', '<b>F</b> = Force [N]', '<b>m</b> = Mass [kg]']
+                        },
+                        reason: {
+                            id: 'Konsisten secara dimensi! Percepatan = Gaya / Massa.',
+                            en: 'Dimensionally consistent! Acceleration = Force / Mass.'
+                        }
                     },
                     { 
                         eq: 'v² = u² + 2 · a · S', 
                         dimConsistent: true,
-                        conceptuallyCorrect: true, 
-                        dimLeft: '[L]²[T]⁻²', 
-                        dimRight: '[L]²[T]⁻²', 
-                        symbols: [
-                            '<b>v, u</b> = Final & Initial Velocity [m/s]',
-                            '<b>a</b> = Acceleration [m/s²]',
-                            '<b>S</b> = Distance [m]'
-                        ],
-                        reason: 'Dimensionally consistent! Velocity squared has dimension [L]²[T]⁻².' 
+                        symbols: {
+                            id: ['<b>v, u</b> = Kecepatan Akhir & Awal [m/s]', '<b>a</b> = Percepatan [m/s²]', '<b>S</b> = Jarak [m]'],
+                            en: ['<b>v, u</b> = Final & Initial Velocity [m/s]', '<b>a</b> = Acceleration [m/s²]', '<b>S</b> = Distance [m]']
+                        },
+                        reason: {
+                            id: 'Konsisten secara dimensi! Kuadrat kecepatan berdimensi [L]²[T]⁻².',
+                            en: 'Dimensionally consistent! Velocity squared has dimension [L]²[T]⁻².'
+                        }
                     },
                     { 
                         eq: 'P = F / t', 
                         dimConsistent: false,
-                        conceptuallyCorrect: false, 
-                        dimLeft: '[M][L]²[T]⁻³', 
-                        dimRight: '[M][L][T]⁻³', 
-                        symbols: [
-                            '<b>P</b> = Power [Watt]',
-                            '<b>F</b> = Force [N]',
-                            '<b>t</b> = Time [s]'
-                        ],
-                        reason: 'Inconsistent! Left side Power has dimension [M][L]²[T]⁻³, while F/t gives [M][L][T]⁻³.' 
+                        symbols: {
+                            id: ['<b>P</b> = Daya [Watt]', '<b>F</b> = Gaya [N]', '<b>t</b> = Waktu [s]'],
+                            en: ['<b>P</b> = Power [Watt]', '<b>F</b> = Force [N]', '<b>t</b> = Time [s]']
+                        },
+                        reason: {
+                            id: 'Tidak konsisten! Ruas kiri Daya [M][L]²[T]⁻³, sedangkan F/t menghasilkan [M][L][T]⁻³.',
+                            en: 'Inconsistent! Left side Power has dimension [M][L]²[T]⁻³, while F/t gives [M][L][T]⁻³.'
+                        }
                     }
                 ];
                 return equations[Math.floor(Math.random() * equations.length)];
@@ -595,10 +729,11 @@
     function initNav() {
         const nav = document.getElementById('module-nav');
         nav.innerHTML = '';
+        const t = translations[currentLang];
         modules.forEach((mod, idx) => {
             const btn = document.createElement('button');
             btn.className = `mod-btn ${idx === currentModIndex ? 'active' : ''}`;
-            btn.innerText = mod.name;
+            btn.innerText = t.modules[idx];
             btn.onclick = () => switchModule(idx);
             nav.appendChild(btn);
         });
@@ -623,6 +758,7 @@
 
     function generateNewData() {
         const mod = modules[currentModIndex];
+        const t = translations[currentLang];
         document.getElementById('feedback').style.display = 'none';
 
         const legendBox = document.getElementById('symbol-legend-box');
@@ -634,14 +770,12 @@
         if (mod.type === 'base-quantities-module') {
             const qData = baseQuantities[selectedQuantityKey];
             
-            // Randomly choose initial unit
             const randomUnitObj = qData.units[Math.floor(Math.random() * qData.units.length)];
             let val = (Math.random() * 800 + 0.1);
             if (selectedQuantityKey === 'temp' && randomUnitObj.symbol === '°C') {
                 val = Math.random() * 200 - 20;
             }
             
-            // Pick a non-SI unit target for the random conversion line (fallback to 1st non-SI if needed)
             const nonSiUnits = qData.units.filter(u => !u.isSI);
             const randomTargetUnitObj = nonSiUnits.length > 0 
                 ? nonSiUnits[Math.floor(Math.random() * nonSiUnits.length)]
@@ -658,86 +792,88 @@
             currentDisplayStr = formattedVal;
 
             document.getElementById('inst-icon').innerText = qData.icon;
-            document.getElementById('inst-name').innerText = qData.instrument;
+            document.getElementById('inst-name').innerText = qData.instrument[currentLang];
             document.getElementById('sensor-display').innerText = `${formattedVal} ${currentRawData.unit}`;
-            document.getElementById('task-title').innerText = `Module: 7 Base Quantities & Unit Conversion`;
-            document.getElementById('task-desc').innerText = `Pilih Besaran Pokok yang sesuai, lalu lakukan konversi nilai baik ke Satuan SI maupun ke Satuan Lain/Acak yang diminta.`;
+            document.getElementById('task-title').innerText = t.mod1Title;
+            document.getElementById('task-desc').innerText = t.mod1Desc;
 
-            // Build Options for Quantity Select (Clean, no SI hints)
             let qOptionsHtml = Object.keys(baseQuantities).map(k => 
-                `<option value="${k}" ${k === selectedQuantityKey ? 'selected' : ''}>${baseQuantities[k].name}</option>`
+                `<option value="${k}" ${k === selectedQuantityKey ? 'selected' : ''}>${baseQuantities[k].name[currentLang]}</option>`
             ).join('');
 
-            // Build Options for Units (Clean, no SI labels)
             let unitOptionsHtml = qData.units.map(u => 
                 `<option value="${u.symbol}">${u.name}</option>`
             ).join('');
 
+            const label3Text = t.mod1Label3.replace('{target}', currentRawData.targetRandomUnit);
+            const placeholderRandom = t.mod1PlaceholderRandom.replace('{target}', currentRawData.targetRandomUnit);
+
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label for="quantity-select">1. Pilih Besaran Pokok (Base Quantity):</label>
+                    <label for="quantity-select">${t.mod1Label1}</label>
                     <select id="quantity-select" onchange="onQuantityChange(this.value)">
                         ${qOptionsHtml}
                     </select>
                 </div>
                 <div class="control-group">
-                    <label>2. Konversi Ke Satuan SI (SI Unit Conversion):</label>
+                    <label>${t.mod1Label2}</label>
                     <div class="input-row">
                         <select id="si-unit-select" style="flex: 1;">
                             ${unitOptionsHtml}
                         </select>
-                        <input type="number" id="si-val-input" step="any" placeholder="Nilai konversi SI" style="flex: 2;">
+                        <input type="number" id="si-val-input" step="any" placeholder="${t.mod1PlaceholderSI}" style="flex: 2;">
                     </div>
                 </div>
                 <div class="control-group">
-                    <label>3. Konversi Ke Satuan Acak [<b>${currentRawData.targetRandomUnit}</b>]:</label>
-                    <input type="number" id="random-val-input" step="any" placeholder="Nilai konversi ke ${currentRawData.targetRandomUnit}">
+                    <label>${label3Text}</label>
+                    <input type="number" id="random-val-input" step="any" placeholder="${placeholderRandom}">
                 </div>
                 <div class="control-group">
-                    <label for="sigfig-input">4. Jumlah Angka Penting (Significant Figures) Pada Layar Sensor:</label>
-                    <input type="number" id="sigfig-input" placeholder="Masukkan jumlah AP">
+                    <label for="sigfig-input">${t.mod1Label4}</label>
+                    <input type="number" id="sigfig-input" placeholder="${t.mod1PlaceholderSigFig}">
                 </div>
             `;
         } else {
             currentRawData = mod.generate();
             document.getElementById('inst-icon').innerText = mod.icon;
-            document.getElementById('inst-name').innerText = mod.instrument;
+            document.getElementById('inst-name').innerText = mod.instrument[currentLang];
 
             if (mod.type === 'exponential') {
                 document.getElementById('sensor-display').innerText = currentRawData.display;
-                document.getElementById('task-title').innerText = `Module: Scientific Notation`;
-                document.getElementById('task-desc').innerText = `Convert the decimal/standard number on display into Scientific Notation (a × 10ᵇ), where 1 ≤ a < 10.`;
+                document.getElementById('task-title').innerText = t.mod2Title;
+                document.getElementById('task-desc').innerText = t.mod2Desc;
 
                 dynamicInputs.innerHTML = `
                     <div class="control-group">
-                        <label>Scientific Notation Form (a × 10ᵇ):</label>
+                        <label>${t.mod2Label}</label>
                         <div class="input-row">
-                            <input type="number" id="coef-input" step="any" placeholder="Multiplier (a)" style="flex: 2;">
+                            <input type="number" id="coef-input" step="any" placeholder="${t.mod2PlaceholderCoef}" style="flex: 2;">
                             <span style="font-weight: bold; color: var(--accent-color);">× 10</span>
-                            <input type="number" id="exp-input" placeholder="Exponent (b)" style="flex: 1;">
+                            <input type="number" id="exp-input" placeholder="${t.mod2PlaceholderExp}" style="flex: 1;">
                         </div>
-                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Example: 1,000,000 = 1 × 10⁶ | 0.002 = 2 × 10⁻³</small>
+                        <small style="color: var(--text-secondary); font-size: 0.75rem;">${t.mod2Hint}</small>
                     </div>
                 `;
             } else if (mod.type === 'dimension-check') {
                 document.getElementById('sensor-display').innerText = currentRawData.eq;
-                document.getElementById('task-title').innerText = `Module: Dimensional Analysis`;
-                document.getElementById('task-desc').innerText = `Determine if the given physics equation is dimensionally valid/consistent.`;
+                document.getElementById('task-title').innerText = t.mod3Title;
+                document.getElementById('task-desc').innerText = t.mod3Desc;
 
-                if (currentRawData.symbols && currentRawData.symbols.length > 0) {
-                    legendBox.innerHTML = `<strong>Symbol Definitions:</strong><ul>` + 
-                        currentRawData.symbols.map(s => `<li>${s}</li>`).join('') + 
+                const syms = currentRawData.symbols[currentLang];
+                if (syms && syms.length > 0) {
+                    legendBox.innerHTML = `<strong>${t.mod3SymbolTitle}</strong><ul>` + 
+                        syms.map(s => `<li>${s}</li>`).join('') + 
                         `</ul>`;
                     legendBox.style.display = 'block';
                 }
 
                 dynamicInputs.innerHTML = `
                     <div class="control-group">
-                        <label for="dim-select">Is this equation dimensionally valid/consistent?</label>
+                        <label for="dim-select">${t.mod3Label}</label>
                         <select id="dim-select">
-                            <option value="">-- Select Choice --</option>
-                            <option value="valid">VALID (Dimensionally consistent)</option>
-                            <option value="invalid">INVALID (Left side dimension ≠ Right side dimension)</option>
+                            <option value="">${t.mod3SelectDefault}</option>
+                            <option value="valid">${t.mod3Valid}</option>
+                            <option value="invalid">${t.mod3Invalid}</option>
                         </select>
                     </div>
                 `;
@@ -774,6 +910,7 @@
 
     function submitAnalysis() {
         const mod = modules[currentModIndex];
+        const t = translations[currentLang];
 
         if (mod.type === 'base-quantities-module') {
             const userQ = document.getElementById('quantity-select').value;
@@ -783,7 +920,7 @@
             const userSigFig = parseInt(document.getElementById('sigfig-input').value);
 
             if (isNaN(userSiVal) || isNaN(userRandomVal) || isNaN(userSigFig)) {
-                showFeedback('error', '⚠️ Silakan isi semua bidang konversi dan angka penting terlebih dahulu.');
+                showFeedback('error', t.errFillAll);
                 return;
             }
 
@@ -801,14 +938,14 @@
             let isSigFigCorrect = (userSigFig === expectedSigFig);
 
             if (isQCorrect && isSiUnitCorrect && isSiValCorrect && isRandomValCorrect && isSigFigCorrect) {
-                showFeedback('success', '🎉 <b>Jawaban Tepat Sekali!</b> Semua analisis besaran, konversi SI, konversi acak, dan angka penting sudah benar.');
+                showFeedback('success', t.successMod1);
             } else {
-                let msg = '<b>Analisis Belum Sepenuhnya Tepat:</b><br><ul>';
-                if (!isQCorrect) msg += `<li>Besaran Pokok seharusnya: <b>${qData.name}</b></li>`;
-                if (!isSiUnitCorrect) msg += `<li>Satuan SI untuk ${qData.name} adalah: <b>${correctSiUnit}</b></li>`;
-                if (!isSiValCorrect) msg += `<li>Nilai Konversi SI seharusnya: <b>${expectedSiVal.toPrecision(4)} ${correctSiUnit}</b></li>`;
-                if (!isRandomValCorrect) msg += `<li>Nilai Konversi ke ${currentRawData.targetRandomUnit} seharusnya: <b>${expectedRandomVal.toPrecision(4)} ${currentRawData.targetRandomUnit}</b></li>`;
-                if (!isSigFigCorrect) msg += `<li>Jumlah Angka Penting pada layar: <b>${expectedSigFig} AP</b></li>`;
+                let msg = t.warnMod1Title;
+                if (!isQCorrect) msg += t.warnMod1Q.replace('{val}', qData.name[currentLang]);
+                if (!isSiUnitCorrect) msg += t.warnMod1SIUnit.replace('{name}', qData.name[currentLang]).replace('{val}', correctSiUnit);
+                if (!isSiValCorrect) msg += t.warnMod1SIVal.replace('{val}', expectedSiVal.toPrecision(4)).replace('{unit}', correctSiUnit);
+                if (!isRandomValCorrect) msg += t.warnMod1RandVal.replace('{unit}', currentRawData.targetRandomUnit).replace('{val}', expectedRandomVal.toPrecision(4)).replace('{unit}', currentRawData.targetRandomUnit);
+                if (!isSigFigCorrect) msg += t.warnMod1SigFig.replace('{val}', expectedSigFig);
                 msg += '</ul>';
                 showFeedback('warning', msg);
             }
@@ -818,7 +955,7 @@
             const exp = parseInt(document.getElementById('exp-input').value);
 
             if (isNaN(coef) || isNaN(exp)) {
-                showFeedback('error', '⚠️ Silakan isi nilai pengali (a) dan eksponen (b).');
+                showFeedback('error', t.errFillCoefExp);
                 return;
             }
 
@@ -828,33 +965,34 @@
             const isValCorrect = Math.abs((userVal - actualVal) / actualVal) < 0.01;
 
             if (isValCorrect && isRangeCorrect) {
-                showFeedback('success', `🎉 <b>Tepat Sekali!</b> Bentuk notasi ilmiah ${coef} × 10<sup>${exp}</sup> sudah sesuai.`);
+                showFeedback('success', t.successMod2.replace('{coef}', coef).replace('{exp}', exp));
             } else {
-                let msg = '<b>Analisis Belum Tepat:</b><br>';
-                if (!isRangeCorrect) msg += '• Pengali (a) harus memenuhi syarat 1 ≤ a < 10.<br>';
-                if (!isValCorrect) msg += '• Nilai total tidak sesuai dengan angka pada display.';
+                let msg = t.warnMod2Title;
+                if (!isRangeCorrect) msg += t.warnMod2Range;
+                if (!isValCorrect) msg += t.warnMod2Val;
                 showFeedback('warning', msg);
             }
 
         } else if (mod.type === 'dimension-check') {
             const choice = document.getElementById('dim-select').value;
             if (!choice) {
-                showFeedback('error', '⚠️ Silakan pilih opsi validitas dimensi.');
+                showFeedback('error', t.errSelectDim);
                 return;
             }
 
             const expectedChoice = currentRawData.dimConsistent ? 'valid' : 'invalid';
+            const reason = currentRawData.reason[currentLang];
             if (choice === expectedChoice) {
-                showFeedback('success', `🎉 <b>Tepat Sekali!</b><br>${currentRawData.reason}`);
+                showFeedback('success', t.successMod3.replace('{reason}', reason));
             } else {
-                showFeedback('warning', `<b>Belum Tepat:</b><br>${currentRawData.reason}`);
+                showFeedback('warning', t.warnMod3.replace('{reason}', reason));
             }
         }
     }
 
     // Initialize Page
     window.onload = () => {
-        initTheme();
+        initSettings();
         initNav();
         generateNewData();
     };

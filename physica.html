@@ -7,26 +7,113 @@
     <!-- Font Awesome for physics icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --header-bg: #1a365d;
+            --top-nav-bg: #0f2545;
+            --card-bg: #fff;
+            --card-text: #4a5568;
+            --card-heading: #2b6cb0;
+            --border-color: #3182ce;
+            --shadow: rgba(0, 0, 0, 0.05);
+            --footer-text: #718096;
+        }
+
+        /* Dark Mode Colors */
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --header-bg: #0d1b2a;
+            --top-nav-bg: #050e1a;
+            --card-bg: #1e1e1e;
+            --card-text: #a0aec0;
+            --card-heading: #63b3ed;
+            --border-color: #4299e1;
+            --shadow: rgba(0, 0, 0, 0.5);
+            --footer-text: #a0aec0;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         body {
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             line-height: 1.6;
+        }
+
+        /* Top Navigation Bar - Dibuat Sticky / Tetap di Atas */
+        .top-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--top-nav-bg);
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .control-btn:hover {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
         }
 
         /* Header / Navbar */
         header {
-            background-color: #1a365d;
+            background-color: var(--header-bg);
             color: #fff;
             padding: 2rem 1.5rem;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px var(--shadow);
         }
 
         .logo-container {
@@ -43,23 +130,7 @@
             object-fit: contain;
             display: block;
             margin: 0 auto;
-            mix-blend-mode: screen; /* Efek magic untuk menyatukan gambar gelap dengan background */
-        }
-        
-        .logo-icon {
-            font-size: 2.2rem;
-            color: #63b3ed;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #e2e8f0;
-            margin-bottom: 1rem;
+            mix-blend-mode: screen;
         }
 
         .author-info {
@@ -84,16 +155,16 @@
         }
 
         .welcome-card {
-            background: #fff;
+            background: var(--card-bg);
             padding: 2rem;
             border-radius: 8px;
             margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-top: 4px solid #3182ce;
+            box-shadow: 0 2px 4px var(--shadow);
+            border-top: 4px solid var(--border-color);
         }
 
         .welcome-card h2 {
-            color: #1a365d;
+            color: var(--card-heading);
             margin-bottom: 0.8rem;
         }
 
@@ -105,11 +176,11 @@
         }
 
         .card {
-            background: #fff;
+            background: var(--card-bg);
             border-radius: 8px;
             padding: 1.5rem;
-            border-left: 5px solid #3182ce;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-left: 5px solid var(--border-color);
+            box-shadow: 0 2px 4px var(--shadow);
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             display: flex;
             flex-direction: column;
@@ -118,17 +189,17 @@
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .card h3 {
-            color: #2b6cb0;
+            color: var(--card-heading);
             margin-bottom: 0.5rem;
         }
 
         .card p {
             font-size: 0.95rem;
-            color: #4a5568;
+            color: var(--card-text);
             margin-bottom: 1.2rem;
         }
 
@@ -153,13 +224,30 @@
         footer {
             text-align: center;
             padding: 1.5rem;
-            color: #718096;
+            color: var(--footer-text);
             font-size: 0.9rem;
             margin-top: 3rem;
         }
     </style>
 </head>
 <body>
+
+    <!-- Top Navigation Bar / Controls (Sticky) -->
+    <nav class="top-nav">
+        <a href="index.html" class="btn-back" id="btn-home">
+            <i class="fa-solid fa-arrow-left"></i> <span>Kembali ke Halaman Utama Profile</span>
+        </a>
+        <div class="nav-controls">
+            <!-- Language Switcher -->
+            <button class="control-btn" id="lang-toggle" onclick="toggleLanguage()">
+                <i class="fa-solid fa-globe"></i> <span id="lang-text">EN</span>
+            </button>
+            <!-- Theme Switcher -->
+            <button class="control-btn" id="theme-toggle" onclick="toggleTheme()">
+                <i class="fa-solid fa-moon" id="theme-icon"></i> <span id="theme-text">Gelap</span>
+            </button>
+        </div>
+    </nav>
 
     <header>
         <div class="logo-container">
@@ -174,8 +262,8 @@
     <div class="container">
         <!-- Welcome Section -->
         <div class="welcome-card">
-            <h2>Welcome to Physica!</h2>
-            <p>This web application serves as an interactive platform designed to help learners explore fundamental physics concepts through intuitive tools and visual simulations.</p>
+            <h2 id="welcome-title">Welcome to Physica!</h2>
+            <p id="welcome-desc">This web application serves as an interactive platform designed to help learners explore fundamental physics concepts through intuitive tools and visual simulations.</p>
         </div>
 
         <!-- Topics Grid -->
@@ -184,90 +272,200 @@
             <!-- Topic 1 -->
             <div class="card">
                 <div>
-                    <h3>Topic 1: Quantities, Units, & Measurements</h3>
-                    <p>Interactive tool exploring fundamental quantities, SI units, scientific notation, and dimensional analysis.</p>
+                    <h3 id="t1-title">Topic 1: Quantities, Units, & Measurements</h3>
+                    <p id="t1-desc">Interactive tool exploring fundamental quantities, SI units, scientific notation, and dimensional analysis.</p>
                 </div>
-                <a href="phys1.html" class="btn">Explore Topic 1 &rarr;</a>
+                <a href="phys1.html" class="btn" id="t1-btn">Explore Topic 1 &rarr;</a>
             </div>
 
             <!-- Topic 2 -->
             <div class="card">
                 <div>
-                    <h3>Topic 2: Vectors</h3>
-                    <p>Interactive tool for scalar-vector classification, component analysis, mathematical operations, and vector visual representations.</p>
+                    <h3 id="t2-title">Topic 2: Vectors</h3>
+                    <p id="t2-desc">Interactive tool for scalar-vector classification, component analysis, mathematical operations, and vector visual representations.</p>
                 </div>
-                <a href="phys2.html" class="btn">Explore Topic 2 &rarr;</a>
+                <a href="phys2.html" class="btn" id="t2-btn">Explore Topic 2 &rarr;</a>
             </div>
 
             <!-- Topic 3 -->
             <div class="card">
                 <div>
-                    <h3>Topic 3: Kinematics</h3>
-                    <p>Interactive tool for kinematics visual representations.</p>
+                    <h3 id="t3-title">Topic 3: Kinematics</h3>
+                    <p id="t3-desc">Interactive tool covering position, displacement, velocity, acceleration, uniform linear motion, uniformly accelerated motion, projectile motion, and circular motion.</p>
                 </div>
-                <a href="phys3.html" class="btn">Explore Topic 3 &rarr;</a>
+                <a href="phys3.html" class="btn" id="t3-btn">Explore Topic 3 &rarr;</a>
             </div>
 
             <!-- Topic 4 -->
             <div class="card">
                 <div>
-                    <h3>Topic 4: -</h3>
-                    <p>Interactive tool for visual representations.</p>
+                    <h3 id="t4-title">Topic 4: -</h3>
+                    <p id="t4-desc">Interactive tool for visual representations.</p>
                 </div>
-                <a href="phys4.html" class="btn">Explore Topic 4 &rarr;</a>
+                <a href="phys4.html" class="btn" id="t4-btn">Explore Topic 4 &rarr;</a>
             </div>
 
             <!-- Topic 5 -->
             <div class="card">
                 <div>
-                    <h3>Topic 5: -</h3>
-                    <p>Interactive tool for visual representations.</p>
+                    <h3 id="t5-title">Topic 5: -</h3>
+                    <p id="t5-desc">Interactive tool for visual representations.</p>
                 </div>
-                <a href="phys5.html" class="btn">Explore Topic 5 &rarr;</a>
+                <a href="phys5.html" class="btn" id="t5-btn">Explore Topic 5 &rarr;</a>
             </div>
 
             <!-- Topic 6 -->
             <div class="card">
                 <div>
-                    <h3>Topic 6: -</h3>
-                    <p>Interactive tool for visual representations.</p>
+                    <h3 id="t6-title">Topic 6: -</h3>
+                    <p id="t6-desc">Interactive tool for visual representations.</p>
                 </div>
-                <a href="phys6.html" class="btn">Explore Topic 6 &rarr;</a>
+                <a href="phys6.html" class="btn" id="t6-btn">Explore Topic 6 &rarr;</a>
             </div>
 
             <!-- Topic 7 -->
             <div class="card">
                 <div>
-                    <h3>Topic 7: -</h3>
-                    <p>Interactive tool for visual representations.</p>
+                    <h3 id="t7-title">Topic 7: -</h3>
+                    <p id="t7-desc">Interactive tool for visual representations.</p>
                 </div>
-                <a href="phys7.html" class="btn">Explore Topic 7 &rarr;</a>
+                <a href="phys7.html" class="btn" id="t7-btn">Explore Topic 7 &rarr;</a>
             </div>
 
             <!-- Topic 8 -->
             <div class="card">
                 <div>
-                    <h3>Topic 8: -</h3>
-                    <p>Interactive tool for visual representations.</p>
+                    <h3 id="t8-title">Topic 8: -</h3>
+                    <p id="t8-desc">Interactive tool for visual representations.</p>
                 </div>
-                <a href="phys8.html" class="btn">Explore Topic 8 &rarr;</a>
+                <a href="phys8.html" class="btn" id="t8-btn">Explore Topic 8 &rarr;</a>
             </div>
 
             <!-- Topic 9 -->
             <div class="card">
                 <div>
-                    <h3>Topic 9: -</h3>
-                    <p>Interactive tool for visual representations.</p>
+                    <h3 id="t9-title">Topic 9: -</h3>
+                    <p id="t9-desc">Interactive tool for visual representations.</p>
                 </div>
-                <a href="phys9.html" class="btn">Explore Topic 9 &rarr;</a>
+                <a href="phys9.html" class="btn" id="t9-btn">Explore Topic 9 &rarr;</a>
             </div>
 
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Designed as an interactive physics learning platform.</p>
+        <p id="footer-text">&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Designed as an interactive physics learning platform.</p>
     </footer>
 
+    <!-- JavaScript For Controls -->
+    <script>
+        const translations = {
+            en: {
+                btnHome: '<i class="fa-solid fa-arrow-left"></i> Back to Profile Page',
+                themeDark: 'Dark',
+                themeLight: 'Light',
+                welcomeTitle: 'Welcome to Physica!',
+                welcomeDesc: 'This web application serves as an interactive platform designed to help learners explore fundamental physics concepts through intuitive tools and visual simulations.',
+                t1Title: 'Topic 1: Quantities, Units, & Measurements',
+                t1Desc: 'Interactive tool exploring fundamental quantities, SI units, scientific notation, and dimensional analysis.',
+                t1Btn: 'Explore Topic 1 &rarr;',
+                t2Title: 'Topic 2: Vectors',
+                t2Desc: 'Interactive tool for scalar-vector classification, component analysis, mathematical operations, and vector visual representations.',
+                t2Btn: 'Explore Topic 2 &rarr;',
+                t3Title: 'Topic 3: Kinematics',
+                t3Desc: 'Interactive tool covering position, displacement, velocity, acceleration, uniform linear motion, uniformly accelerated motion, projectile motion, and circular motion.',
+                t3Btn: 'Explore Topic 3 &rarr;',
+                genericDesc: 'Interactive tool for visual representations.',
+                btnExplore: 'Explore Topic ',
+                footerText: '&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Designed as an interactive physics learning platform.'
+            },
+            id: {
+                btnHome: '<i class="fa-solid fa-arrow-left"></i> Kembali ke Halaman Utama Profile',
+                themeDark: 'Gelap',
+                themeLight: 'Terang',
+                welcomeTitle: 'Selamat Datang di Physica!',
+                welcomeDesc: 'Aplikasi web ini berfungsi sebagai platform interaktif yang dirancang untuk membantu pembelajar mengeksplorasi konsep-konsep dasar fisika melalui alat bantu intuitif dan simulasi visual.',
+                t1Title: 'Topik 1: Besaran, Satuan, & Pengukuran',
+                t1Desc: 'Alat interaktif untuk mengeksplorasi besaran pokok, satuan SI, notasi ilmiah, dan analisis dimensi.',
+                t1Btn: 'Jelajahi Topik 1 &rarr;',
+                t2Title: 'Topik 2: Vektor',
+                t2Desc: 'Alat interaktif untuk klasifikasi skalar-vektor, analisis komponen, operasi matematika, dan representasi visual vektor.',
+                t2Btn: 'Jelajahi Topik 2 &rarr;',
+                t3Title: 'Topik 3: Kinematika',
+                t3Desc: 'Alat interaktif mengenai posisi, perpindahan, kecepatan, percepatan, gerak lurus beraturan, gerak lurus berubah beraturan, gerak parabola, dan gerak melingkar.',
+                t3Btn: 'Jelajahi Topik 3 &rarr;',
+                genericDesc: 'Alat interaktif untuk representasi visual.',
+                btnExplore: 'Jelajahi Topik ',
+                footerText: '&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Dirancang sebagai platform pembelajaran fisika interaktif.'
+            }
+        };
+
+        let currentLang = localStorage.getItem('user_lang') || 'id';
+        let currentTheme = localStorage.getItem('user_theme') || 'light';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTheme(currentTheme);
+            applyLanguage(currentLang);
+        });
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('user_theme', currentTheme);
+            applyTheme(currentTheme);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const icon = document.getElementById('theme-icon');
+            const text = document.getElementById('theme-text');
+            
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun';
+                text.innerText = translations[currentLang].themeLight;
+            } else {
+                icon.className = 'fa-solid fa-moon';
+                text.innerText = translations[currentLang].themeDark;
+            }
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'en' ? 'id' : 'en';
+            localStorage.setItem('user_lang', currentLang);
+            applyLanguage(currentLang);
+            applyTheme(currentTheme);
+        }
+
+        function applyLanguage(lang) {
+            const t = translations[lang];
+            document.getElementById('lang-text').innerText = lang === 'en' ? 'ID' : 'EN';
+            document.getElementById('btn-home').innerHTML = t.btnHome;
+            document.getElementById('welcome-title').innerText = t.welcomeTitle;
+            document.getElementById('welcome-desc').innerText = t.welcomeDesc;
+
+            // Topic 1
+            document.getElementById('t1-title').innerText = t.t1Title;
+            document.getElementById('t1-desc').innerText = t.t1Desc;
+            document.getElementById('t1-btn').innerHTML = t.t1Btn;
+
+            // Topic 2
+            document.getElementById('t2-title').innerText = t.t2Title;
+            document.getElementById('t2-desc').innerText = t.t2Desc;
+            document.getElementById('t2-btn').innerHTML = t.t2Btn;
+
+            // Topic 3
+            document.getElementById('t3-title').innerText = t.t3Title;
+            document.getElementById('t3-desc').innerText = t.t3Desc;
+            document.getElementById('t3-btn').innerHTML = t.t3Btn;
+
+            // Generic Topics 4 - 9
+            for (let i = 4; i <= 9; i++) {
+                document.getElementById(`t${i}-title`).innerText = `${lang === 'id' ? 'Topik' : 'Topic'} ${i}: -`;
+                document.getElementById(`t${i}-desc`).innerText = t.genericDesc;
+                document.getElementById(`t${i}-btn`).innerHTML = `${t.btnExplore}${i} &rarr;`;
+            }
+
+            document.getElementById('footer-text').innerHTML = t.footerText;
+        }
+    </script>
 </body>
 </html>

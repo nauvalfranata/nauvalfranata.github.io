@@ -1,12 +1,22 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtual Lab: Kinematics - Physica</title>
+    <title id="page-title">Virtual Lab: Kinematics - Physica</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* CSS Variables */
-        :root[data-theme="light"] {
+        /* CSS Variables - Light Theme (Default) */
+        :root, [data-theme="light"] {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #38bdf8;
             --bg-color: #f8fafc;
             --panel-bg: #ffffff;
             --panel-border: #e2e8f0;
@@ -14,9 +24,9 @@
             --accent-light: #e0f2fe;
             --text-primary: #0f172a;
             --text-secondary: #475569;
-            --sensor-bg: #1e293b;
+            --sensor-bg: #0f172a;
             --sensor-text: #38bdf8;
-            --sensor-border: #0f172a;
+            --sensor-border: #1e293b;
             --nav-btn-bg: #f1f5f9;
             --nav-btn-border: #cbd5e1;
             --input-bg: #ffffff;
@@ -27,7 +37,12 @@
             --tooltip-text: #ffffff;
         }
 
-        :root[data-theme="dark"] {
+        /* CSS Variables - Dark Theme */
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f8fafc;
+            --accent: #38bdf8;
             --bg-color: #0f172a;
             --panel-bg: #1e293b;
             --panel-border: #334155;
@@ -48,15 +63,82 @@
             --tooltip-text: #0f172a;
         }
 
+        * {
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             margin: 0;
-            padding: 20px;
+            padding: 30px 20px;
             display: flex;
             justify-content: center;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        /* FLOATING CONTROLS (POJOK KANAN ATAS) */
+        .floating-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .floating-lang-switch {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 30px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .floating-lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .floating-lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        }
+
+        .floating-theme-btn {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .floating-theme-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
         }
 
         .container {
@@ -64,8 +146,8 @@
             width: 100%;
             background: var(--panel-bg);
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             border: 1px solid var(--panel-border);
         }
 
@@ -83,26 +165,33 @@
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
-        h1 { margin: 0; font-size: 1.6rem; color: var(--accent-color); }
-        .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
-        .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
-
-        .theme-toggle-btn {
-            background: var(--toggle-bg);
-            color: var(--toggle-text);
-            border: 1px solid var(--nav-btn-border);
-            padding: 8px 14px;
-            border-radius: 20px;
-            cursor: pointer;
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            background: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
             font-size: 0.85rem;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            border: 1px solid var(--panel-border);
+            transition: all 0.2s ease;
         }
+
+        .btn-back:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; color: var(--accent-color); font-weight: 800; }
+        .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
+        .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
 
         .tab-menu {
             display: flex;
@@ -169,6 +258,12 @@
             color: var(--text-primary);
             box-sizing: border-box;
             font-size: 0.9rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         .btn-group {
@@ -298,81 +393,90 @@
 </head>
 <body>
 
+    <!-- FLOATING CONTROLS (MELAYANG DI POJOK KANAN ATAS) -->
+    <div class="floating-controls">
+        <div class="floating-lang-switch">
+            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        
+        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
+            <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+    </div>
+
 <div class="container">
     <header>
         <div>
-            <h1>Virtual Lab: Kinematics</h1>
-            <div class="subtitle">Lecturer: Nauval Franata, S.Si., M.T.</div>
-            <div class="univ-tag">Sultan Ageng Tirtayasa University</div>
+            <h1 id="header-title">Virtual Lab: Kinematics</h1>
+            <div class="subtitle" id="header-lecturer">Dosen Pengampu: Nauval Franata, S.Si., M.T.</div>
+            <div class="univ-tag">Universitas Sultan Ageng Tirtayasa</div>
         </div>
         <div class="header-actions">
-            <a href="physica.html" style="text-decoration: none; padding: 8px 14px; background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
-                🏠 Home
+            <a href="physica.html" class="btn-back" id="home-link">
+                <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Beranda</span>
             </a>
-            <button class="theme-toggle-btn" onclick="toggleTheme()">
-                <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
-            </button>
         </div>
     </header>
 
     <div class="tab-menu">
-        <button class="tab-btn active" onclick="switchTab('horizontalTab')">➡️ Linear Motion</button>
-        <button class="tab-btn" onclick="switchTab('verticalTab')">⬆️ Vertical Motion</button>
-        <button class="tab-btn" onclick="switchTab('projectileTab')">🎯 Projectile Motion</button>
-        <button class="tab-btn" onclick="switchTab('circularTab')">🔄 Circular Motion</button>
+        <button class="tab-btn active" id="tab-btn-h" onclick="switchTab('horizontalTab')">➡️ Gerak Lurus</button>
+        <button class="tab-btn" id="tab-btn-v" onclick="switchTab('verticalTab')">⬆️ Gerak Vertikal</button>
+        <button class="tab-btn" id="tab-btn-p" onclick="switchTab('projectileTab')">🎯 Gerak Parabola</button>
+        <button class="tab-btn" id="tab-btn-c" onclick="switchTab('circularTab')">🔄 Gerak Melingkar</button>
     </div>
 
     <!-- TAB 1: LINEAR MOTION -->
     <div id="horizontalTab" class="tab-content active">
         <div class="lab-grid">
             <div class="control-panel">
-                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Horizontal Parameters</h3>
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);" id="h-param-title">Parameter Horizontal</h3>
                 
                 <div class="form-group">
-                    <label for="hMode">Motion Type:</label>
+                    <label for="hMode" id="lbl-hMode">Jenis Gerak:</label>
                     <select id="hMode" onchange="toggleHAccGroup()">
-                        <option value="GLB">Uniform Motion (a = 0)</option>
-                        <option value="GLBB" selected>Accelerated Motion (a ≠ 0)</option>
+                        <option value="GLB" id="opt-glb">Gerak Lurus Beraturan (a = 0)</option>
+                        <option value="GLBB" selected id="opt-glbb">Gerak Lurus Berubah Beraturan (a ≠ 0)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="hX0">Initial Position (x₀) [m]:</label>
+                    <label for="hX0" id="lbl-hX0">Posisi Awal (x₀) [m]:</label>
                     <input type="number" id="hX0" value="0" step="1">
                 </div>
 
                 <div class="form-group">
-                    <label for="hV0">Initial Velocity (v₀) [m/s]:</label>
+                    <label for="hV0" id="lbl-hV0">Kecepatan Awal (v₀) [m/s]:</label>
                     <input type="number" id="hV0" value="5" step="0.5">
                 </div>
 
                 <div class="form-group" id="hAccGroup">
-                    <label for="hAcc">Acceleration (a) [m/s²]:</label>
+                    <label for="hAcc" id="lbl-hAcc">Percepatan (a) [m/s²]:</label>
                     <input type="number" id="hAcc" value="2" step="0.5">
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn" id="hStartBtn" onclick="toggleHSim()">Start</button>
-                    <button class="btn btn-reset" onclick="resetHSim()">Reset</button>
+                    <button class="btn btn-start" id="hStartBtn" onclick="toggleHSim()">Mulai</button>
+                    <button class="btn btn-reset" id="hResetBtn" onclick="resetHSim()">Reset</button>
                 </div>
             </div>
 
             <div>
                 <div class="telemetry">
-                    <div>Time (t)<span id="hDispT">0.00 s</span></div>
-                    <div>Position (x)<span id="hDispX">0.00 m</span></div>
-                    <div>Velocity (v)<span id="hDispV">0.00 m/s</span></div>
+                    <div id="lbl-tel-hT">Waktu (t)<span id="hDispT">0.00 s</span></div>
+                    <div id="lbl-tel-hX">Posisi (x)<span id="hDispX">0.00 m</span></div>
+                    <div id="lbl-tel-hV">Kecepatan (v)<span id="hDispV">0.00 m/s</span></div>
                 </div>
 
                 <div class="canvas-container">
                     <div>
-                        <div class="section-title">Visual Motion Track</div>
+                        <div class="section-title" id="lbl-hTrack">Lintasan Gerak Visual</div>
                         <canvas id="hSimCanvas" height="100"></canvas>
                     </div>
                     <div>
                         <div class="section-title">
-                            <span>Position vs Time Graph (x - t)</span>
-                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover graph to inspect</small>
+                            <span id="lbl-hGraphTitle">Grafik Posisi vs Waktu (x - t)</span>
+                            <small style="color:var(--accent-color); font-weight:normal;" id="lbl-hGraphHint">💡 Sorot grafik untuk melihat nilai</small>
                         </div>
                         <div class="graph-wrapper">
                             <canvas id="hGraphCanvas" height="140"></canvas>
@@ -388,56 +492,56 @@
     <div id="verticalTab" class="tab-content">
         <div class="lab-grid">
             <div class="control-panel">
-                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Vertical Parameters</h3>
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);" id="v-param-title">Parameter Vertikal</h3>
                 
                 <div class="form-group">
-                    <label for="vMode">Motion Type:</label>
+                    <label for="vMode" id="lbl-vMode">Jenis Gerak:</label>
                     <select id="vMode" onchange="toggleVModeInputs()">
-                        <option value="GJB">Free Fall (v₀ = 0)</option>
-                        <option value="GVA" selected>Thrown Upward (v₀ > 0)</option>
-                        <option value="GVB">Thrown Downward (v₀ < 0)</option>
+                        <option value="GJB" id="opt-gjb">Gerak Jatuh Bebas (v₀ = 0)</option>
+                        <option value="GVA" selected id="opt-gva">Gerak Vertikal ke Atas (v₀ > 0)</option>
+                        <option value="GVB" id="opt-gvb">Gerak Vertikal ke Bawah (v₀ < 0)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="vY0">Initial Height (y₀) [m]:</label>
+                    <label for="vY0" id="lbl-vY0">Ketinggian Awal (y₀) [m]:</label>
                     <input type="number" id="vY0" value="0" step="1" min="0" max="100">
                 </div>
 
                 <div class="form-group" id="vV0Group">
-                    <label for="vV0">Initial Speed (|v₀|) [m/s]:</label>
+                    <label for="vV0" id="lbl-vV0">Kelajuan Awal (|v₀|) [m/s]:</label>
                     <input type="number" id="vV0" value="20" step="0.5" min="0">
                 </div>
 
                 <div class="form-group">
-                    <label for="vGravity">Gravity (g) [m/s²]:</label>
+                    <label for="vGravity" id="lbl-vGravity">Gravitasi (g) [m/s²]:</label>
                     <input type="number" id="vGravity" value="9.8" step="0.1" min="0">
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn" id="vStartBtn" onclick="toggleVSim()">Start</button>
-                    <button class="btn btn-reset" onclick="resetVSim()">Reset</button>
+                    <button class="btn btn-start" id="vStartBtn" onclick="toggleVSim()">Mulai</button>
+                    <button class="btn btn-reset" id="vResetBtn" onclick="resetVSim()">Reset</button>
                 </div>
             </div>
 
             <div>
                 <div class="telemetry">
-                    <div>Time (t)<span id="vDispT">0.00 s</span></div>
-                    <div>Height (y)<span id="vDispY">0.00 m</span></div>
-                    <div>Velocity (v)<span id="vDispV">0.00 m/s</span></div>
+                    <div id="lbl-tel-vT">Waktu (t)<span id="vDispT">0.00 s</span></div>
+                    <div id="lbl-tel-vY">Ketinggian (y)<span id="vDispY">0.00 m</span></div>
+                    <div id="lbl-tel-vV">Kecepatan (v)<span id="vDispV">0.00 m/s</span></div>
                 </div>
 
                 <div class="summary-card">
                     <div class="summary-item">
-                        <span>Max Height (y_max)</span>
+                        <span id="lbl-vYMax">Tinggi Maks (y_max)</span>
                         <strong id="vSummaryYMax">0.00 m</strong>
                     </div>
                     <div class="summary-item">
-                        <span>Peak Time (t_peak)</span>
+                        <span id="lbl-vTPeak">Waktu Puncak (t_puncak)</span>
                         <strong id="vSummaryTPeak">0.00 s</strong>
                     </div>
                     <div class="summary-item">
-                        <span>Total Time (t_total)</span>
+                        <span id="lbl-vTTotal">Waktu Total (t_total)</span>
                         <strong id="vSummaryTTotal">0.00 s</strong>
                     </div>
                 </div>
@@ -445,13 +549,13 @@
                 <!-- DUAL DISPLAY: SIMULASI VISUAL & GRAFIK GRAFIK Y-T -->
                 <div class="dual-canvas-grid">
                     <div>
-                        <div class="section-title">Motion Track</div>
+                        <div class="section-title" id="lbl-vTrack">Lintasan Gerak</div>
                         <canvas id="vSimCanvas" height="220"></canvas>
                     </div>
                     <div>
                         <div class="section-title">
-                            <span>Height vs Time Graph (y - t)</span>
-                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover to inspect</small>
+                            <span id="lbl-vGraphTitle">Grafik Ketinggian vs Waktu (y - t)</span>
+                            <small style="color:var(--accent-color); font-weight:normal;" id="lbl-vGraphHint">💡 Sorot grafik untuk melihat nilai</small>
                         </div>
                         <div class="graph-wrapper">
                             <canvas id="vGraphCanvas" height="220"></canvas>
@@ -467,52 +571,52 @@
     <div id="projectileTab" class="tab-content">
         <div class="lab-grid">
             <div class="control-panel">
-                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Projectile Parameters</h3>
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);" id="p-param-title">Parameter Parabola</h3>
                 
                 <div class="form-group">
-                    <label for="pV0">Initial Velocity (v₀) [m/s]:</label>
+                    <label for="pV0" id="lbl-pV0">Kecepatan Awal (v₀) [m/s]:</label>
                     <input type="number" id="pV0" value="25" step="1" min="0">
                 </div>
 
                 <div class="form-group">
-                    <label for="pAngle">Launch Angle (θ) [°]:</label>
+                    <label for="pAngle" id="lbl-pAngle">Sudut Elevasi (θ) [°]:</label>
                     <input type="number" id="pAngle" value="45" step="1" min="0" max="90">
                 </div>
 
                 <div class="form-group">
-                    <label for="pY0">Initial Height (y₀) [m]:</label>
+                    <label for="pY0" id="lbl-pY0">Ketinggian Awal (y₀) [m]:</label>
                     <input type="number" id="pY0" value="0" step="1" min="0">
                 </div>
 
                 <div class="form-group">
-                    <label for="pGravity">Gravity (g) [m/s²]:</label>
+                    <label for="pGravity" id="lbl-pGravity">Gravitasi (g) [m/s²]:</label>
                     <input type="number" id="pGravity" value="9.8" step="0.1" min="0">
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn" id="pStartBtn" onclick="togglePSim()">Start</button>
-                    <button class="btn btn-reset" onclick="resetPSim()">Reset</button>
+                    <button class="btn btn-start" id="pStartBtn" onclick="togglePSim()">Mulai</button>
+                    <button class="btn btn-reset" id="pResetBtn" onclick="resetPSim()">Reset</button>
                 </div>
             </div>
 
             <div>
                 <div class="telemetry">
-                    <div>Time (t)<span id="pDispT">0.00 s</span></div>
-                    <div>Pos X (x)<span id="pDispX">0.00 m</span></div>
-                    <div>Pos Y (y)<span id="pDispY">0.00 m</span></div>
+                    <div id="lbl-tel-pT">Waktu (t)<span id="pDispT">0.00 s</span></div>
+                    <div id="lbl-tel-pX">Posisi X (x)<span id="pDispX">0.00 m</span></div>
+                    <div id="lbl-tel-pY">Posisi Y (y)<span id="pDispY">0.00 m</span></div>
                 </div>
 
                 <div class="summary-card">
                     <div class="summary-item">
-                        <span>Max Height (y_max)</span>
+                        <span id="lbl-pYMax">Tinggi Maks (y_max)</span>
                         <strong id="pSummaryYMax">0.00 m</strong>
                     </div>
                     <div class="summary-item">
-                        <span>Max Range (x_max)</span>
+                        <span id="lbl-pXMax">Jangkauan Maks (x_max)</span>
                         <strong id="pSummaryXMax">0.00 m</strong>
                     </div>
                     <div class="summary-item">
-                        <span>Total Time (t_total)</span>
+                        <span id="lbl-pTTotal">Waktu Total (t_total)</span>
                         <strong id="pSummaryTTotal">0.00 s</strong>
                     </div>
                 </div>
@@ -520,8 +624,8 @@
                 <div class="canvas-container">
                     <div>
                         <div class="section-title">
-                            <span>Trajectory Graph (y - x)</span>
-                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover graph to inspect point</small>
+                            <span id="lbl-pGraphTitle">Grafik Trajektori (y - x)</span>
+                            <small style="color:var(--accent-color); font-weight:normal;" id="lbl-pGraphHint">💡 Sorot grafik untuk melihat titik</small>
                         </div>
                         <div class="graph-wrapper">
                             <canvas id="pSimCanvas" height="220"></canvas>
@@ -537,34 +641,34 @@
     <div id="circularTab" class="tab-content">
         <div class="lab-grid">
             <div class="control-panel">
-                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Circular Parameters</h3>
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);" id="c-param-title">Parameter Melingkar</h3>
                 
                 <div class="form-group">
-                    <label for="cRadius">Radius (r) [m]:</label>
+                    <label for="cRadius" id="lbl-cRadius">Jari-jari (r) [m]:</label>
                     <input type="number" id="cRadius" value="5" step="0.5" min="1">
                 </div>
 
                 <div class="form-group">
-                    <label for="cOmega">Angular Velocity (ω) [rad/s]:</label>
+                    <label for="cOmega" id="lbl-cOmega">Kecepatan Sudut (ω) [rad/s]:</label>
                     <input type="number" id="cOmega" value="2" step="0.2">
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn" id="cStartBtn" onclick="toggleCSim()">Start</button>
-                    <button class="btn btn-reset" onclick="resetCSim()">Reset</button>
+                    <button class="btn btn-start" id="cStartBtn" onclick="toggleCSim()">Mulai</button>
+                    <button class="btn btn-reset" id="cResetBtn" onclick="resetCSim()">Reset</button>
                 </div>
             </div>
 
             <div>
                 <div class="telemetry">
-                    <div>Time (t)<span id="cDispT">0.00 s</span></div>
-                    <div>Linear Speed (v)<span id="cDispV">0.00 m/s</span></div>
-                    <div>Centripetal Acc (aₛ)<span id="cDispAs">0.00 m/s²</span></div>
+                    <div id="lbl-tel-cT">Waktu (t)<span id="cDispT">0.00 s</span></div>
+                    <div id="lbl-tel-cV">Kelajuan Linear (v)<span id="cDispV">0.00 m/s</span></div>
+                    <div id="lbl-tel-cAs">Percepatan Sentripetal (aₛ)<span id="cDispAs">0.00 m/s²</span></div>
                 </div>
 
                 <div class="canvas-container">
                     <div>
-                        <div class="section-title">Visual Circular Motion</div>
+                        <div class="section-title" id="lbl-cTrack">Visual Gerak Melingkar</div>
                         <canvas id="cSimCanvas" height="220"></canvas>
                     </div>
                 </div>
@@ -574,24 +678,250 @@
 </div>
 
 <script>
-    function initTheme() {
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        updateToggleBtnUI(savedTheme);
+    // System Translations
+    const translations = {
+        id: {
+            pageTitle: "Virtual Lab: Kinematika - Physica",
+            headerTitle: "Virtual Lab: Kinematika",
+            lecturer: "Dosen Pengampu: Nauval Franata, S.Si., M.T.",
+            homeText: "Kembali ke Beranda",
+            tabH: "➡️ Gerak Lurus",
+            tabV: "⬆️ Gerak Vertikal",
+            tabP: "🎯 Gerak Parabola",
+            tabC: "🔄 Gerak Melingkar",
+            hParamTitle: "Parameter Horizontal",
+            vParamTitle: "Parameter Vertikal",
+            pParamTitle: "Parameter Parabola",
+            cParamTitle: "Parameter Melingkar",
+            lblMode: "Jenis Gerak:",
+            optGlb: "Gerak Lurus Beraturan (a = 0)",
+            optGlbb: "Gerak Lurus Berubah Beraturan (a ≠ 0)",
+            lblX0: "Posisi Awal (x₀) [m]:",
+            lblV0: "Kecepatan Awal (v₀) [m/s]:",
+            lblAcc: "Percepatan (a) [m/s²]:",
+            optGjb: "Gerak Jatuh Bebas (v₀ = 0)",
+            optGva: "Gerak Vertikal ke Atas (v₀ > 0)",
+            optGvb: "Gerak Vertikal ke Bawah (v₀ < 0)",
+            lblY0: "Ketinggian Awal (y₀) [m]:",
+            lblV0Abs: "Kelajuan Awal (|v₀|) [m/s]:",
+            lblGravity: "Gravitasi (g) [m/s²]:",
+            lblAngle: "Sudut Elevasi (θ) [°]:",
+            lblRadius: "Jari-jari (r) [m]:",
+            lblOmega: "Kecepatan Sudut (ω) [rad/s]:",
+            btnStart: "Mulai",
+            btnPause: "Jeda",
+            btnReset: "Reset",
+            lblTime: "Waktu (t)",
+            lblPos: "Posisi (x)",
+            lblVel: "Kecepatan (v)",
+            lblHeight: "Ketinggian (y)",
+            lblPosX: "Posisi X (x)",
+            lblPosY: "Posisi Y (y)",
+            lblSpeed: "Kelajuan Linear (v)",
+            lblCentripetal: "Percepatan Sentripetal (aₛ)",
+            lblYMax: "Tinggi Maks (y_max)",
+            lblTPeak: "Waktu Puncak (t_puncak)",
+            lblTTotal: "Waktu Total (t_total)",
+            lblXMax: "Jangkauan Maks (x_max)",
+            lblHTrack: "Lintasan Gerak Visual",
+            lblHGraphTitle: "Grafik Posisi vs Waktu (x - t)",
+            lblGraphHint: "💡 Sorot grafik untuk melihat nilai",
+            lblVTrack: "Lintasan Gerak",
+            lblVGraphTitle: "Grafik Ketinggian vs Waktu (y - t)",
+            lblPGraphTitle: "Grafik Trajektori (y - x)",
+            lblPGraphHint: "💡 Sorot grafik untuk melihat titik",
+            lblCTrack: "Visual Gerak Melingkar"
+        },
+        en: {
+            pageTitle: "Virtual Lab: Kinematics - Physica",
+            headerTitle: "Virtual Lab: Kinematics",
+            lecturer: "Lecturer: Nauval Franata, S.Si., M.T.",
+            homeText: "Back to Home",
+            tabH: "➡️ Linear Motion",
+            tabV: "⬆️ Vertical Motion",
+            tabP: "🎯 Projectile Motion",
+            tabC: "🔄 Circular Motion",
+            hParamTitle: "Horizontal Parameters",
+            vParamTitle: "Vertical Parameters",
+            pParamTitle: "Projectile Parameters",
+            cParamTitle: "Circular Parameters",
+            lblMode: "Motion Type:",
+            optGlb: "Uniform Motion (a = 0)",
+            optGlbb: "Accelerated Motion (a ≠ 0)",
+            lblX0: "Initial Position (x₀) [m]:",
+            lblV0: "Initial Velocity (v₀) [m/s]:",
+            lblAcc: "Acceleration (a) [m/s²]:",
+            optGjb: "Free Fall (v₀ = 0)",
+            optGva: "Thrown Upward (v₀ > 0)",
+            optGvb: "Thrown Downward (v₀ < 0)",
+            lblY0: "Initial Height (y₀) [m]:",
+            lblV0Abs: "Initial Speed (|v₀|) [m/s]:",
+            lblGravity: "Gravity (g) [m/s²]:",
+            lblAngle: "Launch Angle (θ) [°]:",
+            lblRadius: "Radius (r) [m]:",
+            lblOmega: "Angular Velocity (ω) [rad/s]:",
+            btnStart: "Start",
+            btnPause: "Pause",
+            btnReset: "Reset",
+            lblTime: "Time (t)",
+            lblPos: "Position (x)",
+            lblVel: "Velocity (v)",
+            lblHeight: "Height (y)",
+            lblPosX: "Pos X (x)",
+            lblPosY: "Pos Y (y)",
+            lblSpeed: "Linear Speed (v)",
+            lblCentripetal: "Centripetal Acc (aₛ)",
+            lblYMax: "Max Height (y_max)",
+            lblTPeak: "Peak Time (t_peak)",
+            lblTTotal: "Total Time (t_total)",
+            lblXMax: "Max Range (x_max)",
+            lblHTrack: "Visual Motion Track",
+            lblHGraphTitle: "Position vs Time Graph (x - t)",
+            lblGraphHint: "💡 Hover graph to inspect",
+            lblVTrack: "Motion Track",
+            lblVGraphTitle: "Height vs Time Graph (y - t)",
+            lblPGraphTitle: "Trajectory Graph (y - x)",
+            lblPGraphHint: "💡 Hover graph to inspect point",
+            lblCTrack: "Visual Circular Motion"
+        }
+    };
+
+    let currentLang = 'id';
+    let currentTheme = 'light';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('user_lang') || 'id';
+        setLanguage(savedLang);
+
+        const savedTheme = localStorage.getItem('user_theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        resizeAllCanvases();
+    });
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('user_lang', lang);
+        
+        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        
+        document.documentElement.lang = lang;
+
+        updateUIStaticText();
     }
 
     function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('theme', newTheme);
-        updateToggleBtnUI(newTheme);
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        localStorage.setItem('user_theme', theme);
+        
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        const icon = document.getElementById('theme-icon');
+        if (theme === 'dark') {
+            icon.className = 'fa-solid fa-sun';
+        } else {
+            icon.className = 'fa-solid fa-moon';
+        }
+
         resetHSim(); resetVSim(); resetPSim(); resetCSim();
     }
 
-    function updateToggleBtnUI(theme) {
-        document.getElementById('theme-icon').innerText = theme === 'dark' ? '☀️' : '🌙';
-        document.getElementById('theme-text').innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    function updateUIStaticText() {
+        const t = translations[currentLang];
+        document.getElementById('page-title').innerText = t.pageTitle;
+        document.getElementById('header-title').innerText = t.headerTitle;
+        document.getElementById('header-lecturer').innerText = t.lecturer;
+        document.getElementById('home-text').innerText = t.homeText;
+
+        document.getElementById('tab-btn-h').innerText = t.tabH;
+        document.getElementById('tab-btn-v').innerText = t.tabV;
+        document.getElementById('tab-btn-p').innerText = t.tabP;
+        document.getElementById('tab-btn-c').innerText = t.tabC;
+
+        document.getElementById('h-param-title').innerText = t.hParamTitle;
+        document.getElementById('v-param-title').innerText = t.vParamTitle;
+        document.getElementById('p-param-title').innerText = t.pParamTitle;
+        document.getElementById('c-param-title').innerText = t.cParamTitle;
+
+        document.getElementById('lbl-hMode').innerText = t.lblMode;
+        document.getElementById('opt-glb').innerText = t.optGlb;
+        document.getElementById('opt-glbb').innerText = t.optGlbb;
+        document.getElementById('lbl-hX0').innerText = t.lblX0;
+        document.getElementById('lbl-hV0').innerText = t.lblV0;
+        document.getElementById('lbl-hAcc').innerText = t.lblAcc;
+
+        document.getElementById('lbl-vMode').innerText = t.lblMode;
+        document.getElementById('opt-gjb').innerText = t.optGjb;
+        document.getElementById('opt-gva').innerText = t.optGva;
+        document.getElementById('opt-gvb').innerText = t.optGvb;
+        document.getElementById('lbl-vY0').innerText = t.lblY0;
+        document.getElementById('lbl-vV0').innerText = t.lblV0Abs;
+        document.getElementById('lbl-vGravity').innerText = t.lblGravity;
+
+        document.getElementById('lbl-pV0').innerText = t.lblV0;
+        document.getElementById('lbl-pAngle').innerText = t.lblAngle;
+        document.getElementById('lbl-pY0').innerText = t.lblY0;
+        document.getElementById('lbl-pGravity').innerText = t.lblGravity;
+
+        document.getElementById('lbl-cRadius').innerText = t.lblRadius;
+        document.getElementById('lbl-cOmega').innerText = t.lblOmega;
+
+        document.getElementById('hStartBtn').innerText = isHRunning ? t.btnPause : t.btnStart;
+        document.getElementById('hResetBtn').innerText = t.btnReset;
+        document.getElementById('vStartBtn').innerText = isVRunning ? t.btnPause : t.btnStart;
+        document.getElementById('vResetBtn').innerText = t.btnReset;
+        document.getElementById('pStartBtn').innerText = isPRunning ? t.btnPause : t.btnStart;
+        document.getElementById('pResetBtn').innerText = t.btnReset;
+        document.getElementById('cStartBtn').innerText = isCRunning ? t.btnPause : t.btnStart;
+        document.getElementById('cResetBtn').innerText = t.btnReset;
+
+        document.getElementById('lbl-tel-hT').childNodes[0].nodeValue = t.lblTime;
+        document.getElementById('lbl-tel-hX').childNodes[0].nodeValue = t.lblPos;
+        document.getElementById('lbl-tel-hV').childNodes[0].nodeValue = t.lblVel;
+
+        document.getElementById('lbl-tel-vT').childNodes[0].nodeValue = t.lblTime;
+        document.getElementById('lbl-tel-vY').childNodes[0].nodeValue = t.lblHeight;
+        document.getElementById('lbl-tel-vV').childNodes[0].nodeValue = t.lblVel;
+
+        document.getElementById('lbl-tel-pT').childNodes[0].nodeValue = t.lblTime;
+        document.getElementById('lbl-tel-pX').childNodes[0].nodeValue = t.lblPosX;
+        document.getElementById('lbl-tel-pY').childNodes[0].nodeValue = t.lblPosY;
+
+        document.getElementById('lbl-tel-cT').childNodes[0].nodeValue = t.lblTime;
+        document.getElementById('lbl-tel-cV').childNodes[0].nodeValue = t.lblSpeed;
+        document.getElementById('lbl-tel-cAs').childNodes[0].nodeValue = t.lblCentripetal;
+
+        document.getElementById('lbl-vYMax').innerText = t.lblYMax;
+        document.getElementById('lbl-vTPeak').innerText = t.lblTPeak;
+        document.getElementById('lbl-vTTotal').innerText = t.lblTTotal;
+
+        document.getElementById('lbl-pYMax').innerText = t.lblYMax;
+        document.getElementById('lbl-pXMax').innerText = t.lblXMax;
+        document.getElementById('lbl-pTTotal').innerText = t.lblTTotal;
+
+        document.getElementById('lbl-hTrack').innerText = t.lblHTrack;
+        document.getElementById('lbl-hGraphTitle').innerText = t.lblHGraphTitle;
+        document.getElementById('lbl-hGraphHint').innerText = t.lblGraphHint;
+
+        document.getElementById('lbl-vTrack').innerText = t.lblVTrack;
+        document.getElementById('lbl-vGraphTitle').innerText = t.lblVGraphTitle;
+        document.getElementById('lbl-vGraphHint').innerText = t.lblGraphHint;
+
+        document.getElementById('lbl-pGraphTitle').innerText = t.lblPGraphTitle;
+        document.getElementById('lbl-pGraphHint').innerText = t.lblPGraphHint;
+
+        document.getElementById('lbl-cTrack').innerText = t.lblCTrack;
     }
 
     function switchTab(tabId) {
@@ -693,7 +1023,8 @@
 
     function toggleHSim() {
         isHRunning = !isHRunning;
-        document.getElementById('hStartBtn').innerText = isHRunning ? 'Pause' : 'Start';
+        const t = translations[currentLang];
+        document.getElementById('hStartBtn').innerText = isHRunning ? t.btnPause : t.btnStart;
         if (isHRunning) updateHSim(); else cancelAnimationFrame(hAnimId);
     }
 
@@ -882,7 +1213,8 @@
 
     function toggleVSim() {
         isVRunning = !isVRunning;
-        document.getElementById('vStartBtn').innerText = isVRunning ? 'Pause' : 'Start';
+        const t = translations[currentLang];
+        document.getElementById('vStartBtn').innerText = isVRunning ? t.btnPause : t.btnStart;
         if (isVRunning) updateVSim(); else cancelAnimationFrame(vAnimId);
     }
 
@@ -975,13 +1307,12 @@
 
     function calculatePSummary() {
         const v0 = parseFloat(document.getElementById('pV0').value) || 0;
-        const angleDeg = parseFloat(document.getElementById('pAngle').value) || 0;
-        const angleRad = angleDeg * Math.PI / 180;
+        const angle = (parseFloat(document.getElementById('pAngle').value) || 0) * (Math.PI / 180);
         const y0 = parseFloat(document.getElementById('pY0').value) || 0;
         const g = parseFloat(document.getElementById('pGravity').value) || 9.8;
 
-        let v0y = v0 * Math.sin(angleRad);
-        let v0x = v0 * Math.cos(angleRad);
+        let v0x = v0 * Math.cos(angle);
+        let v0y = v0 * Math.sin(angle);
 
         let yMax = y0 + (v0y * v0y) / (2 * g);
 
@@ -993,6 +1324,7 @@
             let t2 = (-b - Math.sqrt(det)) / (2 * a);
             tTotal = Math.max(t1, t2);
         }
+
         let xMax = v0x * tTotal;
 
         document.getElementById('pSummaryYMax').innerText = yMax.toFixed(2) + ' m';
@@ -1002,18 +1334,21 @@
 
     function updatePSim() {
         const v0 = parseFloat(document.getElementById('pV0').value) || 0;
-        const angleRad = (parseFloat(document.getElementById('pAngle').value) || 0) * Math.PI / 180;
+        const angle = (parseFloat(document.getElementById('pAngle').value) || 0) * (Math.PI / 180);
         const y0 = parseFloat(document.getElementById('pY0').value) || 0;
         const g = parseFloat(document.getElementById('pGravity').value) || 9.8;
 
-        let x = v0 * Math.cos(angleRad) * pT;
-        let y = y0 + (v0 * Math.sin(angleRad) * pT) - (0.5 * g * pT * pT);
+        let v0x = v0 * Math.cos(angle);
+        let v0y = v0 * Math.sin(angle);
+
+        let x = v0x * pT;
+        let y = y0 + (v0y * pT) - (0.5 * g * pT * pT);
 
         document.getElementById('pDispT').innerText = pT.toFixed(2) + ' s';
         document.getElementById('pDispX').innerText = Math.max(x, 0).toFixed(2) + ' m';
         document.getElementById('pDispY').innerText = Math.max(y, 0).toFixed(2) + ' m';
 
-        if (y >= 0) pTrajectory.push({ t: pT, x: x, y: y });
+        pTrajectory.push({ t: pT, x: Math.max(x, 0), y: Math.max(y, 0) });
         drawPGraph();
 
         if (pT > 0.1 && y <= 0) { togglePSim(); return; }
@@ -1023,7 +1358,8 @@
 
     function togglePSim() {
         isPRunning = !isPRunning;
-        document.getElementById('pStartBtn').innerText = isPRunning ? 'Pause' : 'Start';
+        const t = translations[currentLang];
+        document.getElementById('pStartBtn').innerText = isPRunning ? t.btnPause : t.btnStart;
         if (isPRunning) updatePSim(); else cancelAnimationFrame(pAnimId);
     }
 
@@ -1039,7 +1375,12 @@
         drawPGraph();
     }
 
-    function resizePCanvas() { if(pSimCanvas.parentElement) { pSimCanvas.width = pSimCanvas.parentElement.clientWidth; resetPSim(); } }
+    function resizePCanvas() {
+        if(pSimCanvas.parentElement) {
+            pSimCanvas.width = pSimCanvas.parentElement.clientWidth;
+            resetPSim();
+        }
+    }
 
     pSimCanvas.addEventListener('mousemove', (e) => {
         if (pTrajectory.length < 2) return;
@@ -1067,47 +1408,72 @@
     });
 
 
-    // --- 4. CIRCULAR MOTION ---
+    // --- 4. CIRCULAR MOTION ENGINE ---
     const cSimCanvas = document.getElementById('cSimCanvas');
     const cSimCtx = cSimCanvas.getContext('2d');
     let isCRunning = false, cAnimId, cT = 0, cDt = 0.03;
 
-    function drawCBall(r, omega) {
+    function drawCVisual(theta) {
         cSimCtx.clearRect(0, 0, cSimCanvas.width, cSimCanvas.height);
         let centerX = cSimCanvas.width / 2;
         let centerY = cSimCanvas.height / 2;
-        let scaleR = Math.min(centerX, centerY) - 25;
+        let rPx = Math.min(centerX, centerY) - 25;
 
-        cSimCtx.beginPath(); cSimCtx.arc(centerX, centerY, scaleR, 0, Math.PI * 2);
-        cSimCtx.strokeStyle = '#cbd5e1'; cSimCtx.lineWidth = 2; cSimCtx.stroke();
+        // Circular Path
+        cSimCtx.beginPath();
+        cSimCtx.arc(centerX, centerY, rPx, 0, Math.PI * 2);
+        cSimCtx.strokeStyle = '#cbd5e1';
+        cSimCtx.lineWidth = 2;
+        cSimCtx.stroke();
 
-        let theta = omega * cT;
-        let ballX = centerX + scaleR * Math.cos(theta);
-        let ballY = centerY - scaleR * Math.sin(theta);
+        // Center Point
+        cSimCtx.beginPath();
+        cSimCtx.arc(centerX, centerY, 4, 0, Math.PI * 2);
+        cSimCtx.fillStyle = '#94a3b8';
+        cSimCtx.fill();
 
-        cSimCtx.beginPath(); cSimCtx.moveTo(centerX, centerY); cSimCtx.lineTo(ballX, ballY);
-        cSimCtx.strokeStyle = '#94a3b8'; cSimCtx.stroke();
+        // Ball Position
+        let x = centerX + rPx * Math.cos(theta);
+        let y = centerY - rPx * Math.sin(theta);
 
-        cSimCtx.beginPath(); cSimCtx.arc(ballX, ballY, 10, 0, Math.PI * 2);
-        cSimCtx.fillStyle = '#10b981'; cSimCtx.fill();
+        // Radius Line
+        cSimCtx.beginPath();
+        cSimCtx.moveTo(centerX, centerY);
+        cSimCtx.lineTo(x, y);
+        cSimCtx.strokeStyle = '#38bdf8';
+        cSimCtx.setLineDash([3, 3]);
+        cSimCtx.stroke();
+        cSimCtx.setLineDash([]);
+
+        // Ball
+        cSimCtx.beginPath();
+        cSimCtx.arc(x, y, 10, 0, Math.PI * 2);
+        cSimCtx.fillStyle = '#0284c7';
+        cSimCtx.fill();
     }
 
     function updateCSim() {
         const r = parseFloat(document.getElementById('cRadius').value) || 1;
         const omega = parseFloat(document.getElementById('cOmega').value) || 0;
 
-        document.getElementById('cDispT').innerText = cT.toFixed(2) + ' s';
-        document.getElementById('cDispV').innerText = Math.abs(omega * r).toFixed(2) + ' m/s';
-        document.getElementById('cDispAs').innerText = (omega * omega * r).toFixed(2) + ' m/s²';
+        let v = omega * r;
+        let as = omega * omega * r;
+        let theta = omega * cT;
 
-        drawCBall(r, omega);
+        document.getElementById('cDispT').innerText = cT.toFixed(2) + ' s';
+        document.getElementById('cDispV').innerText = v.toFixed(2) + ' m/s';
+        document.getElementById('cDispAs').innerText = as.toFixed(2) + ' m/s²';
+
+        drawCVisual(theta);
+
         cT += cDt;
         if (isCRunning) cAnimId = requestAnimationFrame(updateCSim);
     }
 
     function toggleCSim() {
         isCRunning = !isCRunning;
-        document.getElementById('cStartBtn').innerText = isCRunning ? 'Pause' : 'Start';
+        const t = translations[currentLang];
+        document.getElementById('cStartBtn').innerText = isCRunning ? t.btnPause : t.btnStart;
         if (isCRunning) updateCSim(); else cancelAnimationFrame(cAnimId);
     }
 
@@ -1116,21 +1482,25 @@
         cT = 0;
         const r = parseFloat(document.getElementById('cRadius').value) || 1;
         const omega = parseFloat(document.getElementById('cOmega').value) || 0;
+        let v = omega * r;
+        let as = omega * omega * r;
+
         document.getElementById('cDispT').innerText = '0.00 s';
-        document.getElementById('cDispV').innerText = Math.abs(omega * r).toFixed(2) + ' m/s';
-        document.getElementById('cDispAs').innerText = (omega * omega * r).toFixed(2) + ' m/s²';
-        drawCBall(r, omega);
+        document.getElementById('cDispV').innerText = v.toFixed(2) + ' m/s';
+        document.getElementById('cDispAs').innerText = as.toFixed(2) + ' m/s²';
+        drawCVisual(0);
     }
 
-    function resizeCCanvas() { if(cSimCanvas.parentElement) { cSimCanvas.width = cSimCanvas.parentElement.clientWidth; resetCSim(); } }
+    function resizeCCanvas() {
+        if (cSimCanvas.parentElement) {
+            cSimCanvas.width = cSimCanvas.parentElement.clientWidth;
+            resetCSim();
+        }
+    }
 
-    window.addEventListener('resize', resizeAllCanvases);
-
-    initTheme();
-    toggleHAccGroup();
-    toggleVModeInputs();
-    resizeAllCanvases();
+    window.addEventListener('resize', () => {
+        resizeAllCanvases();
+    });
 </script>
-
 </body>
 </html>

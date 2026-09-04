@@ -148,6 +148,36 @@
         .container {
             max-width: 950px;
             width: 100%;
+        }
+
+        /* HEADER & COURSE INFO (Luar Kotak Utama) */
+        .course-info-banner {
+            margin-bottom: 20px;
+            padding: 0 5px;
+        }
+
+        .course-title-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .course-dept {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .main-card {
             background: var(--card-bg);
             padding: 25px;
             border-radius: 16px;
@@ -194,8 +224,6 @@
         }
 
         h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
-        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
-        .univ-tag { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
 
         /* Progress Card Styling */
         .progress-card {
@@ -490,226 +518,232 @@
     </div>
 
 <div class="container">
-    <header>
-        <div>
-            <h1 id="header-title">Panduan Praktikum Interaktif: Headless Setup Raspberry Pi Zero 2 W</h1>
-            <div class="subtitle" id="header-course">Mata Kuliah: Sistem Tertanam (TEL624307) — Pertemuan 9</div>
-            <div class="univ-tag" id="header-univ">Jurusan Teknik Elektro, Universitas Sultan Ageng Tirtayasa</div>
-        </div>
-        <div class="header-actions">
-            <a href="physica.html" class="btn-back" id="home-link">
-                <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Beranda</span>
-            </a>
-        </div>
-    </header>
-
-    <!-- Progress Indicator Interaktif -->
-    <div class="progress-card">
-        <div class="progress-title">
-            <span id="progress-title-text">Kemajuan Praktikum Anda</span>
-            <span id="progress-text">0% Selesai (0/5 Checkpoint)</span>
-        </div>
-        <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="progress-bar"></div>
-        </div>
+    <!-- INFORMASI KURSUS DI LUAR KOTAK UTAMA (Posisikan di Atas Kotak) -->
+    <div class="course-info-banner">
+        <div class="course-title-tag" id="course-tag">Course: Embedded Systems — Meeting 9</div>
+        <div class="course-dept" id="dept-tag">Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa</div>
     </div>
 
-    <!-- Info Target Pembelajaran -->
-    <div class="task-card">
-        <h3 id="target-title">Target Pembelajaran (SubCPMK-002-2-1)</h3>
-        <p id="target-desc">Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi, termasuk instalasi OS, struktur Linux, terminal, konfigurasi SSH, dan komunikasi jaringan secara <i>headless</i> (tanpa monitor, keyboard, dan mouse tambahan).</p>
-    </div>
+    <!-- KOTAK UTAMA PANDUAN PRAKTIKUM -->
+    <div class="main-card">
+        <header>
+            <div>
+                <h1 id="header-title">Panduan Praktikum Interaktif: Headless Setup Raspberry Pi Zero 2 W</h1>
+            </div>
+            <div class="header-actions">
+                <a href="pi.html" class="btn-back" id="home-link">
+                    <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Raspberry Pi</span>
+                </a>
+            </div>
+        </header>
 
-    <!-- Parameter Akses Sistem -->
-    <div class="card" style="margin-bottom: 20px;">
-        <h3 id="params-title">Parameter Akses Sistem (Pra-Konfigurasi)</h3>
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc">Gunakan kredensial berikut selama seluruh alur praktikum:</p>
-        <ul>
-            <li><strong id="param-host-label">Hostname:</strong> <code>apeldua</code> (<span id="param-domain-label">Domain lokal:</span> <code>apeldua.local</code>)</li>
-            <li><strong id="param-user-label">Username:</strong> <code>apel</code></li>
-            <li><strong id="param-pass-label">Password:</strong> <code>123456</code></li>
-            <li><strong id="param-ssh-label">Perintah SSH Terminal:</strong> <code>ssh apel@apeldua.local</code> <span id="param-or-label">atau</span> <code>ssh apel@apeldua</code></li>
-        </ul>
-    </div>
-
-    <!-- Requirements Grid -->
-    <div class="grid-2">
-        <div class="card">
-            <h3 id="hw-title">Persyaratan Perangkat Keras (Hardware)</h3>
-            <ul id="hw-list">
-                <li><strong>Raspberry Pi Zero 2 W</strong> (Board utama)</li>
-                <li><strong>MicroSD Card</strong> (Minimal 16 GB, Class 10) + Card Reader</li>
-                <li><strong>Kabel Micro-USB to USB-A</strong> (Untuk daya/koneksi daya)</li>
-                <li><strong>Laptop Mahasiswa</strong> (Memiliki koneksi Wi-Fi/Hotspot)</li>
-                <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (Nama SSID & Password diketahui)</li>
-            </ul>
-        </div>
-        <div class="card">
-            <h3 id="sw-title">Persyaratan Perangkat Lunak (Software)</h3>
-            <ul id="sw-list">
-                <li><strong>Raspberry Pi Imager</strong> (Aplikasi flasher resmi)</li>
-                <li><strong>Terminal / PowerShell / Command Prompt</strong> (Bawaan OS Laptop)</li>
-                <li><strong>Network Scanner Application</strong> (Fing App di smartphone / Advanced IP Scanner di Windows - <i>Opsional</i>)</li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- Tahap 1 -->
-    <div class="step-section active" id="section-1">
-        <div class="step-header" onclick="toggleAccordion('section-1')">
-            <span id="step1-header">Tahap 1: Flashing OS & Pre-Configuration (Raspberry Pi Imager) <span class="badge">Software</span></span>
-            <span class="toggle-icon">▼</span>
-        </div>
-        <div class="step-content">
-            <ol id="step1-list">
-                <li>Masukkan Kartu MicroSD ke Card Reader dan hubungkan ke laptop.</li>
-                <li>Buka aplikasi <strong>Raspberry Pi Imager</strong>.</li>
-                <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit) / Raspberry Pi OS Lite (64-bit)</strong> (Disarankan versi *Lite* untuk sistem tanpa GUI).</li>
-                <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
-                <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog untuk menerapkan setelan kustomisasi (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
-                <li>Atur parameter kustomisasi sebagai berikut:
-                    <ul>
-                        <li><strong>Hostname:</strong> <code>apeldua</code></li>
-                        <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
-                        <li><strong>Configure wireless LAN:</strong> Masukkan SSID (Nama Wi-Fi/Hotspot) dan Password Wi-Fi yang sedang digunakan oleh laptop Anda.</li>
-                        <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
-                        <li>Masuk ke tab <strong>SERVICES</strong> &rarr; Centang <strong>Enable SSH</strong> &rarr; Pilih <strong>Use password authentication</strong>.</li>
-                    </ul>
-                </li>
-                <li>Klik <strong>SAVE</strong>, lalu pilih <strong>YES</strong> untuk memulai proses pemformatan dan penulisan citra OS. Tunggu hingga selesai dan lakukan <i>eject</i> kartu MicroSD.</li>
-            </ol>
-            <div class="checkpoint">
-                <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Checkpoint 1:</b> MicroSD berhasil di-flash dan berisi file konfigurasi SSH serta Wi-Fi otomatis.</span></label>
+        <!-- Progress Indicator Interaktif -->
+        <div class="progress-card">
+            <div class="progress-title">
+                <span id="progress-title-text">Kemajuan Praktikum Anda</span>
+                <span id="progress-text">0% Selesai (0/5 Checkpoint)</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar"></div>
             </div>
         </div>
-    </div>
 
-    <!-- Tahap 2 -->
-    <div class="step-section" id="section-2">
-        <div class="step-header" onclick="toggleAccordion('section-2')">
-            <span id="step2-header">Tahap 2: Pengkabelan & Integrasi Jaringan (Hardware Setup) <span class="badge">Hardware & Network</span></span>
-            <span class="toggle-icon">▼</span>
+        <!-- Info Target Pembelajaran -->
+        <div class="task-card">
+            <h3 id="target-title">Target Pembelajaran</h3>
+            <p id="target-desc">Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi, termasuk instalasi OS, struktur Linux, terminal, konfigurasi SSH, dan komunikasi jaringan secara <i>headless</i> (tanpa monitor, keyboard, dan mouse tambahan).</p>
         </div>
-        <div class="step-content">
-            <p style="margin-bottom: 8px;"><strong id="step2-arch-title">Arsitektur Koneksi Headless:</strong></p>
-            <ul id="step2-list">
-                <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang sudah di-flash ke slot MicroSD Raspberry Pi Zero 2 W.</li>
-                <li><strong>Sumber Daya:</strong> Tancapkan kabel Micro-USB ke port berlabel <code>PWR IN</code> pada Raspberry Pi Zero 2 W, lalu hubungkan ujung USB-A ke port USB laptop atau adaptor daya 5V.</li>
-                <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi Zero 2 W dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Saat booting, Raspberry Pi akan otomatis menyambung ke jaringan tersebut secara nirkabel.</li>
+
+        <!-- Parameter Akses Sistem -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3 id="params-title">Parameter Akses Sistem (Pra-Konfigurasi)</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc">Gunakan kredensial berikut selama seluruh alur praktikum:</p>
+            <ul>
+                <li><strong id="param-host-label">Hostname:</strong> <code>apeldua</code> (<span id="param-domain-label">Domain lokal:</span> <code>apeldua.local</code>)</li>
+                <li><strong id="param-user-label">Username:</strong> <code>apel</code></li>
+                <li><strong id="param-pass-label">Password:</strong> <code>123456</code></li>
+                <li><strong id="param-ssh-label">Perintah SSH Terminal:</strong> <code>ssh apel@apeldua.local</code> <span id="param-or-label">atau</span> <code>ssh apel@apeldua</code></li>
             </ul>
-            <div class="checkpoint">
-                <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Checkpoint 2:</b> LED hijau pada Raspberry Pi Zero 2 W berkedip/menyala konstan tanda booting berhasil.</span></label>
+        </div>
+
+        <!-- Requirements Grid -->
+        <div class="grid-2">
+            <div class="card">
+                <h3 id="hw-title">Persyaratan Perangkat Keras (Hardware)</h3>
+                <ul id="hw-list">
+                    <li><strong>Raspberry Pi Zero 2 W</strong> (Board utama)</li>
+                    <li><strong>MicroSD Card</strong> (Minimal 16 GB, Class 10) + Card Reader</li>
+                    <li><strong>Kabel Micro-USB to USB-A</strong> (Untuk daya/koneksi daya)</li>
+                    <li><strong>Laptop Mahasiswa</strong> (Memiliki koneksi Wi-Fi/Hotspot)</li>
+                    <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (Nama SSID & Password diketahui)</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3 id="sw-title">Persyaratan Perangkat Lunak (Software)</h3>
+                <ul id="sw-list">
+                    <li><strong>Raspberry Pi Imager</strong> (Aplikasi flasher resmi)</li>
+                    <li><strong>Terminal / PowerShell / Command Prompt</strong> (Bawaan OS Laptop)</li>
+                    <li><strong>Network Scanner Application</strong> (Fing App di smartphone / Advanced IP Scanner di Windows - <i>Opsional</i>)</li>
+                </ul>
             </div>
         </div>
-    </div>
 
-    <!-- Tahap 3 -->
-    <div class="step-section" id="section-3">
-        <div class="step-header" onclick="toggleAccordion('section-3')">
-            <span id="step3-header">Tahap 3: Remote Login via SSH (Terminal Laptop) <span class="badge">Terminal & SSH</span></span>
-            <span class="toggle-icon">▼</span>
-        </div>
-        <div class="step-content">
-            <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop masing-masing.</p>
-            
-            <p style="font-size: 0.9rem;"><span id="step3-s1">1. Jalankan perintah SSH menggunakan mDNS hostname:</span></p>
-            <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-            
-            <p style="font-size: 0.9rem;"><span id="step3-s2">2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.</span></p>
-            <p style="font-size: 0.9rem;"><span id="step3-s3">3. Masukkan password saat diminta:</span></p>
-            <pre><code>123456</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;"><i id="step3-note">Note: Karakter password tidak akan tampil di layar saat diketik (sistem keamanan Linux).</i></p>
-
-            <p style="font-size: 0.9rem;"><span id="step3-s4">4. Jika koneksi mDNS gagal, cari IP Address Raspberry Pi melalui perintah scan lokal atau tabel klien Hotspot smartphone Anda, lalu ketik:</span></p>
-            <pre><code>ssh apel@&lt;ALAMAT_IP_RASPBERRY&gt;</code></pre>
-            
-            <div class="checkpoint">
-                <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"><b>Checkpoint 3:</b> Tampilan prompt terminal berubah menjadi <code>apel@apeldua:~ $</code>.</span></label>
+        <!-- Tahap 1 -->
+        <div class="step-section active" id="section-1">
+            <div class="step-header" onclick="toggleAccordion('section-1')">
+                <span id="step1-header">Tahap 1: Flashing OS & Pre-Configuration (Raspberry Pi Imager) <span class="badge">Software</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <ol id="step1-list">
+                    <li>Masukkan Kartu MicroSD ke Card Reader dan hubungkan ke laptop.</li>
+                    <li>Buka aplikasi <strong>Raspberry Pi Imager</strong>.</li>
+                    <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit) / Raspberry Pi OS Lite (64-bit)</strong> (Disarankan versi *Lite* untuk sistem tanpa GUI).</li>
+                    <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
+                    <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog untuk menerapkan setelan kustomisasi (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
+                    <li>Atur parameter kustomisasi sebagai berikut:
+                        <ul>
+                            <li><strong>Hostname:</strong> <code>apeldua</code></li>
+                            <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
+                            <li><strong>Configure wireless LAN:</strong> Masukkan SSID (Nama Wi-Fi/Hotspot) dan Password Wi-Fi yang sedang digunakan oleh laptop Anda.</li>
+                            <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
+                            <li>Masuk ke tab <strong>SERVICES</strong> &rarr; Centang <strong>Enable SSH</strong> &rarr; Pilih <strong>Use password authentication</strong>.</li>
+                        </ul>
+                    </li>
+                    <li>Klik <strong>SAVE</strong>, lalu pilih <strong>YES</strong> untuk memulai proses pemformatan dan penulisan citra OS. Tunggu hingga selesai dan lakukan <i>eject</i> kartu MicroSD.</li>
+                </ol>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Checkpoint 1:</b> MicroSD berhasil di-flash dan berisi file konfigurasi SSH serta Wi-Fi otomatis.</span></label>
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- Tahap 4 -->
-    <div class="step-section" id="section-4">
-        <div class="step-header" onclick="toggleAccordion('section-4')">
-            <span id="step4-header">Tahap 4: Eksplorasi Struktur Direktori & Perintah Dasar Linux <span class="badge">Linux Structure</span></span>
-            <span class="toggle-icon">▼</span>
+        <!-- Tahap 2 -->
+        <div class="step-section" id="section-2">
+            <div class="step-header" onclick="toggleAccordion('section-2')">
+                <span id="step2-header">Tahap 2: Pengkabelan & Integrasi Jaringan (Hardware Setup) <span class="badge">Hardware & Network</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p style="margin-bottom: 8px;"><strong id="step2-arch-title">Arsitektur Koneksi Headless:</strong></p>
+                <ul id="step2-list">
+                    <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang sudah di-flash ke slot MicroSD Raspberry Pi Zero 2 W.</li>
+                    <li><strong>Sumber Daya:</strong> Tancapkan kabel Micro-USB ke port berlabel <code>PWR IN</code> pada Raspberry Pi Zero 2 W, lalu hubungkan ujung USB-A ke port USB laptop atau adaptor daya 5V.</li>
+                    <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi Zero 2 W dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Saat booting, Raspberry Pi akan otomatis menyambung ke jaringan tersebut secara nirkabel.</li>
+                </ul>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Checkpoint 2:</b> LED hijau pada Raspberry Pi Zero 2 W berkedip/menyala konstan tanda booting berhasil.</span></label>
+                </div>
+            </div>
         </div>
-        <div class="step-content">
-            <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Setelah berhasil masuk ke sistem, jalankan perintah-perintah dasar Linux berikut untuk memahami struktur hierarki direktori:</p>
 
-            <p style="font-size: 0.9rem;"><strong id="step4-s1">1. Memeriksa lokasi direktori aktif dan identitas sistem:</strong></p>
-            <pre><code>pwd
+        <!-- Tahap 3 -->
+        <div class="step-section" id="section-3">
+            <div class="step-header" onclick="toggleAccordion('section-3')">
+                <span id="step3-header">Tahap 3: Remote Login via SSH (Terminal Laptop) <span class="badge">Terminal & SSH</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop masing-masing.</p>
+                
+                <p style="font-size: 0.9rem;"><span id="step3-s1">1. Jalankan perintah SSH menggunakan mDNS hostname:</span></p>
+                <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                
+                <p style="font-size: 0.9rem;"><span id="step3-s2">2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.</span></p>
+                <p style="font-size: 0.9rem;"><span id="step3-s3">3. Masukkan password saat diminta:</span></p>
+                <pre><code>123456</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;"><i id="step3-note">Note: Karakter password tidak akan tampil di layar saat diketik (sistem keamanan Linux).</i></p>
+
+                <p style="font-size: 0.9rem;"><span id="step3-s4">4. Jika koneksi mDNS gagal, cari IP Address Raspberry Pi melalui perintah scan lokal atau tabel klien Hotspot smartphone Anda, lalu ketik:</span></p>
+                <pre><code>ssh apel@&lt;ALAMAT_IP_RASPBERRY&gt;</code></pre>
+                
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"><b>Checkpoint 3:</b> Tampilan prompt terminal berubah menjadi <code>apel@apeldua:~ $</code>.</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 4 -->
+        <div class="step-section" id="section-4">
+            <div class="step-header" onclick="toggleAccordion('section-4')">
+                <span id="step4-header">Tahap 4: Eksplorasi Struktur Direktori & Perintah Dasar Linux <span class="badge">Linux Structure</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Setelah berhasil masuk ke sistem, jalankan perintah-perintah dasar Linux berikut untuk memahami struktur hierarki direktori:</p>
+
+                <p style="font-size: 0.9rem;"><strong id="step4-s1">1. Memeriksa lokasi direktori aktif dan identitas sistem:</strong></p>
+                <pre><code>pwd
 whoami
 hostname -I</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-            <p style="font-size: 0.9rem;"><strong id="step4-s2">2. Eksplorasi Struktur Root Linux (<code>/</code>):</strong></p>
-            <pre><code>cd /
+                <p style="font-size: 0.9rem;"><strong id="step4-s2">2. Eksplorasi Struktur Root Linux (<code>/</code>):</strong></p>
+                <pre><code>cd /
 ls -la</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-            <p style="font-size: 0.9rem;"><strong id="step4-s3">3. Pengelolaan Berkas dan Direktori Latihan:</strong></p>
-            <pre><code>cd ~
+                <p style="font-size: 0.9rem;"><strong id="step4-s3">3. Pengelolaan Berkas dan Direktori Latihan:</strong></p>
+                <pre><code>cd ~
 mkdir praktikum1
 cd praktikum1
 echo "Sistem Tertanam Untirta 2026" > info.txt
 cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-            <div class="checkpoint">
-                <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"><b>Checkpoint 4:</b> Mahasiswa berhasil membuat folder <code>praktikum1</code> dan membaca file <code>info.txt</code>.</span></label>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"><b>Checkpoint 4:</b> Mahasiswa berhasil membuat folder <code>praktikum1</code> dan membaca file <code>info.txt</code>.</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 5 -->
+        <div class="step-section" id="section-5">
+            <div class="step-header" onclick="toggleAccordion('section-5')">
+                <span id="step5-header">Tahap 5: Visualisasi Interaktif Pohon Direktori Linux (FHS) <span class="badge">Modul Interaktif</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main);">Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:</p>
+                
+                <div class="linux-tree-container">
+                    <div class="tree-view">
+                        <div><span class="tree-node active" onclick="showDirInfo('root', this)">/ (Root Directory)</span></div>
+                        <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('bin', this)">/bin</span> & <span class="tree-node" onclick="showDirInfo('sbin', this)">/sbin</span></div>
+                        <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('boot', this)">/boot</span></div>
+                        <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('dev', this)">/dev</span></div>
+                        <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('etc', this)">/etc</span></div>
+                        <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('home', this)">/home</span></div>
+                        <div class="indent-2">└── <span class="tree-node" onclick="showDirInfo('user', this)">/home/apel</span></div>
+                        <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('proc', this)">/proc</span> & <span class="tree-node" onclick="showDirInfo('sys', this)">/sys</span></div>
+                        <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('var', this)">/var</span></div>
+                        <div class="indent-2">└── <span class="tree-node" onclick="showDirInfo('varlog', this)">/var/log</span></div>
+                        <div class="indent-1">└── <span class="tree-node" onclick="showDirInfo('usr', this)">/usr</span></div>
+                    </div>
+
+                    <div class="detail-view" id="dir-detail">
+                        <h4 id="dir-title">/ (Root Directory)</h4>
+                        <p id="dir-desc">Akar tertinggi dari seluruh hirarki direktori di sistem operasi Linux. Semua file dan perangkat terhubung di bawah direktori ini.</p>
+                        <p style="margin-top: 10px;"><strong id="dir-type-label">Tipe Isinya:</strong> <span id="dir-type-val">Sistem Berkas Utama</span></p>
+                        <p><strong id="dir-cmd-label">Contoh Perintah Terminal:</strong></p>
+                        <pre style="padding: 8px; font-size:0.85rem;"><code id="dir-cmd">cd / && ls -la</code></pre>
+                    </div>
+                </div>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"><b>Checkpoint 5:</b> Mahasiswa telah mempelajari dan memahami seluruh struktur direktori penting pada Linux Embedded.</span></label>
+                </div>
             </div>
         </div>
     </div>
-
-    <!-- Tahap 5 -->
-    <div class="step-section" id="section-5">
-        <div class="step-header" onclick="toggleAccordion('section-5')">
-            <span id="step5-header">Tahap 5: Visualisasi Interaktif Pohon Direktori Linux (FHS) <span class="badge">Modul Interaktif</span></span>
-            <span class="toggle-icon">▼</span>
-        </div>
-        <div class="step-content">
-            <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main);">Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:</p>
-            
-            <div class="linux-tree-container">
-                <div class="tree-view">
-                    <div><span class="tree-node active" onclick="showDirInfo('root', this)">/ (Root Directory)</span></div>
-                    <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('bin', this)">/bin</span> & <span class="tree-node" onclick="showDirInfo('sbin', this)">/sbin</span></div>
-                    <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('boot', this)">/boot</span></div>
-                    <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('dev', this)">/dev</span></div>
-                    <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('etc', this)">/etc</span></div>
-                    <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('home', this)">/home</span></div>
-                    <div class="indent-2">└── <span class="tree-node" onclick="showDirInfo('user', this)">/home/apel</span></div>
-                    <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('proc', this)">/proc</span> & <span class="tree-node" onclick="showDirInfo('sys', this)">/sys</span></div>
-                    <div class="indent-1">├── <span class="tree-node" onclick="showDirInfo('var', this)">/var</span></div>
-                    <div class="indent-2">└── <span class="tree-node" onclick="showDirInfo('varlog', this)">/var/log</span></div>
-                    <div class="indent-1">└── <span class="tree-node" onclick="showDirInfo('usr', this)">/usr</span></div>
-                </div>
-
-                <div class="detail-view" id="dir-detail">
-                    <h4 id="dir-title">/ (Root Directory)</h4>
-                    <p id="dir-desc">Akar tertinggi dari seluruh hirarki direktori di sistem operasi Linux. Semua file dan perangkat terhubung di bawah direktori ini.</p>
-                    <p style="margin-top: 10px;"><strong id="dir-type-label">Tipe Isinya:</strong> <span id="dir-type-val">Sistem Berkas Utama</span></p>
-                    <p><strong id="dir-cmd-label">Contoh Perintah Terminal:</strong></p>
-                    <pre style="padding: 8px; font-size:0.85rem;"><code id="dir-cmd">cd / && ls -la</code></pre>
-                </div>
-            </div>
-
-            <div class="checkpoint">
-                <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"><b>Checkpoint 5:</b> Mahasiswa telah mempelajari dan memahami seluruh struktur direktori penting pada Linux Embedded.</span></label>
-            </div>
-        </div>
-    </div>
-
 </div>
 
 <script>
     // Translation Data
     const translations = {
         id: {
+            courseTag: "Course: Embedded Systems — Meeting 9",
+            deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Panduan Interaktif Pertemuan 9 - Sistem Tertanam (TEL624307)",
             headerTitle: "Panduan Praktikum Interaktif: Headless Setup Raspberry Pi Zero 2 W",
-            headerCourse: "Mata Kuliah: Sistem Tertanam (TEL624307) — Pertemuan 9",
-            headerUniv: "Jurusan Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
-            homeText: "Kembali ke Beranda",
+            homeText: "Kembali ke Raspberry Pi",
             progressTitleText: "Kemajuan Praktikum Anda",
             progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
             targetTitle: "Target Pembelajaran (SubCPMK-002-2-1)",
@@ -784,11 +818,11 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
             cp5Text: "<b>Checkpoint 5:</b> Mahasiswa telah mempelajari dan memahami seluruh struktur direktori penting pada Linux Embedded."
         },
         en: {
+            courseTag: "Course: Embedded Systems — Meeting 9",
+            deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Interactive Guide Meeting 9 - Embedded Systems (TEL624307)",
             headerTitle: "Interactive Lab Guide: Headless Setup Raspberry Pi Zero 2 W",
-            headerCourse: "Course: Embedded Systems (TEL624307) — Meeting 9",
-            headerUniv: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
-            homeText: "Back to Home",
+            homeText: "Back to Raspberry Pi",
             progressTitleText: "Your Lab Progress",
             progressText: "{percent}% Completed ({count}/5 Checkpoints)",
             targetTitle: "Learning Objective (SubCPMK-002-2-1)",
@@ -1027,10 +1061,11 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
     function updateUIContent() {
         const t = translations[currentLang];
         
+        document.getElementById('course-tag').innerText = t.courseTag;
+        document.getElementById('dept-tag').innerText = t.deptTag;
+
         document.getElementById('page-title').innerText = t.pageTitle;
         document.getElementById('header-title').innerText = t.headerTitle;
-        document.getElementById('header-course').innerText = t.headerCourse;
-        document.getElementById('header-univ').innerText = t.headerUniv;
         document.getElementById('home-text').innerText = t.homeText;
         document.getElementById('progress-title-text').innerText = t.progressTitleText;
 

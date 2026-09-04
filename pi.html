@@ -31,6 +31,8 @@
             --badge-active-text: #16a34a;
             --badge-soon-bg: rgba(148, 163, 184, 0.15);
             --badge-soon-text: #64748b;
+            --badge-req-bg: rgba(234, 179, 8, 0.15);
+            --badge-req-text: #ca8a04;
         }
 
         /* CSS Variables - Dark Theme */
@@ -53,6 +55,8 @@
             --badge-active-text: #4ade80;
             --badge-soon-bg: rgba(148, 163, 184, 0.2);
             --badge-soon-text: #94a3b8;
+            --badge-req-bg: rgba(234, 179, 8, 0.2);
+            --badge-req-text: #fde047;
         }
 
         * {
@@ -299,6 +303,11 @@
             color: var(--badge-active-text);
         }
 
+        .status-badge.req {
+            background: var(--badge-req-bg);
+            color: var(--badge-req-text);
+        }
+
         .status-badge.soon {
             background: var(--badge-soon-bg);
             color: var(--badge-soon-text);
@@ -383,14 +392,27 @@
                 <i class="fa-brands fa-raspberry-pi"></i> <span data-key="badge_text">Topik 1</span>
             </div>
             <h1 data-key="header_title">Sistem Tertanam: Raspberry Pi</h1>
-            <p data-key="header_desc">Pilih sub-materi pembelajaran interaktif untuk mempelajari konfigurasi, arsitektur, dan pemrograman Raspberry Pi.</p>
+            <p data-key="header_desc">Pilih sub-materi pembelajaran interaktif untuk mempelajari aturan, konfigurasi, arsitektur, dan pemrograman Raspberry Pi.</p>
         </div>
     </header>
 
     <div class="container">
         <div class="grid-modules">
             
-            <!-- Module 1: Headless Setup (Sudah Tersedia -> pi1.html) -->
+            <!-- Module 0: SOP & K3 (Mengarahkan ke pi0.html) -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <span class="status-badge req" data-key="status_req">Wajib Dipahami</span>
+                    </div>
+                    <h3 data-key="m0_title">0. Aturan, SOP & K3</h3>
+                    <p data-key="m0_desc">Prosedur Operasional Standar, aturan laboratorium, dan Keselamatan dan Kesehatan Kerja (K3) penggunaan hardware Raspberry Pi.</p>
+                </div>
+                <a href="pi0.html" class="btn"><span data-key="btn_open">Buka Panduan</span> <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Module 1: Headless Setup (Mengarahkan ke pi1.html) -->
             <div class="card">
                 <div>
                     <div class="card-header">
@@ -446,9 +468,12 @@
                 btn_back: "Kembali ke Modul",
                 badge_text: "Topik 1",
                 header_title: "Sistem Tertanam: Raspberry Pi",
-                header_desc: "Pilih sub-materi pembelajaran interaktif untuk mempelajari konfigurasi, arsitektur, dan pemrograman Raspberry Pi.",
+                header_desc: "Pilih sub-materi pembelajaran interaktif untuk mempelajari aturan, konfigurasi, arsitektur, dan pemrograman Raspberry Pi.",
                 status_active: "Tersedia",
+                status_req: "Wajib Dipahami",
                 status_soon: "Segera Hadir",
+                m0_title: "0. Aturan, SOP & K3",
+                m0_desc: "Prosedur Operasional Standar, aturan laboratorium, dan Keselamatan dan Kesehatan Kerja (K3) penggunaan hardware Raspberry Pi.",
                 m1_title: "1. Headless Setup",
                 m1_desc: "Panduan instalasi OS, konfigurasi SSH, Wi-Fi, dan akses jarak jauh Raspberry Pi tanpa monitor/keyboard.",
                 m2_title: "2. Pemrograman GPIO & Sensor",
@@ -463,9 +488,12 @@
                 btn_back: "Back to Module",
                 badge_text: "Topic 1",
                 header_title: "Embedded System: Raspberry Pi",
-                header_desc: "Select an interactive learning sub-topic to explore Raspberry Pi configuration, architecture, and programming.",
+                header_desc: "Select an interactive learning sub-topic to explore rules, configuration, architecture, and programming.",
                 status_active: "Available",
+                status_req: "Mandatory",
                 status_soon: "Coming Soon",
+                m0_title: "0. Rules, SOP & HSE",
+                m0_desc: "Standard Operating Procedures, lab rules, and Health, Safety, and Environment (HSE) guidelines for Raspberry Pi hardware.",
                 m1_title: "1. Headless Setup",
                 m1_desc: "Guide for OS installation, SSH & Wi-Fi configuration, and remote access without monitor/keyboard.",
                 m2_title: "2. GPIO & Sensor Programming",

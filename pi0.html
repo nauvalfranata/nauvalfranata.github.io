@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Aturan, K3, dan SOP Praktikum - Sistem Tertanam (TEL624307)</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS Variables - Light Theme (Default) */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #38bdf8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sensor-bg: #0f172a;
+            --sensor-text: #38bdf8;
+            --sensor-border: #1e293b;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --success-bg: #dcfce7;
+            --success-color: #16a34a;
+            --success-border: #86efac;
+            --warning-bg: #fef3c7;
+            --warning-color: #d97706;
+            --warning-border: #fcd34d;
+            --error-bg: #fee2e2;
+            --error-color: #dc2626;
+            --error-border: #fca5a5;
+        }
+
+        /* CSS Variables - Dark Theme */
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f8fafc;
+            --accent: #38bdf8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --sensor-bg: #022c22;
+            --sensor-text: #4ade80;
+            --sensor-border: #065f46;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --success-bg: rgba(34, 197, 94, 0.15);
+            --success-color: #4ade80;
+            --success-border: #22c55e;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-color: #fbbf24;
+            --warning-border: #f59e0b;
+            --error-bg: rgba(239, 68, 68, 0.15);
+            --error-color: #f87171;
+            --error-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 20px;
+        }
+
+        /* FLOATING CONTROLS */
+        .floating-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .floating-lang-switch {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+        }
+
+        .floating-lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .floating-lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        }
+
+        .floating-theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(8px);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .floating-theme-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+        }
+
+        /* HEADER & COURSE INFO Banner */
+        .course-info-banner {
+            margin-bottom: 20px;
+            padding: 0 5px;
+        }
+
+        .course-title-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .course-dept {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--card-border);
+        }
+
+        header {
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
+
+        /* Progress Card Styling */
+        .progress-card {
+            background: var(--bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .progress-bar-bg {
+            background: var(--card-border);
+            height: 10px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Information Cards & Tasks */
+        .task-card {
+            background: var(--bg);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .task-card h3, .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; }
+        .task-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+
+        .warning-card {
+            background: var(--error-bg);
+            border-left: 4px solid var(--error-color);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-top: 1px solid var(--error-border);
+            border-right: 1px solid var(--error-border);
+            border-bottom: 1px solid var(--error-border);
+        }
+
+        .warning-card h3 {
+            margin: 0 0 8px 0;
+            color: var(--error-color);
+            font-weight: 700;
+        }
+
+        .warning-card p {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        /* Step Sections (Accordion) */
+        .step-section {
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .step-section.completed {
+            border-color: var(--success-border);
+        }
+
+        .step-header {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .step-header:hover {
+            background: var(--card-border);
+        }
+
+        .step-header .toggle-icon {
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+        }
+
+        .step-section.active .step-header .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .step-content {
+            padding: 20px;
+            display: none;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .step-section.active .step-content {
+            display: block;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .badge-danger {
+            background: var(--error-color);
+        }
+
+        .badge-warning {
+            background: var(--warning-color);
+        }
+
+        pre {
+            background: var(--sensor-bg);
+            color: var(--sensor-text);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--sensor-border);
+            overflow-x: auto;
+            position: relative;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 10px 0;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        li { margin-bottom: 8px; }
+
+        .sub-heading {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 15px;
+            margin-bottom: 6px;
+        }
+
+        .sub-heading:first-child {
+            margin-top: 0;
+        }
+
+        .checkpoint {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            color: var(--warning-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkpoint label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .checkpoint input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- FLOATING CONTROLS -->
+    <div class="floating-controls">
+        <div class="floating-lang-switch">
+            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        
+        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
+            <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+    </div>
+
+<div class="container">
+    <!-- INFORMASI KURSUS DI LUAR KOTAK UTAMA -->
+    <div class="course-info-banner">
+        <div class="course-title-tag" id="course-tag">Course: Embedded Systems — Regulations & Safety</div>
+        <div class="course-dept" id="dept-tag">Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa</div>
+    </div>
+
+    <!-- KOTAK UTAMA PANDUAN PRAKTIKUM -->
+    <div class="main-card">
+        <header>
+            <div>
+                <h1 id="header-title">Aturan, K3, dan SOP Praktikum Sistem Tertanam</h1>
+            </div>
+            <div class="header-actions">
+                <a href="pi.html" class="btn-back" id="home-link">
+                    <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Raspberry Pi</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Progress Indicator Interaktif -->
+        <div class="progress-card">
+            <div class="progress-title">
+                <span id="progress-title-text">Verifikasi Pembacaan & Pemahaman Regulasi</span>
+                <span id="progress-text">0% Selesai (0/4 Konfirmasi)</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Info Target / Tujuan Dokumen -->
+        <div class="task-card">
+            <h3 id="target-title">Tujuan Penyusunan Dokumen SOP & K3</h3>
+            <p id="target-desc">Dokumen ini disusun untuk menjamin keselamatan kerja praktikan, keamanan perangkat keras <i>embedded system</i> (Raspberry Pi, sensor, dan modul antarmuka), serta keteraturan pelaksanaan praktikum mulai dari Pertemuan 9 hingga Pertemuan 16 (Tugas Akhir/Proyek).</p>
+        </div>
+
+        <!-- Bagian 1: Tata Tertib Dokumen Resmi -->
+        <div class="step-section active" id="section-1">
+            <div class="step-header" onclick="toggleAccordion('section-1')">
+                <span id="step1-header">1. Tata Tertib Resmi Laboratorium <span class="badge">Aturan Utama</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content" id="step1-content">
+                <!-- Content will be injected dynamically by JavaScript for i18n -->
+            </div>
+        </div>
+
+        <!-- Bagian 2 -->
+        <div class="step-section" id="section-2">
+            <div class="step-header" onclick="toggleAccordion('section-2')">
+                <span id="step2-header">2. Kesehatan & Keselamatan Kerja (K3) Kelistrikan & ESD <span class="badge badge-danger">Keselamatan K3</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <div class="warning-card">
+                    <h3 id="step2-warn-title">Bahaya Kerusakan Perangkat akibat ESD & Hubungan Singkat!</h3>
+                    <p id="step2-warn-desc">Pin GPIO Raspberry Pi beroperasi pada tingkat tegangan 3.3V dan <b>TIDAK toleran terhadap tegangan 5V langsung</b>. Kesalahan pengkabelan dapat membakar SoC (System on Chip) secara permanen.</p>
+                </div>
+
+                <ul id="step2-list">
+                    <li><strong>Pencegahan Electrostatic Discharge (ESD):</strong> Sebelum menyentuh papan Raspberry Pi atau sensor sensitif, sentuh permukaan logam terbumi (ground) untuk membuang muatan elektrostatis dari tubuh Anda.</li>
+                    <li><strong>Kondisi Tangan Kering:</strong> Pastikan tangan dalam keadaan kering sempurna sebelum menyentuh komponen listrik atau catu daya.</li>
+                    <li><strong>Pemeriksaan Polaritas Catu Daya:</strong> Selalu verifikasi polaritas positif (+) dan negatif/GND (-) menggunakan warna kabel yang standar (Merah = VCC, Hitam = GND) sebelum menghubungkan ke sumber tegangan.</li>
+                    <li><strong>Penanganan Beban Induktif (Relay/Motor):</strong> Gunakan dioda freewheeling atau modul driver terisolasi optokopler untuk mencegah tegangan balik (<i>back-EMF</i>) merusak pin GPIO.</li>
+                    <li><strong>Prosedur Darurat:</strong> Jika tercium bau sangit/asap, segera cabut catu daya utama (kabel Micro-USB/USB-C) dan laporkan langsung kepada asisten laboratorium.</li>
+                </ul>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Konfirmasi 2:</b> Saya memahami bahaya ESD, batas tegangan 3.3V GPIO, dan prosedur keselamatan K3 kelistrikan.</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bagian 3 -->
+        <div class="step-section" id="section-3">
+            <div class="step-header" onclick="toggleAccordion('section-3')">
+                <span id="step3-header">3. Standard Operating Procedure (SOP) Pengoperasian Hardware <span class="badge badge-warning">SOP Hardware</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Setiap praktikan wajib menerapkan urutan langkah SOP baku berikut dalam menangani komponen Raspberry Pi:</p>
+                <ol id="step3-list">
+                    <li><strong>SOP Pengkabelan (Wiring):</strong> Wajib mematikan daya (Power OFF/Unplug) Raspberry Pi sebelum merangkai atau mengubah jalur jumper kabel pada <i>breadboard</i>.</li>
+                    <li><strong>SOP Verifikasi Rangkaian:</strong> Mintalah asisten praktikum memeriksa skema rangkaian <i>breadboard</i> sebelum memasukkan catu daya (Power ON).</li>
+                    <li><strong>SOP Penyambungan Catu Daya:</strong> Tancapkan kabel daya Micro-USB/USB-C ke Raspberry Pi setelah seluruh rangkaian komponen dipastikan aman.</li>
+                    <li><strong>SOP Penonaktifan Sistem (Shutdown):</strong> Jangan pernah mencabut kabel daya secara langsung saat OS berjalan. Jalankan perintah shutdown aman via SSH Terminal:
+                        <pre><code>sudo shutdown -h now</code></pre>
+                        Tunggu hingga LED indikator hijau pada Raspberry Pi berhenti berkedip sepenuhnya sebelum mencabut adaptor daya.</li>
+                </ol>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"><b>Konfirmasi 3:</b> Saya berjanji akan selalu melakukan matikan daya saat merangkai dan menggunakan perintah <i>safe shutdown</i>.</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bagian 4 -->
+        <div class="step-section" id="section-4">
+            <div class="step-header" onclick="toggleAccordion('section-4')">
+                <span id="step4-header">4. SOP Pengembalian Alat & Penutupan Sesi Praktikum <span class="badge">SOP Penutupan</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Prosedur akhir sesi praktikum yang wajib dilakukan sebelum meninggalkan laboratorium:</p>
+                <ol id="step4-list">
+                    <li>Lakukan <i>Safe Shutdown</i> pada Raspberry Pi dan cabut kabel catu daya.</li>
+                    <li>Lepaskan seluruh kabel jumper, LED, resistor, dan sensor dari <i>breadboard</i> secara perlahan (dilarang menarik kabel secara paksa).</li>
+                    <li>Kelompokkan dan rapikan kembali komponen ke dalam kotak komponen (kit praktikum) sesuai dengan jenisnya.</li>
+                    <li>Kembalikan kit praktikum dan peralatan pendukung kepada asisten laboratorium dalam kondisi lengkap dan berfungsi baik.</li>
+                    <li>Bersihkan area meja kerja praktikum dari sisa pemotongan kabel atau sampah pribadi.</li>
+                    <li>Mintalah tanda tangan / verifikasi kelengkapan pada lembar kendali praktikum dari asisten.</li>
+                </ol>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"><b>Konfirmasi 4:</b> Saya menyetujui SOP pengembalian inventaris dan penataan meja kerja laboratorium.</span></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Translation Data
+    const translations = {
+        id: {
+            courseTag: "Course: Embedded Systems — Regulations & Safety",
+            deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
+            pageTitle: "Aturan, K3, dan SOP Praktikum - Sistem Tertanam (TEL624307)",
+            headerTitle: "Aturan, K3, dan SOP Praktikum Sistem Tertanam",
+            homeText: "Kembali ke Raspberry Pi",
+            progressTitleText: "Verifikasi Pembacaan & Pemahaman Regulasi",
+            progressText: "{percent}% Selesai ({count}/4 Konfirmasi)",
+            targetTitle: "Tujuan Penyusunan Dokumen SOP & K3",
+            targetDesc: "Dokumen ini disusun untuk menjamin keselamatan kerja praktikan, keamanan perangkat keras <i>embedded system</i> (Raspberry Pi, sensor, dan modul antarmuka), serta keteraturan pelaksanaan praktikum mulai dari Pertemuan 9 hingga Pertemuan 16 (Tugas Akhir/Proyek).",
+            step1Header: `1. Tata Tertib Resmi Laboratorium <span class="badge">Aturan Utama</span>`,
+            step1Content: `
+                <div class="sub-heading">KESELAMATAN KERJA</div>
+                <ul>
+                    <li>Dilarang <b>menyentuh</b> peralatan listrik/elektronik dengan <b>tangan basah</b>.</li>
+                    <li>Pastikan semua perangkat dalam keadaan <b>OFF</b> sebelum disambungkan ke sumber listrik.</li>
+                    <li>Gunakan alat pelindung (sarung tangan antistatik, kacamata pelindung) bila diperlukan.</li>
+                    <li>Jangan bekerja <b>sendirian</b> saat menguji tegangan tinggi atau arus besar.</li>
+                    <li>Segera laporkan kepada penanggung jawab jika terjadi kerusakan alat atau kecelakaan.</li>
+                </ul>
+
+                <div class="sub-heading">PENGGUNAAN ALAT & PERALATAN</div>
+                <ul>
+                    <li>Gunakan alat sesuai <b>fungsinya</b> dan dengan <b>hati-hati</b>.</li>
+                    <li>Kembalikan alat ke tempat semula setelah digunakan.</li>
+                    <li>Dilarang memodifikasi, membongkar, atau meminjam alat <b>tanpa izin</b>.</li>
+                    <li>Jaga <b>kebersihan</b> meja kerja dan alat ukur.</li>
+                    <li>Catat penggunaan alat pada logbook atau sistem peminjaman yang tersedia.</li>
+                </ul>
+
+                <div class="sub-heading">PENGUJIAN RANGKAIAN</div>
+                <ul>
+                    <li>Semua rangkaian harus diperiksa terlebih dahulu oleh dosen/penanggung jawab sebelum dinyalakan.</li>
+                    <li>Gunakan <i>power supply</i> yang sesuai dan atur tegangan secara bertahap.</li>
+                    <li>Gunakan alat ukur (multimeter, osiloskop) dengan batas ukur yang benar.</li>
+                    <li>Jangan biarkan rangkaian menyala tanpa pengawasan.</li>
+                    <li><b>Matikan alat jika tidak digunakan.</b></li>
+                </ul>
+
+                <div class="sub-heading">ETIKA DAN KEDISIPLINAN</div>
+                <ul>
+                    <li><b>Berpakaian sopan dan rapi</b>; hindari pakaian longgar yang berpotensi tersangkut alat.</li>
+                    <li>Jaga sikap, tidak ribut, tidak makan/minum di area instrumen.</li>
+                    <li><b>Bertanggung jawab</b> atas alat dan material yang dipinjam.</li>
+                </ul>
+
+                <div class="sub-heading">AKSES LABORATORIUM</div>
+                <ul>
+                    <li>Hanya <b>anggota dan pihak yang berkepentingan</b> yang diizinkan masuk.</li>
+                    <li>Selain anggota dilarang masuk ke dalam lab tanpa izin dari penanggung jawab atau pembimbing.</li>
+                    <li>Setiap tamu wajib mengisi buku tamu dan mencantumkan keperluan kunjungannya di laboratorium.</li>
+                    <li>Setiap pelanggaran akan dicatat dan ditindak sesuai kebijakan lab.</li>
+                </ul>
+
+                <div class="sub-heading">SANKSI PELANGGARAN</div>
+                <ul>
+                    <li>Peringatan lisan/tertulis.</li>
+                    <li>Larangan sementara/tetap menggunakan fasilitas lab.</li>
+                    <li>Tindakan lebih lanjut sesuai kebijakan instansi.</li>
+                </ul>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Konfirmasi 1:</b> Saya membaca, memahami, dan bersedia mematuhi tata tertib laboratorium.</span></label>
+                </div>
+            `,
+            step2Header: `2. Kesehatan & Keselamatan Kerja (K3) Kelistrikan & ESD <span class="badge badge-danger">Keselamatan K3</span>`,
+            step2WarnTitle: "Bahaya Kerusakan Perangkat akibat ESD & Hubungan Singkat!",
+            step2WarnDesc: "Pin GPIO Raspberry Pi beroperasi pada tingkat tegangan 3.3V dan <b>TIDAK toleran terhadap tegangan 5V langsung</b>. Kesalahan pengkabelan dapat membakar SoC (System on Chip) secara permanen.",
+            step2List: `
+                <li><strong>Pencegahan Electrostatic Discharge (ESD):</strong> Sebelum menyentuh papan Raspberry Pi atau sensor sensitif, sentuh permukaan logam terbumi (ground) untuk membuang muatan elektrostatis dari tubuh Anda.</li>
+                <li><strong>Kondisi Tangan Kering:</strong> Pastikan tangan dalam keadaan kering sempurna sebelum menyentuh komponen listrik atau catu daya.</li>
+                <li><strong>Pemeriksaan Polaritas Catu Daya:</strong> Selalu verifikasi polaritas positif (+) dan negatif/GND (-) menggunakan warna kabel yang standar (Merah = VCC, Hitam = GND) sebelum menghubungkan ke sumber tegangan.</li>
+                <li><strong>Penanganan Beban Induktif (Relay/Motor):</strong> Gunakan dioda freewheeling atau modul driver terisolasi optokopler untuk mencegah tegangan balik (<i>back-EMF</i>) merusak pin GPIO.</li>
+                <li><strong>Prosedur Darurat:</strong> Jika tercium bau sangit/asap, segera cabut catu daya utama (kabel Micro-USB/USB-C) dan laporkan langsung kepada asisten laboratorium.</li>
+            `,
+            cp2Text: "<b>Konfirmasi 2:</b> Saya memahami bahaya ESD, batas tegangan 3.3V GPIO, dan prosedur keselamatan K3 kelistrikan.",
+            step3Header: `3. Standard Operating Procedure (SOP) Pengoperasian Hardware <span class="badge badge-warning">SOP Hardware</span>`,
+            step3Intro: "Setiap praktikan wajib menerapkan urutan langkah SOP baku berikut dalam menangani komponen Raspberry Pi:",
+            step3List: `
+                <li><strong>SOP Pengkabelan (Wiring):</strong> Wajib mematikan daya (Power OFF/Unplug) Raspberry Pi sebelum merangkai atau mengubah jalur jumper kabel pada <i>breadboard</i>.</li>
+                <li><strong>SOP Verifikasi Rangkaian:</strong> Mintalah asisten praktikum memeriksa skema rangkaian <i>breadboard</i> sebelum memasukkan catu daya (Power ON).</li>
+                <li><strong>SOP Penyambungan Catu Daya:</strong> Tancapkan kabel daya Micro-USB/USB-C ke Raspberry Pi setelah seluruh rangkaian komponen dipastikan aman.</li>
+                <li><strong>SOP Penonaktifan Sistem (Shutdown):</strong> Jangan pernah mencabut kabel daya secara langsung saat OS berjalan. Jalankan perintah shutdown aman via SSH Terminal:
+                    <pre><code>sudo shutdown -h now</code></pre>
+                    Tunggu hingga LED indikator hijau pada Raspberry Pi berhenti berkedip sepenuhnya sebelum mencabut adaptor daya.</li>
+            `,
+            cp3Text: "<b>Konfirmasi 3:</b> Saya berjanji akan selalu melakukan matikan daya saat merangkai dan menggunakan perintah <i>safe shutdown</i>.",
+            step4Header: `4. SOP Pengembalian Alat & Penutupan Sesi Praktikum <span class="badge">SOP Penutupan</span>`,
+            step4Intro: "Prosedur akhir sesi praktikum yang wajib dilakukan sebelum meninggalkan laboratorium:",
+            step4List: `
+                <li>Lakukan <i>Safe Shutdown</i> pada Raspberry Pi dan cabut kabel catu daya.</li>
+                <li>Lepaskan seluruh kabel jumper, LED, resistor, dan sensor dari <i>breadboard</i> secara perlahan (dilarang menarik kabel secara paksa).</li>
+                <li>Kelompokkan dan rapikan kembali komponen ke dalam kotak komponen (kit praktikum) sesuai dengan jenisnya.</li>
+                <li>Kembalikan kit praktikum dan peralatan pendukung kepada asisten laboratorium dalam kondisi lengkap dan berfungsi baik.</li>
+                <li>Bersihkan area meja kerja praktikum dari sisa pemotongan kabel atau sampah pribadi.</li>
+                <li>Mintalah tanda tangan / verifikasi kelengkapan pada lembar kendali praktikum dari asisten.</li>
+            `,
+            cp4Text: "<b>Konfirmasi 4:</b> Saya menyetujui SOP pengembalian inventaris dan penataan meja kerja laboratorium."
+        },
+        en: {
+            courseTag: "Course: Embedded Systems — Regulations & Safety",
+            deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
+            pageTitle: "Rules, Safety, and SOP - Embedded Systems (TEL624307)",
+            headerTitle: "Rules, Safety, and SOP for Embedded Systems Lab",
+            homeText: "Back to Raspberry Pi",
+            progressTitleText: "Regulation Reading & Understanding Verification",
+            progressText: "{percent}% Completed ({count}/4 Confirmations)",
+            targetTitle: "Purpose of SOP & Safety Document",
+            targetDesc: "This document is prepared to ensure student safety, protect embedded hardware (Raspberry Pi, sensors, interface modules), and maintain orderly lab sessions from Meeting 9 through Meeting 16 (Final Project).",
+            step1Header: `1. Official Laboratory Regulations <span class="badge">Main Rules</span>`,
+            step1Content: `
+                <div class="sub-heading">WORK SAFETY</div>
+                <ul>
+                    <li>Do not <b>touch</b> electrical/electronic equipment with <b>wet hands</b>.</li>
+                    <li>Ensure all devices are switched <b>OFF</b> before connecting to power sources.</li>
+                    <li>Use protective equipment (antistatic gloves, safety glasses) when necessary.</li>
+                    <li>Do not work <b>alone</b> when testing high voltage or heavy currents.</li>
+                    <li>Report immediately to the supervisor in case of equipment damage or accidents.</li>
+                </ul>
+
+                <div class="sub-heading">TOOL & EQUIPMENT USAGE</div>
+                <ul>
+                    <li>Use equipment according to its <b>intended function</b> and with <b>care</b>.</li>
+                    <li>Return tools to their original places after use.</li>
+                    <li>Modifying, disassembling, or borrowing equipment <b>without permission</b> is prohibited.</li>
+                    <li>Maintain <b>cleanliness</b> of worktables and measuring instruments.</li>
+                    <li>Log tool usage in the provided logbook or borrowing system.</li>
+                </ul>
+
+                <div class="sub-heading">CIRCUIT TESTING</div>
+                <ul>
+                    <li>All circuits must be inspected by lecturers/supervisors before power-on.</li>
+                    <li>Use appropriate power supplies and adjust voltage incrementally.</li>
+                    <li>Use measuring tools (multimeters, oscilloscopes) within correct measurement ranges.</li>
+                    <li>Do not leave powered circuits unattended.</li>
+                    <li><b>Turn off equipment when not in use.</b></li>
+                </ul>
+
+                <div class="sub-heading">ETHICS AND DISCIPLINE</div>
+                <ul>
+                    <li><b>Dress neatly and politely</b>; avoid loose clothing that could get caught in tools.</li>
+                    <li>Maintain proper behavior, refrain from making noise, and do not eat/drink near instruments.</li>
+                    <li>Be <b>responsible</b> for borrowed tools and materials.</li>
+                </ul>
+
+                <div class="sub-heading">LAB ACCESS</div>
+                <ul>
+                    <li>Only <b>authorized members and relevant personnel</b> are permitted entry.</li>
+                    <li>Non-members are prohibited from entering without permission from supervisors.</li>
+                    <li>All guests must fill in the guestbook and state their visit purpose.</li>
+                    <li>Any violation will be logged and acted upon according to lab policy.</li>
+                </ul>
+
+                <div class="sub-heading">PENALTIES</div>
+                <ul>
+                    <li>Verbal/written warnings.</li>
+                    <li>Temporary/permanent ban from using lab facilities.</li>
+                    <li>Further actions in accordance with institutional policy.</li>
+                </ul>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Confirmation 1:</b> I have read, understood, and agree to abide by lab regulations.</span></label>
+                </div>
+            `,
+            step2Header: `2. Electrical Health & Safety (K3) and ESD <span class="badge badge-danger">Safety K3</span>`,
+            step2WarnTitle: "Danger of Hardware Damage from ESD & Short Circuits!",
+            step2WarnDesc: "Raspberry Pi GPIO pins operate at 3.3V logic level and are <b>NOT 5V tolerant</b>. Wiring errors will permanently burn the SoC (System on Chip).",
+            step2List: `
+                <li><strong>Electrostatic Discharge (ESD) Prevention:</strong> Touch a grounded metal surface before handling Raspberry Pi or sensitive sensors to discharge static electricity.</li>
+                <li><strong>Dry Hands Condition:</strong> Ensure hands are completely dry before touching electrical components or power supplies.</li>
+                <li><strong>Power Supply Polarity Check:</strong> Always check positive (+) and negative/GND (-) wire color conventions (Red = VCC, Black = GND) before turning on power.</li>
+                <li><strong>Inductive Load Handling (Relays/Motors):</strong> Use freewheeling diodes or optocoupler drivers to prevent back-EMF spikes from damaging GPIO pins.</li>
+                <li><strong>Emergency Procedure:</strong> If burnt smell or smoke is detected, immediately unplug main power (Micro-USB/USB-C) and alert lab assistants.</li>
+            `,
+            cp2Text: "<b>Confirmation 2:</b> I understand ESD hazards, 3.3V GPIO limits, and electrical safety procedures.",
+            step3Header: `3. Standard Operating Procedure (SOP) for Hardware Handling <span class="badge badge-warning">SOP Hardware</span>`,
+            step3Intro: "All students must follow these standard SOP steps when handling Raspberry Pi components:",
+            step3List: `
+                <li><strong>Wiring SOP:</strong> Always disconnect power (Power OFF/Unplug) before making or modifying jumper wire connections on breadboards.</li>
+                <li><strong>Circuit Verification SOP:</strong> Request lab assistant to verify breadboard wiring before turning power on (Power ON).</li>
+                <li><strong>Power Connection SOP:</strong> Plug Micro-USB/USB-C power cable into Raspberry Pi only after verifying circuit safety.</li>
+                <li><strong>Safe Shutdown SOP:</strong> Never pull the power cable while OS is running. Execute safe shutdown command via SSH terminal:
+                    <pre><code>sudo shutdown -h now</code></pre>
+                    Wait until the green activity LED stops blinking before unplugging the power supply.</li>
+            `,
+            cp3Text: "<b>Confirmation 3:</b> I pledge to power off before wiring and always perform safe system shutdowns.",
+            step4Header: `4. SOP Tool Return & Lab Session Closure <span class="badge">SOP Closure</span>`,
+            step4Intro: "Required wrap-up procedure before leaving the laboratory:",
+            step4List: `
+                <li>Perform <i>Safe Shutdown</i> on Raspberry Pi and disconnect power cable.</li>
+                <li>Gently disconnect jumper wires, LEDs, resistors, and sensors from breadboard (do not pull cables forcefully).</li>
+                <li>Sort and pack all components back into assigned practical kit boxes.</li>
+                <li>Return practical kits and instruments to lab assistants intact and operational.</li>
+                <li>Clean up the worktable area from wire trimmings and personal trash.</li>
+                <li>Obtain verification signature on the practical control sheet from lab assistant.</li>
+            `,
+            cp4Text: "<b>Confirmation 4:</b> I agree to the inventory return SOP and workspace cleanup policy."
+        }
+    };
+
+    let currentLang = 'id';
+    let currentTheme = 'light';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('user_lang') || 'id';
+        setLanguage(savedLang);
+
+        const savedTheme = localStorage.getItem('user_theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+    });
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('user_lang', lang);
+
+        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+        document.documentElement.lang = lang;
+
+        updateUIContent();
+        updateProgress();
+    }
+
+    function toggleTheme() {
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        setTheme(newTheme);
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        localStorage.setItem('user_theme', theme);
+
+        document.documentElement.setAttribute('data-theme', theme);
+
+        const icon = document.getElementById('theme-icon');
+        if (theme === 'dark') {
+            icon.className = 'fa-solid fa-sun';
+        } else {
+            icon.className = 'fa-solid fa-moon';
+        }
+    }
+
+    function updateUIContent() {
+        const t = translations[currentLang];
+        
+        document.getElementById('course-tag').innerText = t.courseTag;
+        document.getElementById('dept-tag').innerText = t.deptTag;
+
+        document.getElementById('page-title').innerText = t.pageTitle;
+        document.getElementById('header-title').innerText = t.headerTitle;
+        document.getElementById('home-text').innerText = t.homeText;
+        document.getElementById('progress-title-text').innerText = t.progressTitleText;
+
+        document.getElementById('target-title').innerText = t.targetTitle;
+        document.getElementById('target-desc').innerHTML = t.targetDesc;
+
+        document.getElementById('step1-header').innerHTML = t.step1Header;
+        document.getElementById('step1-content').innerHTML = t.step1Content;
+
+        document.getElementById('step2-header').innerHTML = t.step2Header;
+        document.getElementById('step2-warn-title').innerText = t.step2WarnTitle;
+        document.getElementById('step2-warn-desc').innerHTML = t.step2WarnDesc;
+        document.getElementById('step2-list').innerHTML = t.step2List;
+        document.getElementById('cp2-text').innerHTML = t.cp2Text;
+
+        document.getElementById('step3-header').innerHTML = t.step3Header;
+        document.getElementById('step3-intro').innerText = t.step3Intro;
+        document.getElementById('step3-list').innerHTML = t.step3List;
+        document.getElementById('cp3-text').innerHTML = t.cp3Text;
+
+        document.getElementById('step4-header').innerHTML = t.step4Header;
+        document.getElementById('step4-intro').innerText = t.step4Intro;
+        document.getElementById('step4-list').innerHTML = t.step4List;
+        document.getElementById('cp4-text').innerHTML = t.cp4Text;
+    }
+
+    function toggleAccordion(sectionId) {
+        const section = document.getElementById(sectionId);
+        section.classList.toggle('active');
+    }
+
+    function updateProgress() {
+        const checkboxes = document.querySelectorAll('.checkpoint input[type="checkbox"]');
+        let checkedCount = 0;
+
+        checkboxes.forEach((cb) => {
+            const section = cb.closest('.step-section');
+            if (cb.checked) {
+                checkedCount++;
+                section.classList.add('completed');
+            } else {
+                section.classList.remove('completed');
+            }
+        });
+
+        const percentage = Math.round((checkedCount / checkboxes.length) * 100);
+        document.getElementById('progress-bar').style.width = percentage + '%';
+
+        const t = translations[currentLang];
+        document.getElementById('progress-text').innerText = t.progressText
+            .replace('{percent}', percentage)
+            .replace('{count}', checkedCount);
+    }
+</script>
+
+</body>
+</html>

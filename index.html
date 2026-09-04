@@ -1,273 +1,681 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Physica - Interactive Physics Learning Platform</title>
-    <!-- Font Awesome for physics icon -->
+    <title>Nauval Franata, S.Si., M.T. | Personal Website & Academic Hub</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* CSS Variables - Light Theme (Default) */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #38bdf8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --hero-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #1e3a8a 100%);
+            --hero-text: #ffffff;
+            --hero-desc: #94a3b8;
+            --icon-bg: #eff6ff;
+            --footer-bg: #ffffff;
+        }
+
+        /* CSS Variables - Dark Theme */
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f8fafc;
+            --accent: #38bdf8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --hero-bg: linear-gradient(135deg, #020617 0%, #0f172a 60%, #172554 100%);
+            --hero-text: #ffffff;
+            --hero-desc: #cbd5e1;
+            --icon-bg: #1e293b;
+            --footer-bg: #0f172a;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         body {
-            background-color: #f4f7f6;
-            color: #333;
-            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Header / Navbar */
-        header {
-            background-color: #1a365d;
-            color: #fff;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        /* Modern Hero Banner */
+        .hero {
+            background: var(--hero-bg);
+            color: var(--hero-text);
+            padding: 4rem 1.5rem 7rem;
+            position: relative;
         }
 
-        .logo-container {
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            height: 100px;
+            background: var(--bg);
+            transform: skewY(-2deg);
+        }
+
+        .hero-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Top Controls Bar (Lang & Theme Switcher) */
+        .top-controls-wrapper {
+            max-width: 1000px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .lang-switch {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            padding: 4px;
+            display: flex;
+            gap: 4px;
+            backdrop-filter: blur(8px);
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Dark Mode Toggle Button */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 0.5rem;
-        }
-
-        .logo-image {
-            max-height: 100px;
-            width: auto;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
-            mix-blend-mode: screen; /* Efek magic untuk menyatukan gambar gelap dengan background */
-        }
-        
-        .logo-icon {
-            font-size: 2.2rem;
-            color: #63b3ed;
-        }
-
-        header h1 {
-            font-size: 2.5rem;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            font-size: 1.1rem;
-            color: #e2e8f0;
-            margin-bottom: 1rem;
-        }
-
-        .author-info {
+            cursor: pointer;
+            backdrop-filter: blur(8px);
             font-size: 0.95rem;
-            color: #cbd5e0;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            display: inline-block;
-            padding-top: 0.8rem;
-            margin-top: 0.5rem;
+            transition: all 0.2s ease;
         }
 
-        .author-name {
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        .hero-avatar-wrapper {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hero-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
             font-weight: 600;
-            color: #ffffff;
+            margin-bottom: 0.8rem;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        .hero-info h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.4rem;
+        }
+
+        .hero-info .title {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .hero-info .desc {
+            color: var(--hero-desc);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            max-width: 650px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 0.5rem 1.1rem;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+        }
+
+        .social-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
         /* Main Container */
         .container {
             max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            margin: -2rem auto 3rem;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+            flex: 1;
         }
 
-        .welcome-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 8px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-top: 4px solid #3182ce;
+        /* Section Styling */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 2rem;
+            margin-bottom: 1.2rem;
         }
 
-        .welcome-card h2 {
-            color: #1a365d;
-            margin-bottom: 0.8rem;
+        .section-header h3 {
+            font-size: 1.25rem;
+            color: var(--secondary);
+            font-weight: 700;
         }
 
-        /* Simulation Grid */
-        .grid-simulasi {
+        /* Grid Layouts */
+        .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
+        /* Card Styles */
         .card {
-            background: #fff;
-            border-radius: 8px;
-            padding: 1.5rem;
-            border-left: 5px solid #3182ce;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Interactive Card Hover */
+        .card-interactive {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
+            overflow: hidden;
         }
 
-        .card:hover {
+        .card-interactive::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card-interactive:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
         }
 
-        .card h3 {
-            color: #2b6cb0;
+        .card-interactive:hover::before {
+            opacity: 1;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: var(--icon-bg);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--card-border);
+        }
+
+        .card h4 {
+            font-size: 1.15rem;
+            color: var(--secondary);
+            font-weight: 700;
             margin-bottom: 0.5rem;
         }
 
         .card p {
-            font-size: 0.95rem;
-            color: #4a5568;
-            margin-bottom: 1.2rem;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
         }
 
-        /* Link Buttons */
+        /* Education List */
+        .education-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .edu-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .edu-icon {
+            background: var(--icon-bg);
+            color: var(--primary);
+            padding: 0.8rem;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            border: 1px solid var(--card-border);
+        }
+
+        .edu-details h5 {
+            font-size: 1rem;
+            color: var(--secondary);
+            font-weight: 700;
+        }
+
+        .edu-details .inst {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Teaching List */
+        .course-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .course-list li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .course-list li i {
+            color: var(--primary);
+            font-size: 0.85rem;
+        }
+
+        /* Buttons */
         .btn {
-            display: inline-block;
-            background-color: #3182ce;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--primary);
             color: #fff;
-            padding: 0.6rem 1.2rem;
-            border-radius: 5px;
+            padding: 0.7rem 1.3rem;
+            border-radius: 10px;
             text-decoration: none;
-            font-weight: bold;
-            text-align: center;
-            transition: background 0.2s;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
         }
 
         .btn:hover {
-            background-color: #2b6cb0;
+            background-color: var(--primary-dark);
+            gap: 10px;
         }
-        
+
+        .btn-disabled {
+            background-color: var(--icon-bg);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            border: 1px solid var(--card-border);
+        }
+
         /* Footer */
         footer {
             text-align: center;
-            padding: 1.5rem;
-            color: #718096;
+            padding: 2rem 1.5rem;
+            color: var(--text-muted);
             font-size: 0.9rem;
-            margin-top: 3rem;
+            border-top: 1px solid var(--card-border);
+            background: var(--footer-bg);
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            .hero-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .hero-info .desc {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <img src="logo-physica.png" alt="Physica Logo" class="logo-image">
+    <!-- Header & Profile Hero -->
+    <section class="hero">
+        <!-- Top Controls Bar -->
+        <div class="top-controls-wrapper">
+            <!-- Language Switcher -->
+            <div class="lang-switch">
+                <button class="lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+            </div>
+            
+            <!-- Dark Mode Toggle Button -->
+            <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
         </div>
-        <div class="author-info">
-            <p class="author-name">Nauval Franata, S.Si., M.T.</p>
-            <p>Universitas Sultan Ageng Tirtayasa</p>
+
+        <div class="hero-container">
+            <div class="hero-avatar-wrapper">
+                <img src="foto-dosen.jpg" alt="Nauval Franata" class="hero-img" onerror="this.src='https://ui-avatars.com/api/?name=Nauval+Franata&background=0D8ABC&color=fff&size=150'">
+            </div>
+            <div class="hero-info">
+                <span class="badge"><i class="fa-solid fa-globe"></i> <span data-key="badge">Personal Website & Academic Hub</span></span>
+                <h1>Nauval Franata, S.Si., M.T.</h1>
+                <div class="title"><i class="fa-solid fa-university"></i> <span data-key="role">Dosen Universitas Sultan Ageng Tirtayasa</span></div>
+                <p class="desc" data-key="hero_desc">Selamat datang di portal akademik pribadi saya. Situs ini ditujukan untuk membagikan modul pembelajaran interaktif, media pengajaran, serta berbagai fasilitas belajar digital bagi mahasiswa dan peneliti.</p>
+                
+                <div class="social-links">
+                    <a href="mailto:nauval.franata@untirta.ac.id" class="social-btn"><i class="fa-solid fa-envelope"></i> <span data-key="email_btn">Kontak Email</span></a>
+                    <a href="https://scholar.google.com/citations?user=e6UEwY8AAAAJ&hl=en" target="_blank" class="social-btn"><i class="fa-solid fa-graduation-cap"></i> Google Scholar</a>
+                </div>
+            </div>
         </div>
-    </header>
+    </section>
 
     <div class="container">
-        <!-- Welcome Section -->
-        <div class="welcome-card">
-            <h2>Welcome to Physica!</h2>
-            <p>This web application serves as an interactive platform designed to help learners explore fundamental physics concepts through intuitive tools and visual simulations.</p>
-        </div>
 
-        <!-- Topics Grid -->
-        <div class="grid-simulasi">
+        <!-- Bagian 1: Latar Belakang Pendidikan & Pengajaran -->
+        <div class="grid-2">
             
-            <!-- Topic 1 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 1: Quantities, Units, & Measurements</h3>
-                    <p>Interactive tool exploring fundamental quantities, SI units, scientific notation, and dimensional analysis.</p>
+            <!-- Riwayat Pendidikan -->
+            <div>
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-user-graduate" style="color: var(--primary);"></i> <span data-key="edu_title">Latar Belakang Pendidikan</span></h3>
                 </div>
-                <a href="t1.html" class="btn">Explore Topic 1 &rarr;</a>
+                <div class="card education-list">
+                    
+                    <div class="edu-item">
+                        <div class="edu-icon"><i class="fa-solid fa-microchip"></i></div>
+                        <div class="edu-details">
+                            <h5 data-key="master_degree">Magister Teknik (M.T.)</h5>
+                            <div class="inst" data-key="master_dept">Teknik Elektro — Universitas Indonesia</div>
+                        </div>
+                    </div>
+
+                    <div class="edu-item">
+                        <div class="edu-icon"><i class="fa-solid fa-atom"></i></div>
+                        <div class="edu-details">
+                            <h5 data-key="bachelor_degree">Sarjana Sains (S.Si.)</h5>
+                            <div class="inst" data-key="bachelor_dept">Fisika — Universitas Indonesia</div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
-            <!-- Topic 2 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 2: Vectors</h3>
-                    <p>Interactive tool for scalar-vector classification, component analysis, mathematical operations, and vector visual representations.</p>
+            <!-- Mata Kuliah yang Diampu -->
+            <div>
+                <div class="section-header">
+                    <h3><i class="fa-solid fa-book-open-reader" style="color: var(--primary);"></i> <span data-key="teaching_title">Mata Kuliah yang Diampu</span></h3>
                 </div>
-                <a href="t2.html" class="btn">Explore Topic 2 &rarr;</a>
-            </div>
-
-            <!-- Topic 3 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 3: Kinematics</h3>
-                    <p>Interactive tool for kinematics visual representations.</p>
+                <div class="card">
+                    <ul class="course-list">
+                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c1">Fisika 1</span></li>
+                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c2">Fisika 2</span></li>
+                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c3">Matematika 2</span></li>
+                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c4">Teknologi Sensor dan Transducer</span></li>
+                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c5">Sistem Tertanam</span></li>
+                    </ul>
                 </div>
-                <a href="t3.html" class="btn">Explore Topic 3 &rarr;</a>
-            </div>
-
-            <!-- Topic 4 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 4: -</h3>
-                    <p>Interactive tool for visual representations.</p>
-                </div>
-                <a href="t4.html" class="btn">Explore Topic 4 &rarr;</a>
-            </div>
-
-            <!-- Topic 5 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 5: -</h3>
-                    <p>Interactive tool for visual representations.</p>
-                </div>
-                <a href="t5.html" class="btn">Explore Topic 5 &rarr;</a>
-            </div>
-
-            <!-- Topic 6 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 6: -</h3>
-                    <p>Interactive tool for visual representations.</p>
-                </div>
-                <a href="t6.html" class="btn">Explore Topic 6 &rarr;</a>
-            </div>
-
-            <!-- Topic 7 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 7: -</h3>
-                    <p>Interactive tool for visual representations.</p>
-                </div>
-                <a href="t7.html" class="btn">Explore Topic 7 &rarr;</a>
-            </div>
-
-            <!-- Topic 8 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 8: -</h3>
-                    <p>Interactive tool for visual representations.</p>
-                </div>
-                <a href="t8.html" class="btn">Explore Topic 8 &rarr;</a>
-            </div>
-
-            <!-- Topic 9 -->
-            <div class="card">
-                <div>
-                    <h3>Topic 9: -</h3>
-                    <p>Interactive tool for visual representations.</p>
-                </div>
-                <a href="t9.html" class="btn">Explore Topic 9 &rarr;</a>
             </div>
 
         </div>
+
+        <!-- Bagian 2: Media & Modul Pembelajaran Interaktif -->
+        <div class="section-header">
+            <h3><i class="fa-solid fa-laptop-code" style="color: var(--primary);"></i> <span data-key="module_title">Media & Modul Pembelajaran Interaktif</span></h3>
+        </div>
+
+        <div class="grid-2">
+            <!-- Modul 1: Physica -->
+            <div class="card card-interactive">
+                <div>
+                    <div class="card-icon">
+                        <i class="fa-solid fa-atom"></i>
+                    </div>
+                    <h4>Physica</h4>
+                    <p data-key="physica_desc">Platform web interaktif yang dirancang untuk pembelajaran Fisika Dasar, dilengkapi simulasi visual dan alat bantu untuk memahami konsep-konsep fisika secara intuitif.</p>
+                </div>
+                <a href="physica.html" class="btn"><span data-key="open_physica">Buka Physica</span> <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <!-- Modul 2: Virtual Lab -->
+            <div class="card card-interactive">
+                <div>
+                    <div class="card-icon">
+                        <i class="fa-solid fa-flask"></i>
+                    </div>
+                    <h4 data-key="vlab_title">Laboratorium Virtual</h4>
+                    <p data-key="vlab_desc">Panduan praktikum interaktif, simulasi pengambilan data eksperimen, dan alat ukur digital.</p>
+                </div>
+                <a href="#" id="vlab-btn" class="btn btn-disabled" onclick="alert(currentLang === 'id' ? 'Modul ini sedang dalam tahap pengembangan.' : 'This module is currently under development.'); return false;" data-key="coming_soon">Segera Hadir</a>
+            </div>
+        </div>
+
     </div>
 
     <footer>
-        <p>&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Designed as an interactive physics learning platform.</p>
+        <p>&copy; 2026 Nauval Franata, S.Si., M.T. — Universitas Sultan Ageng Tirtayasa.</p>
     </footer>
 
+    <!-- Script Multibahasa & Dark Mode Toggle -->
+    <script>
+        let currentLang = 'id';
+        let currentTheme = 'light';
+
+        const translations = {
+            id: {
+                badge: "Personal Website & Academic Hub",
+                role: "Dosen Universitas Sultan Ageng Tirtayasa",
+                hero_desc: "Selamat datang di portal akademik pribadi saya. Situs ini ditujukan untuk membagikan modul pembelajaran interaktif, media pengajaran, serta berbagai fasilitas belajar digital bagi mahasiswa dan peneliti.",
+                email_btn: "Kontak Email",
+                edu_title: "Latar Belakang Pendidikan",
+                master_degree: "Magister Teknik (M.T.)",
+                master_dept: "Teknik Elektro — Universitas Indonesia",
+                bachelor_degree: "Sarjana Sains (S.Si.)",
+                bachelor_dept: "Fisika — Universitas Indonesia",
+                teaching_title: "Mata Kuliah yang Diampu",
+                c1: "Fisika 1",
+                c2: "Fisika 2",
+                c3: "Matematika 2",
+                c4: "Teknologi Sensor dan Transducer",
+                c5: "Sistem Tertanam",
+                module_title: "Media & Modul Pembelajaran Interaktif",
+                physica_desc: "Platform web interaktif yang dirancang untuk pembelajaran Fisika Dasar, dilengkapi simulasi visual dan alat bantu untuk memahami konsep-konsep fisika secara intuitif.",
+                open_physica: "Buka Physica",
+                vlab_title: "Laboratorium Virtual",
+                vlab_desc: "Panduan praktikum interaktif, simulasi pengambilan data eksperimen, dan alat ukur digital.",
+                coming_soon: "Segera Hadir"
+            },
+            en: {
+                badge: "Personal Website & Academic Hub",
+                role: "Lecturer at Sultan Ageng Tirtayasa University",
+                hero_desc: "Welcome to my personal academic portal. This website serves to share interactive learning modules, teaching resources, and digital learning tools for students and researchers.",
+                email_btn: "Email Contact",
+                edu_title: "Educational Background",
+                master_degree: "Master of Engineering (M.Eng.)",
+                master_dept: "Electrical Engineering — Universitas Indonesia",
+                bachelor_degree: "Bachelor of Science (B.Sc.)",
+                bachelor_dept: "Physics — Universitas Indonesia",
+                teaching_title: "Courses Taught",
+                c1: "Physics 1",
+                c2: "Physics 2",
+                c3: "Mathematics 2",
+                c4: "Sensor and Transducer Technology",
+                c5: "Embedded Systems",
+                module_title: "Interactive Learning Modules & Media",
+                physica_desc: "An interactive web platform designed for General Physics learning, featuring visual simulations and tools to understand physical concepts intuitively.",
+                open_physica: "Open Physica",
+                vlab_title: "Virtual Laboratory",
+                vlab_desc: "Interactive lab guides, experimental data collection simulations, and digital measuring tools.",
+                coming_soon: "Coming Soon"
+            }
+        };
+
+        // Inisialisasi Tema & Bahasa
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load Preferensi Bahasa
+            const savedLang = localStorage.getItem('user_lang') || 'id';
+            setLanguage(savedLang);
+
+            // Load Preferensi Tema
+            const savedTheme = localStorage.getItem('user_theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                // Ikuti preferensi OS pengguna jika belum ada pilihan tersimpan
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+        });
+
+        // Fitur Ganti Bahasa
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('user_lang', lang);
+            
+            document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+            document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+            
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-key]').forEach(element => {
+                const key = element.getAttribute('data-key');
+                if (translations[lang][key]) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Fitur Ganti Tema (Dark / Light)
+        function toggleTheme() {
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            setTheme(newTheme);
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            localStorage.setItem('user_theme', theme);
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            const icon = document.getElementById('theme-icon');
+            if (theme === 'dark') {
+                icon.className = 'fa-solid fa-sun';
+            } else {
+                icon.className = 'fa-solid fa-moon';
+            }
+        }
+    </script>
 </body>
 </html>

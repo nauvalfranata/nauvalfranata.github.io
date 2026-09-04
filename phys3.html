@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab: Kinematics - Physica</title>
+    <style>
+        /* CSS Variables */
+        :root[data-theme="light"] {
+            --bg-color: #f8fafc;
+            --panel-bg: #ffffff;
+            --panel-border: #e2e8f0;
+            --accent-color: #0284c7;
+            --accent-light: #e0f2fe;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --sensor-bg: #1e293b;
+            --sensor-text: #38bdf8;
+            --sensor-border: #0f172a;
+            --nav-btn-bg: #f1f5f9;
+            --nav-btn-border: #cbd5e1;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --toggle-bg: #e2e8f0;
+            --toggle-text: #0f172a;
+            --tooltip-bg: rgba(15, 23, 42, 0.9);
+            --tooltip-text: #ffffff;
+        }
+
+        :root[data-theme="dark"] {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --panel-border: #334155;
+            --accent-color: #38bdf8;
+            --accent-light: rgba(56, 189, 248, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --sensor-bg: #022c22;
+            --sensor-text: #4ade80;
+            --sensor-border: #065f46;
+            --nav-btn-bg: #0f172a;
+            --nav-btn-border: #334155;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --toggle-bg: #334155;
+            --toggle-text: #f8fafc;
+            --tooltip-bg: rgba(255, 255, 255, 0.95);
+            --tooltip-text: #0f172a;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: var(--panel-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--panel-border);
+        }
+
+        header {
+            border-bottom: 2px solid var(--panel-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h1 { margin: 0; font-size: 1.6rem; color: var(--accent-color); }
+        .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
+        .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
+
+        .theme-toggle-btn {
+            background: var(--toggle-bg);
+            color: var(--toggle-text);
+            border: 1px solid var(--nav-btn-border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-menu {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--accent-light);
+            color: var(--accent-color);
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 820px) {
+            .lab-grid { grid-template-columns: 1fr; }
+        }
+
+        .control-panel {
+            background: var(--bg-color);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 18px;
+        }
+
+        .form-group { margin-bottom: 12px; }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #ffffff;
+            background-color: var(--accent-color);
+            transition: 0.2s;
+        }
+
+        .btn-reset { background-color: #ef4444; }
+        .btn:hover { opacity: 0.9; }
+
+        .telemetry {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            background: var(--sensor-bg);
+            color: var(--sensor-text);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--sensor-border);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .telemetry div {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .telemetry div span {
+            display: block;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--sensor-text);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .summary-card {
+            background: var(--accent-light);
+            border: 1px solid var(--accent-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .summary-item strong {
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        .graph-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        canvas {
+            background-color: var(--bg-color);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            width: 100%;
+            display: block;
+        }
+
+        .canvas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Responsive Dual Display for Vertical Motion */
+        .dual-canvas-grid {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .dual-canvas-grid { grid-template-columns: 1fr; }
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .graph-tooltip {
+            position: absolute;
+            display: none;
+            background: var(--tooltip-bg);
+            color: var(--tooltip-text);
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>Virtual Lab: Kinematics</h1>
+            <div class="subtitle">Lecturer: Nauval Franata, S.Si., M.T.</div>
+            <div class="univ-tag">Sultan Ageng Tirtayasa University</div>
+        </div>
+        <div class="header-actions">
+            <a href="index.html" style="text-decoration: none; padding: 8px 14px; background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                🏠 Home
+            </a>
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchTab('horizontalTab')">➡️ Linear Motion</button>
+        <button class="tab-btn" onclick="switchTab('verticalTab')">⬆️ Vertical Motion</button>
+        <button class="tab-btn" onclick="switchTab('projectileTab')">🎯 Projectile Motion</button>
+        <button class="tab-btn" onclick="switchTab('circularTab')">🔄 Circular Motion</button>
+    </div>
+
+    <!-- TAB 1: LINEAR MOTION -->
+    <div id="horizontalTab" class="tab-content active">
+        <div class="lab-grid">
+            <div class="control-panel">
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Horizontal Parameters</h3>
+                
+                <div class="form-group">
+                    <label for="hMode">Motion Type:</label>
+                    <select id="hMode" onchange="toggleHAccGroup()">
+                        <option value="GLB">Uniform Motion (a = 0)</option>
+                        <option value="GLBB" selected>Accelerated Motion (a ≠ 0)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="hX0">Initial Position (x₀) [m]:</label>
+                    <input type="number" id="hX0" value="0" step="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="hV0">Initial Velocity (v₀) [m/s]:</label>
+                    <input type="number" id="hV0" value="5" step="0.5">
+                </div>
+
+                <div class="form-group" id="hAccGroup">
+                    <label for="hAcc">Acceleration (a) [m/s²]:</label>
+                    <input type="number" id="hAcc" value="2" step="0.5">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" id="hStartBtn" onclick="toggleHSim()">Start</button>
+                    <button class="btn btn-reset" onclick="resetHSim()">Reset</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="telemetry">
+                    <div>Time (t)<span id="hDispT">0.00 s</span></div>
+                    <div>Position (x)<span id="hDispX">0.00 m</span></div>
+                    <div>Velocity (v)<span id="hDispV">0.00 m/s</span></div>
+                </div>
+
+                <div class="canvas-container">
+                    <div>
+                        <div class="section-title">Visual Motion Track</div>
+                        <canvas id="hSimCanvas" height="100"></canvas>
+                    </div>
+                    <div>
+                        <div class="section-title">
+                            <span>Position vs Time Graph (x - t)</span>
+                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover graph to inspect</small>
+                        </div>
+                        <div class="graph-wrapper">
+                            <canvas id="hGraphCanvas" height="140"></canvas>
+                            <div id="hGraphTooltip" class="graph-tooltip"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 2: VERTICAL MOTION -->
+    <div id="verticalTab" class="tab-content">
+        <div class="lab-grid">
+            <div class="control-panel">
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Vertical Parameters</h3>
+                
+                <div class="form-group">
+                    <label for="vMode">Motion Type:</label>
+                    <select id="vMode" onchange="toggleVModeInputs()">
+                        <option value="GJB">Free Fall (v₀ = 0)</option>
+                        <option value="GVA" selected>Thrown Upward (v₀ > 0)</option>
+                        <option value="GVB">Thrown Downward (v₀ < 0)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="vY0">Initial Height (y₀) [m]:</label>
+                    <input type="number" id="vY0" value="0" step="1" min="0" max="100">
+                </div>
+
+                <div class="form-group" id="vV0Group">
+                    <label for="vV0">Initial Speed (|v₀|) [m/s]:</label>
+                    <input type="number" id="vV0" value="20" step="0.5" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="vGravity">Gravity (g) [m/s²]:</label>
+                    <input type="number" id="vGravity" value="9.8" step="0.1" min="0">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" id="vStartBtn" onclick="toggleVSim()">Start</button>
+                    <button class="btn btn-reset" onclick="resetVSim()">Reset</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="telemetry">
+                    <div>Time (t)<span id="vDispT">0.00 s</span></div>
+                    <div>Height (y)<span id="vDispY">0.00 m</span></div>
+                    <div>Velocity (v)<span id="vDispV">0.00 m/s</span></div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span>Max Height (y_max)</span>
+                        <strong id="vSummaryYMax">0.00 m</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Peak Time (t_peak)</span>
+                        <strong id="vSummaryTPeak">0.00 s</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Total Time (t_total)</span>
+                        <strong id="vSummaryTTotal">0.00 s</strong>
+                    </div>
+                </div>
+
+                <!-- DUAL DISPLAY: SIMULASI VISUAL & GRAFIK GRAFIK Y-T -->
+                <div class="dual-canvas-grid">
+                    <div>
+                        <div class="section-title">Motion Track</div>
+                        <canvas id="vSimCanvas" height="220"></canvas>
+                    </div>
+                    <div>
+                        <div class="section-title">
+                            <span>Height vs Time Graph (y - t)</span>
+                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover to inspect</small>
+                        </div>
+                        <div class="graph-wrapper">
+                            <canvas id="vGraphCanvas" height="220"></canvas>
+                            <div id="vGraphTooltip" class="graph-tooltip"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 3: PROJECTILE MOTION -->
+    <div id="projectileTab" class="tab-content">
+        <div class="lab-grid">
+            <div class="control-panel">
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Projectile Parameters</h3>
+                
+                <div class="form-group">
+                    <label for="pV0">Initial Velocity (v₀) [m/s]:</label>
+                    <input type="number" id="pV0" value="25" step="1" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="pAngle">Launch Angle (θ) [°]:</label>
+                    <input type="number" id="pAngle" value="45" step="1" min="0" max="90">
+                </div>
+
+                <div class="form-group">
+                    <label for="pY0">Initial Height (y₀) [m]:</label>
+                    <input type="number" id="pY0" value="0" step="1" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="pGravity">Gravity (g) [m/s²]:</label>
+                    <input type="number" id="pGravity" value="9.8" step="0.1" min="0">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" id="pStartBtn" onclick="togglePSim()">Start</button>
+                    <button class="btn btn-reset" onclick="resetPSim()">Reset</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="telemetry">
+                    <div>Time (t)<span id="pDispT">0.00 s</span></div>
+                    <div>Pos X (x)<span id="pDispX">0.00 m</span></div>
+                    <div>Pos Y (y)<span id="pDispY">0.00 m</span></div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="summary-item">
+                        <span>Max Height (y_max)</span>
+                        <strong id="pSummaryYMax">0.00 m</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Max Range (x_max)</span>
+                        <strong id="pSummaryXMax">0.00 m</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Total Time (t_total)</span>
+                        <strong id="pSummaryTTotal">0.00 s</strong>
+                    </div>
+                </div>
+
+                <div class="canvas-container">
+                    <div>
+                        <div class="section-title">
+                            <span>Trajectory Graph (y - x)</span>
+                            <small style="color:var(--accent-color); font-weight:normal;">💡 Hover graph to inspect point</small>
+                        </div>
+                        <div class="graph-wrapper">
+                            <canvas id="pSimCanvas" height="220"></canvas>
+                            <div id="pGraphTooltip" class="graph-tooltip"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: CIRCULAR MOTION -->
+    <div id="circularTab" class="tab-content">
+        <div class="lab-grid">
+            <div class="control-panel">
+                <h3 style="margin-top: 0; margin-bottom: 15px; font-size: 1.1rem; color: var(--accent-color);">Circular Parameters</h3>
+                
+                <div class="form-group">
+                    <label for="cRadius">Radius (r) [m]:</label>
+                    <input type="number" id="cRadius" value="5" step="0.5" min="1">
+                </div>
+
+                <div class="form-group">
+                    <label for="cOmega">Angular Velocity (ω) [rad/s]:</label>
+                    <input type="number" id="cOmega" value="2" step="0.2">
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn" id="cStartBtn" onclick="toggleCSim()">Start</button>
+                    <button class="btn btn-reset" onclick="resetCSim()">Reset</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="telemetry">
+                    <div>Time (t)<span id="cDispT">0.00 s</span></div>
+                    <div>Linear Speed (v)<span id="cDispV">0.00 m/s</span></div>
+                    <div>Centripetal Acc (aₛ)<span id="cDispAs">0.00 m/s²</span></div>
+                </div>
+
+                <div class="canvas-container">
+                    <div>
+                        <div class="section-title">Visual Circular Motion</div>
+                        <canvas id="cSimCanvas" height="220"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateToggleBtnUI(savedTheme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateToggleBtnUI(newTheme);
+        resetHSim(); resetVSim(); resetPSim(); resetCSim();
+    }
+
+    function updateToggleBtnUI(theme) {
+        document.getElementById('theme-icon').innerText = theme === 'dark' ? '☀️' : '🌙';
+        document.getElementById('theme-text').innerText = theme === 'dark' ? 'Light Mode' : 'Dark Mode';
+    }
+
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+        const tabs = ['horizontalTab', 'verticalTab', 'projectileTab', 'circularTab'];
+        const idx = tabs.indexOf(tabId);
+        document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+
+        resizeAllCanvases();
+    }
+
+    function resizeAllCanvases() {
+        resizeHCanvas();
+        resizeVCanvas();
+        resizePCanvas();
+        resizeCCanvas();
+    }
+
+    // --- 1. HORIZONTAL MOTION ---
+    const hSimCanvas = document.getElementById('hSimCanvas');
+    const hSimCtx = hSimCanvas.getContext('2d');
+    const hGraphCanvas = document.getElementById('hGraphCanvas');
+    const hGraphCtx = hGraphCanvas.getContext('2d');
+    let isHRunning = false, hAnimId, hT = 0, hDt = 0.03, hData = [];
+    let hHoverPt = null;
+
+    function toggleHAccGroup() {
+        document.getElementById('hAccGroup').style.display = document.getElementById('hMode').value === 'GLB' ? 'none' : 'block';
+        resetHSim();
+    }
+
+    function drawHBall(x) {
+        hSimCtx.clearRect(0, 0, hSimCanvas.width, hSimCanvas.height);
+        hSimCtx.beginPath(); hSimCtx.moveTo(20, 60); hSimCtx.lineTo(hSimCanvas.width - 20, 60);
+        hSimCtx.strokeStyle = '#cbd5e1'; hSimCtx.lineWidth = 4; hSimCtx.stroke();
+
+        let xPx = 20 + Math.min(Math.max(x, 0), 100) / 100 * (hSimCanvas.width - 40);
+        hSimCtx.beginPath(); hSimCtx.arc(xPx, 45, 10, 0, Math.PI * 2);
+        hSimCtx.fillStyle = '#0284c7'; hSimCtx.fill();
+    }
+
+    function drawHGraph() {
+        hGraphCtx.clearRect(0, 0, hGraphCanvas.width, hGraphCanvas.height);
+        let padL = 35, padB = 20, W = hGraphCanvas.width - padL - 10, H = hGraphCanvas.height - padB - 10;
+
+        hGraphCtx.beginPath();
+        hGraphCtx.moveTo(padL, 10); hGraphCtx.lineTo(padL, hGraphCanvas.height - padB);
+        hGraphCtx.lineTo(hGraphCanvas.width - 10, hGraphCanvas.height - padB);
+        hGraphCtx.strokeStyle = '#94a3b8'; hGraphCtx.lineWidth = 1; hGraphCtx.stroke();
+
+        if (hData.length < 2) return;
+
+        hGraphCtx.beginPath();
+        hGraphCtx.strokeStyle = '#0284c7'; hGraphCtx.lineWidth = 2;
+        for (let i = 0; i < hData.length; i++) {
+            let px = padL + (hData[i].t / 10) * W;
+            let py = (hGraphCanvas.height - padB) - (Math.min(hData[i].x, 100) / 100) * H;
+            if (i === 0) hGraphCtx.moveTo(px, py); else hGraphCtx.lineTo(px, py);
+        }
+        hGraphCtx.stroke();
+
+        if (hHoverPt) {
+            let px = padL + (hHoverPt.t / 10) * W;
+            let py = (hGraphCanvas.height - padB) - (Math.min(hHoverPt.x, 100) / 100) * H;
+
+            hGraphCtx.strokeStyle = '#ef4444'; hGraphCtx.setLineDash([3, 3]);
+            hGraphCtx.beginPath(); hGraphCtx.moveTo(px, 10); hGraphCtx.lineTo(px, hGraphCanvas.height - padB); hGraphCtx.stroke();
+            hGraphCtx.beginPath(); hGraphCtx.moveTo(padL, py); hGraphCtx.lineTo(hGraphCanvas.width - 10, py); hGraphCtx.stroke();
+            hGraphCtx.setLineDash([]);
+
+            hGraphCtx.beginPath(); hGraphCtx.arc(px, py, 5, 0, Math.PI * 2);
+            hGraphCtx.fillStyle = '#ef4444'; hGraphCtx.fill();
+        }
+    }
+
+    function updateHSim() {
+        const x0 = parseFloat(document.getElementById('hX0').value) || 0;
+        const v0 = parseFloat(document.getElementById('hV0').value) || 0;
+        const a = document.getElementById('hMode').value === 'GLB' ? 0 : (parseFloat(document.getElementById('hAcc').value) || 0);
+
+        let x = x0 + (v0 * hT) + (0.5 * a * hT * hT);
+        let v = v0 + (a * hT);
+
+        document.getElementById('hDispT').innerText = hT.toFixed(2) + ' s';
+        document.getElementById('hDispX').innerText = Math.max(x, 0).toFixed(2) + ' m';
+        document.getElementById('hDispV').innerText = v.toFixed(2) + ' m/s';
+
+        drawHBall(x);
+        hData.push({ t: hT, x: x });
+        drawHGraph();
+
+        if (x >= 100 || x < 0 || hT >= 10) { toggleHSim(); return; }
+        hT += hDt;
+        if (isHRunning) hAnimId = requestAnimationFrame(updateHSim);
+    }
+
+    function toggleHSim() {
+        isHRunning = !isHRunning;
+        document.getElementById('hStartBtn').innerText = isHRunning ? 'Pause' : 'Start';
+        if (isHRunning) updateHSim(); else cancelAnimationFrame(hAnimId);
+    }
+
+    function resetHSim() {
+        if (isHRunning) toggleHSim();
+        hT = 0; hData = []; hHoverPt = null;
+        document.getElementById('hGraphTooltip').style.display = 'none';
+        const x0 = parseFloat(document.getElementById('hX0').value) || 0;
+        const v0 = parseFloat(document.getElementById('hV0').value) || 0;
+        document.getElementById('hDispT').innerText = '0.00 s';
+        document.getElementById('hDispX').innerText = x0.toFixed(2) + ' m';
+        document.getElementById('hDispV').innerText = v0.toFixed(2) + ' m/s';
+        drawHBall(x0); drawHGraph();
+    }
+
+    function resizeHCanvas() {
+        if (hSimCanvas.parentElement) {
+            hSimCanvas.width = hSimCanvas.parentElement.clientWidth;
+            hGraphCanvas.width = hGraphCanvas.parentElement.clientWidth;
+            resetHSim();
+        }
+    }
+
+    hGraphCanvas.addEventListener('mousemove', (e) => {
+        if (hData.length < 2) return;
+        const rect = hGraphCanvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        let padL = 35, W = hGraphCanvas.width - padL - 10;
+        
+        let targetT = ((mouseX - padL) / W) * 10;
+        let closest = hData.reduce((prev, curr) => Math.abs(curr.t - targetT) < Math.abs(prev.t - targetT) ? curr : prev);
+
+        hHoverPt = closest;
+        drawHGraph();
+
+        const tooltip = document.getElementById('hGraphTooltip');
+        tooltip.style.display = 'block';
+        tooltip.style.left = (mouseX + 10) + 'px';
+        tooltip.style.top = '20px';
+        tooltip.innerHTML = `t: <b>${closest.t.toFixed(2)}s</b><br>x: <b>${closest.x.toFixed(2)}m</b>`;
+    });
+
+    hGraphCanvas.addEventListener('mouseleave', () => {
+        hHoverPt = null;
+        document.getElementById('hGraphTooltip').style.display = 'none';
+        drawHGraph();
+    });
+
+
+    // --- 2. VERTICAL MOTION ---
+    const vSimCanvas = document.getElementById('vSimCanvas');
+    const vSimCtx = vSimCanvas.getContext('2d');
+    const vGraphCanvas = document.getElementById('vGraphCanvas');
+    const vGraphCtx = vGraphCanvas.getContext('2d');
+    let isVRunning = false, vAnimId, vT = 0, vDt = 0.03, vData = [];
+    let vHoverPt = null;
+
+    function toggleVModeInputs() {
+        const mode = document.getElementById('vMode').value;
+        document.getElementById('vV0Group').style.display = (mode === 'GJB') ? 'none' : 'block';
+        resetVSim();
+    }
+
+    function drawVBall(y) {
+        vSimCtx.clearRect(0, 0, vSimCanvas.width, vSimCanvas.height);
+        let centerX = vSimCanvas.width / 2;
+        let padB = 25, padT = 20;
+        let availableH = vSimCanvas.height - padB - padT;
+
+        // Ground line
+        vSimCtx.beginPath();
+        vSimCtx.moveTo(10, vSimCanvas.height - padB);
+        vSimCtx.lineTo(vSimCanvas.width - 10, vSimCanvas.height - padB);
+        vSimCtx.strokeStyle = '#cbd5e1';
+        vSimCtx.lineWidth = 3;
+        vSimCtx.stroke();
+
+        // Vertical Guide Line
+        vSimCtx.beginPath();
+        vSimCtx.setLineDash([3, 3]);
+        vSimCtx.moveTo(centerX, padT);
+        vSimCtx.lineTo(centerX, vSimCanvas.height - padB);
+        vSimCtx.strokeStyle = '#94a3b8';
+        vSimCtx.stroke();
+        vSimCtx.setLineDash([]);
+
+        // Calculate Y Pixel Position (0m -> Bottom, 100m -> Top)
+        let clampedY = Math.min(Math.max(y, 0), 100);
+        let yPx = (vSimCanvas.height - padB) - (clampedY / 100) * availableH;
+
+        // Draw Ball
+        vSimCtx.beginPath();
+        vSimCtx.arc(centerX, yPx, 10, 0, Math.PI * 2);
+        vSimCtx.fillStyle = '#38bdf8';
+        vSimCtx.fill();
+        vSimCtx.strokeStyle = '#0284c7';
+        vSimCtx.lineWidth = 2;
+        vSimCtx.stroke();
+    }
+
+    function drawVGraph() {
+        vGraphCtx.clearRect(0, 0, vGraphCanvas.width, vGraphCanvas.height);
+        let padL = 35, padB = 20, W = vGraphCanvas.width - padL - 10, H = vGraphCanvas.height - padB - 10;
+
+        vGraphCtx.beginPath();
+        vGraphCtx.moveTo(padL, 10); vGraphCtx.lineTo(padL, vGraphCanvas.height - padB);
+        vGraphCtx.lineTo(vGraphCanvas.width - 10, vGraphCanvas.height - padB);
+        vGraphCtx.strokeStyle = '#94a3b8'; vGraphCtx.lineWidth = 1; vGraphCtx.stroke();
+
+        if (vData.length < 2) return;
+
+        vGraphCtx.beginPath();
+        vGraphCtx.strokeStyle = '#38bdf8'; vGraphCtx.lineWidth = 2;
+        for (let i = 0; i < vData.length; i++) {
+            let px = padL + (vData[i].t / 10) * W;
+            let py = (vGraphCanvas.height - padB) - (Math.min(vData[i].y, 100) / 100) * H;
+            if (i === 0) vGraphCtx.moveTo(px, py); else vGraphCtx.lineTo(px, py);
+        }
+        vGraphCtx.stroke();
+
+        if (vHoverPt) {
+            let px = padL + (vHoverPt.t / 10) * W;
+            let py = (vGraphCanvas.height - padB) - (Math.min(vHoverPt.y, 100) / 100) * H;
+
+            vGraphCtx.strokeStyle = '#ef4444'; vGraphCtx.setLineDash([3, 3]);
+            vGraphCtx.beginPath(); vGraphCtx.moveTo(px, 10); vGraphCtx.lineTo(px, vGraphCanvas.height - padB); vGraphCtx.stroke();
+            vGraphCtx.beginPath(); vGraphCtx.moveTo(padL, py); vGraphCtx.lineTo(vGraphCanvas.width - 10, py); vGraphCtx.stroke();
+            vGraphCtx.setLineDash([]);
+
+            vGraphCtx.beginPath(); vGraphCtx.arc(px, py, 5, 0, Math.PI * 2);
+            vGraphCtx.fillStyle = '#ef4444'; vGraphCtx.fill();
+        }
+    }
+
+    function calculateVSummary() {
+        const mode = document.getElementById('vMode').value;
+        const rawV0 = Math.abs(parseFloat(document.getElementById('vV0').value) || 0);
+        let v0 = mode === 'GVA' ? rawV0 : (mode === 'GVB' ? -rawV0 : 0);
+        const y0 = parseFloat(document.getElementById('vY0').value) || 0;
+        const g = parseFloat(document.getElementById('vGravity').value) || 9.8;
+
+        let yMax = y0;
+        let tPeak = 0;
+
+        if (mode === 'GVA' && g > 0) {
+            tPeak = v0 / g;
+            yMax = y0 + (v0 * v0) / (2 * g);
+        }
+
+        let a = -0.5 * g, b = v0, c = y0;
+        let det = b * b - 4 * a * c;
+        let tTotal = 0;
+        if (det >= 0) {
+            let t1 = (-b + Math.sqrt(det)) / (2 * a);
+            let t2 = (-b - Math.sqrt(det)) / (2 * a);
+            tTotal = Math.max(t1, t2);
+        }
+
+        document.getElementById('vSummaryYMax').innerText = yMax.toFixed(2) + ' m';
+        document.getElementById('vSummaryTPeak').innerText = tPeak.toFixed(2) + ' s';
+        document.getElementById('vSummaryTTotal').innerText = tTotal.toFixed(2) + ' s';
+    }
+
+    function updateVSim() {
+        const mode = document.getElementById('vMode').value;
+        const rawV0 = Math.abs(parseFloat(document.getElementById('vV0').value) || 0);
+        let v0 = mode === 'GVA' ? rawV0 : (mode === 'GVB' ? -rawV0 : 0);
+        const y0 = parseFloat(document.getElementById('vY0').value) || 0;
+        const g = parseFloat(document.getElementById('vGravity').value) || 9.8;
+
+        let y = y0 + (v0 * vT) - (0.5 * g * vT * vT);
+        let v = v0 - (g * vT);
+
+        document.getElementById('vDispT').innerText = vT.toFixed(2) + ' s';
+        document.getElementById('vDispY').innerText = Math.max(y, 0).toFixed(2) + ' m';
+        document.getElementById('vDispV').innerText = v.toFixed(2) + ' m/s';
+
+        drawVBall(y);
+        vData.push({ t: vT, y: Math.max(y, 0) });
+        drawVGraph();
+
+        if (vT > 0.1 && y <= 0) { toggleVSim(); return; }
+        vT += vDt;
+        if (isVRunning) vAnimId = requestAnimationFrame(updateVSim);
+    }
+
+    function toggleVSim() {
+        isVRunning = !isVRunning;
+        document.getElementById('vStartBtn').innerText = isVRunning ? 'Pause' : 'Start';
+        if (isVRunning) updateVSim(); else cancelAnimationFrame(vAnimId);
+    }
+
+    function resetVSim() {
+        if (isVRunning) toggleVSim();
+        vT = 0; vData = []; vHoverPt = null;
+        document.getElementById('vGraphTooltip').style.display = 'none';
+        const y0 = parseFloat(document.getElementById('vY0').value) || 0;
+        document.getElementById('vDispT').innerText = '0.00 s';
+        document.getElementById('vDispY').innerText = y0.toFixed(2) + ' m';
+        document.getElementById('vDispV').innerText = '0.00 m/s';
+        drawVBall(y0);
+        calculateVSummary();
+        drawVGraph();
+    }
+
+    function resizeVCanvas() {
+        if(vGraphCanvas.parentElement) {
+            vSimCanvas.width = vSimCanvas.parentElement.clientWidth;
+            vGraphCanvas.width = vGraphCanvas.parentElement.clientWidth;
+            resetVSim();
+        }
+    }
+
+    vGraphCanvas.addEventListener('mousemove', (e) => {
+        if (vData.length < 2) return;
+        const rect = vGraphCanvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        let padL = 35, W = vGraphCanvas.width - padL - 10;
+        
+        let targetT = ((mouseX - padL) / W) * 10;
+        let closest = vData.reduce((prev, curr) => Math.abs(curr.t - targetT) < Math.abs(prev.t - targetT) ? curr : prev);
+
+        vHoverPt = closest;
+        drawVGraph();
+
+        const tooltip = document.getElementById('vGraphTooltip');
+        tooltip.style.display = 'block';
+        tooltip.style.left = (mouseX + 10) + 'px';
+        tooltip.style.top = '20px';
+        tooltip.innerHTML = `t: <b>${closest.t.toFixed(2)}s</b><br>y: <b>${closest.y.toFixed(2)}m</b>`;
+    });
+
+    vGraphCanvas.addEventListener('mouseleave', () => {
+        vHoverPt = null;
+        document.getElementById('vGraphTooltip').style.display = 'none';
+        drawVGraph();
+    });
+
+
+    // --- 3. PROJECTILE MOTION ENGINE ---
+    const pSimCanvas = document.getElementById('pSimCanvas');
+    const pSimCtx = pSimCanvas.getContext('2d');
+    let isPRunning = false, pAnimId, pT = 0, pDt = 0.03, pTrajectory = [];
+    let pHoverPt = null;
+
+    function drawPGraph() {
+        pSimCtx.clearRect(0, 0, pSimCanvas.width, pSimCanvas.height);
+        let padL = 35, padB = 20, W = pSimCanvas.width - padL - 10, H = pSimCanvas.height - padB - 10;
+
+        pSimCtx.beginPath();
+        pSimCtx.moveTo(padL, 10); pSimCtx.lineTo(padL, pSimCanvas.height - padB);
+        pSimCtx.lineTo(pSimCanvas.width - 10, pSimCanvas.height - padB);
+        pSimCtx.strokeStyle = '#94a3b8'; pSimCtx.lineWidth = 1; pSimCtx.stroke();
+
+        if (pTrajectory.length < 2) return;
+
+        pSimCtx.beginPath();
+        pSimCtx.strokeStyle = '#f59e0b'; pSimCtx.lineWidth = 2;
+        for (let i = 0; i < pTrajectory.length; i++) {
+            let px = padL + (pTrajectory[i].x / 100) * W;
+            let py = (pSimCanvas.height - padB) - (pTrajectory[i].y / 50) * H;
+            if (i === 0) pSimCtx.moveTo(px, py); else pSimCtx.lineTo(px, py);
+        }
+        pSimCtx.stroke();
+
+        if (pHoverPt) {
+            let px = padL + (pHoverPt.x / 100) * W;
+            let py = (pSimCanvas.height - padB) - (pHoverPt.y / 50) * H;
+
+            pSimCtx.strokeStyle = '#ef4444'; pSimCtx.setLineDash([3, 3]);
+            pSimCtx.beginPath(); pSimCtx.moveTo(px, 10); pSimCtx.lineTo(px, pSimCanvas.height - padB); pSimCtx.stroke();
+            pSimCtx.beginPath(); pSimCtx.moveTo(padL, py); pSimCtx.lineTo(pSimCanvas.width - 10, py); pSimCtx.stroke();
+            pSimCtx.setLineDash([]);
+
+            pSimCtx.beginPath(); pSimCtx.arc(px, py, 5, 0, Math.PI * 2);
+            pSimCtx.fillStyle = '#ef4444'; pSimCtx.fill();
+        }
+    }
+
+    function calculatePSummary() {
+        const v0 = parseFloat(document.getElementById('pV0').value) || 0;
+        const angleDeg = parseFloat(document.getElementById('pAngle').value) || 0;
+        const angleRad = angleDeg * Math.PI / 180;
+        const y0 = parseFloat(document.getElementById('pY0').value) || 0;
+        const g = parseFloat(document.getElementById('pGravity').value) || 9.8;
+
+        let v0y = v0 * Math.sin(angleRad);
+        let v0x = v0 * Math.cos(angleRad);
+
+        let yMax = y0 + (v0y * v0y) / (2 * g);
+
+        let a = -0.5 * g, b = v0y, c = y0;
+        let det = b * b - 4 * a * c;
+        let tTotal = 0;
+        if (det >= 0) {
+            let t1 = (-b + Math.sqrt(det)) / (2 * a);
+            let t2 = (-b - Math.sqrt(det)) / (2 * a);
+            tTotal = Math.max(t1, t2);
+        }
+        let xMax = v0x * tTotal;
+
+        document.getElementById('pSummaryYMax').innerText = yMax.toFixed(2) + ' m';
+        document.getElementById('pSummaryXMax').innerText = xMax.toFixed(2) + ' m';
+        document.getElementById('pSummaryTTotal').innerText = tTotal.toFixed(2) + ' s';
+    }
+
+    function updatePSim() {
+        const v0 = parseFloat(document.getElementById('pV0').value) || 0;
+        const angleRad = (parseFloat(document.getElementById('pAngle').value) || 0) * Math.PI / 180;
+        const y0 = parseFloat(document.getElementById('pY0').value) || 0;
+        const g = parseFloat(document.getElementById('pGravity').value) || 9.8;
+
+        let x = v0 * Math.cos(angleRad) * pT;
+        let y = y0 + (v0 * Math.sin(angleRad) * pT) - (0.5 * g * pT * pT);
+
+        document.getElementById('pDispT').innerText = pT.toFixed(2) + ' s';
+        document.getElementById('pDispX').innerText = Math.max(x, 0).toFixed(2) + ' m';
+        document.getElementById('pDispY').innerText = Math.max(y, 0).toFixed(2) + ' m';
+
+        if (y >= 0) pTrajectory.push({ t: pT, x: x, y: y });
+        drawPGraph();
+
+        if (pT > 0.1 && y <= 0) { togglePSim(); return; }
+        pT += pDt;
+        if (isPRunning) pAnimId = requestAnimationFrame(updatePSim);
+    }
+
+    function togglePSim() {
+        isPRunning = !isPRunning;
+        document.getElementById('pStartBtn').innerText = isPRunning ? 'Pause' : 'Start';
+        if (isPRunning) updatePSim(); else cancelAnimationFrame(pAnimId);
+    }
+
+    function resetPSim() {
+        if (isPRunning) togglePSim();
+        pT = 0; pTrajectory = []; pHoverPt = null;
+        document.getElementById('pGraphTooltip').style.display = 'none';
+        const y0 = parseFloat(document.getElementById('pY0').value) || 0;
+        document.getElementById('pDispT').innerText = '0.00 s';
+        document.getElementById('pDispX').innerText = '0.00 m';
+        document.getElementById('pDispY').innerText = y0.toFixed(2) + ' m';
+        calculatePSummary();
+        drawPGraph();
+    }
+
+    function resizePCanvas() { if(pSimCanvas.parentElement) { pSimCanvas.width = pSimCanvas.parentElement.clientWidth; resetPSim(); } }
+
+    pSimCanvas.addEventListener('mousemove', (e) => {
+        if (pTrajectory.length < 2) return;
+        const rect = pSimCanvas.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        let padL = 35, W = pSimCanvas.width - padL - 10;
+        
+        let targetX = ((mouseX - padL) / W) * 100;
+        let closest = pTrajectory.reduce((prev, curr) => Math.abs(curr.x - targetX) < Math.abs(prev.x - targetX) ? curr : prev);
+
+        pHoverPt = closest;
+        drawPGraph();
+
+        const tooltip = document.getElementById('pGraphTooltip');
+        tooltip.style.display = 'block';
+        tooltip.style.left = (mouseX + 10) + 'px';
+        tooltip.style.top = '20px';
+        tooltip.innerHTML = `t: <b>${closest.t.toFixed(2)}s</b><br>x: <b>${closest.x.toFixed(2)}m</b><br>y: <b>${closest.y.toFixed(2)}m</b>`;
+    });
+
+    pSimCanvas.addEventListener('mouseleave', () => {
+        pHoverPt = null;
+        document.getElementById('pGraphTooltip').style.display = 'none';
+        drawPGraph();
+    });
+
+
+    // --- 4. CIRCULAR MOTION ---
+    const cSimCanvas = document.getElementById('cSimCanvas');
+    const cSimCtx = cSimCanvas.getContext('2d');
+    let isCRunning = false, cAnimId, cT = 0, cDt = 0.03;
+
+    function drawCBall(r, omega) {
+        cSimCtx.clearRect(0, 0, cSimCanvas.width, cSimCanvas.height);
+        let centerX = cSimCanvas.width / 2;
+        let centerY = cSimCanvas.height / 2;
+        let scaleR = Math.min(centerX, centerY) - 25;
+
+        cSimCtx.beginPath(); cSimCtx.arc(centerX, centerY, scaleR, 0, Math.PI * 2);
+        cSimCtx.strokeStyle = '#cbd5e1'; cSimCtx.lineWidth = 2; cSimCtx.stroke();
+
+        let theta = omega * cT;
+        let ballX = centerX + scaleR * Math.cos(theta);
+        let ballY = centerY - scaleR * Math.sin(theta);
+
+        cSimCtx.beginPath(); cSimCtx.moveTo(centerX, centerY); cSimCtx.lineTo(ballX, ballY);
+        cSimCtx.strokeStyle = '#94a3b8'; cSimCtx.stroke();
+
+        cSimCtx.beginPath(); cSimCtx.arc(ballX, ballY, 10, 0, Math.PI * 2);
+        cSimCtx.fillStyle = '#10b981'; cSimCtx.fill();
+    }
+
+    function updateCSim() {
+        const r = parseFloat(document.getElementById('cRadius').value) || 1;
+        const omega = parseFloat(document.getElementById('cOmega').value) || 0;
+
+        document.getElementById('cDispT').innerText = cT.toFixed(2) + ' s';
+        document.getElementById('cDispV').innerText = Math.abs(omega * r).toFixed(2) + ' m/s';
+        document.getElementById('cDispAs').innerText = (omega * omega * r).toFixed(2) + ' m/s²';
+
+        drawCBall(r, omega);
+        cT += cDt;
+        if (isCRunning) cAnimId = requestAnimationFrame(updateCSim);
+    }
+
+    function toggleCSim() {
+        isCRunning = !isCRunning;
+        document.getElementById('cStartBtn').innerText = isCRunning ? 'Pause' : 'Start';
+        if (isCRunning) updateCSim(); else cancelAnimationFrame(cAnimId);
+    }
+
+    function resetCSim() {
+        if (isCRunning) toggleCSim();
+        cT = 0;
+        const r = parseFloat(document.getElementById('cRadius').value) || 1;
+        const omega = parseFloat(document.getElementById('cOmega').value) || 0;
+        document.getElementById('cDispT').innerText = '0.00 s';
+        document.getElementById('cDispV').innerText = Math.abs(omega * r).toFixed(2) + ' m/s';
+        document.getElementById('cDispAs').innerText = (omega * omega * r).toFixed(2) + ' m/s²';
+        drawCBall(r, omega);
+    }
+
+    function resizeCCanvas() { if(cSimCanvas.parentElement) { cSimCanvas.width = cSimCanvas.parentElement.clientWidth; resetCSim(); } }
+
+    window.addEventListener('resize', resizeAllCanvases);
+
+    initTheme();
+    toggleHAccGroup();
+    toggleVModeInputs();
+    resizeAllCanvases();
+</script>
+
+</body>
+</html>

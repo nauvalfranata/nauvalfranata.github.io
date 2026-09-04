@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab: Quantities, Units, and Measurements - Untirta</title>
+    <style>
+        /* Light Theme Default Variables */
+        :root[data-theme="light"] {
+            --bg-color: #f8fafc;
+            --panel-bg: #ffffff;
+            --panel-border: #e2e8f0;
+            --accent-color: #0284c7;
+            --accent-light: #e0f2fe;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --sensor-bg: #1e293b;
+            --sensor-text: #38bdf8;
+            --sensor-border: #0f172a;
+            --nav-btn-bg: #f1f5f9;
+            --nav-btn-border: #cbd5e1;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --success-bg: #dcfce7;
+            --success-color: #16a34a;
+            --success-border: #86efac;
+            --warning-bg: #fef3c7;
+            --warning-color: #d97706;
+            --warning-border: #fcd34d;
+            --error-bg: #fee2e2;
+            --error-color: #dc2626;
+            --error-border: #fca5a5;
+            --toggle-bg: #e2e8f0;
+            --toggle-text: #0f172a;
+        }
+
+        /* Dark Theme Variables */
+        :root[data-theme="dark"] {
+            --bg-color: #0f172a;
+            --panel-bg: #1e293b;
+            --panel-border: #334155;
+            --accent-color: #38bdf8;
+            --accent-light: rgba(56, 189, 248, 0.15);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --sensor-bg: #022c22;
+            --sensor-text: #4ade80;
+            --sensor-border: #065f46;
+            --nav-btn-bg: #0f172a;
+            --nav-btn-border: #334155;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --success-bg: rgba(34, 197, 94, 0.15);
+            --success-color: #4ade80;
+            --success-border: #22c55e;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-color: #fbbf24;
+            --warning-border: #f59e0b;
+            --error-bg: rgba(239, 68, 68, 0.15);
+            --error-color: #f87171;
+            --error-border: #ef4444;
+            --toggle-bg: #334155;
+            --toggle-text: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--panel-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--panel-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        header {
+            border-bottom: 2px solid var(--panel-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h1 { margin: 0; font-size: 1.6rem; color: var(--accent-color); }
+        .subtitle { color: var(--text-secondary); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
+        .univ-tag { color: var(--text-secondary); font-size: 0.85rem; font-style: italic; }
+
+        /* Theme Toggle Switch Button */
+        .theme-toggle-btn {
+            background: var(--toggle-bg);
+            color: var(--toggle-text);
+            border: 1px solid var(--nav-btn-border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.03);
+        }
+
+        /* Navigation Modules */
+        .module-nav {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+
+        .mod-btn {
+            background: var(--nav-btn-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--nav-btn-border);
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .mod-btn:hover { background: var(--accent-light); color: var(--accent-color); }
+        .mod-btn.active {
+            background: var(--accent-color);
+            color: #ffffff;
+            font-weight: bold;
+            border-color: var(--accent-color);
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .lab-grid { grid-template-columns: 1fr; }
+        }
+
+        .instrument-panel {
+            background: var(--bg-color);
+            border: 2px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+        }
+
+        .sensor-display {
+            background: var(--sensor-bg);
+            color: var(--sensor-text);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.8rem;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 2px solid var(--sensor-border);
+            margin: 15px 0;
+            text-align: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            word-break: break-all;
+        }
+
+        .instrument-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .task-card {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .task-card h4 { margin: 0 0 8px 0; color: var(--text-primary); }
+        .task-card p { margin: 0; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4; }
+
+        .symbol-legend {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--accent-color);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .symbol-legend ul {
+            margin: 5px 0 0 0;
+            padding-left: 18px;
+        }
+
+        .control-group {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-secondary); font-weight: 600; }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-primary);
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--accent-color);
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .btn-action:hover { opacity: 0.9; }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback.success { background: var(--success-bg); color: var(--success-color); border: 1px solid var(--success-border); }
+        .feedback.warning { background: var(--warning-bg); color: var(--warning-color); border: 1px solid var(--warning-border); }
+        .feedback.error { background: var(--error-bg); color: var(--error-color); border: 1px solid var(--error-border); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1>Virtual Lab: Quantities, Units, and Measurements</h1>
+            <div class="subtitle">Lecturer: Nauval Franata, S.Si., M.T.</div>
+            <div class="univ-tag">Universitas Sultan Ageng Tirtayasa</div>
+        </div>
+        <div class="header-actions">
+            <a href="index.html" style="text-decoration: none; padding: 8px 14px; background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); border-radius: 20px; font-size: 0.85rem; font-weight: 600;">
+                🏠 Home
+            </a>
+            <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="theme-icon">🌙</span> <span id="theme-text">Dark Mode</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Module Navigation -->
+    <div class="module-nav" id="module-nav"></div>
+
+    <div class="lab-grid">
+        <!-- Instrument / Virtual Sensor Panel -->
+        <div class="instrument-panel">
+            <div class="instrument-icon" id="inst-icon">⚙️</div>
+            <div style="color: var(--text-secondary); font-size: 0.9rem; font-weight: 500;" id="inst-name">Instrument Panel</div>
+            <div class="sensor-display" id="sensor-display">0.00</div>
+            <button class="btn-action" style="background: var(--nav-btn-bg); color: var(--text-primary); border: 1px solid var(--nav-btn-border); padding: 8px;" onclick="generateNewData()">
+                🔄 Get New Sample / Problem
+            </button>
+        </div>
+
+        <!-- Student Analysis Input Panel -->
+        <div>
+            <div class="task-card">
+                <h4 id="task-title">Module Title</h4>
+                <p id="task-desc">Task description goes here.</p>
+                <div id="symbol-legend-box" class="symbol-legend" style="display: none;"></div>
+            </div>
+
+            <!-- Dynamic Input Container -->
+            <div id="dynamic-inputs"></div>
+
+            <button class="btn-action" onclick="submitAnalysis()">Submit Analysis Data</button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Theme Management
+    function initTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateToggleBtnUI(savedTheme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateToggleBtnUI(newTheme);
+    }
+
+    function updateToggleBtnUI(theme) {
+        const icon = document.getElementById('theme-icon');
+        const text = document.getElementById('theme-text');
+        if (theme === 'dark') {
+            icon.innerText = '☀️';
+            text.innerText = 'Light Mode';
+        } else {
+            icon.innerText = '🌙';
+            text.innerText = 'Dark Mode';
+        }
+    }
+
+    // 7 Base Quantities Data (Clean Unit Names without SI hints)
+    const baseQuantities = {
+        current: {
+            name: 'Electric Current',
+            icon: '⚡',
+            instrument: 'Digital Ammeter',
+            siUnit: 'A',
+            units: [
+                { symbol: 'mA', name: 'Milliampere (mA)', factor: 1e-3, isSI: false },
+                { symbol: 'A', name: 'Ampere (A)', factor: 1, isSI: true },
+                { symbol: 'kA', name: 'Kiloampere (kA)', factor: 1e3, isSI: false }
+            ]
+        },
+        length: {
+            name: 'Length',
+            icon: '📏',
+            instrument: 'Laser Distance Meter',
+            siUnit: 'm',
+            units: [
+                { symbol: 'mm', name: 'Millimeter (mm)', factor: 1e-3, isSI: false },
+                { symbol: 'cm', name: 'Centimeter (cm)', factor: 1e-2, isSI: false },
+                { symbol: 'm', name: 'Meter (m)', factor: 1, isSI: true },
+                { symbol: 'km', name: 'Kilometer (km)', factor: 1e3, isSI: false }
+            ]
+        },
+        mass: {
+            name: 'Mass',
+            icon: '⚖️',
+            instrument: 'Digital Analytical Balance',
+            siUnit: 'kg',
+            units: [
+                { symbol: 'mg', name: 'Milligram (mg)', factor: 1e-6, isSI: false },
+                { symbol: 'g', name: 'Gram (g)', factor: 1e-3, isSI: false },
+                { symbol: 'kg', name: 'Kilogram (kg)', factor: 1, isSI: true }
+            ]
+        },
+        time: {
+            name: 'Time',
+            icon: '⏱️',
+            instrument: 'Digital Precision Timer',
+            siUnit: 's',
+            units: [
+                { symbol: 'µs', name: 'Microsecond (µs)', factor: 1e-6, isSI: false },
+                { symbol: 'ms', name: 'Millisecond (ms)', factor: 1e-3, isSI: false },
+                { symbol: 's', name: 'Second (s)', factor: 1, isSI: true }
+            ]
+        },
+        temp: {
+            name: 'Temperature',
+            icon: '🌡️',
+            instrument: 'Pyrometer / Thermocouple',
+            siUnit: 'K',
+            units: [
+                { symbol: '°C', name: 'Celsius (°C)', isTemp: true, isSI: false },
+                { symbol: 'K', name: 'Kelvin (K)', isTemp: true, isSI: true }
+            ]
+        },
+        amount: {
+            name: 'Amount of Substance',
+            icon: '🧪',
+            instrument: 'Mass Spectrometer Analyzer',
+            siUnit: 'mol',
+            units: [
+                { symbol: 'mmol', name: 'Millimole (mmol)', factor: 1e-3, isSI: false },
+                { symbol: 'mol', name: 'Mole (mol)', factor: 1, isSI: true },
+                { symbol: 'kmol', name: 'Kilomole (kmol)', factor: 1e3, isSI: false }
+            ]
+        },
+        luminous: {
+            name: 'Luminous Intensity',
+            icon: '💡',
+            instrument: 'Digital Luxmeter / Photometer',
+            siUnit: 'cd',
+            units: [
+                { symbol: 'mcd', name: 'Millicandela (mcd)', factor: 1e-3, isSI: false },
+                { symbol: 'cd', name: 'Candela (cd)', factor: 1, isSI: true },
+                { symbol: 'kcd', name: 'Kilocandela (kcd)', factor: 1e3, isSI: false }
+            ]
+        }
+    };
+
+    // Config Modules
+    const modules = [
+        {
+            id: 'base-quantities',
+            name: '1. 7 Base Quantities & Unit Conversion',
+            type: 'base-quantities-module'
+        },
+        {
+            id: 'notation',
+            name: '2. Scientific Notation',
+            icon: '🔢',
+            instrument: 'Scientific Notation Generator',
+            type: 'exponential',
+            generate: () => {
+                const isVeryLarge = Math.random() > 0.5;
+                let num, exp;
+                if (isVeryLarge) {
+                    exp = Math.floor(Math.random() * 6) + 3;
+                    num = (Math.random() * 8.9 + 1) * Math.pow(10, exp);
+                } else {
+                    exp = -(Math.floor(Math.random() * 6) + 1);
+                    num = (Math.random() * 8.9 + 1) * Math.pow(10, exp);
+                }
+                return { val: num, display: num.toLocaleString('fullwide', { useGrouping: false, maximumFractionDigits: 8 }) };
+            }
+        },
+        {
+            id: 'dimension',
+            name: '3. Dimensional Analysis',
+            icon: '📐',
+            instrument: 'Dimensional Analyzer',
+            type: 'dimension-check',
+            generate: () => {
+                const equations = [
+                    { 
+                        eq: 'v = u + a · t', 
+                        dimConsistent: true,
+                        conceptuallyCorrect: true, 
+                        dimLeft: '[L][T]⁻¹', 
+                        dimRight: '[L][T]⁻¹', 
+                        symbols: [
+                            '<b>v, u</b> = Velocity [m/s]',
+                            '<b>a</b> = Acceleration [m/s²]',
+                            '<b>t</b> = Time [s]'
+                        ],
+                        reason: 'Left side dimension [L][T]⁻¹ matches Right side dimension [L][T]⁻¹ + [L][T]⁻² · [T] = [L][T]⁻¹.' 
+                    },
+                    { 
+                        eq: 'S = v · t + ½ a · t²', 
+                        dimConsistent: true,
+                        conceptuallyCorrect: true, 
+                        dimLeft: '[L]', 
+                        dimRight: '[L]', 
+                        symbols: [
+                            '<b>S</b> = Displacement / Distance [m]',
+                            '<b>v</b> = Initial Velocity [m/s]',
+                            '<b>t</b> = Time [s]',
+                            '<b>a</b> = Acceleration [m/s²]'
+                        ],
+                        reason: 'Left side dimension [L] matches Right side terms [L][T]⁻¹ · [T] + [L][T]⁻² · [T]² = [L].' 
+                    },
+                    { 
+                        eq: 'F = m · v²', 
+                        dimConsistent: false,
+                        conceptuallyCorrect: false, 
+                        dimLeft: '[M][L][T]⁻²', 
+                        dimRight: '[M][L]²[T]⁻²', 
+                        symbols: [
+                            '<b>F</b> = Force [N = kg·m/s²]',
+                            '<b>m</b> = Mass [kg]',
+                            '<b>v</b> = Velocity [m/s]'
+                        ],
+                        reason: 'Inconsistent! Left side Force has dimension [M][L][T]⁻², whereas right side m·v² has dimension [M][L]²[T]⁻² (Energy). Correct Force formula is F = m·a.' 
+                    },
+                    { 
+                        eq: 'P = F · v', 
+                        dimConsistent: true,
+                        conceptuallyCorrect: true, 
+                        dimLeft: '[M][L]²[T]⁻³', 
+                        dimRight: '[M][L]²[T]⁻³', 
+                        symbols: [
+                            '<b>P</b> = Power [Watt = J/s]',
+                            '<b>F</b> = Force [N]',
+                            '<b>v</b> = Velocity [m/s]'
+                        ],
+                        reason: 'Dimensionally consistent! Left side Power [M][L]²[T]⁻³ equals Right side Force × Velocity [M][L][T]⁻² · [L][T]⁻¹.' 
+                    },
+                    { 
+                        eq: 'Ek = m · g · h', 
+                        dimConsistent: true,
+                        conceptuallyCorrect: false, 
+                        dimLeft: '[M][L]²[T]⁻²', 
+                        dimRight: '[M][L]²[T]⁻²', 
+                        symbols: [
+                            '<b>Ek</b> = Kinetic Energy [Joule]',
+                            '<b>m</b> = Mass [kg]',
+                            '<b>g</b> = Gravitational Acceleration [m/s²]',
+                            '<b>h</b> = Height [m]'
+                        ],
+                        reason: 'Both sides have dimension [M][L]²[T]⁻² (Energy). <br>⚠️ <b>Physics Note:</b> Conceptually, m·g·h is Potential Energy (Ep), not Kinetic Energy (Ek). However, <b>dimensionally</b> it is correct because both represent Energy.' 
+                    },
+                    { 
+                        eq: 'a = F / m', 
+                        dimConsistent: true,
+                        conceptuallyCorrect: true, 
+                        dimLeft: '[L][T]⁻²', 
+                        dimRight: '[L][T]⁻²', 
+                        symbols: [
+                            '<b>a</b> = Acceleration [m/s²]',
+                            '<b>F</b> = Force [N]',
+                            '<b>m</b> = Mass [kg]'
+                        ],
+                        reason: 'Dimensionally consistent! Acceleration = Force / Mass.' 
+                    },
+                    { 
+                        eq: 'v² = u² + 2 · a · S', 
+                        dimConsistent: true,
+                        conceptuallyCorrect: true, 
+                        dimLeft: '[L]²[T]⁻²', 
+                        dimRight: '[L]²[T]⁻²', 
+                        symbols: [
+                            '<b>v, u</b> = Final & Initial Velocity [m/s]',
+                            '<b>a</b> = Acceleration [m/s²]',
+                            '<b>S</b> = Distance [m]'
+                        ],
+                        reason: 'Dimensionally consistent! Velocity squared has dimension [L]²[T]⁻².' 
+                    },
+                    { 
+                        eq: 'P = F / t', 
+                        dimConsistent: false,
+                        conceptuallyCorrect: false, 
+                        dimLeft: '[M][L]²[T]⁻³', 
+                        dimRight: '[M][L][T]⁻³', 
+                        symbols: [
+                            '<b>P</b> = Power [Watt]',
+                            '<b>F</b> = Force [N]',
+                            '<b>t</b> = Time [s]'
+                        ],
+                        reason: 'Inconsistent! Left side Power has dimension [M][L]²[T]⁻³, while F/t gives [M][L][T]⁻³.' 
+                    }
+                ];
+                return equations[Math.floor(Math.random() * equations.length)];
+            }
+        }
+    ];
+
+    let currentModIndex = 0;
+    let currentRawData = {};
+    let currentDisplayStr = '';
+    let selectedQuantityKey = 'current';
+
+    function initNav() {
+        const nav = document.getElementById('module-nav');
+        nav.innerHTML = '';
+        modules.forEach((mod, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `mod-btn ${idx === currentModIndex ? 'active' : ''}`;
+            btn.innerText = mod.name;
+            btn.onclick = () => switchModule(idx);
+            nav.appendChild(btn);
+        });
+    }
+
+    function switchModule(index) {
+        currentModIndex = index;
+        initNav();
+        generateNewData();
+    }
+
+    function countSigFigs(str) {
+        str = str.trim();
+        if (!str || isNaN(Number(str))) return 0;
+        if (str.includes('.')) {
+            str = str.replace('.', '').replace(/^0+/, '');
+            return str.length;
+        }
+        str = str.replace(/^0+/, '').replace(/0+$/, '');
+        return str.length;
+    }
+
+    function generateNewData() {
+        const mod = modules[currentModIndex];
+        document.getElementById('feedback').style.display = 'none';
+
+        const legendBox = document.getElementById('symbol-legend-box');
+        legendBox.style.display = 'none';
+
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        dynamicInputs.innerHTML = '';
+
+        if (mod.type === 'base-quantities-module') {
+            const qData = baseQuantities[selectedQuantityKey];
+            
+            // Randomly choose initial unit
+            const randomUnitObj = qData.units[Math.floor(Math.random() * qData.units.length)];
+            let val = (Math.random() * 800 + 0.1);
+            if (selectedQuantityKey === 'temp' && randomUnitObj.symbol === '°C') {
+                val = Math.random() * 200 - 20;
+            }
+            
+            // Pick a non-SI unit target for the random conversion line (fallback to 1st non-SI if needed)
+            const nonSiUnits = qData.units.filter(u => !u.isSI);
+            const randomTargetUnitObj = nonSiUnits.length > 0 
+                ? nonSiUnits[Math.floor(Math.random() * nonSiUnits.length)]
+                : qData.units[0];
+
+            currentRawData = {
+                val: val,
+                unit: randomUnitObj.symbol,
+                qKey: selectedQuantityKey,
+                targetRandomUnit: randomTargetUnitObj.symbol
+            };
+
+            let formattedVal = currentRawData.val.toPrecision(4);
+            currentDisplayStr = formattedVal;
+
+            document.getElementById('inst-icon').innerText = qData.icon;
+            document.getElementById('inst-name').innerText = qData.instrument;
+            document.getElementById('sensor-display').innerText = `${formattedVal} ${currentRawData.unit}`;
+            document.getElementById('task-title').innerText = `Module: 7 Base Quantities & Unit Conversion`;
+            document.getElementById('task-desc').innerText = `Pilih Besaran Pokok yang sesuai, lalu lakukan konversi nilai baik ke Satuan SI maupun ke Satuan Lain/Acak yang diminta.`;
+
+            // Build Options for Quantity Select (Clean, no SI hints)
+            let qOptionsHtml = Object.keys(baseQuantities).map(k => 
+                `<option value="${k}" ${k === selectedQuantityKey ? 'selected' : ''}>${baseQuantities[k].name}</option>`
+            ).join('');
+
+            // Build Options for Units (Clean, no SI labels)
+            let unitOptionsHtml = qData.units.map(u => 
+                `<option value="${u.symbol}">${u.name}</option>`
+            ).join('');
+
+            dynamicInputs.innerHTML = `
+                <div class="control-group">
+                    <label for="quantity-select">1. Pilih Besaran Pokok (Base Quantity):</label>
+                    <select id="quantity-select" onchange="onQuantityChange(this.value)">
+                        ${qOptionsHtml}
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>2. Konversi Ke Satuan SI (SI Unit Conversion):</label>
+                    <div class="input-row">
+                        <select id="si-unit-select" style="flex: 1;">
+                            ${unitOptionsHtml}
+                        </select>
+                        <input type="number" id="si-val-input" step="any" placeholder="Nilai konversi SI" style="flex: 2;">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label>3. Konversi Ke Satuan Acak [<b>${currentRawData.targetRandomUnit}</b>]:</label>
+                    <input type="number" id="random-val-input" step="any" placeholder="Nilai konversi ke ${currentRawData.targetRandomUnit}">
+                </div>
+                <div class="control-group">
+                    <label for="sigfig-input">4. Jumlah Angka Penting (Significant Figures) Pada Layar Sensor:</label>
+                    <input type="number" id="sigfig-input" placeholder="Masukkan jumlah AP">
+                </div>
+            `;
+        } else {
+            currentRawData = mod.generate();
+            document.getElementById('inst-icon').innerText = mod.icon;
+            document.getElementById('inst-name').innerText = mod.instrument;
+
+            if (mod.type === 'exponential') {
+                document.getElementById('sensor-display').innerText = currentRawData.display;
+                document.getElementById('task-title').innerText = `Module: Scientific Notation`;
+                document.getElementById('task-desc').innerText = `Convert the decimal/standard number on display into Scientific Notation (a × 10ᵇ), where 1 ≤ a < 10.`;
+
+                dynamicInputs.innerHTML = `
+                    <div class="control-group">
+                        <label>Scientific Notation Form (a × 10ᵇ):</label>
+                        <div class="input-row">
+                            <input type="number" id="coef-input" step="any" placeholder="Multiplier (a)" style="flex: 2;">
+                            <span style="font-weight: bold; color: var(--accent-color);">× 10</span>
+                            <input type="number" id="exp-input" placeholder="Exponent (b)" style="flex: 1;">
+                        </div>
+                        <small style="color: var(--text-secondary); font-size: 0.75rem;">Example: 1,000,000 = 1 × 10⁶ | 0.002 = 2 × 10⁻³</small>
+                    </div>
+                `;
+            } else if (mod.type === 'dimension-check') {
+                document.getElementById('sensor-display').innerText = currentRawData.eq;
+                document.getElementById('task-title').innerText = `Module: Dimensional Analysis`;
+                document.getElementById('task-desc').innerText = `Determine if the given physics equation is dimensionally valid/consistent.`;
+
+                if (currentRawData.symbols && currentRawData.symbols.length > 0) {
+                    legendBox.innerHTML = `<strong>Symbol Definitions:</strong><ul>` + 
+                        currentRawData.symbols.map(s => `<li>${s}</li>`).join('') + 
+                        `</ul>`;
+                    legendBox.style.display = 'block';
+                }
+
+                dynamicInputs.innerHTML = `
+                    <div class="control-group">
+                        <label for="dim-select">Is this equation dimensionally valid/consistent?</label>
+                        <select id="dim-select">
+                            <option value="">-- Select Choice --</option>
+                            <option value="valid">VALID (Dimensionally consistent)</option>
+                            <option value="invalid">INVALID (Left side dimension ≠ Right side dimension)</option>
+                        </select>
+                    </div>
+                `;
+            }
+        }
+    }
+
+    function onQuantityChange(newKey) {
+        selectedQuantityKey = newKey;
+        generateNewData();
+    }
+
+    function calculateConversion(val, fromUnitStr, toUnitStr, qKey) {
+        if (qKey === 'temp') {
+            if (fromUnitStr === toUnitStr) return val;
+            if (fromUnitStr === '°C' && toUnitStr === 'K') return val + 273.15;
+            if (fromUnitStr === 'K' && toUnitStr === '°C') return val - 273.15;
+        }
+        
+        const qData = baseQuantities[qKey];
+        const fromObj = qData.units.find(u => u.symbol === fromUnitStr);
+        const toObj = qData.units.find(u => u.symbol === toUnitStr);
+
+        const baseVal = val * fromObj.factor;
+        return baseVal / toObj.factor;
+    }
+
+    function showFeedback(type, message) {
+        const fb = document.getElementById('feedback');
+        fb.className = `feedback ${type}`;
+        fb.innerHTML = message;
+        fb.style.display = 'block';
+    }
+
+    function submitAnalysis() {
+        const mod = modules[currentModIndex];
+
+        if (mod.type === 'base-quantities-module') {
+            const userQ = document.getElementById('quantity-select').value;
+            const userSiUnit = document.getElementById('si-unit-select').value;
+            const userSiVal = parseFloat(document.getElementById('si-val-input').value);
+            const userRandomVal = parseFloat(document.getElementById('random-val-input').value);
+            const userSigFig = parseInt(document.getElementById('sigfig-input').value);
+
+            if (isNaN(userSiVal) || isNaN(userRandomVal) || isNaN(userSigFig)) {
+                showFeedback('error', '⚠️ Silakan isi semua bidang konversi dan angka penting terlebih dahulu.');
+                return;
+            }
+
+            const correctQKey = currentRawData.qKey;
+            const qData = baseQuantities[correctQKey];
+            const correctSiUnit = qData.siUnit;
+            const expectedSiVal = calculateConversion(currentRawData.val, currentRawData.unit, correctSiUnit, correctQKey);
+            const expectedRandomVal = calculateConversion(currentRawData.val, currentRawData.unit, currentRawData.targetRandomUnit, correctQKey);
+            const expectedSigFig = countSigFigs(currentDisplayStr);
+
+            let isQCorrect = (userQ === correctQKey);
+            let isSiUnitCorrect = (userSiUnit === correctSiUnit);
+            let isSiValCorrect = Math.abs((userSiVal - expectedSiVal) / expectedSiVal) < 0.02;
+            let isRandomValCorrect = Math.abs((userRandomVal - expectedRandomVal) / expectedRandomVal) < 0.02;
+            let isSigFigCorrect = (userSigFig === expectedSigFig);
+
+            if (isQCorrect && isSiUnitCorrect && isSiValCorrect && isRandomValCorrect && isSigFigCorrect) {
+                showFeedback('success', '🎉 <b>Jawaban Tepat Sekali!</b> Semua analisis besaran, konversi SI, konversi acak, dan angka penting sudah benar.');
+            } else {
+                let msg = '<b>Analisis Belum Sepenuhnya Tepat:</b><br><ul>';
+                if (!isQCorrect) msg += `<li>Besaran Pokok seharusnya: <b>${qData.name}</b></li>`;
+                if (!isSiUnitCorrect) msg += `<li>Satuan SI untuk ${qData.name} adalah: <b>${correctSiUnit}</b></li>`;
+                if (!isSiValCorrect) msg += `<li>Nilai Konversi SI seharusnya: <b>${expectedSiVal.toPrecision(4)} ${correctSiUnit}</b></li>`;
+                if (!isRandomValCorrect) msg += `<li>Nilai Konversi ke ${currentRawData.targetRandomUnit} seharusnya: <b>${expectedRandomVal.toPrecision(4)} ${currentRawData.targetRandomUnit}</b></li>`;
+                if (!isSigFigCorrect) msg += `<li>Jumlah Angka Penting pada layar: <b>${expectedSigFig} AP</b></li>`;
+                msg += '</ul>';
+                showFeedback('warning', msg);
+            }
+
+        } else if (mod.type === 'exponential') {
+            const coef = parseFloat(document.getElementById('coef-input').value);
+            const exp = parseInt(document.getElementById('exp-input').value);
+
+            if (isNaN(coef) || isNaN(exp)) {
+                showFeedback('error', '⚠️ Silakan isi nilai pengali (a) dan eksponen (b).');
+                return;
+            }
+
+            const actualVal = currentRawData.val;
+            const userVal = coef * Math.pow(10, exp);
+            const isRangeCorrect = coef >= 1 && coef < 10;
+            const isValCorrect = Math.abs((userVal - actualVal) / actualVal) < 0.01;
+
+            if (isValCorrect && isRangeCorrect) {
+                showFeedback('success', `🎉 <b>Tepat Sekali!</b> Bentuk notasi ilmiah ${coef} × 10<sup>${exp}</sup> sudah sesuai.`);
+            } else {
+                let msg = '<b>Analisis Belum Tepat:</b><br>';
+                if (!isRangeCorrect) msg += '• Pengali (a) harus memenuhi syarat 1 ≤ a < 10.<br>';
+                if (!isValCorrect) msg += '• Nilai total tidak sesuai dengan angka pada display.';
+                showFeedback('warning', msg);
+            }
+
+        } else if (mod.type === 'dimension-check') {
+            const choice = document.getElementById('dim-select').value;
+            if (!choice) {
+                showFeedback('error', '⚠️ Silakan pilih opsi validitas dimensi.');
+                return;
+            }
+
+            const expectedChoice = currentRawData.dimConsistent ? 'valid' : 'invalid';
+            if (choice === expectedChoice) {
+                showFeedback('success', `🎉 <b>Tepat Sekali!</b><br>${currentRawData.reason}`);
+            } else {
+                showFeedback('warning', `<b>Belum Tepat:</b><br>${currentRawData.reason}`);
+            }
+        }
+    }
+
+    // Initialize Page
+    window.onload = () => {
+        initTheme();
+        initNav();
+        generateNewData();
+    };
+</script>
+</body>
+</html>

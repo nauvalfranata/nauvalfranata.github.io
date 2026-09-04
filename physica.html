@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physica - Interactive Physics Learning Platform</title>
+    <!-- Font Awesome for physics icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Header / Navbar */
+        header {
+            background-color: #1a365d;
+            color: #fff;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 0.5rem;
+        }
+
+        .logo-image {
+            max-height: 100px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+            mix-blend-mode: screen; /* Efek magic untuk menyatukan gambar gelap dengan background */
+        }
+        
+        .logo-icon {
+            font-size: 2.2rem;
+            color: #63b3ed;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            margin-bottom: 1rem;
+        }
+
+        .author-info {
+            font-size: 0.95rem;
+            color: #cbd5e0;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            display: inline-block;
+            padding-top: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .welcome-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-top: 4px solid #3182ce;
+        }
+
+        .welcome-card h2 {
+            color: #1a365d;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Simulation Grid */
+        .grid-simulasi {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 5px solid #3182ce;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            color: #2b6cb0;
+            margin-bottom: 0.5rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #4a5568;
+            margin-bottom: 1.2rem;
+        }
+
+        /* Link Buttons */
+        .btn {
+            display: inline-block;
+            background-color: #3182ce;
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #2b6cb0;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo-physica.png" alt="Physica Logo" class="logo-image">
+        </div>
+        <div class="author-info">
+            <p class="author-name">Nauval Franata, S.Si., M.T.</p>
+            <p>Universitas Sultan Ageng Tirtayasa</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Welcome Section -->
+        <div class="welcome-card">
+            <h2>Welcome to Physica!</h2>
+            <p>This web application serves as an interactive platform designed to help learners explore fundamental physics concepts through intuitive tools and visual simulations.</p>
+        </div>
+
+        <!-- Topics Grid -->
+        <div class="grid-simulasi">
+            
+            <!-- Topic 1 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 1: Quantities, Units, & Measurements</h3>
+                    <p>Interactive tool exploring fundamental quantities, SI units, scientific notation, and dimensional analysis.</p>
+                </div>
+                <a href="phys1.html" class="btn">Explore Topic 1 &rarr;</a>
+            </div>
+
+            <!-- Topic 2 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 2: Vectors</h3>
+                    <p>Interactive tool for scalar-vector classification, component analysis, mathematical operations, and vector visual representations.</p>
+                </div>
+                <a href="phys2.html" class="btn">Explore Topic 2 &rarr;</a>
+            </div>
+
+            <!-- Topic 3 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 3: Kinematics</h3>
+                    <p>Interactive tool for kinematics visual representations.</p>
+                </div>
+                <a href="phys3.html" class="btn">Explore Topic 3 &rarr;</a>
+            </div>
+
+            <!-- Topic 4 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 4: -</h3>
+                    <p>Interactive tool for visual representations.</p>
+                </div>
+                <a href="phys4.html" class="btn">Explore Topic 4 &rarr;</a>
+            </div>
+
+            <!-- Topic 5 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 5: -</h3>
+                    <p>Interactive tool for visual representations.</p>
+                </div>
+                <a href="phys5.html" class="btn">Explore Topic 5 &rarr;</a>
+            </div>
+
+            <!-- Topic 6 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 6: -</h3>
+                    <p>Interactive tool for visual representations.</p>
+                </div>
+                <a href="phys6.html" class="btn">Explore Topic 6 &rarr;</a>
+            </div>
+
+            <!-- Topic 7 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 7: -</h3>
+                    <p>Interactive tool for visual representations.</p>
+                </div>
+                <a href="phys7.html" class="btn">Explore Topic 7 &rarr;</a>
+            </div>
+
+            <!-- Topic 8 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 8: -</h3>
+                    <p>Interactive tool for visual representations.</p>
+                </div>
+                <a href="phys8.html" class="btn">Explore Topic 8 &rarr;</a>
+            </div>
+
+            <!-- Topic 9 -->
+            <div class="card">
+                <div>
+                    <h3>Topic 9: -</h3>
+                    <p>Interactive tool for visual representations.</p>
+                </div>
+                <a href="phys9.html" class="btn">Explore Topic 9 &rarr;</a>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Designed as an interactive physics learning platform.</p>
+    </footer>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Virtual Lab: Besaran, Satuan, dan Pengukuran - Untirta</title>
+    <title id="page-title">Virtual Lab: Besaran, Satuan, dan Pengukuran</title>
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -83,68 +83,6 @@
             padding: 30px 20px;
         }
 
-        /* FLOATING CONTROLS (POJOK KANAN ATAS) */
-        .floating-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 9999;
-        }
-
-        .floating-lang-switch {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            padding: 4px;
-            display: flex;
-            gap: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-        }
-
-        .floating-lang-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .floating-lang-btn.active {
-            background: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-        }
-
-        .floating-theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .floating-theme-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-
         .container {
             max-width: 950px;
             width: 100%;
@@ -194,8 +132,6 @@
         }
 
         h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
-        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
-        .univ-tag { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
 
         /* Navigation Modules */
         .module-nav {
@@ -358,24 +294,10 @@
 </head>
 <body>
 
-    <!-- FLOATING CONTROLS (MELAYANG DI POJOK KANAN ATAS) -->
-    <div class="floating-controls">
-        <div class="floating-lang-switch">
-            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
-            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-        </div>
-        
-        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
-            <i class="fa-solid fa-moon" id="theme-icon"></i>
-        </button>
-    </div>
-
 <div class="container">
     <header>
         <div>
             <h1 id="header-title">Virtual Lab: Besaran, Satuan, dan Pengukuran</h1>
-            <div class="subtitle" id="header-lecturer">Dosen Pengampu: Nauval Franata, S.Si., M.T.</div>
-            <div class="univ-tag">Universitas Sultan Ageng Tirtayasa</div>
         </div>
         <div class="header-actions">
             <a href="physica.html" class="btn-back" id="home-link">
@@ -419,9 +341,8 @@
     // System Translations
     const translations = {
         id: {
-            pageTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran - Untirta",
+            pageTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran",
             headerTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran",
-            lecturer: "Dosen Pengampu: Nauval Franata, S.Si., M.T.",
             homeText: "Kembali ke Beranda",
             defaultInstName: "Panel Instrumen",
             btnNewSample: "🔄 Dapatkan Sampel / Soal Baru",
@@ -471,9 +392,8 @@
             warnMod3: "<b>Belum Tepat:</b><br>{reason}"
         },
         en: {
-            pageTitle: "Virtual Lab: Quantities, Units, and Measurements - Untirta",
+            pageTitle: "Virtual Lab: Quantities, Units, and Measurements",
             headerTitle: "Virtual Lab: Quantities, Units, and Measurements",
-            lecturer: "Lecturer: Nauval Franata, S.Si., M.T.",
             homeText: "Back to Home",
             defaultInstName: "Instrument Panel",
             btnNewSample: "🔄 Get New Sample / Problem",
@@ -527,60 +447,38 @@
     let currentLang = 'id';
     let currentTheme = 'light';
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedLang = localStorage.getItem('user_lang') || 'id';
-        setLanguage(savedLang);
+    function applySettings() {
+        currentLang = localStorage.getItem('user_lang') || 'id';
+        currentTheme = localStorage.getItem('user_theme');
 
-        const savedTheme = localStorage.getItem('user_theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
+        document.documentElement.lang = currentLang;
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
         } else {
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
         }
-
-        initNav();
-        generateNewData();
-    });
-
-    function setLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('user_lang', lang);
-        
-        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-        
-        document.documentElement.lang = lang;
 
         updateUIStaticText();
         initNav();
         generateNewData();
     }
 
-    function toggleTheme() {
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        applySettings();
+    });
 
-    function setTheme(theme) {
-        currentTheme = theme;
-        localStorage.setItem('user_theme', theme);
-        
-        document.documentElement.setAttribute('data-theme', theme);
-        
-        const icon = document.getElementById('theme-icon');
-        if (theme === 'dark') {
-            icon.className = 'fa-solid fa-sun';
-        } else {
-            icon.className = 'fa-solid fa-moon';
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'user_theme' || e.key === 'user_lang') {
+            applySettings();
         }
-    }
+    });
 
     function updateUIStaticText() {
         const t = translations[currentLang];
         document.getElementById('page-title').innerText = t.pageTitle;
         document.getElementById('header-title').innerText = t.headerTitle;
-        document.getElementById('header-lecturer').innerText = t.lecturer;
         document.getElementById('home-text').innerText = t.homeText;
         document.getElementById('btn-new-sample').innerText = t.btnNewSample;
         document.getElementById('btn-submit').innerText = t.btnSubmit;

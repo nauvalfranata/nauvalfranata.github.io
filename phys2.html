@@ -142,7 +142,7 @@
 
         h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
 
-        /* Navigation Modules - Interactive Grid Selector */
+        /* Navigation Modules */
         .module-selector-container {
             margin-bottom: 20px;
             padding-bottom: 15px;
@@ -460,7 +460,6 @@
             mod4OptTri: "🔺 Penjumlahan: Metode Segitiga (A + B)",
             mod4OptPara: "🔷 Penjumlahan: Metode Jajaran Genjang (A + B)",
             mod4OptSub: "➖ Pengurangan: Metode Vektor Berlawanan (A - B)",
-            mod4TargetLabel: "💡 <b>Vektor Target:</b>",
             mod5Title: "Perkalian Vektor",
             mod5Desc: "Hitung Perkalian Titik / Dot Product (A · B) dan magnitudo Perkalian Silang / Cross Product |A × B|.",
             mod5Label1: "1. Dot Product (A · B):",
@@ -542,7 +541,6 @@
             mod4OptTri: "🔺 Addition: Triangle Method (A + B)",
             mod4OptPara: "🔷 Addition: Parallelogram Method (A + B)",
             mod4OptSub: "➖ Subtraction: Opposite Vector Method (A - B)",
-            mod4TargetLabel: "💡 <b>Target Vector:</b>",
             mod5Title: "Vector Product",
             mod5Desc: "Calculate the Dot Product (A · B) and Cross Product magnitude |A × B|.",
             mod5Label1: "1. Dot Product (A · B):",
@@ -572,11 +570,6 @@
             mod4ParaErrROrigin: "• Resultant Vector R must originate from the common tail point of A and B.<br>",
             mod4ParaErrRDiag: "• Tip of Resultant Vector R must reach the opposite corner (parallelogram diagonal).<br>",
             mod4SubSuccess: "✅ <b>Perfect! Geometric Subtraction (A - B) Correct!</b><br>• Vectors A and B placed head-to-tail with direction reversal of -B.<br>• Resultant R (A - B) = ({rx}, {ry}).",
-            mod4SubErrTitle: "❌ <b>Geometric Subtraction (A - B) Not Quite Correct:</b><br>",
-            mod4SubErrA: "• Vector A component value is wrong.<br>",
-            mod4SubErrB: "• Vector B component value is wrong.<br>",
-            mod4SubErrHeadTail: "• Tail of Vector B must connect to tip of Vector A.<br>",
-            mod4SubErrR: "• Resultant Vector R must be drawn from tail of Vector A to tip of reversed Vector (-B).<br>",
             mod5Correct: "✅ <b>Correct Vector Multiplication!</b><br>• Dot Product (A · B): <b>{dot}</b><br>• Cross Product Magnitude |A × B|: <b>{cross}</b>",
             mod5Incorrect: "❌ <b>Vector Multiplication Not Quite Correct!</b><br>• Expected Dot Product: <b>{dot}</b><br>• Expected |A × B|: <b>{cross}</b>"
         }
@@ -585,7 +578,7 @@
     let currentLang = 'id';
     let currentTheme = 'light';
 
-    function applySettings() {
+    function applySettings(isInitial = false) {
         currentLang = localStorage.getItem('user_lang') || 'id';
         currentTheme = localStorage.getItem('user_theme');
 
@@ -600,16 +593,17 @@
 
         updateUIStaticText();
         initNav();
-        generateNewData();
+        renderCurrentModuleText();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        applySettings();
+        applySettings(true);
+        generateNewData();
     });
 
     window.addEventListener('storage', (e) => {
         if (e.key === 'user_theme' || e.key === 'user_lang') {
-            applySettings();
+            applySettings(false);
         }
     });
 
@@ -645,11 +639,8 @@
 
     // Canvas & Interactive Dragging State
     let canvas, ctx;
-    let isDragging = false;
     let dragTarget = null; 
-    let dragOffset = { x: 0, y: 0 };
     const GRID_SIZE = 20;
-    const ORIGIN = { x: 150, y: 120 };
 
     let geoVectors = {
         A: { startX: 100, startY: 180, endX: 160, endY: 140, color: '#2563eb', label: 'A' },
@@ -680,6 +671,87 @@
         generateNewData();
     }
 
+    function renderCurrentModuleText() {
+        const t = translations[currentLang];
+        document.getElementById('inst-name').innerText = t.instruments[currentModIndex];
+        const submitBtn = document.getElementById('btn-submit');
+        
+        if (currentModIndex === 0) {
+            submitBtn.style.display = 'none';
+            document.getElementById('inst-icon').innerText = "🎮";
+            if (currentRawData.name) {
+                document.getElementById('sensor-display').innerText = currentRawData.name[currentLang];
+            }
+            document.getElementById('task-title').innerText = t.mod1Title;
+            document.getElementById('task-desc').innerText = t.mod1Desc;
+            const btnScalar = document.getElementById('btn-opt-scalar');
+            const btnVector = document.getElementById('btn-opt-vector');
+            if (btnScalar) btnScalar.innerText = t.btnScalar;
+            if (btnVector) btnVector.innerText = t.btnVector;
+
+        } else if (currentModIndex === 1) {
+            submitBtn.style.display = 'block';
+            document.getElementById('inst-icon').innerText = "📐";
+            document.getElementById('task-title').innerText = t.mod2Title;
+            document.getElementById('task-desc').innerText = t.mod2Desc;
+            
+            const lbl1 = document.getElementById('lbl-mod2-1');
+            const lbl2 = document.getElementById('lbl-mod2-2');
+            const inp1 = document.getElementById('mod2-mag');
+            const inp2 = document.getElementById('mod2-deg');
+            if (lbl1) lbl1.innerText = t.mod2Label1;
+            if (lbl2) lbl2.innerText = t.mod2Label2;
+            if (inp1) inp1.placeholder = t.mod2Placeholder1;
+            if (inp2) inp2.placeholder = t.mod2Placeholder2;
+
+        } else if (currentModIndex === 2) {
+            submitBtn.style.display = 'block';
+            document.getElementById('inst-icon').innerText = "🧮";
+            document.getElementById('task-title').innerText = t.mod3Title;
+            document.getElementById('task-desc').innerText = t.mod3Desc;
+            
+            const lbl = document.getElementById('lbl-mod3');
+            if (lbl) lbl.innerText = t.mod3Label;
+
+        } else if (currentModIndex === 3) {
+            submitBtn.style.display = 'block';
+            document.getElementById('inst-icon').innerText = "✏️";
+            document.getElementById('task-title').innerText = t.mod4Title;
+            
+            const lblMethod = document.getElementById('lbl-mod4-method');
+            const optTri = document.getElementById('opt-mod4-tri');
+            const optPara = document.getElementById('opt-mod4-para');
+            const optSub = document.getElementById('opt-mod4-sub');
+            if (lblMethod) lblMethod.innerText = t.mod4LabelMethod;
+            if (optTri) optTri.innerText = t.mod4OptTri;
+            if (optPara) optPara.innerText = t.mod4OptPara;
+            if (optSub) optSub.innerText = t.mod4OptSub;
+
+            if (activeGeoMethod === 'triangle') {
+                document.getElementById('task-desc').innerText = t.mod4MethodTriDesc;
+            } else if (activeGeoMethod === 'parallelogram') {
+                document.getElementById('task-desc').innerText = t.mod4MethodParaDesc;
+            } else if (activeGeoMethod === 'subtraction') {
+                document.getElementById('task-desc').innerText = t.mod4MethodSubDesc;
+            }
+
+        } else if (currentModIndex === 4) {
+            submitBtn.style.display = 'block';
+            document.getElementById('inst-icon').innerText = "✖️";
+            document.getElementById('task-title').innerText = t.mod5Title;
+            document.getElementById('task-desc').innerText = t.mod5Desc;
+
+            const lbl1 = document.getElementById('lbl-mod5-1');
+            const lbl2 = document.getElementById('lbl-mod5-2');
+            const inp1 = document.getElementById('mod5-dot');
+            const inp2 = document.getElementById('mod5-cross');
+            if (lbl1) lbl1.innerText = t.mod5Label1;
+            if (lbl2) lbl2.innerText = t.mod5Label2;
+            if (inp1) inp1.placeholder = t.mod5Placeholder1;
+            if (inp2) inp2.placeholder = t.mod5Placeholder2;
+        }
+    }
+
     function generateNewData() {
         const t = translations[currentLang];
         document.getElementById('feedback').style.display = 'none';
@@ -688,62 +760,45 @@
         const canvasEl = document.getElementById('vector-canvas');
         canvasEl.style.display = 'none';
 
-        document.getElementById('inst-name').innerText = t.instruments[currentModIndex];
-        const submitBtn = document.getElementById('btn-submit');
-        submitBtn.style.display = 'block';
-
         if (currentModIndex === 0) {
-            // Modul 1: Klasifikasi
             const item = quantityDatabase[Math.floor(Math.random() * quantityDatabase.length)];
             currentRawData = item;
 
-            document.getElementById('inst-icon').innerText = "🎮";
             document.getElementById('sensor-display').innerText = item.name[currentLang];
-            document.getElementById('task-title').innerText = t.mod1Title;
-            document.getElementById('task-desc').innerText = t.mod1Desc;
-            submitBtn.style.display = 'none';
 
             dynamicInputs.innerHTML = `
-                <button class="btn-game-opt" onclick="checkClassification('scalar')">${t.btnScalar}</button>
-                <button class="btn-game-opt" onclick="checkClassification('vector')">${t.btnVector}</button>
+                <button class="btn-game-opt" id="btn-opt-scalar" onclick="checkClassification('scalar')">${t.btnScalar}</button>
+                <button class="btn-game-opt" id="btn-opt-vector" onclick="checkClassification('vector')">${t.btnVector}</button>
             `;
         } else if (currentModIndex === 1) {
-            // Modul 2: Komponen & Magnitudo
             const ax = Math.floor(Math.random() * 16) - 8 || 3;
             const ay = Math.floor(Math.random() * 16) - 8 || 4;
             currentRawData = { ax, ay };
 
-            document.getElementById('inst-icon').innerText = "📐";
             document.getElementById('sensor-display').innerText = `A = (${ax >= 0 ? '+' : ''}${ax}) i + (${ay >= 0 ? '+' : ''}${ay}) j`;
-            document.getElementById('task-title').innerText = t.mod2Title;
-            document.getElementById('task-desc').innerText = t.mod2Desc;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label>${t.mod2Label1}</label>
+                    <label id="lbl-mod2-1">${t.mod2Label1}</label>
                     <input type="number" id="mod2-mag" step="any" placeholder="${t.mod2Placeholder1}">
                 </div>
                 <div class="control-group">
-                    <label>${t.mod2Label2}</label>
+                    <label id="lbl-mod2-2">${t.mod2Label2}</label>
                     <input type="number" id="mod2-deg" step="any" placeholder="${t.mod2Placeholder2}">
                 </div>
             `;
         } else if (currentModIndex === 2) {
-            // Modul 3: Operasi Analitis
             const ax = Math.floor(Math.random() * 12) - 6;
             const ay = Math.floor(Math.random() * 12) - 6;
             const bx = Math.floor(Math.random() * 12) - 6;
             const by = Math.floor(Math.random() * 12) - 6;
             currentRawData = { ax, ay, bx, by };
 
-            document.getElementById('inst-icon').innerText = "🧮";
             document.getElementById('sensor-display').innerText = `A = ${ax}i + ${ay}j\nB = ${bx}i + ${by}j`;
-            document.getElementById('task-title').innerText = t.mod3Title;
-            document.getElementById('task-desc').innerText = t.mod3Desc;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label>${t.mod3Label}</label>
+                    <label id="lbl-mod3">${t.mod3Label}</label>
                     <div class="input-row">
                         <input type="number" id="mod3-rx" placeholder="Rx">
                         <span style="font-weight:bold;">i +</span>
@@ -753,10 +808,7 @@
                 </div>
             `;
         } else if (currentModIndex === 3) {
-            // Modul 4: Geometris
             canvasEl.style.display = 'block';
-            document.getElementById('inst-icon').innerText = "✏️";
-            document.getElementById('task-title').innerText = t.mod4Title;
 
             const targetAx = Math.floor(Math.random() * 5) + 1;
             const targetAy = Math.floor(Math.random() * 4) - 2;
@@ -768,11 +820,11 @@
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label>${t.mod4LabelMethod}</label>
+                    <label id="lbl-mod4-method">${t.mod4LabelMethod}</label>
                     <select id="geo-method-select" onchange="changeGeoMethod(this.value)">
-                        <option value="triangle">${t.mod4OptTri}</option>
-                        <option value="parallelogram">${t.mod4OptPara}</option>
-                        <option value="subtraction">${t.mod4OptSub}</option>
+                        <option value="triangle" id="opt-mod4-tri">${t.mod4OptTri}</option>
+                        <option value="parallelogram" id="opt-mod4-para">${t.mod4OptPara}</option>
+                        <option value="subtraction" id="opt-mod4-sub">${t.mod4OptSub}</option>
                     </select>
                 </div>
             `;
@@ -780,29 +832,27 @@
             resetGeoCanvas();
             changeGeoMethod('triangle');
         } else if (currentModIndex === 4) {
-            // Modul 5: Perkalian Vektor
             const ax = Math.floor(Math.random() * 8) - 4 || 2;
             const ay = Math.floor(Math.random() * 8) - 4 || 3;
             const bx = Math.floor(Math.random() * 8) - 4 || -1;
             const by = Math.floor(Math.random() * 8) - 4 || 4;
             currentRawData = { ax, ay, bx, by };
 
-            document.getElementById('inst-icon').innerText = "✖️";
             document.getElementById('sensor-display').innerText = `A = (${ax}, ${ay})\nB = (${bx}, ${by})`;
-            document.getElementById('task-title').innerText = t.mod5Title;
-            document.getElementById('task-desc').innerText = t.mod5Desc;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label>${t.mod5Label1}</label>
+                    <label id="lbl-mod5-1">${t.mod5Label1}</label>
                     <input type="number" id="mod5-dot" step="any" placeholder="${t.mod5Placeholder1}">
                 </div>
                 <div class="control-group">
-                    <label>${t.mod5Label2}</label>
+                    <label id="lbl-mod5-2">${t.mod5Label2}</label>
                     <input type="number" id="mod5-cross" step="any" placeholder="${t.mod5Placeholder2}">
                 </div>
             `;
         }
+
+        renderCurrentModuleText();
     }
 
     function checkClassification(userChoice) {
@@ -983,7 +1033,6 @@
         const t = translations[currentLang];
 
         if (currentModIndex === 1) {
-            // Modul 2 Validation
             const userMag = parseFloat(document.getElementById('mod2-mag').value);
             const userDeg = parseFloat(document.getElementById('mod2-deg').value);
 
@@ -1006,7 +1055,6 @@
                 showFeedback('warning', t.mod2Incorrect.replace('{mag}', actualMag.toFixed(2)).replace('{deg}', actualDeg.toFixed(1)));
             }
         } else if (currentModIndex === 2) {
-            // Modul 3 Validation
             const userRx = parseFloat(document.getElementById('mod3-rx').value);
             const userRy = parseFloat(document.getElementById('mod3-ry').value);
 
@@ -1024,7 +1072,6 @@
                 showFeedback('warning', t.mod3Incorrect.replace('{rx}', expectedRx).replace('{ry}', expectedRy));
             }
         } else if (currentModIndex === 3) {
-            // Modul 4 Validation
             const A = geoVectors.A;
             const B = geoVectors.B;
             const R = geoVectors.R;
@@ -1087,7 +1134,6 @@
                 }
             }
         } else if (currentModIndex === 4) {
-            // Modul 5 Validation
             const userDot = parseFloat(document.getElementById('mod5-dot').value);
             const userCross = parseFloat(document.getElementById('mod5-cross').value);
 

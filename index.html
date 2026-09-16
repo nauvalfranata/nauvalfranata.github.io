@@ -998,5 +998,20 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Ambil parameter dari URL (misal: index.html?page=physica)
+            const urlParams = new URLSearchParams(window.location.search);
+            const page = urlParams.get('page');
+    
+            // Jika terdapat parameter 'page', muat halaman tersebut ke dalam iframe
+            if (page) {
+                const mainIframe = document.querySelector('iframe'); // Sesuaikan selector iframe jika ada ID/Class khusus
+                if (mainIframe) {
+                    mainIframe.src = `${page}.html`;
+                }
+            }
+        });
+    </script>
 </body>
 </html>

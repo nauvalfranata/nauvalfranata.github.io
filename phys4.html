@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Lab Interaktif: Dinamika Gerak & Kesetimbangan - Untirta</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --secondary: #0f172a;
+            --accent: #0284c7;
+            --accent-light: #e0f2fe;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sensor-bg: #0f172a;
+            --sensor-text: #38bdf8;
+            --sensor-border: #1e293b;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --success-bg: #dcfce7;
+            --success-color: #15803d;
+            --success-border: #86efac;
+            --warning-bg: #fef3c7;
+            --warning-color: #b45309;
+            --warning-border: #fcd34d;
+            --error-bg: #fee2e2;
+            --error-color: #b91c1c;
+            --error-border: #fca5a5;
+        }
+
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --primary-light: rgba(59, 130, 246, 0.15);
+            --secondary: #f8fafc;
+            --accent: #38bdf8;
+            --accent-light: rgba(56, 189, 248, 0.15);
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --sensor-bg: #022c22;
+            --sensor-text: #4ade80;
+            --sensor-border: #065f46;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --success-bg: rgba(34, 197, 94, 0.15);
+            --success-color: #4ade80;
+            --success-border: #22c55e;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-color: #fbbf24;
+            --warning-border: #f59e0b;
+            --error-bg: rgba(239, 68, 68, 0.15);
+            --error-color: #f87171;
+            --error-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 15px;
+        }
+
+        .floating-controls {
+            position: fixed;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+        }
+
+        .floating-lang-switch {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 30px;
+            padding: 3px;
+            display: flex;
+            gap: 3px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .floating-lang-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .floating-lang-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        }
+
+        .floating-theme-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+            font-size: 0.9rem;
+        }
+
+        .floating-theme-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .container {
+            max-width: 1020px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--card-border);
+        }
+
+        header {
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+        }
+
+        .btn-back:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        h1 { margin: 0; font-size: 1.45rem; color: var(--primary); font-weight: 800; letter-spacing: -0.02em; }
+        .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; font-weight: 600; }
+
+        .module-nav {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            scrollbar-width: thin;
+        }
+
+        .mod-btn {
+            background: var(--bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-size: 0.78rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .mod-btn:hover { background: var(--card-border); color: var(--text-main); }
+        .mod-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .mod-badge {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 850px) {
+            .lab-grid { grid-template-columns: 1fr; }
+        }
+
+        .instrument-panel {
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 380px;
+        }
+
+        .sensor-display {
+            background: var(--sensor-bg);
+            color: var(--sensor-text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--sensor-border);
+            margin: 12px 0;
+            text-align: left;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.4);
+            width: 100%;
+            line-height: 1.6;
+        }
+
+        .instrument-icon {
+            font-size: 1.8rem;
+            margin-bottom: 4px;
+            background: var(--card-bg);
+            padding: 10px 16px;
+            border-radius: 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .task-card {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .task-card h4 { margin: 0 0 6px 0; color: var(--primary-dark); font-weight: 800; font-size: 1.05rem; }
+        .task-card p { margin: 0; color: var(--text-main); font-size: 0.88rem; line-height: 1.5; }
+
+        .control-group {
+            width: 100%;
+            margin-bottom: 14px;
+        }
+
+        label { display: block; font-size: 0.85rem; margin-bottom: 6px; color: var(--text-muted); font-weight: 700; }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1.5px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .formula-card {
+            background: var(--card-bg);
+            border: 1px dashed var(--accent);
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            color: var(--text-main);
+        }
+
+        .formula-card h5 {
+            color: var(--accent);
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .math-expr {
+            font-family: 'JetBrains Mono', monospace;
+            font-style: italic;
+            background: var(--bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--card-border);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 380px;
+            height: 250px;
+            cursor: crosshair;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        .canvas-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+        }
+
+        .vector-builder-box {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            padding: 14px;
+            border-radius: 12px;
+            margin-top: 12px;
+            width: 100%;
+        }
+
+        .vector-row-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            border: 1px solid var(--card-border);
+            font-size: 0.85rem;
+            gap: 8px;
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-action:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg);
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover { background: var(--card-border); }
+
+        .btn-game-opt {
+            padding: 14px;
+            margin-top: 10px;
+            border-radius: 12px;
+            border: 1.5px solid var(--card-border);
+            background: var(--card-bg);
+            color: var(--text-main);
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-game-opt:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary-dark);
+            transform: translateX(4px);
+        }
+
+        .force-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .force-card:hover, .force-card.active {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .example-box {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent);
+            padding: 14px;
+            margin-top: 10px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            display: none;
+            line-height: 1.6;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.success { background: var(--success-bg); color: var(--success-color); border: 1.5px solid var(--success-border); }
+        .feedback.warning { background: var(--warning-bg); color: var(--warning-color); border: 1.5px solid var(--warning-border); }
+        .feedback.error { background: var(--error-bg); color: var(--error-color); border: 1.5px solid var(--error-border); }
+
+        .sim-slider-group {
+            background: var(--bg);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 10px;
+        }
+
+        .sim-slider-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .sim-slider {
+            width: 100%;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-controls">
+        <div class="floating-lang-switch">
+            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+        </div>
+        
+        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
+            <i class="fa-solid fa-moon" id="theme-icon"></i>
+        </button>
+    </div>
+
+<div class="container">
+    <header>
+        <div>
+            <h1 id="header-title">Virtual Lab: Hukum Newton & Dinamika</h1>
+            <div class="subtitle" id="header-lecturer">Dosen Pengampu: Nauval Franata, S.Si., M.T.</div>
+        </div>
+        <div class="header-actions">
+            <a href="physica.html" class="btn-back" id="home-link">
+                <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Beranda</span>
+            </a>
+        </div>
+    </header>
+
+    <div class="module-nav" id="module-nav"></div>
+
+    <div class="lab-grid">
+        <div class="instrument-panel">
+            <div class="instrument-icon" id="inst-icon">📐</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 700; margin-top: 4px;" id="inst-name">Panel Visualisator Fisika</div>
+            
+            <div class="sensor-display" id="sensor-display">Pilih modul untuk memulai</div>
+
+            <div class="canvas-container" id="canvas-container">
+                <canvas id="fbd-canvas" width="380" height="250"></canvas>
+                <div class="canvas-hint" id="canvas-hint">
+                    <i class="fa-solid fa-hand-pointer"></i> Tarik/Geser pada kanvas untuk interaksi
+                </div>
+            </div>
+
+            <button class="btn-action" style="background: var(--bg); color: var(--text-main); border: 1.5px solid var(--card-border); padding: 10px; margin-top: 14px; box-shadow: none;" onclick="generateNewData()" id="btn-new-sample">
+                <i class="fa-solid fa-rotate"></i> Dapatkan Soal / Variasi Baru
+            </button>
+        </div>
+
+        <div>
+            <div class="task-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <h4 id="task-title" style="margin:0;">Judul Modul</h4>
+                </div>
+                <p id="task-desc">Petunjuk tugas akan muncul di sini.</p>
+            </div>
+
+            <div class="formula-card" id="formula-card" style="display: none;">
+                <h5><i class="fa-solid fa-lightbulb"></i> Ringkasan Konsep Fisika:</h5>
+                <div id="formula-text"></div>
+            </div>
+
+            <div id="dynamic-inputs"></div>
+
+            <button class="btn-action" id="submit-btn" onclick="submitAnalysis()">
+                <i class="fa-solid fa-circle-check"></i> Periksa Jawaban Saya
+            </button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const translations = {
+        id: {
+            pageTitle: "Lab Interaktif: Dinamika Gerak & Kesetimbangan - Untirta",
+            headerTitle: "Virtual Lab: Dinamika & Kesetimbangan",
+            lecturer: "Dosen Pengampu: Nauval Franata, S.Si., M.T.",
+            homeText: "Kembali ke Beranda",
+            btnNewSample: "Variasi / Soal Baru",
+            btnSubmit: "Periksa Jawaban Saya",
+            canvasHintDrag: "Klik & tahan (drag) pada gambar untuk membuat panah vektor gaya!",
+            canvasHintSim: "Gunakan penggeser (slider) di kanan untuk melihat perubahan visual!",
+            modules: [
+                "Modul 1: Hukum Newton",
+                "Modul 2: Sifat Gaya",
+                "Modul 3: Diagram Gaya (FBD)",
+                "Modul 4: Kalkulator Dinamika",
+                "Modul 5: Kesetimbangan Statis"
+            ],
+            instruments: [
+                "Simulasi Konsep Hukum Newton",
+                "Karakteristik & Jenis Gaya (Simulasi)",
+                "Kanvas Diagram Gaya Bebas (Drag & Draw)",
+                "Kalkulator & Simulator Dinamika",
+                "Analisis Kesetimbangan Statis Benda Tegar"
+            ],
+            mod1Title: "Eksplorasi Konsep: Hukum Newton",
+            mod1Desc: "Analisislah fenomena fisika di bawah ini! Tentukan Hukum Newton mana yang menjelaskan peristiwa tersebut secara akurat.",
+            mod2Title: "Sifat & Klasifikasi Jenis Gaya Interaktif",
+            mod2Desc: "Pilih jenis gaya di bawah, lalu ubah slider parameter untuk mengamati vektor dan nilai perhitungannya secara langsung!",
+            mod3Title: "Konstruksi Diagram Gaya Bebas (FBD)",
+            mod3Desc: "<b>Instruksi Interaktif:</b> Klik dan Tahan (Drag) pada benda di kanvas visual untuk menggambar PANAH GAYA. Setelah garis dibuat, tetapkan jenis gayanya!",
+            mod4Title: "Kalkulator & Simulator Sistem Dinamika",
+            mod4Desc: "Ubah parameter massa atau gaya di bawah untuk melihat simulasi gerakan, lalu hitung nilai percepatan dan gaya internalnya!",
+            mod5Title: "Studi Kasus Kesetimbangan Benda Tegar",
+            mod5Desc: "Hitung nilai gaya atau massa agar sistem berada dalam kondisi kesetimbangan statis sempurna (∑<i>F</i> = 0, ∑<i>τ</i> = 0)."
+        },
+        en: {
+            pageTitle: "Interactive Lab: Motion Dynamics & Equilibrium - Untirta",
+            headerTitle: "Virtual Lab: Dynamics & Equilibrium",
+            lecturer: "Lecturer: Nauval Franata, S.Si., M.T.",
+            homeText: "Back to Home",
+            btnNewSample: "New Variant / Problem",
+            btnSubmit: "Check My Answer",
+            canvasHintDrag: "Click & drag on the object canvas to draw a force vector arrow!",
+            canvasHintSim: "Adjust sliders on the right panel to observe real-time dynamic changes!",
+            modules: [
+                "Module 1: Newton's Laws",
+                "Module 2: Force Properties",
+                "Module 3: Force Diagrams (FBD)",
+                "Module 4: Dynamics Calculator",
+                "Module 5: Static Equilibrium"
+            ],
+            instruments: [
+                "Newton's Laws Conceptual Simulation",
+                "Force Characteristics & Types (Interactive)",
+                "Free Body Diagram Canvas (Drag & Draw)",
+                "Dynamics System Calculator & Simulator",
+                "Rigid Body Static Equilibrium Analysis"
+            ],
+            mod1Title: "Concept Exploration: Newton's Laws",
+            mod1Desc: "Analyze the physical scenario below! Identify which of Newton's Laws governs this behavior.",
+            mod2Title: "Interactive Force Properties",
+            mod2Desc: "Select a force type below and adjust sliders to observe live vector dynamics and formula outputs!",
+            mod3Title: "Free Body Diagram (FBD) Construction",
+            mod3Desc: "<b>Interactive Guide:</b> Click and Drag on the object in the visual canvas to DRAW A FORCE ARROW. Assign its proper label afterwards!",
+            mod4Title: "Dynamics Calculator & Simulator",
+            mod4Desc: "Adjust mass and force parameters below to simulate motion in real-time, then calculate exact acceleration and tension/contact force!",
+            mod5Title: "Rigid Body Equilibrium Case Studies",
+            mod5Desc: "Calculate the exact force or weight needed to satisfy complete static equilibrium conditions (∑<i>F</i> = 0, ∑<i>τ</i> = 0)."
+        }
+    };
+
+    let currentLang = 'id';
+    let currentTheme = 'light';
+    let currentModIndex = 0;
+    let currentRawData = {};
+    
+    let userDrawnVectors = [];
+    let isDrawing = false;
+    let dragStart = { x: 0, y: 0 };
+    let currentDragPos = { x: 0, y: 0 };
+
+    let selectedForceType = 'W'; 
+    let forceParams = {
+        m: 5,
+        g: 9.8,
+        theta: 30,
+        mu_s: 0.4,
+        mu_k: 0.25,
+        a: 2.0
+    };
+
+    const fbdScenarios = {
+        single_block: {
+            name: "1. Balok Ditarik Gaya F di Lantai Kasar",
+            desc: "<b>Skenario:</b> Balok ditarik gaya <i>F</i> ke kanan di atas lantai kasar.<br><i>Tarik panah pada kanvas: Gaya Tarik (F), Berat (W), Normal (N), dan Gesek (f<sub>k</sub>)!</i>",
+            correctVectors: ['F', 'W', 'N', 'fk'],
+            formulas: "• Vertikal: <i>N</i> - <i>W</i> = 0 ⇒ <i>N</i> = <i>W</i> = <i>m</i> · <i>g</i><br>• Horisontal: <i>F</i> - <i>f</i><sub>k</sub> = <i>m</i> · <i>a</i>"
+        },
+        hanging_mass: {
+            name: "2. Beban Digantung Tali pada Atap",
+            desc: "<b>Skenario:</b> Beban bermassa <i>m</i> digantung diam pada tali ideal.<br><i>Tarik panah ke bawah untuk Berat (W) dan ke atas untuk Tegangan Tali (T)!</i>",
+            correctVectors: ['W', 'T'],
+            formulas: "• Kondisi Diam (∑<i>F</i> = 0): <i>T</i> - <i>W</i> = 0 ⇒ <i>T</i> = <i>m</i> · <i>g</i>"
+        },
+        inclined_block: {
+            name: "3. Balok Meluncur di Bidang Miring Licin",
+            desc: "<b>Skenario:</b> Balok meluncur turun di bidang miring licin.<br><i>Tarik panah tegak lurus bidang untuk Gaya Normal (N), sejajar bidang miring ke bawah (W<sub>x</sub>), dan lurus ke bawah (W)!</i>",
+            correctVectors: ['W', 'N', 'Wx'],
+            formulas: "• Komponen sejajar miring: <i>W</i><sub>x</sub> = <i>m</i> · <i>g</i> · sin(<i>θ</i>)<br>• Komponen tegak lurus: <i>N</i> = <i>m</i> · <i>g</i> · cos(<i>θ</i>)"
+        },
+        atwood_machine: {
+            name: "4. Mesin Katrol Atwood (Beban m₁ & m₂)",
+            desc: "<b>Skenario:</b> Dua beban terhubung katrol ideal.<br><i>Gambarkan vektor gaya pada beban m₁ (T₁, W₁) dan m₂ (T₂, W₂)!</i>",
+            correctVectors: ['W1', 'T1', 'W2', 'T2'],
+            formulas: "• Percepatan sistem: <i>a</i> = |<i>m</i><sub>2</sub> - <i>m</i><sub>1</sub>| · <i>g</i> / (<i>m</i><sub>1</sub> + <i>m</i><sub>2</sub>)<br>• Tegangan Tali: <i>T</i> = 2 · <i>m</i><sub>1</sub> · <i>m</i><sub>2</sub> · <i>g</i> / (<i>m</i><sub>1</sub> + <i>m</i><sub>2</sub>)"
+        }
+    };
+
+    const newtonGameDB = [
+        {
+            text: { 
+                id: "Saat bus kota mengerem mendadak, tubuh para penumpang secara otomatis terdorong ke depan.", 
+                en: "When a city bus brakes abruptly, passengers' bodies automatically lurch forward." 
+            },
+            law: "N1",
+            name: { id: "Hukum I Newton (Inersia / Kelembaman)", en: "Newton's First Law (Inertia)" },
+            desc: { id: "Setiap benda cenderung mempertahankan keadaan diam atau gerak lurus beraturannya kecuali ada gaya total yang bekerja padanya (∑<i>F</i> = 0).", en: "An object stays at rest or continues in uniform motion unless acted upon by a net external force (∑<i>F</i> = 0)." }
+        },
+        {
+            text: { 
+                id: "Mendorong troli belanjaan yang kosong terasa sangat ringan dan cepat dipercepat dibandingkan troli yang penuh tumpukan kardus berat.", 
+                en: "Pushing an empty shopping cart is much easier to accelerate than a cart loaded with heavy boxes." 
+            },
+            law: "N2",
+            name: { id: "Hukum II Newton (∑<i>F</i> = <i>m</i> · <i>a</i>)", en: "Newton's Second Law (∑<i>F</i> = <i>m</i> · <i>a</i>)" },
+            desc: { id: "Percepatan (<i>a</i>) yang dihasilkan berbanding lurus dengan gaya total (<i>F</i>) dan berbanding terbalik dengan massa total (<i>m</i>).", en: "Acceleration (<i>a</i>) is directly proportional to net force (<i>F</i>) and inversely proportional to mass (<i>m</i>)." }
+        },
+        {
+            text: { 
+                id: "Saat dayung ditekan mendorong air ke belakang, perahu kayu justru bergerak maju mendobrak ke depan.", 
+                en: "As an oar pushes water backward, the wooden boat surges forward through the water." 
+            },
+            law: "N3",
+            name: { id: "Hukum III Newton (Aksi - Reaksi)", en: "Newton's Third Law (Action - Reaction)" },
+            desc: { id: "Ketika benda A memberikan gaya aksi pada benda B, maka benda B memberikan gaya reaksi yang sama besar namun berlawanan arah (<i>F</i><sub>aksi</sub> = -<i>F</i><sub>reaksi</sub>).", en: "When body A exerts a force on body B, body B exerts an equal and opposite reaction force (<i>F</i><sub>action</sub> = -<i>F</i><sub>reaction</sub>)." }
+        }
+    ];
+
+    const forceConceptDB = [
+        {
+            idKey: "W",
+            name: { id: "1. Gaya Berat (W)", en: "1. Weight Force (W)" },
+            desc: { id: "Gaya tarik gravitasi bumi yang bekerja pada setiap benda bermassa.", en: "Gravitational pull exerted by earth on a mass." },
+            dir: { id: "Tegak lurus menuju pusat bumi (ke bawah).", en: "Always straight down toward earth's center." },
+            formulaHtml: "<i>W</i> = <i>m</i> · <i>g</i>",
+            example: { id: "<b>Contoh:</b> Buah kelapa jatuh dari pohon dipercepat lurus ke bawah akibat gravitasi.", en: "<b>Example:</b> A coconut falling straight down accelerated by gravity." }
+        },
+        {
+            idKey: "N",
+            name: { id: "2. Gaya Normal (N)", en: "2. Normal Force (N)" },
+            desc: { id: "Gaya kontak penahan dari bidang terhadap benda yang menempel padanya.", en: "Support contact force exerted by a surface on an object." },
+            dir: { id: "Tegak lurus (90°) keluar dari permukaan bidang sentuh.", en: "Always perpendicular (90°) away from the surface." },
+            formulaHtml: "<i>N</i> = <i>W</i> &nbsp;(datar) &nbsp;|&nbsp; <i>N</i> = <i>m</i> · <i>g</i> · cos(<i>θ</i>) &nbsp;(miring)",
+            example: { id: "<b>Contoh:</b> Laptop di atas meja disangga gaya normal meja ke atas.", en: "<b>Example:</b> Laptop resting on desk supported vertically by normal force." }
+        },
+        {
+            idKey: "f",
+            name: { id: "3. Gaya Gesek (f_s & f_k)", en: "3. Friction Force (f_s & f_k)" },
+            desc: { id: "Gaya sentuh penahan gerak akibat kekasaran mikro dua permukaan.", en: "Resistive contact force caused by microscopic surface roughness." },
+            dir: { id: "Sejajar bidang dan berlawanan arah gerak.", en: "Parallel to surface and opposing motion." },
+            formulaHtml: "<i>f</i><sub>s</sub> ≤ <i>μ</i><sub>s</sub> · <i>N</i> &nbsp;(Statis) &nbsp;|&nbsp; <i>f</i><sub>k</sub> = <i>μ</i><sub>k</sub> · <i>N</i> &nbsp;(Kinetis)",
+            example: { id: "<b>Contoh:</b> Gesekan ban mobil saat mengerem di atas permukaan jalan aspal.", en: "<b>Example:</b> Car tires braking on asphalt street." }
+        },
+        {
+            idKey: "T",
+            name: { id: "4. Gaya Tegangan Tali (T)", en: "4. Tension Force (T)" },
+            desc: { id: "Gaya tarik yang dihantarkan melalui tali, kawat, atau rantai ideal.", en: "Pulling force transmitted through a string or cable." },
+            dir: { id: "Menarik benda menjauhi titik ikatan tali.", en: "Pulls object away from attachment point." },
+            formulaHtml: "∑<i>F</i> = <i>m</i> · <i>a</i> &nbsp;⇒&nbsp; <i>T</i> = <i>m</i> · (<i>g</i> + <i>a</i>)",
+            example: { id: "<b>Contoh:</b> Lift ditarik naik turun oleh kabel baja tegangan tinggi.", en: "<b>Example:</b> Elevator car pulled by high-tension steel cables." }
+        }
+    ];
+
+    const modules = [
+        { id: 'newton_game', type: 'game' },
+        { id: 'force_concept', type: 'concept' },
+        { id: 'fbd_interactive', type: 'fbd' },
+        { id: 'dynamics_calc', type: 'calc' },
+        { id: 'equilibrium_cases', type: 'eq' }
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('user_lang') || 'id';
+        setLanguage(savedLang);
+
+        const savedTheme = localStorage.getItem('user_theme');
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setTheme(prefersDark ? 'dark' : 'light');
+        }
+
+        setupCanvasInteractivity();
+        initNav();
+        generateNewData();
+    });
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('user_lang', lang);
+        
+        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
+        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+        document.documentElement.lang = lang;
+
+        updateUIStaticText();
+        initNav();
+        generateNewData();
+    }
+
+    function toggleTheme() {
+        setTheme(currentTheme === 'light' ? 'dark' : 'light');
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        localStorage.setItem('user_theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
+        
+        const themeIcon = document.getElementById('theme-icon');
+        if (themeIcon) {
+            themeIcon.className = theme === 'dark' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+        drawCanvas();
+    }
+
+    function updateUIStaticText() {
+        const t = translations[currentLang];
+        document.getElementById('page-title').innerText = t.pageTitle;
+        document.getElementById('header-title').innerText = t.headerTitle;
+        document.getElementById('header-lecturer').innerText = t.lecturer;
+        document.getElementById('home-text').innerText = t.homeText;
+        document.getElementById('btn-new-sample').innerHTML = `<i class="fa-solid fa-rotate"></i> ${t.btnNewSample}`;
+        document.getElementById('submit-btn').innerHTML = `<i class="fa-solid fa-circle-check"></i> ${t.btnSubmit}`;
+    }
+
+    function initNav() {
+        const nav = document.getElementById('module-nav');
+        nav.innerHTML = '';
+        const t = translations[currentLang];
+        modules.forEach((mod, idx) => {
+            const btn = document.createElement('button');
+            btn.className = `mod-btn ${idx === currentModIndex ? 'active' : ''}`;
+            btn.innerHTML = `${t.modules[idx]}`;
+            btn.onclick = () => switchModule(idx);
+            nav.appendChild(btn);
+        });
+    }
+
+    function switchModule(index) {
+        currentModIndex = index;
+        initNav();
+        generateNewData();
+    }
+
+    function generateNewData() {
+        const mod = modules[currentModIndex];
+        const t = translations[currentLang];
+
+        const icons = ['🎮', '💡', '✍️', '🧮', '⚖️'];
+        document.getElementById('inst-icon').innerText = icons[currentModIndex];
+        document.getElementById('inst-name').innerText = t.instruments[currentModIndex];
+        document.getElementById('feedback').style.display = 'none';
+
+        const canvasContainer = document.getElementById('canvas-container');
+        const canvasHint = document.getElementById('canvas-hint');
+        const sensorDisplay = document.getElementById('sensor-display');
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        const submitBtn = document.getElementById('submit-btn');
+        const formulaCard = document.getElementById('formula-card');
+
+        submitBtn.style.display = 'flex';
+        formulaCard.style.display = 'none';
+        dynamicInputs.innerHTML = '';
+
+        if (mod.type === 'game') {
+            submitBtn.style.display = 'none';
+            canvasContainer.style.display = 'none';
+            
+            currentRawData = newtonGameDB[Math.floor(Math.random() * newtonGameDB.length)];
+
+            sensorDisplay.innerHTML = `<i class="fa-solid fa-quote-left"></i> <b>Skenario Fisika:</b><br>${currentRawData.text[currentLang]}`;
+            document.getElementById('task-title').innerText = t.mod1Title;
+            document.getElementById('task-desc').innerText = t.mod1Desc;
+
+            dynamicInputs.innerHTML = `
+                <button class="btn-game-opt" onclick="checkNewtonGame('N1')">
+                    <span>1️⃣</span> <div><b>Hukum I Newton</b><br><small style="color:var(--text-muted)">Inersia / Kelembaman (∑<i>F</i> = 0)</small></div>
+                </button>
+                <button class="btn-game-opt" onclick="checkNewtonGame('N2')">
+                    <span>2️⃣</span> <div><b>Hukum II Newton</b><br><small style="color:var(--text-muted)">Percepatan & Gaya (∑<i>F</i> = <i>m</i> · <i>a</i>)</small></div>
+                </button>
+                <button class="btn-game-opt" onclick="checkNewtonGame('N3')">
+                    <span>3️⃣</span> <div><b>Hukum III Newton</b><br><small style="color:var(--text-muted)">Aksi & Reaksi (<i>F</i><sub>aksi</sub> = -<i>F</i><sub>reaksi</sub>)</small></div>
+                </button>
+            `;
+        } else if (mod.type === 'concept') {
+            submitBtn.style.display = 'none';
+            canvasContainer.style.display = 'flex';
+            canvasHint.innerText = t.canvasHintSim;
+
+            document.getElementById('task-title').innerText = t.mod2Title;
+            document.getElementById('task-desc').innerText = t.mod2Desc;
+
+            renderForceConceptUI();
+            drawCanvas();
+        } else if (mod.type === 'fbd') {
+            canvasContainer.style.display = 'flex';
+            canvasHint.innerText = t.canvasHintDrag;
+            userDrawnVectors = [];
+            currentRawData = { scenarioKey: 'single_block' };
+
+            document.getElementById('task-title').innerText = t.mod3Title;
+            document.getElementById('task-desc').innerHTML = t.mod3Desc;
+
+            formulaCard.style.display = 'block';
+            document.getElementById('formula-text').innerHTML = fbdScenarios['single_block'].formulas;
+
+            sensorDisplay.innerHTML = fbdScenarios['single_block'].desc;
+
+            renderFbdControls();
+            drawCanvas();
+        } else if (mod.type === 'calc') {
+            canvasContainer.style.display = 'flex';
+            canvasHint.innerText = t.canvasHintSim;
+            
+            const systemType = Math.random() > 0.5 ? 'atwood' : 'two_blocks';
+            const m1 = Math.floor(Math.random() * 4) + 2; 
+            const m2 = Math.floor(Math.random() * 4) + 4; 
+            const F = Math.floor(Math.random() * 20) + 20; 
+            const g = 10;
+
+            currentRawData = { systemType, m1, m2, F, g, animOffset: 0 };
+
+            document.getElementById('task-title').innerText = t.mod4Title;
+            document.getElementById('task-desc').innerText = t.mod4Desc;
+
+            formulaCard.style.display = 'block';
+
+            if (systemType === 'atwood') {
+                document.getElementById('formula-text').innerHTML = "• Percepatan: <i>a</i> = (<i>m</i><sub>2</sub> - <i>m</i><sub>1</sub>) · <i>g</i> / (<i>m</i><sub>1</sub> + <i>m</i><sub>2</sub>)<br>• Tegangan Tali: <i>T</i> = (2 · <i>m</i><sub>1</sub> · <i>m</i><sub>2</sub> · <i>g</i>) / (<i>m</i><sub>1</sub> + <i>m</i><sub>2</sub>)";
+                sensorDisplay.innerHTML = `<b>Sistem Mesin Atwood:</b><br>Ubah slider massa di kanan untuk mengamati percepatan sistem! (<i>g</i> = ${g} m/s²)`;
+            } else {
+                document.getElementById('formula-text').innerHTML = "• Percepatan Total: <i>a</i> = <i>F</i> / (<i>m</i><sub>1</sub> + <i>m</i><sub>2</sub>)<br>• Gaya Kontak: <i>N</i><sub>12</sub> = (<i>m</i><sub>2</sub> · <i>F</i>) / (<i>m</i><sub>1</sub> + <i>m</i><sub>2</sub>)";
+                sensorDisplay.innerHTML = `<b>Sistem Dua Balok Kontak:</b><br>Ubah slider gaya & massa untuk melihat perubahan percepatan!`;
+            }
+
+            renderCalcControls();
+            drawCanvas();
+        } else if (mod.type === 'eq') {
+            canvasContainer.style.display = 'flex';
+            canvasHint.innerText = "Diagram Kasus Kesetimbangan Statis (∑F = 0, ∑τ = 0)";
+            
+            const caseType = Math.random() > 0.5 ? 'seesaw' : 'hinged_bar';
+            
+            formulaCard.style.display = 'block';
+
+            if (caseType === 'seesaw') {
+                const W1 = Math.floor(Math.random() * 4) * 10 + 20; 
+                const L1 = Math.floor(Math.random() * 2) + 2;  
+                const L2 = Math.floor(Math.random() * 2) + 1;  
+                const targetW2 = (W1 * L1) / L2;
+                
+                currentRawData = { caseType, W1, L1, L2, targetW2 };
+                document.getElementById('formula-text').innerHTML = "• Syarat Kesetimbangan Rotasi: ∑<i>τ</i> = 0<br>• (<i>W</i><sub>1</sub> · <i>L</i><sub>1</sub>) - (<i>W</i><sub>2</sub> · <i>L</i><sub>2</sub>) = 0 &nbsp;⇒&nbsp; <i>W</i><sub>2</sub> = (<i>W</i><sub>1</sub> · <i>L</i><sub>1</sub>) / <i>L</i><sub>2</sub>";
+                sensorDisplay.innerHTML = `<b>Kasus 1: Papan Jungkitan (∑<i>τ</i> = 0)</b><br>Beban <i>W</i><sub>1</sub> = ${W1} N pada posisi <i>L</i><sub>1</sub> = ${L1} m.<br>Beban <i>W</i><sub>2</sub> ditaruh pada posisi <i>L</i><sub>2</sub> = ${L2} m.<br><b>Hitung berapa nilai <i>W</i><sub>2</sub> agar jungkitan seimbang!</b>`;
+                
+                dynamicInputs.innerHTML = `
+                    <div class="control-group">
+                        <label>Masukkan Nilai Beban <i>W</i><sub>2</sub> (Newton):</label>
+                        <input type="number" id="eq-ans" step="any" placeholder="Contoh: 40">
+                    </div>
+                `;
+            } else {
+                const W_bar = Math.floor(Math.random() * 4) * 20 + 40; 
+                const targetT = W_bar; 
+                currentRawData = { caseType, W_bar, targetT };
+                document.getElementById('formula-text').innerHTML = "• Syarat Torsi Poros Engsel: ∑<i>τ</i><sub>poros</sub> = 0<br>• (<i>T</i> · <i>L</i>/2) - (<i>W</i> · <i>L</i>/2) = 0 &nbsp;⇒&nbsp; <i>T</i> = <i>W</i>";
+                sensorDisplay.innerHTML = `<b>Kasus 2: Batang Horisontal Disangga Tali</b><br>Batang homogen dengan berat <i>W</i> = ${W_bar} N diengselkan di dinding.<br>Tali penyangga diikatkan tepat di tengah batang.<br><b>Hitung Gaya Tegangan Tali (<i>T</i>) agar posisi batang tetap mendatar!</b>`;
+
+                dynamicInputs.innerHTML = `
+                    <div class="control-group">
+                        <label>Masukkan Gaya Tegangan Tali <i>T</i> (Newton):</label>
+                        <input type="number" id="eq-ans" step="any" placeholder="Contoh: 60">
+                    </div>
+                `;
+            }
+
+            document.getElementById('task-title').innerText = t.mod5Title;
+            document.getElementById('task-desc').innerText = t.mod5Desc;
+            drawCanvas();
+        }
+    }
+
+    function renderForceConceptUI() {
+        const sensorDisplay = document.getElementById('sensor-display');
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+
+        let selectorHtml = `<div style="margin-bottom:12px;"><b>Pilih Jenis Gaya untuk Dihitung & Disimulasikan:</b></div><div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">`;
+        forceConceptDB.forEach(fc => {
+            const activeClass = selectedForceType === fc.idKey ? 'active' : '';
+            selectorHtml += `
+                <div class="force-card ${activeClass}" onclick="selectForceType('${fc.idKey}')">
+                    <div style="font-weight:800; font-size:0.85rem; color:var(--primary);">${fc.name[currentLang]}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;">
+                        Formula: <span class="math-expr">${fc.formulaHtml}</span>
+                    </div>
+                </div>
+            `;
+        });
+        selectorHtml += `</div>`;
+
+        let sliderHtml = `<div class="vector-builder-box" style="margin-top:12px;">`;
+        
+        if (selectedForceType === 'W') {
+            const W_val = (forceParams.m * forceParams.g).toFixed(2);
+            sensorDisplay.innerHTML = `<b>1. Gaya Berat (W):</b><br>` +
+                `• Massa (<i>m</i>) = <b>${forceParams.m} kg</b>, Percepatan Gravitasi (<i>g</i>) = <b>${forceParams.g} m/s²</b><br>` +
+                `• Hasil Kalkulasi: <span style="color:#22c55e; font-weight:bold;"><i>W</i> = <i>m</i> · <i>g</i> = ${W_val} N</span><br>` +
+                `<small>Vektor selalu mengarah tegak lurus ke bawah menuju pusat bumi.</small>`;
+
+            sliderHtml += `
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Massa Benda (<i>m</i>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.m} kg</span></div>
+                    <input type="range" class="sim-slider" min="1" max="20" step="0.5" value="${forceParams.m}" oninput="updateForceParam('m', this.value)">
+                </div>
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Gravitasi (<i>g</i>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.g} m/s²</span></div>
+                    <input type="range" class="sim-slider" min="1.6" max="20" step="0.2" value="${forceParams.g}" oninput="updateForceParam('g', this.value)">
+                </div>
+            `;
+        } else if (selectedForceType === 'N') {
+            const rad = forceParams.theta * Math.PI / 180;
+            const W_val = forceParams.m * forceParams.g;
+            const N_calc = (W_val * Math.cos(rad)).toFixed(1);
+            const Wx_calc = (W_val * Math.sin(rad)).toFixed(1);
+            const isInclined = forceParams.theta > 0;
+
+            sensorDisplay.innerHTML = `<b>2. Gaya Normal (N):</b><br>` +
+                `• Kondisi Permukaan: <b>${isInclined ? `Bidang Miring (θ = ${forceParams.theta}°)` : 'Bidang Datar (θ = 0°)'}</b><br>` +
+                `• Formula Aktif: <i>N</i> = ${isInclined ? `<i>m</i>·<i>g</i>·cos(${forceParams.theta}°)` : '<i>W</i> = <i>m</i>·<i>g</i>'}<br>` +
+                `• Gaya Normal: <span style="color:#22c55e; font-weight:bold;"><i>N</i> = ${N_calc} N</span><br>` +
+                `${isInclined ? `• Komponen Sejajar: <span style="color:#38bdf8; font-weight:bold;"><i>W</i><sub>x</sub> = ${Wx_calc} N</span><br>` : ''}` +
+                `<small>Vektor gaya normal selalu tegak lurus (90°) keluar dari permukaan bidang sentuh.</small>`;
+
+            sliderHtml += `
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Massa (<i>m</i>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.m} kg</span></div>
+                    <input type="range" class="sim-slider" min="1" max="20" value="${forceParams.m}" oninput="updateForceParam('m', this.value)">
+                </div>
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Kemiringan Bidang (<i>θ</i>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.theta}°</span></div>
+                    <input type="range" class="sim-slider" min="0" max="60" step="5" value="${forceParams.theta}" oninput="updateForceParam('theta', this.value)">
+                </div>
+            `;
+        } else if (selectedForceType === 'f') {
+            const N_val = forceParams.m * forceParams.g;
+            const fs_max = (forceParams.mu_s * N_val).toFixed(1);
+            const fk_val = (forceParams.mu_k * N_val).toFixed(1);
+
+            sensorDisplay.innerHTML = `<b>3. Gaya Gesek (f<sub>s</sub> & f<sub>k</sub>):</b><br>` +
+                `• Gaya Gesek Statis Maksimum: <span style="color:#fbbf24; font-weight:bold;"><i>f</i><sub>s,max</sub> = <i>μ</i><sub>s</sub> · <i>N</i> = ${fs_max} N</span><br>` +
+                `• Gaya Gesek Kinetis (Saat Bergerak): <span style="color:#22c55e; font-weight:bold;"><i>f</i><sub>k</sub> = <i>μ</i><sub>k</sub> · <i>N</i> = ${fk_val} N</span><br>` +
+                `<small>Selalu berlawanan dengan arah kecenderungan gerak benda.</small>`;
+
+            sliderHtml += `
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Koefisien Statis (<i>μ</i><sub>s</sub>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.mu_s}</span></div>
+                    <input type="range" class="sim-slider" min="0.1" max="0.9" step="0.05" value="${forceParams.mu_s}" oninput="updateForceParam('mu_s', this.value)">
+                </div>
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Koefisien Kinetis (<i>μ</i><sub>k</sub>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.mu_k}</span></div>
+                    <input type="range" class="sim-slider" min="0.05" max="0.8" step="0.05" value="${forceParams.mu_k}" oninput="updateForceParam('mu_k', this.value)">
+                </div>
+            `;
+        } else if (selectedForceType === 'T') {
+            const W_val = forceParams.m * forceParams.g;
+            const T_stat = W_val.toFixed(1);
+            const T_acc = (forceParams.m * (forceParams.g + forceParams.a)).toFixed(1);
+
+            sensorDisplay.innerHTML = `<b>4. Gaya Tegangan Tali (T):</b><br>` +
+                `• Kondisi Diam / Kecepatan Tetap: <i>T</i> = <i>W</i> = <b>${T_stat} N</b><br>` +
+                `• Ditarik Naik Dipercepat (<i>a</i> = ${forceParams.a} m/s²): <span style="color:#22c55e; font-weight:bold;"><i>T</i> = <i>m</i>·(<i>g</i> + <i>a</i>) = ${T_acc} N</span><br>` +
+                `<small>Selalu bertindak menarik benda menuju titik tumpuan tali.</small>`;
+
+            sliderHtml += `
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Massa Beban (<i>m</i>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.m} kg</span></div>
+                    <input type="range" class="sim-slider" min="1" max="20" value="${forceParams.m}" oninput="updateForceParam('m', this.value)">
+                </div>
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header"><span>Percepatan Lift Ke Atas (<i>a</i>):</span><span style="color:var(--primary); font-family:'JetBrains Mono';">${forceParams.a} m/s²</span></div>
+                    <input type="range" class="sim-slider" min="0" max="10" step="0.5" value="${forceParams.a}" oninput="updateForceParam('a', this.value)">
+                </div>
+            `;
+        }
+
+        sliderHtml += `</div>`;
+        dynamicInputs.innerHTML = selectorHtml + sliderHtml;
+    }
+
+    function selectForceType(typeKey) {
+        selectedForceType = typeKey;
+        renderForceConceptUI();
+        drawCanvas();
+    }
+
+    function updateForceParam(key, val) {
+        forceParams[key] = parseFloat(val);
+        if (key === 'mu_s' && forceParams.mu_s < forceParams.mu_k) {
+            forceParams.mu_k = forceParams.mu_s;
+        }
+        renderForceConceptUI();
+        drawCanvas();
+    }
+
+    function renderFbdControls() {
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        const optionsHtml = Object.keys(fbdScenarios).map(key => {
+            return `<option value="${key}">${fbdScenarios[key].name}</option>`;
+        }).join('');
+
+        dynamicInputs.innerHTML = `
+            <div class="control-group">
+                <label>Pilih Skenario Fisika:</label>
+                <select id="fbd-select" onchange="changeFbdScenario(this.value)">
+                    ${optionsHtml}
+                </select>
+            </div>
+
+            <div class="vector-builder-box">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <label style="color: var(--primary); margin:0;"><i class="fa-solid fa-list-check"></i> Vektor Gaya yang Digambar:</label>
+                    <button class="btn-secondary" style="padding:4px 10px; font-size:0.78rem;" onclick="resetDrawnVectors()"><i class="fa-solid fa-trash-can"></i> Hapus Semua</button>
+                </div>
+                <div id="vector-list-items">
+                    <i style="color:var(--text-muted); font-size:0.85rem;">Belum ada gaya yang digambar. Klik & tarik garis panah di kanvas visual!</i>
+                </div>
+            </div>
+        `;
+        updateVectorListUI();
+    }
+
+    function changeFbdScenario(key) {
+        currentRawData.scenarioKey = key;
+        userDrawnVectors = [];
+        if (fbdScenarios[key]) {
+            document.getElementById('sensor-display').innerHTML = fbdScenarios[key].desc;
+            document.getElementById('formula-text').innerHTML = fbdScenarios[key].formulas;
+        }
+        updateVectorListUI();
+        drawCanvas();
+    }
+
+    function resetDrawnVectors() {
+        userDrawnVectors = [];
+        updateVectorListUI();
+        drawCanvas();
+    }
+
+    function updateVectorListUI() {
+        const container = document.getElementById('vector-list-items');
+        if (!container) return;
+
+        if (userDrawnVectors.length === 0) {
+            container.innerHTML = `<i style="color:var(--text-muted); font-size:0.85rem;">Belum ada gaya yang digambar. Klik & tarik garis panah di kanvas visual!</i>`;
+            return;
+        }
+
+        container.innerHTML = userDrawnVectors.map((v, i) => `
+            <div class="vector-row-item">
+                <span>🎯 Garis ${i+1}: <b>Panah ke ${v.dir.toUpperCase()}</b></span>
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <select style="padding:4px 8px; font-size:0.82rem;" onchange="assignLabelToVector(${i}, this.value)">
+                        <option value="">-- Pilih Jenis Gaya --</option>
+                        <option value="F" ${v.label==='F'?'selected':''}>F (Gaya Tarik/Dorong)</option>
+                        <option value="W" ${v.label==='W'?'selected':''}>W (Gaya Berat Gravitasi)</option>
+                        <option value="W1" ${v.label==='W1'?'selected':''}>W₁ (Berat Beban 1)</option>
+                        <option value="W2" ${v.label==='W2'?'selected':''}>W₂ (Berat Beban 2)</option>
+                        <option value="N" ${v.label==='N'?'selected':''}>N (Gaya Normal Bidang)</option>
+                        <option value="fk" ${v.label==='fk'?'selected':''}>f_k (Gaya Gesek Kinetis)</option>
+                        <option value="T" ${v.label==='T'?'selected':''}>T (Gaya Tegangan Tali)</option>
+                        <option value="T1" ${v.label==='T1'?'selected':''}>T₁ (Tegangan Tali 1)</option>
+                        <option value="T2" ${v.label==='T2'?'selected':''}>T₂ (Tegangan Tali 2)</option>
+                        <option value="Wx" ${v.label==='Wx'?'selected':''}>W_x (Komponen Berat Miring)</option>
+                    </select>
+                    <i class="fa-solid fa-xmark" style="color:var(--error-color); cursor:pointer; font-size:1.1rem; padding:2px 6px;" onclick="deleteVector(${i})"></i>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function assignLabelToVector(index, label) {
+        userDrawnVectors[index].label = label;
+        drawCanvas();
+    }
+
+    function deleteVector(index) {
+        userDrawnVectors.splice(index, 1);
+        updateVectorListUI();
+        drawCanvas();
+    }
+
+    function renderCalcControls() {
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        const { systemType, m1, m2, F } = currentRawData;
+
+        if (systemType === 'atwood') {
+            dynamicInputs.innerHTML = `
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header">
+                        <span>Massa Beban 1 (<i>m</i><sub>1</sub>):</span>
+                        <span id="val-m1" style="color:var(--primary); font-family:'JetBrains Mono';">${m1} kg</span>
+                    </div>
+                    <input type="range" class="sim-slider" min="1" max="10" value="${m1}" oninput="updateSimParam('m1', this.value)">
+                </div>
+
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header">
+                        <span>Massa Beban 2 (<i>m</i><sub>2</sub>):</span>
+                        <span id="val-m2" style="color:var(--primary); font-family:'JetBrains Mono';">${m2} kg</span>
+                    </div>
+                    <input type="range" class="sim-slider" min="1" max="10" value="${m2}" oninput="updateSimParam('m2', this.value)">
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px;">
+                    <div class="control-group">
+                        <label>1. Percepatan <i>a</i> (m/s²):</label>
+                        <input type="number" id="calc-a" step="any" placeholder="Nilai a">
+                    </div>
+                    <div class="control-group">
+                        <label>2. Tegangan Tali <i>T</i> (N):</label>
+                        <input type="number" id="calc-t" step="any" placeholder="Nilai T">
+                    </div>
+                </div>
+            `;
+        } else {
+            dynamicInputs.innerHTML = `
+                <div class="sim-slider-group">
+                    <div class="sim-slider-header">
+                        <span>Gaya Dorong (<i>F</i>):</span>
+                        <span id="val-F" style="color:var(--primary); font-family:'JetBrains Mono';">${F} N</span>
+                    </div>
+                    <input type="range" class="sim-slider" min="10" max="60" value="${F}" oninput="updateSimParam('F', this.value)">
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                    <div class="sim-slider-group">
+                        <div class="sim-slider-header">
+                            <span>Massa A (<i>m</i><sub>1</sub>):</span>
+                            <span id="val-m1" style="color:var(--primary); font-family:'JetBrains Mono';">${m1} kg</span>
+                        </div>
+                        <input type="range" class="sim-slider" min="1" max="10" value="${m1}" oninput="updateSimParam('m1', this.value)">
+                    </div>
+                    <div class="sim-slider-group">
+                        <div class="sim-slider-header">
+                            <span>Massa B (<i>m</i><sub>2</sub>):</span>
+                            <span id="val-m2" style="color:var(--primary); font-family:'JetBrains Mono';">${m2} kg</span>
+                        </div>
+                        <input type="range" class="sim-slider" min="1" max="10" value="${m2}" oninput="updateSimParam('m2', this.value)">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px;">
+                    <div class="control-group">
+                        <label>1. Percepatan <i>a</i> (m/s²):</label>
+                        <input type="number" id="calc-a" step="any" placeholder="Nilai a">
+                    </div>
+                    <div class="control-group">
+                        <label>2. Gaya Kontak <i>N</i> (N):</label>
+                        <input type="number" id="calc-t" step="any" placeholder="Nilai N">
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    function updateSimParam(param, value) {
+        currentRawData[param] = parseFloat(value);
+        const labelEl = document.getElementById(`val-${param}`);
+        if (labelEl) {
+            labelEl.innerText = param === 'F' ? `${value} N` : `${value} kg`;
+        }
+        drawCanvas();
+    }
+
+    function setupCanvasInteractivity() {
+        const canvas = document.getElementById('fbd-canvas');
+
+        const getPos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * (canvas.width / rect.width),
+                y: (clientY - rect.top) * (canvas.height / rect.height)
+            };
+        };
+
+        const startDraw = (e) => {
+            if (modules[currentModIndex].type !== 'fbd') return;
+            isDrawing = true;
+            dragStart = getPos(e);
+            currentDragPos = dragStart;
+        };
+
+        const moveDraw = (e) => {
+            if (!isDrawing) return;
+            currentDragPos = getPos(e);
+            drawCanvas();
+        };
+
+        const endDraw = () => {
+            if (!isDrawing) return;
+            isDrawing = false;
+
+            const dx = currentDragPos.x - dragStart.x;
+            const dy = currentDragPos.y - dragStart.y;
+            const dist = Math.hypot(dx, dy);
+
+            if (dist > 18) {
+                let dir = '';
+                const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+
+                if (angle >= -45 && angle <= 45) dir = 'right';
+                else if (angle > 45 && angle < 135) dir = 'down';
+                else if (angle >= 135 || angle <= -135) dir = 'left';
+                else if (angle > -135 && angle < -45) dir = 'up';
+
+                userDrawnVectors.push({
+                    startX: dragStart.x,
+                    startY: dragStart.y,
+                    endX: currentDragPos.x,
+                    endY: currentDragPos.y,
+                    dir: dir,
+                    label: ''
+                });
+
+                updateVectorListUI();
+            }
+            drawCanvas();
+        };
+
+        canvas.addEventListener('mousedown', startDraw);
+        canvas.addEventListener('mousemove', moveDraw);
+        window.addEventListener('mouseup', endDraw);
+
+        canvas.addEventListener('touchstart', startDraw);
+        canvas.addEventListener('touchmove', moveDraw);
+        window.addEventListener('touchend', endDraw);
+    }
+
+    function checkNewtonGame(choice) {
+        const isCorrect = choice === currentRawData.law;
+        const lawName = currentRawData.name[currentLang];
+        const desc = currentRawData.desc[currentLang];
+
+        if (isCorrect) {
+            showFeedback(true, `✅ <b>Jawaban Tepat Sekali!</b><br>Skenario ini sepenuhnya dijelaskan oleh <b>${lawName}</b>.<br><i>Penjelasan Fisika:</i> ${desc}`);
+        } else {
+            showFeedback(false, `❌ <b>Jawaban Belum Tepat!</b><br>Peristiwa ini sejatinya merupakan contoh penerapan <b>${lawName}</b>.<br><i>Penjelasan Fisika:</i> ${desc}`);
+        }
+    }
+
+    function submitAnalysis() {
+        const mod = modules[currentModIndex];
+
+        if (mod.type === 'fbd') {
+            const currentScenario = fbdScenarios[currentRawData.scenarioKey];
+            const correctLabels = currentScenario.correctVectors;
+
+            if (userDrawnVectors.length === 0) {
+                showFeedback(false, "⚠️ Harap buat setidaknya satu garis panah gaya pada kanvas di sebelah kiri!");
+                return;
+            }
+
+            const unassigned = userDrawnVectors.some(v => !v.label);
+            if (unassigned) {
+                showFeedback(false, "⚠️ Ada panah gaya yang belum dikasih jenis nama gaya! Pilih identitasnya pada daftar.");
+                return;
+            }
+
+            const drawnLabels = userDrawnVectors.map(v => v.label);
+            let isCorrect = (drawnLabels.length === correctLabels.length) && correctLabels.every(l => drawnLabels.includes(l));
+
+            if (isCorrect) {
+                showFeedback(true, `✅ <b>Konstruksi Diagram Gaya Sempurna!</b><br>Seluruh komponen gaya (${drawnLabels.join(', ')}) digambarkan dengan benar sesuai kondisi fisika.`);
+            } else {
+                showFeedback(false, `❌ <b>Diagram Gaya Belum Tepat!</b><br>Komponen vektor gaya yang wajib ada untuk sistem ini adalah: <b>${correctLabels.join(', ')}</b>.`);
+            }
+        } else if (mod.type === 'calc') {
+            const userA = parseFloat(document.getElementById('calc-a').value);
+            const userT = parseFloat(document.getElementById('calc-t').value);
+
+            if (isNaN(userA) || isNaN(userT)) {
+                showFeedback(false, "⚠️ Harap isi kedua kolom hasil perhitungan dengan angka!");
+                return;
+            }
+
+            let exactA = 0, exactT = 0;
+            const { systemType, m1, m2, F, g } = currentRawData;
+
+            if (systemType === 'atwood') {
+                const maxM = Math.max(m1, m2);
+                const minM = Math.min(m1, m2);
+                exactA = ((maxM - minM) * g) / (m1 + m2);
+                exactT = (2 * m1 * m2 * g) / (m1 + m2);
+            } else {
+                exactA = F / (m1 + m2);
+                exactT = (m2 * F) / (m1 + m2);
+            }
+
+            if (Math.abs(userA - exactA) < 0.25 && Math.abs(userT - exactT) < 0.5) {
+                showFeedback(true, `✅ <b>Perhitungan Tepat & Presisi!</b><br>• Percepatan sistem (<i>a</i>) = <b>${exactA.toFixed(2)} m/s²</b><br>• Gaya Internal (<i>T</i> / <i>N</i>) = <b>${exactT.toFixed(2)} N</b>`);
+            } else {
+                showFeedback(false, `❌ <b>Hasil Perhitungan Belum Sesuai!</b><br>• Percepatan seharusnya (<i>a</i>) = <b>${exactA.toFixed(2)} m/s²</b><br>• Gaya Internal seharusnya = <b>${exactT.toFixed(2)} N</b>`);
+            }
+        } else if (mod.type === 'eq') {
+            const userAns = parseFloat(document.getElementById('eq-ans').value);
+            if (isNaN(userAns)) {
+                showFeedback(false, "⚠️ Harap masukkan angka jawaban hasil perhitungan Anda!");
+                return;
+            }
+
+            const target = currentRawData.caseType === 'seesaw' ? currentRawData.targetW2 : currentRawData.targetT;
+
+            if (Math.abs(userAns - target) < 0.25) {
+                showFeedback(true, `✅ <b>Kondisi Kesetimbangan Statis Tercapai!</b><br>Nilai tepat agar sistem seimbang sempurna (∑<i>τ</i> = 0) adalah <b>${target.toFixed(2)} N</b>.`);
+            } else {
+                showFeedback(false, `❌ <b>Belum Seimbang!</b><br>Nilai yang tepat agar sistem berada dalam kondisi setimbang statis adalah <b>${target.toFixed(2)} N</b>.`);
+            }
+        }
+    }
+
+    function showFeedback(isSuccess, htmlContent) {
+        const feedback = document.getElementById('feedback');
+        feedback.className = `feedback ${isSuccess ? 'success' : 'error'}`;
+        feedback.innerHTML = htmlContent;
+        feedback.style.display = 'block';
+    }
+
+    function drawArrow(ctx, fromx, fromy, tox, toy, color, label) {
+        const headlen = 10;
+        const dx = tox - fromx;
+        const dy = toy - fromy;
+        const angle = Math.atan2(dy, dx);
+
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+        ctx.lineWidth = 2.5;
+
+        ctx.beginPath();
+        ctx.moveTo(fromx, fromy);
+        ctx.lineTo(tox, toy);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(tox, toy);
+        ctx.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        ctx.closePath();
+        ctx.fill();
+
+        if (label) {
+            ctx.fillStyle = color;
+            ctx.font = 'bold 12px Plus Jakarta Sans';
+            const textX = tox + (dx === 0 ? 10 : (dx > 0 ? 8 : -35));
+            const textY = toy + (dy === 0 ? -5 : (dy > 0 ? 15 : -8));
+            ctx.fillText(label, textX, textY);
+        }
+    }
+
+    function drawCanvas() {
+        const canvas = document.getElementById('fbd-canvas');
+        if (!canvas || canvas.style.display === 'none') return;
+
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const lineBg = isDark ? '#475569' : '#cbd5e1';
+        const textColor = isDark ? '#f1f5f9' : '#1e293b';
+        const mod = modules[currentModIndex];
+
+        if (mod.type === 'concept') {
+            if (selectedForceType === 'W') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(40, 190); ctx.lineTo(340, 190); ctx.stroke();
+                
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(150, 110, 80, 80);
+                ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.strokeRect(150, 110, 80, 80);
+                
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 14px Plus Jakarta Sans';
+                ctx.fillText(`m = ${forceParams.m} kg`, 190, 150);
+
+                const W_len = Math.min(130, forceParams.m * forceParams.g * 0.6);
+                drawArrow(ctx, 190, 150, 190, 150 + W_len, '#ef4444', `W = ${(forceParams.m * forceParams.g).toFixed(1)} N`);
+
+            } else if (selectedForceType === 'N') {
+                const rad = forceParams.theta * Math.PI / 180;
+                const cosVal = Math.cos(rad);
+                const sinVal = Math.sin(rad);
+
+                const baseStartX = 50;
+                const baseEndX = 330;
+                const groundY = 200;
+                const baseWidth = baseEndX - baseStartX;
+                const rampHeight = baseWidth * Math.tan(rad);
+                const rampTopY = groundY - rampHeight;
+
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(baseStartX, groundY);
+                ctx.lineTo(baseEndX, groundY);
+                if (forceParams.theta > 0) {
+                    ctx.lineTo(baseEndX, rampTopY);
+                    ctx.closePath();
+                    ctx.fillStyle = isDark ? 'rgba(51, 65, 85, 0.4)' : 'rgba(226, 232, 240, 0.5)';
+                    ctx.fill();
+                }
+                ctx.stroke();
+
+                if (forceParams.theta > 0) {
+                    ctx.beginPath();
+                    ctx.arc(baseStartX, groundY, 40, 0, -rad, true);
+                    ctx.strokeStyle = '#f59e0b';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                    ctx.fillStyle = '#f59e0b';
+                    ctx.font = 'bold 12px Plus Jakarta Sans';
+                    ctx.fillText(`θ=${forceParams.theta}°`, baseStartX + 55, groundY - 12);
+                }
+
+                const midX = baseStartX + baseWidth / 2;
+                const midY = groundY - rampHeight / 2;
+
+                ctx.save();
+                ctx.translate(midX, midY);
+                ctx.rotate(-rad);
+
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(-40, -50, 80, 50);
+                ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.strokeRect(-40, -50, 80, 50);
+                
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText(`m = ${forceParams.m} kg`, 0, -25);
+
+                const W_total = forceParams.m * forceParams.g;
+                const N_val = W_total * cosVal;
+                const Wx_val = W_total * sinVal;
+
+                const N_len = Math.min(80, N_val * 0.5);
+                const Wx_len = Math.min(75, Wx_val * 0.5);
+
+                drawArrow(ctx, 0, -25, 0, -25 - N_len, '#22c55e', `N = ${N_val.toFixed(1)} N`);
+
+                if (forceParams.theta > 0) {
+                    drawArrow(ctx, 0, -25, -Wx_len, -25, '#38bdf8', `Wx = ${Wx_val.toFixed(1)} N`);
+                }
+
+                ctx.restore();
+
+                const W_len = Math.min(90, W_total * 0.5);
+                drawArrow(ctx, midX, midY - 25, midX, midY - 25 + W_len, '#ef4444', `W = ${W_total.toFixed(1)} N`);
+
+            } else if (selectedForceType === 'f') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(40, 180); ctx.lineTo(340, 180); ctx.stroke();
+                for(let x=40; x<340; x+=15) {
+                    ctx.beginPath(); ctx.moveTo(x, 180); ctx.lineTo(x-8, 192); ctx.stroke();
+                }
+
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(150, 110, 80, 70);
+                ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.strokeRect(150, 110, 80, 70);
+                
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText(`m = ${forceParams.m} kg`, 190, 145);
+
+                drawArrow(ctx, 230, 145, 310, 145, '#3b82f6', 'F (Arah)');
+
+                const N_val = forceParams.m * forceParams.g;
+                const fk_val = forceParams.mu_k * N_val;
+                const fk_len = Math.min(90, fk_val * 0.8);
+                drawArrow(ctx, 150, 175, 150 - fk_len, 175, '#f59e0b', `fk = ${fk_val.toFixed(1)} N`);
+
+            } else if (selectedForceType === 'T') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(130, 30); ctx.lineTo(250, 30); ctx.stroke();
+
+                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(190, 30); ctx.lineTo(190, 110); ctx.stroke();
+
+                ctx.fillStyle = '#0284c7'; ctx.fillRect(160, 110, 60, 60);
+                ctx.strokeStyle = '#0369a1'; ctx.lineWidth = 2; ctx.strokeRect(160, 110, 60, 60);
+                
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px Plus Jakarta Sans';
+                ctx.fillText(`m = ${forceParams.m} kg`, 190, 140);
+
+                const T_val = forceParams.m * (forceParams.g + forceParams.a);
+                drawArrow(ctx, 190, 110, 190, 35, '#22c55e', `T = ${T_val.toFixed(1)} N`);
+                drawArrow(ctx, 190, 170, 190, 235, '#ef4444', `W = ${(forceParams.m * forceParams.g).toFixed(1)} N`);
+            }
+
+        } else if (mod.type === 'fbd') {
+            const key = currentRawData.scenarioKey;
+
+            if (key === 'single_block') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(40, 180); ctx.lineTo(340, 180); ctx.stroke();
+                for(let x=40; x<340; x+=15) {
+                    ctx.beginPath(); ctx.moveTo(x, 180); ctx.lineTo(x-8, 192); ctx.stroke();
+                }
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(150, 120, 80, 60);
+                ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.strokeRect(150, 120, 80, 60);
+                
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 16px Plus Jakarta Sans';
+                ctx.fillText('m', 190, 150);
+
+            } else if (key === 'hanging_mass') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 4;
+                ctx.beginPath(); ctx.moveTo(130, 40); ctx.lineTo(250, 40); ctx.stroke();
+                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.moveTo(190, 40); ctx.lineTo(190, 120); ctx.stroke();
+                ctx.fillStyle = '#0284c7'; ctx.fillRect(160, 120, 60, 60);
+                ctx.strokeStyle = '#0369a1'; ctx.strokeRect(160, 120, 60, 60);
+                
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 16px Plus Jakarta Sans';
+                ctx.fillText('m', 190, 150);
+
+            } else if (key === 'inclined_block') {
+                const baseLeft = 50, baseRight = 330, rampTopY = 80, rampBottomY = 200;
+
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(baseLeft, rampBottomY);
+                ctx.lineTo(baseRight, rampBottomY);
+                ctx.lineTo(baseRight, rampTopY);
+                ctx.closePath();
+                ctx.fillStyle = isDark ? 'rgba(51, 65, 85, 0.3)' : 'rgba(226, 232, 240, 0.4)';
+                ctx.fill();
+                ctx.stroke();
+
+                const angle = Math.atan2(rampBottomY - rampTopY, baseRight - baseLeft);
+                ctx.save();
+                ctx.translate(190, 140);
+                ctx.rotate(-angle);
+
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(-35, -45, 70, 45);
+                ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.strokeRect(-35, -45, 70, 45);
+                
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 16px Plus Jakarta Sans'; 
+                ctx.fillText('m', 0, -22);
+                ctx.restore();
+
+            } else if (key === 'atwood_machine') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(190, 50, 22, 0, Math.PI * 2); ctx.stroke();
+                ctx.moveTo(190, 10); ctx.lineTo(190, 28); ctx.stroke();
+                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(168, 50); ctx.lineTo(168, 120);
+                ctx.moveTo(212, 50); ctx.lineTo(212, 140); ctx.stroke();
+                
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(148, 120, 40, 40);
+                ctx.strokeStyle = '#1d4ed8'; ctx.strokeRect(148, 120, 40, 40);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText('m₁', 168, 140);
+
+                ctx.fillStyle = '#0284c7'; ctx.fillRect(192, 140, 40, 50);
+                ctx.strokeStyle = '#0369a1'; ctx.strokeRect(192, 140, 40, 50);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText('m₂', 212, 165);
+            }
+
+            userDrawnVectors.forEach(v => {
+                const color = v.label ? '#22c55e' : '#f59e0b';
+                drawArrow(ctx, v.startX, v.startY, v.endX, v.endY, color, v.label || '?');
+            });
+
+            if (isDrawing) {
+                drawArrow(ctx, dragStart.x, dragStart.y, currentDragPos.x, currentDragPos.y, '#38bdf8', '');
+            }
+
+        } else if (mod.type === 'calc') {
+            const { systemType, m1, m2, F } = currentRawData;
+
+            if (systemType === 'atwood') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.arc(190, 45, 24, 0, Math.PI * 2); ctx.stroke();
+                ctx.moveTo(190, 10); ctx.lineTo(190, 21); ctx.stroke();
+
+                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(166, 45); ctx.lineTo(166, 120);
+                ctx.moveTo(214, 45); ctx.lineTo(214, 140); ctx.stroke();
+
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(146, 120, 40, 40);
+                ctx.strokeStyle = '#1d4ed8'; ctx.strokeRect(146, 120, 40, 40);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText(`${m1}kg`, 166, 140);
+
+                ctx.fillStyle = '#0284c7'; ctx.fillRect(194, 140, 40, 50);
+                ctx.strokeStyle = '#0369a1'; ctx.strokeRect(194, 140, 40, 50);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText(`${m2}kg`, 214, 165);
+
+            } else {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(30, 180); ctx.lineTo(350, 180); ctx.stroke();
+
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(120, 110, 60, 70);
+                ctx.strokeStyle = '#1d4ed8'; ctx.lineWidth = 2; ctx.strokeRect(120, 110, 60, 70);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText(`m₁:${m1}k`, 150, 145);
+
+                ctx.fillStyle = '#0284c7'; ctx.fillRect(180, 100, 70, 80);
+                ctx.strokeStyle = '#0369a1'; ctx.lineWidth = 2; ctx.strokeRect(180, 100, 70, 80);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText(`m₂:${m2}k`, 215, 140);
+
+                drawArrow(ctx, 50, 145, 120, 145, '#22c55e', `F=${F}N`);
+            }
+
+        } else if (mod.type === 'eq') {
+            const { caseType, W1, L1, L2 } = currentRawData;
+
+            if (caseType === 'seesaw') {
+                ctx.strokeStyle = lineBg; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(40, 160); ctx.lineTo(340, 160); ctx.stroke();
+
+                ctx.fillStyle = '#f59e0b';
+                ctx.beginPath(); ctx.moveTo(190, 160); ctx.lineTo(175, 190); ctx.lineTo(205, 190); ctx.closePath(); ctx.fill();
+
+                ctx.fillStyle = '#ef4444'; ctx.fillRect(190 - (L1 * 35) - 20, 125, 40, 35);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 11px Plus Jakarta Sans';
+                ctx.fillText(`W₁`, 190 - (L1 * 35), 142);
+
+                ctx.fillStyle = '#3b82f6'; ctx.fillRect(190 + (L2 * 35) - 20, 125, 40, 35);
+                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 11px Plus Jakarta Sans';
+                ctx.fillText(`W₂=?`, 190 + (L2 * 35), 142);
+
+            } else {
+                ctx.fillStyle = lineBg; ctx.fillRect(50, 30, 15, 180);
+
+                ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 8;
+                ctx.beginPath(); ctx.moveTo(65, 130); ctx.lineTo(285, 130); ctx.stroke();
+
+                ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 2.5;
+                ctx.beginPath(); ctx.moveTo(65, 35); ctx.lineTo(175, 130); ctx.stroke();
+
+                ctx.fillStyle = textColor; ctx.font = 'bold 13px Plus Jakarta Sans';
+                ctx.fillText(`Poros (Engsel)`, 80, 150);
+                drawArrow(ctx, 175, 130, 175, 200, '#ef4444', 'W');
+                drawArrow(ctx, 175, 130, 120, 82, '#22c55e', 'T');
+            }
+        }
+    }
+</script>
+</body>
+</html>

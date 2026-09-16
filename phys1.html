@@ -140,35 +140,79 @@
 
         h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
 
-        /* Navigation Modules */
-        .module-nav {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 10px;
+        /* Navigation Modules - New Interactive Selector */
+        .module-selector-container {
             margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--card-border);
         }
 
-        .mod-btn {
-            background: var(--bg);
+        .module-selector-label {
+            font-size: 0.85rem;
+            font-weight: 700;
             color: var(--text-muted);
-            border: 1px solid var(--card-border);
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.2s;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .mod-btn:hover { background: var(--card-border); color: var(--text-main); }
-        .mod-btn.active {
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .mod-card {
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .mod-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .mod-card.active {
+            background: rgba(37, 99, 235, 0.08);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .mod-card-icon {
+            font-size: 1.4rem;
+            background: var(--card-bg);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            flex-shrink: 0;
+        }
+
+        .mod-card.active .mod-card-icon {
             background: var(--primary);
             color: #ffffff;
-            font-weight: 700;
             border-color: var(--primary);
+        }
+
+        .mod-card-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
         }
 
         .lab-grid {
@@ -179,6 +223,7 @@
 
         @media (max-width: 768px) {
             .lab-grid { grid-template-columns: 1fr; }
+            .module-grid { grid-template-columns: 1fr; }
         }
 
         .instrument-panel {
@@ -223,7 +268,7 @@
             border-bottom: 1px solid var(--card-border);
         }
 
-        .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; }
+        .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; font-size: 1.05rem; }
         .task-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 
         .symbol-legend {
@@ -313,8 +358,13 @@
         </div>
     </header>
 
-    <!-- Module Navigation -->
-    <div class="module-nav" id="module-nav"></div>
+    <!-- Module Selector -->
+    <div class="module-selector-container">
+        <div class="module-selector-label" id="select-mod-label">
+            <i class="fa-solid fa-compass"></i> Pilih Topik Pembelajaran
+        </div>
+        <div class="module-grid" id="module-nav"></div>
+    </div>
 
     <div class="lab-grid">
         <!-- Instrument / Virtual Sensor Panel -->
@@ -351,15 +401,16 @@
             pageTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran",
             headerTitle: "Virtual Lab: Besaran, Satuan, dan Pengukuran",
             homeText: "Kembali ke Beranda",
+            selectModLabel: "Pilih Topik Pembelajaran",
             defaultInstName: "Panel Instrumen",
             btnNewSample: "🔄 Dapatkan Sampel / Soal Baru",
             btnSubmit: "Kirim Data Analisis",
             modules: [
-                "1. 7 Besaran Pokok & Konversi Satuan",
-                "2. Notasi Ilmiah",
-                "3. Analisis Dimensi"
+                { name: "Besaran Pokok & Konversi Satuan", icon: "📏" },
+                { name: "Notasi Ilmiah", icon: "🔢" },
+                { name: "Analisis Dimensi", icon: "📐" }
             ],
-            mod1Title: "Modul: 7 Besaran Pokok & Konversi Satuan",
+            mod1Title: "Besaran Pokok & Konversi Satuan",
             mod1Desc: "Pilih Besaran Pokok yang sesuai, lalu lakukan konversi nilai baik ke Satuan SI maupun ke Satuan Lain/Acak yang diminta.",
             mod1Label1: "1. Pilih Besaran Pokok:",
             mod1Label2: "2. Konversi Ke Satuan SI:",
@@ -368,13 +419,13 @@
             mod1PlaceholderSI: "Nilai konversi SI",
             mod1PlaceholderRandom: "Nilai konversi ke {target}",
             mod1PlaceholderSigFig: "Masukkan jumlah AP",
-            mod2Title: "Modul: Notasi Ilmiah",
+            mod2Title: "Notasi Ilmiah",
             mod2Desc: "Ubah angka desimal/standar pada layar menjadi Notasi Ilmiah (a × 10ᵇ), di mana 1 ≤ a < 10.",
             mod2Label: "Bentuk Notasi Ilmiah (a × 10ᵇ):",
             mod2PlaceholderCoef: "Pengali (a)",
             mod2PlaceholderExp: "Eksponen (b)",
             mod2Hint: "Contoh: 1.000.000 = 1 × 10⁶ | 0,002 = 2 × 10⁻³",
-            mod3Title: "Modul: Analisis Dimensi",
+            mod3Title: "Analisis Dimensi",
             mod3Desc: "Tentukan apakah persamaan fisika yang diberikan valid/konsisten secara dimensi.",
             mod3SymbolTitle: "Definisi Simbol:",
             mod3Label: "Apakah persamaan ini valid/konsisten secara dimensi?",
@@ -402,15 +453,16 @@
             pageTitle: "Virtual Lab: Quantities, Units, and Measurements",
             headerTitle: "Virtual Lab: Quantities, Units, and Measurements",
             homeText: "Back to Home",
+            selectModLabel: "Select Learning Topic",
             defaultInstName: "Instrument Panel",
             btnNewSample: "🔄 Get New Sample / Problem",
             btnSubmit: "Submit Analysis Data",
             modules: [
-                "1. 7 Base Quantities & Unit Conversion",
-                "2. Scientific Notation",
-                "3. Dimensional Analysis"
+                { name: "Base Quantities & Unit Conversion", icon: "📏" },
+                { name: "Scientific Notation", icon: "🔢" },
+                { name: "Dimensional Analysis", icon: "📐" }
             ],
-            mod1Title: "Module: 7 Base Quantities & Unit Conversion",
+            mod1Title: "Base Quantities & Unit Conversion",
             mod1Desc: "Select the appropriate Base Quantity, then convert the value into both the SI Unit and the Random Target Unit.",
             mod1Label1: "1. Select Base Quantity:",
             mod1Label2: "2. Convert to SI Unit:",
@@ -419,13 +471,13 @@
             mod1PlaceholderSI: "SI conversion value",
             mod1PlaceholderRandom: "Conversion value to {target}",
             mod1PlaceholderSigFig: "Enter number of SFs",
-            mod2Title: "Module: Scientific Notation",
+            mod2Title: "Scientific Notation",
             mod2Desc: "Convert the decimal/standard number on display into Scientific Notation (a × 10ᵇ), where 1 ≤ a < 10.",
             mod2Label: "Scientific Notation Form (a × 10ᵇ):",
             mod2PlaceholderCoef: "Multiplier (a)",
             mod2PlaceholderExp: "Exponent (b)",
             mod2Hint: "Example: 1,000,000 = 1 × 10⁶ | 0.002 = 2 × 10⁻³",
-            mod3Title: "Module: Dimensional Analysis",
+            mod3Title: "Dimensional Analysis",
             mod3Desc: "Determine if the given physics equation is dimensionally valid/consistent.",
             mod3SymbolTitle: "Symbol Definitions:",
             mod3Label: "Is this equation dimensionally valid/consistent?",
@@ -487,6 +539,7 @@
         document.getElementById('page-title').innerText = t.pageTitle;
         document.getElementById('header-title').innerText = t.headerTitle;
         document.getElementById('home-text').innerText = t.homeText;
+        document.getElementById('select-mod-label').innerHTML = `<i class="fa-solid fa-compass"></i> ${t.selectModLabel}`;
         document.getElementById('btn-new-sample').innerText = t.btnNewSample;
         document.getElementById('btn-submit').innerText = t.btnSubmit;
     }
@@ -715,11 +768,16 @@
         nav.innerHTML = '';
         const t = translations[currentLang];
         modules.forEach((mod, idx) => {
-            const btn = document.createElement('button');
-            btn.className = `mod-btn ${idx === currentModIndex ? 'active' : ''}`;
-            btn.innerText = t.modules[idx];
-            btn.onclick = () => switchModule(idx);
-            nav.appendChild(btn);
+            const card = document.createElement('div');
+            card.className = `mod-card ${idx === currentModIndex ? 'active' : ''}`;
+            card.onclick = () => switchModule(idx);
+            
+            const modMeta = t.modules[idx];
+            card.innerHTML = `
+                <div class="mod-card-icon">${modMeta.icon}</div>
+                <div class="mod-card-title">${modMeta.name}</div>
+            `;
+            nav.appendChild(card);
         });
     }
 

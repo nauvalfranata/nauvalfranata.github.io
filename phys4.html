@@ -542,7 +542,7 @@
                 c2: { l1: "1. Kinetic Friction Force fₖ (N):", p1: "Enter friction force fₖ", l2: "2. System Acceleration a (m/s²):", p2: "Enter acceleration value a" },
                 c3: { l1: "1. Parallel Surface Force Fₓ (N):", p1: "Enter Fₓ (w sin θ)", l2: "2. Acceleration a (m/s²):", p2: "Enter acceleration value a" },
                 c4: { l1: "1. System Acceleration a (m/s²):", p1: "Enter acceleration value a", l2: "2. Rope Tension T (N):", p2: "Enter tension value T" },
-                c5: { l1: "1. Centripetal Acceleration aₛ (m/s²):", p1: "Enter aₛ value", l2: "2. Centripetal Force Fₛ (N):", p2: "Enter Fₛ value" }
+                c5: { l1: "1. Centripetal Acceleration a⛤ (m/s²):", p1: "Enter a⛤ value", l2: "2. Centripetal Force F⛤ (N):", p2: "Enter F⛤ value" }
             },
             conceptUI: {
                 instName: "Conceptual Case Study",
@@ -1322,18 +1322,20 @@
             }
 
         } else if (currentSubCalcCase === 2) {
-            // PERBAIKAN: Bidang Miring Licin (Sudut Dinamis & Orientasi Balok Sejajar Bidang Miring)
+            // PERBAIKAN: Bidang Miring Licin (Skala Disesuaikan Agar Puncak Selalu Terlihat Jelas)
             const thetaDeg = (currentRawData && currentRawData.theta) ? currentRawData.theta : 30;
             const angleRad = thetaDeg * (Math.PI / 180);
 
-            // Koordinat segitiga bidang miring
-            const x0 = 30, y0 = 180;
-            const baseWidth = 240;
+            // Tentukan tinggi maksimum segitiga agar puncak memiliki margin di atas
+            const maxRampHeight = h - 60; // Mengatur batas atas puncak agar tidak terpotong (margin top)
+            const baseWidth = Math.min(240, maxRampHeight / Math.tan(angleRad));
             const rampHeight = baseWidth * Math.tan(angleRad);
 
+            // Koordinat dasar alas dan puncak
+            const x0 = 30, y0 = 190;
             const x1 = x0 + baseWidth; // Ujung alas kanan
             const y1 = y0;
-            const x2 = x1;             // Puncak tinggi tegak
+            const x2 = x1;             // Puncak tegak
             const y2 = y0 - rampHeight;
 
             // Gambar segitiga bidang miring

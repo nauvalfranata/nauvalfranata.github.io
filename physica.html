@@ -152,33 +152,6 @@
             z-index: 1;
         }
 
-        .btn-back-container {
-            text-align: left;
-            margin-bottom: 1rem;
-        }
-
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 0.5rem 1rem;
-            border-radius: 30px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 600;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(5px);
-            transition: all 0.2s ease;
-        }
-
-        .btn-back:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            transform: translateX(-3px);
-        }
-
         .logo-container {
             display: flex;
             align-items: center;
@@ -360,11 +333,6 @@
     <!-- Header Asli -->
     <header>
         <div class="header-container">
-            <div class="btn-back-container">
-                <a href="index.html" class="btn-back" id="btn-home">
-                    <i class="fa-solid fa-arrow-left"></i> <span data-key="btn_home">Kembali ke Profile</span>
-                </a>
-            </div>
             <div class="logo-container">
                 <img src="logo-physica.png" alt="Physica Logo" class="logo-image" onerror="this.style.display='none'">
             </div>
@@ -489,7 +457,6 @@
 
         const translations = {
             id: {
-                btn_home: "Kembali ke Profile",
                 welcome_title: "Selamat Datang di Physica!",
                 welcome_desc: "Aplikasi web ini berfungsi sebagai platform interaktif yang dirancang untuk membantu pembelajar mengeksplorasi konsep-konsep dasar fisika melalui alat bantu intuitif dan simulasi visual.",
                 t1_title: "Topik 1: Besaran, Satuan, & Pengukuran",
@@ -514,7 +481,6 @@
                 footer_text: "&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Dirancang sebagai platform pembelajaran fisika interaktif."
             },
             en: {
-                btn_home: "Back to Profile",
                 welcome_title: "Welcome to Physica!",
                 welcome_desc: "This web application serves as an interactive platform designed to help learners explore fundamental physics concepts through intuitive tools and visual simulations.",
                 t1_title: "Topic 1: Quantities, Units, & Measurements",

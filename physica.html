@@ -9,15 +9,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
-        // Memeriksa apakah halaman dibuka langsung (tidak di dalam iframe)
+        // Redirect jika dibuka langsung di luar iframe
         if (window.self === window.top) {
-            // Alihkan ke index.html sambil membawa parameter query page=physica
             window.location.href = "index.html?page=physica";
         }
     </script>
+
     <style>
-        /* CSS Variables - Light Theme (Default) */
+        /* CSS Variables - Light Theme (Sinkron dengan index.html) */
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
@@ -28,14 +29,14 @@
             --card-border: #e2e8f0;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --hero-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #1e3a8a 100%);
+            --hero-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #1e3a8a 100%);
             --hero-text: #ffffff;
             --hero-desc: #94a3b8;
             --icon-bg: #eff6ff;
             --footer-bg: #ffffff;
         }
 
-        /* CSS Variables - Dark Theme */
+        /* CSS Variables - Dark Theme (Sinkron dengan index.html) */
         [data-theme="dark"] {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
@@ -46,10 +47,10 @@
             --card-border: #334155;
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
-            --hero-bg: linear-gradient(135deg, #020617 0%, #0f172a 60%, #172554 100%);
+            --hero-bg: linear-gradient(135deg, #020617 0%, #0f172a 50%, #172554 100%);
             --hero-text: #ffffff;
             --hero-desc: #cbd5e1;
-            --icon-bg: #1e293b;
+            --icon-bg: #334155;
             --footer-bg: #0f172a;
         }
 
@@ -58,7 +59,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
 
         body {
@@ -69,11 +70,11 @@
             flex-direction: column;
         }
 
-        /* Header / Hero Style Asli */
+        /* Hero / Header Modern */
         header {
             background: var(--hero-bg);
             color: var(--hero-text);
-            padding: 3.5rem 1.5rem 6rem;
+            padding: 3rem 1.5rem 5rem;
             text-align: center;
             position: relative;
         }
@@ -81,53 +82,58 @@
         header::after {
             content: '';
             position: absolute;
-            bottom: -50px;
+            bottom: -40px;
             left: 0;
             right: 0;
-            height: 100px;
+            height: 80px;
             background: var(--bg);
-            transform: skewY(-2deg);
+            transform: skewY(-1.5deg);
         }
 
         .header-container {
-            max-width: 1000px;
+            max-width: 900px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
         }
 
         .logo-image {
-            max-height: 90px;
+            max-height: 75px;
             width: auto;
             object-fit: contain;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.3));
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25));
         }
 
-        .author-info {
-            font-size: 0.95rem;
-            color: var(--hero-desc);
-            border-top: 1px solid rgba(255, 255, 255, 0.15);
-            display: inline-block;
-            padding-top: 0.8rem;
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            color: var(--accent);
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
             margin-top: 0.5rem;
         }
 
-        .author-name {
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        /* Container & Cards */
+        /* Container & Welcome Card */
         .container {
-            max-width: 1000px;
-            margin: -2.5rem auto 3rem;
+            max-width: 1050px;
+            margin: -2rem auto 3rem;
             padding: 0 1.5rem;
             position: relative;
             z-index: 2;
@@ -139,28 +145,28 @@
             border-radius: 16px;
             padding: 2rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--card-border);
             border-left: 5px solid var(--primary);
         }
 
         .welcome-card h2 {
-            font-size: 1.5rem;
-            color: var(--secondary);
-            margin-bottom: 0.6rem;
+            font-size: 1.4rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
             font-weight: 800;
         }
 
         .welcome-card p {
             color: var(--text-muted);
-            font-size: 0.98rem;
+            font-size: 0.95rem;
             line-height: 1.6;
         }
 
         /* Grid Topics */
         .grid-simulasi {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
             gap: 1.5rem;
         }
 
@@ -169,53 +175,38 @@
             border-radius: 16px;
             padding: 1.8rem;
             border: 1px solid var(--card-border);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            opacity: 0;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
-        }
-
-        .card:hover::before {
-            opacity: 1;
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
         }
 
         .card-icon {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 12px;
             background: var(--icon-bg);
             color: var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            margin-bottom: 1.2rem;
             border: 1px solid var(--card-border);
         }
 
         .card h3 {
             font-size: 1.1rem;
-            color: var(--secondary);
+            color: var(--text-main);
             font-weight: 700;
             margin-bottom: 0.6rem;
             line-height: 1.4;
@@ -224,7 +215,7 @@
         .card p {
             font-size: 0.9rem;
             color: var(--text-muted);
-            line-height: 1.5;
+            line-height: 1.6;
             margin-bottom: 1.5rem;
         }
 
@@ -235,12 +226,13 @@
             gap: 8px;
             background-color: var(--primary);
             color: #ffffff;
-            padding: 0.65rem 1.2rem;
+            padding: 0.7rem 1.2rem;
             border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.88rem;
             transition: all 0.2s;
+            align-self: flex-start;
         }
 
         .btn:hover {
@@ -250,9 +242,9 @@
 
         footer {
             text-align: center;
-            padding: 2rem 1.5rem;
+            padding: 1.5rem 2.5rem;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             border-top: 1px solid var(--card-border);
             background: var(--footer-bg);
         }
@@ -260,15 +252,14 @@
 </head>
 <body>
 
-    <!-- Header Asli -->
+    <!-- Header / Hero Section -->
     <header>
         <div class="header-container">
             <div class="logo-container">
                 <img src="logo-physica.png" alt="Physica Logo" class="logo-image" onerror="this.style.display='none'">
             </div>
-            <div class="author-info">
-                <p class="author-name">Nauval Franata, S.Si., M.T.</p>
-                <p>Universitas Sultan Ageng Tirtayasa</p>
+            <div class="hero-badge">
+                <i class="fa-solid fa-atom"></i> <span data-key="hero_badge">Modul Fisika Interaktif</span>
             </div>
         </div>
     </header>
@@ -276,8 +267,8 @@
     <div class="container">
         <!-- Welcome Section -->
         <div class="welcome-card">
-            <h2 id="welcome-title" data-key="welcome_title">Selamat Datang di Physica!</h2>
-            <p id="welcome-desc" data-key="welcome_desc">Aplikasi web ini berfungsi sebagai platform interaktif yang dirancang untuk membantu pembelajar mengeksplorasi konsep-konsep dasar fisika melalui alat bantu intuitif dan simulasi visual.</p>
+            <h2 data-key="welcome_title">Selamat Datang di Physica!</h2>
+            <p data-key="welcome_desc">Aplikasi web ini berfungsi sebagai platform interaktif yang dirancang untuk membantu pembelajar mengeksplorasi konsep-konsep dasar fisika melalui alat bantu intuitif dan simulasi visual.</p>
         </div>
 
         <!-- Topics Grid -->
@@ -377,13 +368,14 @@
     </div>
 
     <footer>
-        <p data-key="footer_text">&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Dirancang sebagai platform pembelajaran fisika interaktif.</p>
+        <p data-key="footer_text">Physica — Platform Pembelajaran Fisika Dasar Interaktif.</p>
     </footer>
 
     <!-- Script Sinkronisasi Mode & Bahasa dengan index.html -->
     <script>
         const translations = {
             id: {
+                hero_badge: "Modul Fisika Interaktif",
                 welcome_title: "Selamat Datang di Physica!",
                 welcome_desc: "Aplikasi web ini berfungsi sebagai platform interaktif yang dirancang untuk membantu pembelajar mengeksplorasi konsep-konsep dasar fisika melalui alat bantu intuitif dan simulasi visual.",
                 t1_title: "Topik 1: Besaran, Satuan, & Pengukuran",
@@ -405,9 +397,10 @@
                 t9_title: "Topik 9: Termodinamika Dasar",
                 t9_desc: "Alat interaktif untuk mengeksplorasi sistem dan proses termodinamika, kerja, kalor, perubahan energi dalam, dan Hukum I Termodinamika.",
                 explore_prefix: "Jelajahi Topik",
-                footer_text: "&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Dirancang sebagai platform pembelajaran fisika interaktif."
+                footer_text: "Physica — Platform Pembelajaran Fisika Dasar Interaktif."
             },
             en: {
+                hero_badge: "Interactive Physics Module",
                 welcome_title: "Welcome to Physica!",
                 welcome_desc: "This web application serves as an interactive platform designed to help learners explore fundamental physics concepts through intuitive tools and visual simulations.",
                 t1_title: "Topic 1: Quantities, Units, & Measurements",
@@ -429,16 +422,14 @@
                 t9_title: "Topic 9: Fundamental Thermodynamics",
                 t9_desc: "Interactive tool exploring thermodynamic systems and processes, work, heat, internal energy change, and the First Law of Thermodynamics.",
                 explore_prefix: "Explore Topic",
-                footer_text: "&copy; 2026 Physica — Universitas Sultan Ageng Tirtayasa. Designed as an interactive physics learning platform."
+                footer_text: "Physica — Interactive General Physics Learning Platform."
             }
         };
 
         function applySettings() {
-            // Mengikuti pengaturan dari localStorage yang diatur oleh index.html
             const savedLang = localStorage.getItem('user_lang') || 'id';
             const savedTheme = localStorage.getItem('user_theme');
 
-            // Terapan Bahasa
             document.documentElement.lang = savedLang;
             document.querySelectorAll('[data-key]').forEach(element => {
                 const key = element.getAttribute('data-key');
@@ -447,7 +438,6 @@
                 }
             });
 
-            // Terapan Tema (Light/Dark)
             if (savedTheme) {
                 document.documentElement.setAttribute('data-theme', savedTheme);
             } else {
@@ -456,10 +446,8 @@
             }
         }
 
-        // Jalankan saat halaman dimuat
         document.addEventListener('DOMContentLoaded', applySettings);
 
-        // Dengarkan perubahan pada localStorage jika diubah dari index.html secara real-time
         window.addEventListener('storage', (e) => {
             if (e.key === 'user_theme' || e.key === 'user_lang') {
                 applySettings();

@@ -506,7 +506,7 @@
     let currentLang = 'id';
     let currentTheme = 'light';
 
-    function applySettings() {
+    function applySettings(isInitial = false) {
         currentLang = localStorage.getItem('user_lang') || 'id';
         currentTheme = localStorage.getItem('user_theme');
 
@@ -521,16 +521,21 @@
 
         updateUIStaticText();
         initNav();
-        generateNewData();
+        
+        if (isInitial) {
+            generateNewData();
+        } else {
+            renderCurrentQuestionUI();
+        }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        applySettings();
+        applySettings(true);
     });
 
     window.addEventListener('storage', (e) => {
         if (e.key === 'user_theme' || e.key === 'user_lang') {
-            applySettings();
+            applySettings(false);
         }
     });
 
@@ -800,14 +805,6 @@
 
     function generateNewData() {
         const mod = modules[currentModIndex];
-        const t = translations[currentLang];
-        document.getElementById('feedback').style.display = 'none';
-
-        const legendBox = document.getElementById('symbol-legend-box');
-        legendBox.style.display = 'none';
-
-        const dynamicInputs = document.getElementById('dynamic-inputs');
-        dynamicInputs.innerHTML = '';
 
         if (mod.type === 'base-quantities-module') {
             const qData = baseQuantities[selectedQuantityKey];
@@ -832,10 +829,40 @@
 
             let formattedVal = currentRawData.val.toPrecision(4);
             currentDisplayStr = formattedVal;
+        } else {
+            currentRawData = mod.generate();
+        }
+
+        renderCurrentQuestionUI();
+    }
+
+    function renderCurrentQuestionUI() {
+        const mod = modules[currentModIndex];
+        const t = translations[currentLang];
+
+        document.getElementById('feedback').style.display = 'none';
+
+        const legendBox = document.getElementById('symbol-legend-box');
+        legendBox.style.display = 'none';
+
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+
+        // Simpan input sementara sebelum re-render UI jika diperlukan
+        const prevSiVal = document.getElementById('si-val-input')?.value || '';
+        const prevRandomVal = document.getElementById('random-val-input')?.value || '';
+        const prevSigFigVal = document.getElementById('sigfig-input')?.value || '';
+        const prevCoefVal = document.getElementById('coef-input')?.value || '';
+        const prevExpVal = document.getElementById('exp-input')?.value || '';
+        const prevDimVal = document.getElementById('dim-select')?.value || '';
+
+        dynamicInputs.innerHTML = '';
+
+        if (mod.type === 'base-quantities-module') {
+            const qData = baseQuantities[selectedQuantityKey];
 
             document.getElementById('inst-icon').innerText = qData.icon;
             document.getElementById('inst-name').innerText = qData.instrument[currentLang];
-            document.getElementById('sensor-display').innerText = `${formattedVal} ${currentRawData.unit}`;
+            document.getElementById('sensor-display').innerText = `${currentDisplayStr} ${currentRawData.unit}`;
             document.getElementById('task-title').innerText = t.mod1Title;
             document.getElementById('task-desc').innerText = t.mod1Desc;
 
@@ -863,20 +890,19 @@
                         <select id="si-unit-select" style="flex: 1;">
                             ${unitOptionsHtml}
                         </select>
-                        <input type="number" id="si-val-input" step="any" placeholder="${t.mod1PlaceholderSI}" style="flex: 2;">
+                        <input type="number" id="si-val-input" step="any" placeholder="${t.mod1PlaceholderSI}" style="flex: 2;" value="${prevSiVal}">
                     </div>
                 </div>
                 <div class="control-group">
                     <label>${label3Text}</label>
-                    <input type="number" id="random-val-input" step="any" placeholder="${placeholderRandom}">
+                    <input type="number" id="random-val-input" step="any" placeholder="${placeholderRandom}" value="${prevRandomVal}">
                 </div>
                 <div class="control-group">
                     <label for="sigfig-input">${t.mod1Label4}</label>
-                    <input type="number" id="sigfig-input" placeholder="${t.mod1PlaceholderSigFig}">
+                    <input type="number" id="sigfig-input" placeholder="${t.mod1PlaceholderSigFig}" value="${prevSigFigVal}">
                 </div>
             `;
         } else {
-            currentRawData = mod.generate();
             document.getElementById('inst-icon').innerText = mod.icon;
             document.getElementById('inst-name').innerText = mod.instrument[currentLang];
 
@@ -889,9 +915,9 @@
                     <div class="control-group">
                         <label>${t.mod2Label}</label>
                         <div class="input-row">
-                            <input type="number" id="coef-input" step="any" placeholder="${t.mod2PlaceholderCoef}" style="flex: 2;">
+                            <input type="number" id="coef-input" step="any" placeholder="${t.mod2PlaceholderCoef}" style="flex: 2;" value="${prevCoefVal}">
                             <span style="font-weight: bold; color: var(--primary);">× 10</span>
-                            <input type="number" id="exp-input" placeholder="${t.mod2PlaceholderExp}" style="flex: 1;">
+                            <input type="number" id="exp-input" placeholder="${t.mod2PlaceholderExp}" style="flex: 1;" value="${prevExpVal}">
                         </div>
                         <small style="color: var(--text-muted); font-size: 0.75rem;">${t.mod2Hint}</small>
                     </div>
@@ -914,8 +940,8 @@
                         <label for="dim-select">${t.mod3Label}</label>
                         <select id="dim-select">
                             <option value="">${t.mod3SelectDefault}</option>
-                            <option value="valid">${t.mod3Valid}</option>
-                            <option value="invalid">${t.mod3Invalid}</option>
+                            <option value="valid" ${prevDimVal === 'valid' ? 'selected' : ''}>${t.mod3Valid}</option>
+                            <option value="invalid" ${prevDimVal === 'invalid' ? 'selected' : ''}>${t.mod3Invalid}</option>
                         </select>
                     </div>
                 `;

@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Virtual Lab: Vectors - Untirta</title>
+    <title id="page-title">Virtual Lab: Vektor</title>
     <!-- Google Fonts & Font Awesome Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // Redirect jika dibuka langsung di luar iframe
+        if (window.self === window.top) {
+            window.location.href = "index.html?page=phys2";
+        }
+    </script>
 
     <style>
         /* CSS Variables - Light Theme (Default) */
@@ -16,7 +23,7 @@
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --secondary: #0f172a;
-            --accent: #0284c7;
+            --accent: #38bdf8;
             --accent-light: #e0f2fe;
             --bg: #f8fafc;
             --card-bg: #ffffff;
@@ -85,68 +92,6 @@
             padding: 30px 20px;
         }
 
-        /* FLOATING CONTROLS (POJOK KANAN ATAS) */
-        .floating-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 9999;
-        }
-
-        .floating-lang-switch {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            padding: 4px;
-            display: flex;
-            gap: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-        }
-
-        .floating-lang-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .floating-lang-btn.active {
-            background: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-        }
-
-        .floating-theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .floating-theme-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-
         .container {
             max-width: 950px;
             width: 100%;
@@ -196,37 +141,80 @@
         }
 
         h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
-        .subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; font-weight: 500; }
-        .univ-tag { color: var(--text-muted); font-size: 0.85rem; font-style: italic; }
 
-        .module-nav {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding-bottom: 10px;
+        /* Navigation Modules - Interactive Grid Selector */
+        .module-selector-container {
             margin-bottom: 20px;
+            padding-bottom: 15px;
             border-bottom: 1px solid var(--card-border);
         }
 
-        .mod-btn {
-            background: var(--bg);
+        .module-selector-label {
+            font-size: 0.85rem;
+            font-weight: 700;
             color: var(--text-muted);
-            border: 1px solid var(--card-border);
-            padding: 10px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            white-space: nowrap;
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.2s;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .mod-btn:hover { background: var(--card-border); color: var(--text-main); }
-        .mod-btn.active {
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .mod-card {
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .mod-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .mod-card.active {
+            background: rgba(37, 99, 235, 0.08);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .mod-card-icon {
+            font-size: 1.4rem;
+            background: var(--card-bg);
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            flex-shrink: 0;
+        }
+
+        .mod-card.active .mod-card-icon {
             background: var(--primary);
             color: #ffffff;
-            font-weight: 700;
             border-color: var(--primary);
+        }
+
+        .mod-card-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.3;
         }
 
         .lab-grid {
@@ -237,6 +225,7 @@
 
         @media (max-width: 768px) {
             .lab-grid { grid-template-columns: 1fr; }
+            .module-grid { grid-template-columns: 1fr; }
         }
 
         .instrument-panel {
@@ -283,7 +272,7 @@
             border-bottom: 1px solid var(--card-border);
         }
 
-        .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; }
+        .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; font-size: 1.05rem; }
         .task-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 
         .control-group {
@@ -376,24 +365,10 @@
 </head>
 <body>
 
-    <!-- FLOATING CONTROLS (MELAYANG DI POJOK KANAN ATAS) -->
-    <div class="floating-controls">
-        <div class="floating-lang-switch">
-            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
-            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-        </div>
-        
-        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
-            <i class="fa-solid fa-moon" id="theme-icon"></i>
-        </button>
-    </div>
-
 <div class="container">
     <header>
         <div>
             <h1 id="header-title">Virtual Lab: Vektor</h1>
-            <div class="subtitle" id="header-lecturer">Dosen Pengampu: Nauval Franata, S.Si., M.T.</div>
-            <div class="univ-tag">Universitas Sultan Ageng Tirtayasa</div>
         </div>
         <div class="header-actions">
             <a href="physica.html" class="btn-back" id="home-link">
@@ -402,8 +377,13 @@
         </div>
     </header>
 
-    <!-- Module Navigation -->
-    <div class="module-nav" id="module-nav"></div>
+    <!-- Module Selector -->
+    <div class="module-selector-container">
+        <div class="module-selector-label" id="select-mod-label">
+            <i class="fa-solid fa-compass"></i> Pilih Topik Pembelajaran
+        </div>
+        <div class="module-grid" id="module-nav"></div>
+    </div>
 
     <div class="lab-grid">
         <!-- Instrument / Visual Display Panel -->
@@ -427,7 +407,7 @@
             <!-- Dynamic Input Container -->
             <div id="dynamic-inputs"></div>
 
-            <button class="btn-action" id="submit-btn" onclick="submitAnalysis()">Kirim Data Analisis</button>
+            <button class="btn-action" id="btn-submit" onclick="submitAnalysis()">Kirim Data Analisis</button>
             <div id="feedback" class="feedback"></div>
         </div>
     </div>
@@ -437,20 +417,20 @@
     // System Translations
     const translations = {
         id: {
-            pageTitle: "Virtual Lab: Vektor - Untirta",
+            pageTitle: "Virtual Lab: Vektor",
             headerTitle: "Virtual Lab: Vektor",
-            lecturer: "Dosen Pengampu: Nauval Franata, S.Si., M.T.",
             homeText: "Kembali ke Beranda",
+            selectModLabel: "Pilih Topik Pembelajaran",
             defaultInstName: "Panel Instrumen Interaktif",
             defaultSensorMsg: "Pilih modul untuk memulai",
             btnNewSample: "🔄 Dapatkan Sampel / Soal Baru",
             btnSubmit: "Kirim Data Analisis",
             modules: [
-                "1. Klasifikasi Skalar & Vektor",
-                "2. Komponen & Magnitudo",
-                "3. Operasi Vektor Analitis",
-                "4. Konstruksi Vektor Geometris",
-                "5. Perkalian Titik & Silang"
+                { name: "Klasifikasi Skalar & Vektor", icon: "🎮" },
+                { name: "Komponen & Magnitudo", icon: "📐" },
+                { name: "Operasi Vektor Analitis", icon: "🧮" },
+                { name: "Konstruksi Vektor Geometris", icon: "✏️" },
+                { name: "Perkalian Titik & Silang", icon: "✖️" }
             ],
             instruments: [
                 "Klasifikasi Besaran",
@@ -508,7 +488,7 @@
             mod4ParaErrB: "• Nilai komponen Vektor B salah.<br>",
             mod4ParaErrTailTail: "• Pangkal Vektor A dan Vektor B harus berada pada titik yang persis sama (tail-to-tail).<br>",
             mod4ParaErrROrigin: "• Vektor Resultan R harus berawal dari titik pangkal bersama A dan B.<br>",
-            mod4ParaErrRDiag: "• Ujung Vektor Resultan R harus mencapai sudut seberang (diagonal jajaran genjang).<br>",
+            mod4ParaErrRDiag: "• Ujung Vektor Resultan R harus mencapai sudut seberang (diagonal jajaran janjang).<br>",
             mod4SubSuccess: "✅ <b>Sempurna! Pengurangan Geometris (A - B) Benar!</b><br>• Vektor A dan B diletakkan head-to-tail dengan pembalikan arah -B.<br>• Resultan R (A - B) = ({rx}, {ry}).",
             mod4SubErrTitle: "❌ <b>Pengurangan Geometris (A - B) Belum Tepat:</b><br>",
             mod4SubErrA: "• Nilai komponen Vektor A salah.<br>",
@@ -519,20 +499,20 @@
             mod5Incorrect: "❌ <b>Perkalian Vektor Belum Tepat!</b><br>• Seharusnya Dot Product: <b>{dot}</b><br>• Seharusnya |A × B|: <b>{cross}</b>"
         },
         en: {
-            pageTitle: "Virtual Lab: Vectors - Untirta",
+            pageTitle: "Virtual Lab: Vectors",
             headerTitle: "Virtual Lab: Vectors",
-            lecturer: "Lecturer: Nauval Franata, S.Si., M.T.",
             homeText: "Back to Home",
+            selectModLabel: "Select Learning Topic",
             defaultInstName: "Interactive Display Panel",
             defaultSensorMsg: "Select a module to begin",
             btnNewSample: "🔄 Get New Sample / Problem",
             btnSubmit: "Submit Analysis Data",
             modules: [
-                "1. Scalar vs Vector Classification",
-                "2. Components & Magnitude",
-                "3. Analytical Vector Operations",
-                "4. Geometric Vector Construction",
-                "5. Dot & Cross Product"
+                { name: "Scalar vs Vector Classification", icon: "🎮" },
+                { name: "Components & Magnitude", icon: "📐" },
+                { name: "Analytical Vector Operations", icon: "🧮" },
+                { name: "Geometric Vector Construction", icon: "✏️" },
+                { name: "Dot & Cross Product", icon: "✖️" }
             ],
             instruments: [
                 "Quantity Classifier",
@@ -556,242 +536,141 @@
             mod3Label: "Resultant Vector R Components:",
             mod4Title: "Geometric Vector Construction",
             mod4MethodTriDesc: "[Triangle Addition Method]: Drag and arrange Vectors A & B head-to-tail (place tail of B at tip of A). Then drag Resultant R from tail of A to tip of B!",
-            mod4MethodParaDesc: "[Parallelogram Addition Method]: Drag and arrange Vectors A & B from the SAME INITIAL POINT (tail-to-tail). Then drag Resultant R as the main diagonal!",
-            mod4MethodSubDesc: "[Subtraction Method (A - B)]: Arrange Vector A + (-B). Place tail of B at tip of A, then reverse B (-B). Drag Resultant R from tail of A to tip of -B!",
+            mod4MethodParaDesc: "[Parallelogram Addition Method]: Drag and arrange Vectors A & B starting from the SAME TAIL POINT. Then drag Resultant R as its main diagonal!",
+            mod4MethodSubDesc: "[Subtraction Method (A - B)]: Arrange Vector A + (-B). Connect tail of B to tip of A, then reverse B's direction (-B). Drag Resultant R from tail of A to tip of -B!",
             mod4LabelMethod: "Select Geometric Construction Method:",
             mod4OptTri: "🔺 Addition: Triangle Method (A + B)",
             mod4OptPara: "🔷 Addition: Parallelogram Method (A + B)",
-            mod4OptSub: "➖ Subtraction: Reversed Vector Method (A - B)",
+            mod4OptSub: "➖ Subtraction: Opposite Vector Method (A - B)",
             mod4TargetLabel: "💡 <b>Target Vector:</b>",
-            mod5Title: "Vector Products",
-            mod5Desc: "Compute the Dot Product (A · B) and the magnitude of the Cross Product |A × B|.",
+            mod5Title: "Vector Product",
+            mod5Desc: "Calculate the Dot Product (A · B) and Cross Product magnitude |A × B|.",
             mod5Label1: "1. Dot Product (A · B):",
-            mod5Label2: "2. Magnitude of Cross Product |A × B|:",
+            mod5Label2: "2. Cross Product Magnitude |A × B|:",
             mod5Placeholder1: "Scalar value",
             mod5Placeholder2: "Magnitude value",
-            errFillFields: "⚠️ Please fill in all input fields!",
+            errFillFields: "⚠️ Please fill in all input fields first!",
             errFillBothRxRy: "⚠️ Please enter both Rx and Ry components!",
-            errFillBothProducts: "⚠️ Please fill in both product calculation fields!",
-            gameCorrect: "✅ <b>Spot on!</b><br><b>{name}</b> is a <b>{type} Quantity</b>.<br><i>Explanation:</i> {desc}",
-            gameIncorrect: "❌ <b>Incorrect!</b><br><b>{name}</b> is actually a <b>{type} Quantity</b>.<br><i>Explanation:</i> {desc}",
-            mod2Correct: "✅ <b>Analysis Correct!</b><br>• Magnitude |A|: <b>{mag}</b><br>• Angle θ: <b>{deg}°</b>",
-            mod2Incorrect: "❌ <b>Analysis Incorrect:</b><br>• Expected Magnitude |A|: <b>{mag}</b><br>• Expected Angle θ: <b>{deg}°</b>",
-            mod3Correct: "✅ <b>Resultant Vector Correct!</b><br>• R = <b>{rx} i + {ry} j</b>",
-            mod3Incorrect: "❌ <b>Incorrect Resultant!</b><br>• Expected: R = <b>{rx} i + {ry} j</b>",
+            errFillBothProducts: "⚠️ Please fill in both vector product calculations!",
+            gameCorrect: "✅ <b>Spot On!</b><br><b>{name}</b> is a <b>{type} Quantity</b>.<br><i>Explanation:</i> {desc}",
+            gameIncorrect: "❌ <b>Not Quite!</b><br><b>{name}</b> is actually a <b>{type} Quantity</b>.<br><i>Explanation:</i> {desc}",
+            mod2Correct: "✅ <b>Correct Analysis!</b><br>• Magnitude |A|: <b>{mag}</b><br>• Angle θ: <b>{deg}°</b>",
+            mod2Incorrect: "❌ <b>Analysis Not Quite Correct:</b><br>• Expected Magnitude |A|: <b>{mag}</b><br>• Expected Angle θ: <b>{deg}°</b>",
+            mod3Correct: "✅ <b>Correct Resultant Vector!</b><br>• R = <b>{rx} i + {ry} j</b>",
+            mod3Incorrect: "❌ <b>Resultant Not Quite Correct!</b><br>• Expected: R = <b>{rx} i + {ry} j</b>",
             mod4TriSuccess: "✅ <b>Perfect! Triangle Addition Correct!</b><br>• Vectors A and B are correctly placed <i>head-to-tail</i>.<br>• Resultant R = ({rx}, {ry}).",
-            mod4TriErrTitle: "❌ <b>Triangle Method Arrangement Incorrect:</b><br>",
-            mod4TriErrA: "• Component values of Vector A are incorrect.<br>",
-            mod4TriErrB: "• Component values of Vector B are incorrect.<br>",
+            mod4TriErrTitle: "❌ <b>Triangle Method Arrangement Not Quite Correct:</b><br>",
+            mod4TriErrA: "• Vector A component value is wrong.<br>",
+            mod4TriErrB: "• Vector B component value is wrong.<br>",
             mod4TriErrHeadTail: "• Tail of Vector B must be placed at the tip of Vector A.<br>",
-            mod4TriErrR: "• Resultant Vector R must be drawn from tail of Vector A to tip of Vector B.<br>",
-            mod4ParaSuccess: "✅ <b>Perfect! Parallelogram Addition Correct!</b><br>• Vectors A and B share the same initial point (<i>tail-to-tail</i>).<br>• Resultant Vector R is drawn as the main diagonal R = ({rx}, {ry}).",
-            mod4ParaErrTitle: "❌ <b>Parallelogram Method Arrangement Incorrect:</b><br>",
-            mod4ParaErrA: "• Component values of Vector A are incorrect.<br>",
-            mod4ParaErrB: "• Component values of Vector B are incorrect.<br>",
-            mod4ParaErrTailTail: "• Tail of Vector A and Vector B must start at the exact same point (tail-to-tail).<br>",
-            mod4ParaErrROrigin: "• Resultant Vector R must originate from the common initial point of A and B.<br>",
+            mod4TriErrR: "• Resultant R must be drawn from tail of Vector A to tip of Vector B.<br>",
+            mod4ParaSuccess: "✅ <b>Perfect! Parallelogram Addition Correct!</b><br>• Vectors A and B share the same tail point (<i>tail-to-tail</i>).<br>• Resultant Vector R is drawn as the main diagonal R = ({rx}, {ry}).",
+            mod4ParaErrTitle: "❌ <b>Parallelogram Method Arrangement Not Quite Correct:</b><br>",
+            mod4ParaErrA: "• Vector A component value is wrong.<br>",
+            mod4ParaErrB: "• Vector B component value is wrong.<br>",
+            mod4ParaErrTailTail: "• Tails of Vector A and Vector B must be at the exact same point (tail-to-tail).<br>",
+            mod4ParaErrROrigin: "• Resultant Vector R must originate from the common tail point of A and B.<br>",
             mod4ParaErrRDiag: "• Tip of Resultant Vector R must reach the opposite corner (parallelogram diagonal).<br>",
-            mod4SubSuccess: "✅ <b>Perfect! Geometric Subtraction (A - B) Correct!</b><br>• Vectors A and B are placed head-to-tail with inverted vector -B.<br>• Resultant R (A - B) = ({rx}, {ry}).",
-            mod4SubErrTitle: "❌ <b>Geometric Subtraction (A - B) Incorrect:</b><br>",
-            mod4SubErrA: "• Component values of Vector A are incorrect.<br>",
-            mod4SubErrB: "• Component values of Vector B are incorrect.<br>",
-            mod4SubErrHeadTail: "• Tail of Vector B must be attached to the tip of Vector A.<br>",
-            mod4SubErrR: "• Resultant Vector R must be drawn from tail of Vector A to tip of inverted Vector (-B).<br>",
-            mod5Correct: "✅ <b>Vector Products Correct!</b><br>• Dot Product (A · B): <b>{dot}</b><br>• Cross Product Magnitude |A × B|: <b>{cross}</b>",
-            mod5Incorrect: "❌ <b>Vector Products Incorrect!</b><br>• Expected Dot Product: <b>{dot}</b><br>• Expected |A × B|: <b>{cross}</b>"
+            mod4SubSuccess: "✅ <b>Perfect! Geometric Subtraction (A - B) Correct!</b><br>• Vectors A and B placed head-to-tail with direction reversal of -B.<br>• Resultant R (A - B) = ({rx}, {ry}).",
+            mod4SubErrTitle: "❌ <b>Geometric Subtraction (A - B) Not Quite Correct:</b><br>",
+            mod4SubErrA: "• Vector A component value is wrong.<br>",
+            mod4SubErrB: "• Vector B component value is wrong.<br>",
+            mod4SubErrHeadTail: "• Tail of Vector B must connect to tip of Vector A.<br>",
+            mod4SubErrR: "• Resultant Vector R must be drawn from tail of Vector A to tip of reversed Vector (-B).<br>",
+            mod5Correct: "✅ <b>Correct Vector Multiplication!</b><br>• Dot Product (A · B): <b>{dot}</b><br>• Cross Product Magnitude |A × B|: <b>{cross}</b>",
+            mod5Incorrect: "❌ <b>Vector Multiplication Not Quite Correct!</b><br>• Expected Dot Product: <b>{dot}</b><br>• Expected |A × B|: <b>{cross}</b>"
         }
     };
 
     let currentLang = 'id';
     let currentTheme = 'light';
 
-    // Scalar vs Vector Database (Bilingual Descriptions)
-    const quantityDatabase = [
-        { name: { id: "Massa", en: "Mass" }, type: "scalar", desc: { id: "Massa hanya memiliki nilai tanpa arah.", en: "Mass only has magnitude without direction." } },
-        { name: { id: "Kecepatan", en: "Velocity" }, type: "vector", desc: { id: "Kecepatan memperhitungkan laju gerak beserta arahnya.", en: "Velocity accounts for the rate of motion along with its direction." } },
-        { name: { id: "Kelajuan", en: "Speed" }, type: "scalar", desc: { id: "Kelajuan mengukur laju gerak tanpa memperhitungkan arah.", en: "Speed measures the rate of motion without considering direction." } },
-        { name: { id: "Gaya", en: "Force" }, type: "vector", desc: { id: "Gaya memiliki nilai magnitudo dan arah dorongan/tarikan.", en: "Force has both magnitude and direction of push or pull." } },
-        { name: { id: "Perpindahan", en: "Displacement" }, type: "vector", desc: { id: "Perpindahan memperhitungkan posisi awal ke akhir beserta arahnya.", en: "Displacement accounts for initial-to-final position and direction." } },
-        { name: { id: "Jarak", en: "Distance" }, type: "scalar", desc: { id: "Jarak adalah total panjang lintasan tanpa memperhitungkan arah.", en: "Distance is the total path length traveled without direction." } },
-        { name: { id: "Suhu", en: "Temperature" }, type: "scalar", desc: { id: "Suhu menunjukkan derajat panas/dingin (murni skalar).", en: "Temperature indicates degree of hotness or coldness (pure scalar)." } },
-        { name: { id: "Momentum", en: "Momentum" }, type: "vector", desc: { id: "Momentum (p = m · v) searah dengan arah kecepatan.", en: "Momentum (p = m · v) points in the same direction as velocity." } },
-        { name: { id: "Energi Kinetik", en: "Kinetic Energy" }, type: "scalar", desc: { id: "Energi merupakan besaran skalar (skalar dari kuadrat kecepatan).", en: "Energy is a scalar quantity (scalar product involving velocity squared)." } },
-        { name: { id: "Percepatan", en: "Acceleration" }, type: "vector", desc: { id: "Percepatan adalah perubahan kecepatan terhadap waktu yang memiliki arah.", en: "Acceleration is the rate of change of velocity, which has direction." } },
-        { name: { id: "Impuls", en: "Impulse" }, type: "vector", desc: { id: "Impuls (I = F · Δt) memiliki arah yang sama dengan gaya F.", en: "Impulse (I = F · Δt) shares the same direction as force F." } },
-        { name: { id: "Usaha", en: "Work" }, type: "scalar", desc: { id: "Usaha adalah hasil perkalian titik (dot product) gaya dan perpindahan.", en: "Work is the dot product of force and displacement (scalar)." } },
-        { name: { id: "Kuat Arus Listrik", en: "Electric Current" }, type: "scalar", desc: { id: "Meskipun memiliki arah aliran, arus listrik mematuhi aljabar skalar.", en: "Despite having flow direction, current is a scalar obeying standard algebra." } },
-        { name: { id: "Torsi", en: "Torque" }, type: "vector", desc: { id: "Torsi adalah hasil perkalian silang r × F (besaran vektor).", en: "Torque is the cross product r × F (vector quantity)." } },
-        { name: { id: "Tekanan", en: "Pressure" }, type: "scalar", desc: { id: "Tekanan fluida bekerja tegak lurus ke segala arah pada suatu titik (skalar).", en: "Fluid pressure acts in all directions perpendicularly at a point (scalar)." } },
-        { name: { id: "Momen Inersia", en: "Moment of Inertia" }, type: "scalar", desc: { id: "Momen inersia mengukur kelembaman rotasi tanpa komponen arah spasial.", en: "Moment of inertia measures rotational inertia without spatial vector components." } },
-        { name: { id: "Fluks Magnetik", en: "Magnetic Flux" }, type: "scalar", desc: { id: "Fluks magnetik adalah hasil dot product B · A (skalar).", en: "Magnetic flux is the dot product B · A (scalar)." } },
-        { name: { id: "Gaya Angkat", en: "Lift Force" }, type: "vector", desc: { id: "Gaya angkat aerodinamis memiliki besar dan arah tegak lurus aliran udara.", en: "Aerodynamic lift has magnitude and is directed perpendicular to airflow." } }
-    ];
+    function applySettings() {
+        currentLang = localStorage.getItem('user_lang') || 'id';
+        currentTheme = localStorage.getItem('user_theme');
 
-    // Canvas Interactive Drag & Drop System State
-    let dragNode = null;
-    let geoMethod = 'triangle'; // 'triangle', 'parallelogram', or 'subtraction'
-    let geoState = {
-        targetA: { x: 3, y: 2 },
-        targetB: { x: 2, y: 3 },
-        startA: { x: 0, y: 0 },
-        endA: { x: 2, y: 0 },
-        startB: { x: 0, y: 0 },
-        endB: { x: 0, y: 2 },
-        startR: { x: 0, y: 0 },
-        endR: { x: 3, y: 3 }
-    };
+        document.documentElement.lang = currentLang;
 
-    const modules = [
-        {
-            id: 'scalar_vector_game',
-            type: 'game-scalar-vector',
-            generate: () => {
-                const item = quantityDatabase[Math.floor(Math.random() * quantityDatabase.length)];
-                return item;
-            }
-        },
-        {
-            id: 'magnitude_angle',
-            type: 'magnitude-angle',
-            generate: () => {
-                const ax = Math.floor(Math.random() * 16) - 8 || 3;
-                const ay = Math.floor(Math.random() * 16) - 8 || 4;
-                return { ax, ay, display: `A = ${ax >= 0 ? ax : '('+ax+')'} i + ${ay >= 0 ? ay : '('+ay+')'} j` };
-            }
-        },
-        {
-            id: 'vector_addition_analitis',
-            type: 'vector-op',
-            generate: () => {
-                const ax = Math.floor(Math.random() * 10) - 5;
-                const ay = Math.floor(Math.random() * 10) - 5;
-                const bx = Math.floor(Math.random() * 10) - 5;
-                const by = Math.floor(Math.random() * 10) - 5;
-                const isAdd = Math.random() > 0.5;
-                const op = isAdd ? '+' : '-';
-                return { 
-                    ax, ay, bx, by, isAdd,
-                    display: `A = ${ax}i + ${ay}j\nB = ${bx}i + ${by}j\nFind: R = A ${op} B` 
-                };
-            }
-        },
-        {
-            id: 'vector_addition_geometris',
-            type: 'vector-geo',
-            generate: () => {
-                const ax = Math.floor(Math.random() * 4) + 2;
-                const ay = Math.floor(Math.random() * 3) + 1;
-                const bx = Math.floor(Math.random() * 3) + 1;
-                const by = Math.floor(Math.random() * 3) + 1;
-
-                geoState.targetA = { x: ax, y: ay };
-                geoState.targetB = { x: bx, y: by };
-                
-                // Set default node positions
-                geoState.startA = { x: 1, y: 1 };
-                geoState.endA = { x: 1 + ax, y: 1 + ay };
-                geoState.startB = { x: 5, y: 1 };
-                geoState.endB = { x: 5 + bx, y: 1 + by };
-                geoState.startR = { x: 1, y: 5 };
-                geoState.endR = { x: 4, y: 6 };
-
-                return { ax, ay, bx, by };
-            }
-        },
-        {
-            id: 'vector_products',
-            type: 'products',
-            generate: () => {
-                const ax = Math.floor(Math.random() * 6) - 3;
-                const ay = Math.floor(Math.random() * 6) - 3;
-                const az = Math.floor(Math.random() * 6) - 3;
-                const bx = Math.floor(Math.random() * 6) - 3;
-                const by = Math.floor(Math.random() * 6) - 3;
-                const bz = Math.floor(Math.random() * 6) - 3;
-                return {
-                    ax, ay, az, bx, by, bz,
-                    display: `A = [${ax}, ${ay}, ${az}]\nB = [${bx}, ${by}, ${bz}]`
-                };
-            }
-        }
-    ];
-
-    let currentModIndex = 0;
-    let currentRawData = {};
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const savedLang = localStorage.getItem('user_lang') || 'id';
-        setLanguage(savedLang);
-
-        const savedTheme = localStorage.getItem('user_theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
         } else {
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(prefersDark ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
         }
-
-        initNav();
-        initCanvasEvents();
-        generateNewData();
-    });
-
-    function setLanguage(lang) {
-        currentLang = lang;
-        localStorage.setItem('user_lang', lang);
-        
-        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-        
-        document.documentElement.lang = lang;
 
         updateUIStaticText();
         initNav();
         generateNewData();
     }
 
-    function toggleTheme() {
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        applySettings();
+    });
 
-    function setTheme(theme) {
-        currentTheme = theme;
-        localStorage.setItem('user_theme', theme);
-        
-        document.documentElement.setAttribute('data-theme', theme);
-        
-        const icon = document.getElementById('theme-icon');
-        if (theme === 'dark') {
-            icon.className = 'fa-solid fa-sun';
-        } else {
-            icon.className = 'fa-solid fa-moon';
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'user_theme' || e.key === 'user_lang') {
+            applySettings();
         }
-        if (modules[currentModIndex].type === 'vector-geo') {
-            drawInteractiveCanvas();
-        }
-    }
+    });
 
     function updateUIStaticText() {
         const t = translations[currentLang];
         document.getElementById('page-title').innerText = t.pageTitle;
         document.getElementById('header-title').innerText = t.headerTitle;
-        document.getElementById('header-lecturer').innerText = t.lecturer;
         document.getElementById('home-text').innerText = t.homeText;
+        document.getElementById('select-mod-label').innerHTML = `<i class="fa-solid fa-compass"></i> ${t.selectModLabel}`;
         document.getElementById('btn-new-sample').innerText = t.btnNewSample;
-        document.getElementById('submit-btn').innerText = t.btnSubmit;
+        document.getElementById('btn-submit').innerText = t.btnSubmit;
     }
+
+    // Dataset Game Klasifikasi
+    const quantityDatabase = [
+        { name: { id: "Massa", en: "Mass" }, type: "scalar", desc: { id: "Hanya memiliki nilai/magnitudo tanpa arah.", en: "Has magnitude only without direction." } },
+        { name: { id: "Kecepatan", en: "Velocity" }, type: "vector", desc: { id: "Memiliki nilai dan arah perpindahan per satuan waktu.", en: "Has magnitude and direction of displacement per unit time." } },
+        { name: { id: "Laju", en: "Speed" }, type: "scalar", desc: { id: "Hanya menunjukkan seberapa cepat benda bergerak (skalar dari kecepatan).", en: "Indicates speed only (scalar component of velocity)." } },
+        { name: { id: "Gaya", en: "Force" }, type: "vector", desc: { id: "Memiliki magnitudo dan arah dorongan/tarikan.", en: "Has magnitude and direction of push/pull." } },
+        { name: { id: "Perpindahan", en: "Displacement" }, type: "vector", desc: { id: "Perubahan posisi dari titik awal ke titik akhir yang berarah.", en: "Change in position from initial to final point with direction." } },
+        { name: { id: "Jarak", en: "Distance" }, type: "scalar", desc: { id: "Panjang seluruh lintasan yang ditempuh tanpa memperhitungkan arah.", en: "Total path length covered regardless of direction." } },
+        { name: { id: "Percepatan", en: "Acceleration" }, type: "vector", desc: { id: "Perubahan kecepatan terhadap waktu beserta arahnya.", en: "Change in velocity per unit time along with direction." } },
+        { name: { id: "Suhu", en: "Temperature" }, type: "scalar", desc: { id: "Ukuran derajat panas/dingin tanpa memiliki arah.", en: "Measure of heat/coldness without direction." } },
+        { name: { id: "Energi Kinetik", en: "Kinetic Energy" }, type: "scalar", desc: { id: "Energi gerak yang nilainya selalu skalar.", en: "Energy of motion which is always a scalar value." } },
+        { name: { id: "Momentum", en: "Momentum" }, type: "vector", desc: { id: "Hasil kali massa dan kecepatan (p = m·v), berarah searah v.", en: "Product of mass and velocity (p = m·v), pointing in direction of v." } },
+        { name: { id: "Tekanan", en: "Pressure" }, type: "scalar", desc: { id: "Gaya per satuan luas (P = F/A) yang terdistribusi secara skalar.", en: "Force per unit area (P = F/A) distributed as a scalar." } },
+        { name: { id: "Medan Listrik", en: "Electric Field" }, type: "vector", desc: { id: "Memiliki kuat medan dan arah gaya listrik per muatan.", en: "Has field strength and direction of electric force per unit charge." } }
+    ];
+
+    let currentModIndex = 0;
+    let currentRawData = {};
+    let activeGeoMethod = 'triangle';
+
+    // Canvas & Interactive Dragging State
+    let canvas, ctx;
+    let isDragging = false;
+    let dragTarget = null; 
+    let dragOffset = { x: 0, y: 0 };
+    const GRID_SIZE = 20;
+    const ORIGIN = { x: 150, y: 120 };
+
+    let geoVectors = {
+        A: { startX: 100, startY: 180, endX: 160, endY: 140, color: '#2563eb', label: 'A' },
+        B: { startX: 50, startY: 80, endX: 110, endY: 80, color: '#e11d48', label: 'B' },
+        R: { startX: 200, startY: 180, endX: 260, endY: 120, color: '#16a34a', label: 'R' }
+    };
 
     function initNav() {
         const nav = document.getElementById('module-nav');
         nav.innerHTML = '';
         const t = translations[currentLang];
-        modules.forEach((mod, idx) => {
-            const btn = document.createElement('button');
-            btn.className = `mod-btn ${idx === currentModIndex ? 'active' : ''}`;
-            btn.innerText = t.modules[idx];
-            btn.onclick = () => switchModule(idx);
-            nav.appendChild(btn);
+        t.modules.forEach((modMeta, idx) => {
+            const card = document.createElement('div');
+            card.className = `mod-card ${idx === currentModIndex ? 'active' : ''}`;
+            card.onclick = () => switchModule(idx);
+            
+            card.innerHTML = `
+                <div class="mod-card-icon">${modMeta.icon}</div>
+                <div class="mod-card-title">${modMeta.name}</div>
+            `;
+            nav.appendChild(card);
         });
     }
 
@@ -801,232 +680,64 @@
         generateNewData();
     }
 
-    function changeGeoMethod(method) {
-        geoMethod = method;
-        const taskDesc = document.getElementById('task-desc');
-        const t = translations[currentLang];
-        if (method === 'triangle') {
-            taskDesc.innerText = t.mod4MethodTriDesc;
-        } else if (method === 'parallelogram') {
-            taskDesc.innerText = t.mod4MethodParaDesc;
-        } else if (method === 'subtraction') {
-            taskDesc.innerText = t.mod4MethodSubDesc;
-        }
-        drawInteractiveCanvas();
-    }
-
-    function initCanvasEvents() {
-        const canvas = document.getElementById('vector-canvas');
-        
-        const getGridPos = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            const x = Math.round((clientX - rect.left - 20) / 25);
-            const y = Math.round((220 - (clientY - rect.top)) / 25);
-            return { x: Math.max(0, Math.min(10, x)), y: Math.max(0, Math.min(8, y)) };
-        };
-
-        const findClosestNode = (pos) => {
-            const nodes = [
-                { key: 'startA', obj: geoState.startA }, { key: 'endA', obj: geoState.endA },
-                { key: 'startB', obj: geoState.startB }, { key: 'endB', obj: geoState.endB },
-                { key: 'startR', obj: geoState.startR }, { key: 'endR', obj: geoState.endR }
-            ];
-            for (let n of nodes) {
-                if (Math.abs(n.obj.x - pos.x) <= 0.8 && Math.abs(n.obj.y - pos.y) <= 0.8) {
-                    return n.key;
-                }
-            }
-            return null;
-        };
-
-        const handleStart = (e) => {
-            if (modules[currentModIndex].type !== 'vector-geo') return;
-            const pos = getGridPos(e);
-            dragNode = findClosestNode(pos);
-        };
-
-        const handleMove = (e) => {
-            if (!dragNode || modules[currentModIndex].type !== 'vector-geo') return;
-            e.preventDefault();
-            const pos = getGridPos(e);
-            geoState[dragNode].x = pos.x;
-            geoState[dragNode].y = pos.y;
-            drawInteractiveCanvas();
-        };
-
-        const handleEnd = () => { dragNode = null; };
-
-        canvas.addEventListener('mousedown', handleStart);
-        canvas.addEventListener('mousemove', handleMove);
-        window.addEventListener('mouseup', handleEnd);
-
-        canvas.addEventListener('touchstart', handleStart);
-        canvas.addEventListener('touchmove', handleMove);
-        window.addEventListener('touchend', handleEnd);
-    }
-
-    function drawInteractiveCanvas() {
-        const canvas = document.getElementById('vector-canvas');
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        const originX = 20;
-        const originY = 220;
-        const scale = 25;
-
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-
-        // Grid
-        ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
-        ctx.lineWidth = 1;
-        for (let x = 0; x <= 10; x++) {
-            ctx.beginPath();
-            ctx.moveTo(originX + x * scale, 10);
-            ctx.lineTo(originX + x * scale, originY);
-            ctx.stroke();
-        }
-        for (let y = 0; y <= 8; y++) {
-            ctx.beginPath();
-            ctx.moveTo(originX, originY - y * scale);
-            ctx.lineTo(originX + 10 * scale, originY - y * scale);
-            ctx.stroke();
-        }
-
-        function drawArrow(start, end, color, label, dash = []) {
-            const fromX = originX + start.x * scale;
-            const fromY = originY - start.y * scale;
-            const toX = originX + end.x * scale;
-            const toY = originY - end.y * scale;
-
-            const dx = toX - fromX;
-            const dy = toY - fromY;
-            const angle = Math.atan2(dy, dx);
-            const headlen = 9;
-
-            ctx.save();
-            ctx.strokeStyle = color;
-            ctx.fillStyle = color;
-            ctx.lineWidth = 3;
-            ctx.setLineDash(dash);
-
-            // Line
-            ctx.beginPath();
-            ctx.moveTo(fromX, fromY);
-            ctx.lineTo(toX, toY);
-            ctx.stroke();
-
-            // Arrowhead
-            ctx.setLineDash([]);
-            if (dx !== 0 || dy !== 0) {
-                ctx.beginPath();
-                ctx.moveTo(toX, toY);
-                ctx.lineTo(toX - headlen * Math.cos(angle - Math.PI / 6), toY - headlen * Math.sin(angle - Math.PI / 6));
-                ctx.lineTo(toX - headlen * Math.cos(angle + Math.PI / 6), toY - headlen * Math.sin(angle + Math.PI / 6));
-                ctx.fill();
-            }
-
-            // Handles (interactive dots)
-            ctx.beginPath(); ctx.arc(fromX, fromY, 5, 0, 2 * Math.PI); ctx.fill();
-            ctx.beginPath(); ctx.arc(toX, toY, 5, 0, 2 * Math.PI); ctx.fill();
-
-            // Label
-            if (label) {
-                ctx.font = 'bold 12px Plus Jakarta Sans, sans-serif';
-                ctx.fillText(label, (fromX + toX) / 2 + 6, (fromY + toY) / 2 - 6);
-            }
-            ctx.restore();
-        }
-
-        if (geoMethod === 'parallelogram') {
-            const isOriginSame = (geoState.startA.x === geoState.startB.x && geoState.startA.y === geoState.startB.y);
-            if (isOriginSame) {
-                const cornerX = originX + (geoState.endA.x + (geoState.endB.x - geoState.startB.x)) * scale;
-                const cornerY = originY - (geoState.endA.y + (geoState.endB.y - geoState.startB.y)) * scale;
-                
-                ctx.save();
-                ctx.setLineDash([4, 4]);
-                ctx.strokeStyle = isDark ? '#64748b' : '#94a3b8';
-                ctx.lineWidth = 2;
-
-                ctx.beginPath();
-                ctx.moveTo(originX + geoState.endA.x * scale, originY - geoState.endA.y * scale);
-                ctx.lineTo(cornerX, cornerY);
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.moveTo(originX + geoState.endB.x * scale, originY - geoState.endB.y * scale);
-                ctx.lineTo(cornerX, cornerY);
-                ctx.stroke();
-
-                ctx.restore();
-            }
-        } else if (geoMethod === 'subtraction') {
-            const isHeadToTail = geoState.startB.x === geoState.endA.x && geoState.startB.y === geoState.endA.y;
-            if (isHeadToTail) {
-                const vecB_X = geoState.endB.x - geoState.startB.x;
-                const vecB_Y = geoState.endB.y - geoState.startB.y;
-                const negB_end = {
-                    x: geoState.startB.x - vecB_X,
-                    y: geoState.startB.y - vecB_Y
-                };
-                drawArrow(geoState.startB, negB_end, '#f97316', '-B', [4, 4]);
-            }
-        }
-
-        drawArrow(geoState.startA, geoState.endA, '#0284c7', 'A');
-        drawArrow(geoState.startB, geoState.endB, '#e11d48', 'B');
-        drawArrow(geoState.startR, geoState.endR, '#16a34a', 'R');
-    }
-
     function generateNewData() {
-        const mod = modules[currentModIndex];
-        currentRawData = mod.generate();
         const t = translations[currentLang];
-
-        const icons = ['🎯', '📐', '➕', '✏️', '✖️'];
-        document.getElementById('inst-icon').innerText = icons[currentModIndex];
-        document.getElementById('inst-name').innerText = t.instruments[currentModIndex];
         document.getElementById('feedback').style.display = 'none';
-
-        const canvas = document.getElementById('vector-canvas');
-        const sensorDisplay = document.getElementById('sensor-display');
         const dynamicInputs = document.getElementById('dynamic-inputs');
-        const submitBtn = document.getElementById('submit-btn');
-        
-        submitBtn.style.display = 'block';
-        canvas.style.display = 'none';
         dynamicInputs.innerHTML = '';
+        const canvasEl = document.getElementById('vector-canvas');
+        canvasEl.style.display = 'none';
 
-        if (mod.type === 'game-scalar-vector') {
-            submitBtn.style.display = 'none';
-            const item = currentRawData;
-            sensorDisplay.innerText = `${currentLang === 'id' ? 'Besaran' : 'Quantity'}: ${item.name[currentLang]}`;
+        document.getElementById('inst-name').innerText = t.instruments[currentModIndex];
+        const submitBtn = document.getElementById('btn-submit');
+        submitBtn.style.display = 'block';
+
+        if (currentModIndex === 0) {
+            // Modul 1: Klasifikasi
+            const item = quantityDatabase[Math.floor(Math.random() * quantityDatabase.length)];
+            currentRawData = item;
+
+            document.getElementById('inst-icon').innerText = "🎮";
+            document.getElementById('sensor-display').innerText = item.name[currentLang];
             document.getElementById('task-title').innerText = t.mod1Title;
             document.getElementById('task-desc').innerText = t.mod1Desc;
+            submitBtn.style.display = 'none';
 
             dynamicInputs.innerHTML = `
-                <button class="btn-game-opt" onclick="checkGameAnswer('scalar')">${t.btnScalar}</button>
-                <button class="btn-game-opt" onclick="checkGameAnswer('vector')">${t.btnVector}</button>
+                <button class="btn-game-opt" onclick="checkClassification('scalar')">${t.btnScalar}</button>
+                <button class="btn-game-opt" onclick="checkClassification('vector')">${t.btnVector}</button>
             `;
-        } else if (mod.type === 'magnitude-angle') {
-            sensorDisplay.innerText = currentRawData.display;
+        } else if (currentModIndex === 1) {
+            // Modul 2: Komponen & Magnitudo
+            const ax = Math.floor(Math.random() * 16) - 8 || 3;
+            const ay = Math.floor(Math.random() * 16) - 8 || 4;
+            currentRawData = { ax, ay };
+
+            document.getElementById('inst-icon').innerText = "📐";
+            document.getElementById('sensor-display').innerText = `A = (${ax >= 0 ? '+' : ''}${ax}) i + (${ay >= 0 ? '+' : ''}${ay}) j`;
             document.getElementById('task-title').innerText = t.mod2Title;
             document.getElementById('task-desc').innerText = t.mod2Desc;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label for="mag-input">${t.mod2Label1}</label>
-                    <input type="number" id="mag-input" step="any" placeholder="${t.mod2Placeholder1}">
+                    <label>${t.mod2Label1}</label>
+                    <input type="number" id="mod2-mag" step="any" placeholder="${t.mod2Placeholder1}">
                 </div>
                 <div class="control-group">
-                    <label for="deg-input">${t.mod2Label2}</label>
-                    <input type="number" id="deg-input" step="any" placeholder="${t.mod2Placeholder2}">
+                    <label>${t.mod2Label2}</label>
+                    <input type="number" id="mod2-deg" step="any" placeholder="${t.mod2Placeholder2}">
                 </div>
             `;
-        } else if (mod.type === 'vector-op') {
-            sensorDisplay.innerHTML = currentRawData.display.replace(/\n/g, '<br>');
+        } else if (currentModIndex === 2) {
+            // Modul 3: Operasi Analitis
+            const ax = Math.floor(Math.random() * 12) - 6;
+            const ay = Math.floor(Math.random() * 12) - 6;
+            const bx = Math.floor(Math.random() * 12) - 6;
+            const by = Math.floor(Math.random() * 12) - 6;
+            currentRawData = { ax, ay, bx, by };
+
+            document.getElementById('inst-icon').innerText = "🧮";
+            document.getElementById('sensor-display').innerText = `A = ${ax}i + ${ay}j\nB = ${bx}i + ${by}j`;
             document.getElementById('task-title').innerText = t.mod3Title;
             document.getElementById('task-desc').innerText = t.mod3Desc;
 
@@ -1034,206 +745,370 @@
                 <div class="control-group">
                     <label>${t.mod3Label}</label>
                     <div class="input-row">
-                        <input type="number" id="rx-input" placeholder="Rx" style="flex: 1;">
-                        <span style="font-weight: bold; color: var(--accent);">i +</span>
-                        <input type="number" id="ry-input" placeholder="Ry" style="flex: 1;">
-                        <span style="font-weight: bold; color: var(--accent);">j</span>
+                        <input type="number" id="mod3-rx" placeholder="Rx">
+                        <span style="font-weight:bold;">i +</span>
+                        <input type="number" id="mod3-ry" placeholder="Ry">
+                        <span style="font-weight:bold;">j</span>
                     </div>
                 </div>
             `;
-        } else if (mod.type === 'vector-geo') {
-            canvas.style.display = 'block';
-            sensorDisplay.innerText = `A = (${currentRawData.ax}, ${currentRawData.ay}) | B = (${currentRawData.bx}, ${currentRawData.by})`;
-            drawInteractiveCanvas();
-            
+        } else if (currentModIndex === 3) {
+            // Modul 4: Geometris
+            canvasEl.style.display = 'block';
+            document.getElementById('inst-icon').innerText = "✏️";
             document.getElementById('task-title').innerText = t.mod4Title;
-            changeGeoMethod(geoMethod);
+
+            const targetAx = Math.floor(Math.random() * 5) + 1;
+            const targetAy = Math.floor(Math.random() * 4) - 2;
+            const targetBx = Math.floor(Math.random() * 4) - 2;
+            const targetBy = Math.floor(Math.random() * 5) + 1;
+
+            currentRawData = { targetAx, targetAy, targetBx, targetBy };
+            document.getElementById('sensor-display').innerHTML = `A = (${targetAx}, ${targetAy})<br>B = (${targetBx}, ${targetBy})`;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label for="geo-method-select">${t.mod4LabelMethod}</label>
+                    <label>${t.mod4LabelMethod}</label>
                     <select id="geo-method-select" onchange="changeGeoMethod(this.value)">
-                        <option value="triangle" ${geoMethod === 'triangle' ? 'selected' : ''}>${t.mod4OptTri}</option>
-                        <option value="parallelogram" ${geoMethod === 'parallelogram' ? 'selected' : ''}>${t.mod4OptPara}</option>
-                        <option value="subtraction" ${geoMethod === 'subtraction' ? 'selected' : ''}>${t.mod4OptSub}</option>
+                        <option value="triangle">${t.mod4OptTri}</option>
+                        <option value="parallelogram">${t.mod4OptPara}</option>
+                        <option value="subtraction">${t.mod4OptSub}</option>
                     </select>
                 </div>
-                <div style="font-size:0.85rem; color: var(--text-muted); margin-bottom: 10px; line-height: 1.5;">
-                    ${t.mod4TargetLabel}<br>
-                    • Blue Line (Vector A): (${currentRawData.ax}, ${currentRawData.ay})<br>
-                    • Red Line (Vector B): (${currentRawData.bx}, ${currentRawData.by})<br>
-                    • Green Line (Resultant R): ${geoMethod === 'subtraction' ? 'A - B' : 'A + B'}
-                </div>
             `;
-        } else if (mod.type === 'products') {
-            sensorDisplay.innerHTML = currentRawData.display.replace(/\n/g, '<br>');
+
+            resetGeoCanvas();
+            changeGeoMethod('triangle');
+        } else if (currentModIndex === 4) {
+            // Modul 5: Perkalian Vektor
+            const ax = Math.floor(Math.random() * 8) - 4 || 2;
+            const ay = Math.floor(Math.random() * 8) - 4 || 3;
+            const bx = Math.floor(Math.random() * 8) - 4 || -1;
+            const by = Math.floor(Math.random() * 8) - 4 || 4;
+            currentRawData = { ax, ay, bx, by };
+
+            document.getElementById('inst-icon').innerText = "✖️";
+            document.getElementById('sensor-display').innerText = `A = (${ax}, ${ay})\nB = (${bx}, ${by})`;
             document.getElementById('task-title').innerText = t.mod5Title;
             document.getElementById('task-desc').innerText = t.mod5Desc;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
-                    <label for="dot-input">${t.mod5Label1}</label>
-                    <input type="number" id="dot-input" step="any" placeholder="${t.mod5Placeholder1}">
+                    <label>${t.mod5Label1}</label>
+                    <input type="number" id="mod5-dot" step="any" placeholder="${t.mod5Placeholder1}">
                 </div>
                 <div class="control-group">
-                    <label for="crossmag-input">${t.mod5Label2}</label>
-                    <input type="number" id="crossmag-input" step="any" placeholder="${t.mod5Placeholder2}">
+                    <label>${t.mod5Label2}</label>
+                    <input type="number" id="mod5-cross" step="any" placeholder="${t.mod5Placeholder2}">
                 </div>
             `;
         }
     }
 
-    function checkGameAnswer(userChoice) {
-        const isCorrect = userChoice === currentRawData.type;
+    function checkClassification(userChoice) {
         const t = translations[currentLang];
-        const name = currentRawData.name[currentLang];
-        const typeStr = currentRawData.type.toUpperCase();
-        const desc = currentRawData.desc[currentLang];
-
+        const isCorrect = userChoice === currentRawData.type;
+        const typeStr = currentRawData.type === 'scalar' ? (currentLang === 'id' ? 'Skalar' : 'Scalar') : (currentLang === 'id' ? 'Vektor' : 'Vector');
+        
         if (isCorrect) {
-            showFeedback(true, t.gameCorrect.replace('{name}', name).replace('{type}', typeStr).replace('{desc}', desc));
+            showFeedback('success', t.gameCorrect.replace('{name}', currentRawData.name[currentLang]).replace('{type}', typeStr).replace('{desc}', currentRawData.desc[currentLang]));
         } else {
-            showFeedback(false, t.gameIncorrect.replace('{name}', name).replace('{type}', typeStr).replace('{desc}', desc));
+            showFeedback('error', t.gameIncorrect.replace('{name}', currentRawData.name[currentLang]).replace('{type}', typeStr).replace('{desc}', currentRawData.desc[currentLang]));
         }
+    }
+
+    function changeGeoMethod(method) {
+        activeGeoMethod = method;
+        const t = translations[currentLang];
+
+        if (method === 'triangle') {
+            document.getElementById('task-desc').innerText = t.mod4MethodTriDesc;
+        } else if (method === 'parallelogram') {
+            document.getElementById('task-desc').innerText = t.mod4MethodParaDesc;
+        } else if (method === 'subtraction') {
+            document.getElementById('task-desc').innerText = t.mod4MethodSubDesc;
+        }
+        resetGeoCanvas();
+    }
+
+    function resetGeoCanvas() {
+        canvas = document.getElementById('vector-canvas');
+        ctx = canvas.getContext('2d');
+
+        geoVectors = {
+            A: { startX: 40, startY: 200, endX: 40 + currentRawData.targetAx * GRID_SIZE, endY: 200 - currentRawData.targetAy * GRID_SIZE, color: '#2563eb', label: 'A' },
+            B: { startX: 40, startY: 100, endX: 40 + currentRawData.targetBx * GRID_SIZE, endY: 100 - currentRawData.targetBy * GRID_SIZE, color: '#e11d48', label: 'B' },
+            R: { startX: 180, startY: 180, endX: 240, endY: 120, color: '#16a34a', label: 'R' }
+        };
+
+        initCanvasEvents();
+        drawCanvas();
+    }
+
+    function drawCanvas() {
+        if (!ctx) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Grid
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        for (let x = 0; x <= canvas.width; x += GRID_SIZE) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+        for (let y = 0; y <= canvas.height; y += GRID_SIZE) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+
+        // Draw Vectors
+        Object.keys(geoVectors).forEach(key => {
+            const v = geoVectors[key];
+            drawArrow(ctx, v.startX, v.startY, v.endX, v.endY, v.color, v.label);
+        });
+    }
+
+    function drawArrow(context, fromx, fromy, tox, toy, color, label) {
+        const headlen = 10;
+        const dx = tox - fromx;
+        const dy = toy - fromy;
+        const angle = Math.atan2(dy, dx);
+
+        context.strokeStyle = color;
+        context.fillStyle = color;
+        context.lineWidth = 3;
+
+        context.beginPath();
+        context.moveTo(fromx, fromy);
+        context.lineTo(tox, toy);
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(tox, toy);
+        context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        context.closePath();
+        context.fill();
+
+        context.font = 'bold 12px Plus Jakarta Sans';
+        context.fillText(label, (fromx + tox) / 2 + 5, (fromy + toy) / 2 - 5);
+    }
+
+    function initCanvasEvents() {
+        canvas.onmousedown = handlePointerDown;
+        canvas.onmousemove = handlePointerMove;
+        canvas.onmouseup = handlePointerUp;
+
+        canvas.ontouchstart = (e) => {
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousedown", { clientX: touch.clientX, clientY: touch.clientY });
+            canvas.dispatchEvent(mouseEvent);
+        };
+        canvas.ontouchmove = (e) => {
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousemove", { clientX: touch.clientX, clientY: touch.clientY });
+            canvas.dispatchEvent(mouseEvent);
+        };
+        canvas.ontouchend = () => {
+            const mouseEvent = new MouseEvent("mouseup", {});
+            canvas.dispatchEvent(mouseEvent);
+        };
+    }
+
+    function handlePointerDown(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        dragTarget = null;
+        Object.keys(geoVectors).forEach(key => {
+            const v = geoVectors[key];
+            const distStart = Math.hypot(mx - v.startX, my - v.startY);
+            const distEnd = Math.hypot(mx - v.endX, my - v.endY);
+
+            if (distStart < 15) {
+                dragTarget = { key, part: 'start' };
+            } else if (distEnd < 15) {
+                dragTarget = { key, part: 'end' };
+            } else {
+                const midX = (v.startX + v.endX) / 2;
+                const midY = (v.startY + v.endY) / 2;
+                if (Math.hypot(mx - midX, my - midY) < 20) {
+                    dragTarget = { key, part: 'body', startX: v.startX, startY: v.startY, endX: v.endX, endY: v.endY, mx, my };
+                }
+            }
+        });
+    }
+
+    function handlePointerMove(e) {
+        if (!dragTarget) return;
+        const rect = canvas.getBoundingClientRect();
+        let mx = Math.round((e.clientX - rect.left) / GRID_SIZE) * GRID_SIZE;
+        let my = Math.round((e.clientY - rect.top) / GRID_SIZE) * GRID_SIZE;
+
+        const v = geoVectors[dragTarget.key];
+        if (dragTarget.part === 'start') {
+            v.startX = mx;
+            v.startY = my;
+        } else if (dragTarget.part === 'end') {
+            v.endX = mx;
+            v.endY = my;
+        } else if (dragTarget.part === 'body') {
+            const dx = mx - Math.round(dragTarget.mx / GRID_SIZE) * GRID_SIZE;
+            const dy = my - Math.round(dragTarget.my / GRID_SIZE) * GRID_SIZE;
+            v.startX = dragTarget.startX + dx;
+            v.startY = dragTarget.startY + dy;
+            v.endX = dragTarget.endX + dx;
+            v.endY = dragTarget.endY + dy;
+        }
+        drawCanvas();
+    }
+
+    function handlePointerUp() {
+        dragTarget = null;
+    }
+
+    function showFeedback(type, message) {
+        const fb = document.getElementById('feedback');
+        fb.className = `feedback ${type}`;
+        fb.innerHTML = message;
+        fb.style.display = 'block';
     }
 
     function submitAnalysis() {
-        const mod = modules[currentModIndex];
         const t = translations[currentLang];
 
-        if (mod.type === 'magnitude-angle') {
-            const userMag = parseFloat(document.getElementById('mag-input').value);
-            const userDeg = parseFloat(document.getElementById('deg-input').value);
+        if (currentModIndex === 1) {
+            // Modul 2 Validation
+            const userMag = parseFloat(document.getElementById('mod2-mag').value);
+            const userDeg = parseFloat(document.getElementById('mod2-deg').value);
 
             if (isNaN(userMag) || isNaN(userDeg)) {
-                showFeedback(false, t.errFillFields);
+                showFeedback('error', t.errFillFields);
                 return;
             }
 
-            const exactMag = Math.sqrt(currentRawData.ax ** 2 + currentRawData.ay ** 2);
-            let exactDeg = Math.atan2(currentRawData.ay, currentRawData.ax) * (180 / Math.PI);
-            if (exactDeg < 0) exactDeg += 360;
+            const actualMag = Math.hypot(currentRawData.ax, currentRawData.ay);
+            let actualRad = Math.atan2(currentRawData.ay, currentRawData.ax);
+            let actualDeg = actualRad * (180 / Math.PI);
+            if (actualDeg < 0) actualDeg += 360;
 
-            const isMagCorrect = Math.abs(userMag - exactMag) < 0.1;
-            const isDegCorrect = Math.abs(userDeg - exactDeg) < 1.0;
+            const isMagOk = Math.abs(userMag - actualMag) < 0.1;
+            const isDegOk = Math.abs(userDeg - actualDeg) < 1.0;
 
-            if (isMagCorrect && isDegCorrect) {
-                showFeedback(true, t.mod2Correct.replace('{mag}', exactMag.toFixed(2)).replace('{deg}', exactDeg.toFixed(2)));
+            if (isMagOk && isDegOk) {
+                showFeedback('success', t.mod2Correct.replace('{mag}', actualMag.toFixed(2)).replace('{deg}', actualDeg.toFixed(1)));
             } else {
-                showFeedback(false, t.mod2Incorrect.replace('{mag}', exactMag.toFixed(2)).replace('{deg}', exactDeg.toFixed(2)));
+                showFeedback('warning', t.mod2Incorrect.replace('{mag}', actualMag.toFixed(2)).replace('{deg}', actualDeg.toFixed(1)));
             }
-        } else if (mod.type === 'vector-op') {
-            const userRx = parseFloat(document.getElementById('rx-input').value);
-            const userRy = parseFloat(document.getElementById('ry-input').value);
+        } else if (currentModIndex === 2) {
+            // Modul 3 Validation
+            const userRx = parseFloat(document.getElementById('mod3-rx').value);
+            const userRy = parseFloat(document.getElementById('mod3-ry').value);
 
             if (isNaN(userRx) || isNaN(userRy)) {
-                showFeedback(false, t.errFillBothRxRy);
+                showFeedback('error', t.errFillBothRxRy);
                 return;
             }
 
-            const exactRx = currentRawData.isAdd ? currentRawData.ax + currentRawData.bx : currentRawData.ax - currentRawData.bx;
-            const exactRy = currentRawData.isAdd ? currentRawData.ay + currentRawData.by : currentRawData.ay - currentRawData.by;
+            const expectedRx = currentRawData.ax + currentRawData.bx;
+            const expectedRy = currentRawData.ay + currentRawData.by;
 
-            if (userRx === exactRx && userRy === exactRy) {
-                showFeedback(true, t.mod3Correct.replace('{rx}', exactRx).replace('{ry}', exactRy));
+            if (userRx === expectedRx && userRy === expectedRy) {
+                showFeedback('success', t.mod3Correct.replace('{rx}', expectedRx).replace('{ry}', expectedRy));
             } else {
-                showFeedback(false, t.mod3Incorrect.replace('{rx}', exactRx).replace('{ry}', exactRy));
+                showFeedback('warning', t.mod3Incorrect.replace('{rx}', expectedRx).replace('{ry}', expectedRy));
             }
-        } else if (mod.type === 'vector-geo') {
-            const vecA = { x: geoState.endA.x - geoState.startA.x, y: geoState.endA.y - geoState.startA.y };
-            const vecB = { x: geoState.endB.x - geoState.startB.x, y: geoState.endB.y - geoState.startB.y };
-            const vecR = { x: geoState.endR.x - geoState.startR.x, y: geoState.endR.y - geoState.startR.y };
+        } else if (currentModIndex === 3) {
+            // Modul 4 Validation
+            const A = geoVectors.A;
+            const B = geoVectors.B;
+            const R = geoVectors.R;
 
-            const isValACorrect = vecA.x === currentRawData.ax && vecA.y === currentRawData.ay;
-            const isValBCorrect = vecB.x === currentRawData.bx && vecB.y === currentRawData.by;
+            const curAx = (A.endX - A.startX) / GRID_SIZE;
+            const curAy = -(A.endY - A.startY) / GRID_SIZE;
+            const curBx = (B.endX - B.startX) / GRID_SIZE;
+            const curBy = -(B.endY - B.startY) / GRID_SIZE;
+            const curRx = (R.endX - R.startX) / GRID_SIZE;
+            const curRy = -(R.endY - R.startY) / GRID_SIZE;
 
-            if (geoMethod === 'triangle') {
-                const isHeadToTail = geoState.startB.x === geoState.endA.x && geoState.startB.y === geoState.endA.y;
-                const isResultantConnected = geoState.startR.x === geoState.startA.x && geoState.startR.y === geoState.startA.y &&
-                                             geoState.endR.x === geoState.endB.x && geoState.endR.y === geoState.endB.y;
+            const isAOk = curAx === currentRawData.targetAx && curAy === currentRawData.targetAy;
+            const isBOk = curBx === currentRawData.targetBx && curBy === currentRawData.targetBy;
 
-                if (isValACorrect && isValBCorrect && isHeadToTail && isResultantConnected) {
-                    showFeedback(true, t.mod4TriSuccess.replace('{rx}', vecR.x).replace('{ry}', vecR.y));
+            if (activeGeoMethod === 'triangle') {
+                const isHeadTail = A.endX === B.startX && A.endY === B.startY;
+                const isROk = R.startX === A.startX && R.startY === A.startY && R.endX === B.endX && R.endY === B.endY;
+
+                if (isAOk && isBOk && isHeadTail && isROk) {
+                    showFeedback('success', t.mod4TriSuccess.replace('{rx}', curRx).replace('{ry}', curRy));
                 } else {
-                    let errMsg = t.mod4TriErrTitle;
-                    if (!isValACorrect) errMsg += t.mod4TriErrA;
-                    if (!isValBCorrect) errMsg += t.mod4TriErrB;
-                    if (!isHeadToTail) errMsg += t.mod4TriErrHeadTail;
-                    if (!isResultantConnected) errMsg += t.mod4TriErrR;
-                    showFeedback(false, errMsg);
+                    let err = t.mod4TriErrTitle;
+                    if (!isAOk) err += t.mod4TriErrA;
+                    if (!isBOk) err += t.mod4TriErrB;
+                    if (!isHeadTail) err += t.mod4TriErrHeadTail;
+                    if (!isROk) err += t.mod4TriErrR;
+                    showFeedback('warning', err);
                 }
-            } else if (geoMethod === 'parallelogram') {
-                const isTailToTail = geoState.startA.x === geoState.startB.x && geoState.startA.y === geoState.startB.y;
-                const isResultantOrigin = geoState.startR.x === geoState.startA.x && geoState.startR.y === geoState.startA.y;
-                const isDiagonalCorrect = geoState.endR.x === (geoState.startA.x + currentRawData.ax + currentRawData.bx) &&
-                                         geoState.endR.y === (geoState.startA.y + currentRawData.ay + currentRawData.by);
+            } else if (activeGeoMethod === 'parallelogram') {
+                const isTailTail = A.startX === B.startX && A.startY === B.startY;
+                const isROriginOk = R.startX === A.startX && R.startY === A.startY;
+                const isRDiagonal = (R.endX - R.startX) === (A.endX - A.startX + B.endX - B.startX) &&
+                                    (R.endY - R.startY) === (A.endY - A.startY + B.endY - B.startY);
 
-                if (isValACorrect && isValBCorrect && isTailToTail && isResultantOrigin && isDiagonalCorrect) {
-                    showFeedback(true, t.mod4ParaSuccess.replace('{rx}', vecR.x).replace('{ry}', vecR.y));
+                if (isAOk && isBOk && isTailTail && isROriginOk && isRDiagonal) {
+                    showFeedback('success', t.mod4ParaSuccess.replace('{rx}', curRx).replace('{ry}', curRy));
                 } else {
-                    let errMsg = t.mod4ParaErrTitle;
-                    if (!isValACorrect) errMsg += t.mod4ParaErrA;
-                    if (!isValBCorrect) errMsg += t.mod4ParaErrB;
-                    if (!isTailToTail) errMsg += t.mod4ParaErrTailTail;
-                    if (!isResultantOrigin) errMsg += t.mod4ParaErrROrigin;
-                    if (!isDiagonalCorrect) errMsg += t.mod4ParaErrRDiag;
-                    showFeedback(false, errMsg);
+                    let err = t.mod4ParaErrTitle;
+                    if (!isAOk) err += t.mod4ParaErrA;
+                    if (!isBOk) err += t.mod4ParaErrB;
+                    if (!isTailTail) err += t.mod4ParaErrTailTail;
+                    if (!isROriginOk) err += t.mod4ParaErrROrigin;
+                    if (!isRDiagonal) err += t.mod4ParaErrRDiag;
+                    showFeedback('warning', err);
                 }
-            } else if (geoMethod === 'subtraction') {
-                const isHeadToTail = geoState.startB.x === geoState.endA.x && geoState.startB.y === geoState.endA.y;
-                const expectedSubR = {
-                    x: currentRawData.ax - currentRawData.bx,
-                    y: currentRawData.ay - currentRawData.by
-                };
-                const isResultantCorrect = vecR.x === expectedSubR.x && vecR.y === expectedSubR.y &&
-                                           geoState.startR.x === geoState.startA.x && geoState.startR.y === geoState.startA.y;
+            } else if (activeGeoMethod === 'subtraction') {
+                const isHeadTail = A.endX === B.startX && A.endY === B.startY;
+                const isBReversed = curBx === -currentRawData.targetBx && curBy === -currentRawData.targetBy;
+                const isROk = R.startX === A.startX && R.startY === A.startY && R.endX === B.endX && R.endY === B.endY;
 
-                if (isValACorrect && isValBCorrect && isHeadToTail && isResultantCorrect) {
-                    showFeedback(true, t.mod4SubSuccess.replace('{rx}', vecR.x).replace('{ry}', vecR.y));
+                if (isAOk && isBReversed && isHeadTail && isROk) {
+                    showFeedback('success', t.mod4SubSuccess.replace('{rx}', curRx).replace('{ry}', curRy));
                 } else {
-                    let errMsg = t.mod4SubErrTitle;
-                    if (!isValACorrect) errMsg += t.mod4SubErrA;
-                    if (!isValBCorrect) errMsg += t.mod4SubErrB;
-                    if (!isHeadToTail) errMsg += t.mod4SubErrHeadTail;
-                    if (!isResultantCorrect) errMsg += t.mod4SubErrR;
-                    showFeedback(false, errMsg);
+                    let err = t.mod4SubErrTitle;
+                    if (!isAOk) err += t.mod4SubErrA;
+                    if (!isBReversed) err += t.mod4SubErrB;
+                    if (!isHeadTail) err += t.mod4SubErrHeadTail;
+                    if (!isROk) err += t.mod4SubErrR;
+                    showFeedback('warning', err);
                 }
             }
-        } else if (mod.type === 'products') {
-            const userDot = parseFloat(document.getElementById('dot-input').value);
-            const userCrossMag = parseFloat(document.getElementById('crossmag-input').value);
+        } else if (currentModIndex === 4) {
+            // Modul 5 Validation
+            const userDot = parseFloat(document.getElementById('mod5-dot').value);
+            const userCross = parseFloat(document.getElementById('mod5-cross').value);
 
-            if (isNaN(userDot) || isNaN(userCrossMag)) {
-                showFeedback(false, t.errFillBothProducts);
+            if (isNaN(userDot) || isNaN(userCross)) {
+                showFeedback('error', t.errFillBothProducts);
                 return;
             }
 
-            const { ax, ay, az, bx, by, bz } = currentRawData;
-            const exactDot = ax * bx + ay * by + az * bz;
+            const expectedDot = (currentRawData.ax * currentRawData.bx) + (currentRawData.ay * currentRawData.by);
+            const expectedCrossMag = Math.abs((currentRawData.ax * currentRawData.by) - (currentRawData.ay * currentRawData.bx));
 
-            const cx = ay * bz - az * by;
-            const cy = az * bx - ax * bz;
-            const cz = ax * by - ay * bx;
-            const exactCrossMag = Math.sqrt(cx * cx + cy * cy + cz * cz);
+            const isDotOk = userDot === expectedDot;
+            const isCrossOk = userCross === expectedCrossMag;
 
-            const isDotCorrect = Math.abs(userDot - exactDot) < 0.1;
-            const isCrossCorrect = Math.abs(userCrossMag - exactCrossMag) < 0.1;
-
-            if (isDotCorrect && isCrossCorrect) {
-                showFeedback(true, t.mod5Correct.replace('{dot}', exactDot.toFixed(2)).replace('{cross}', exactCrossMag.toFixed(2)));
+            if (isDotOk && isCrossOk) {
+                showFeedback('success', t.mod5Correct.replace('{dot}', expectedDot).replace('{cross}', expectedCrossMag));
             } else {
-                showFeedback(false, t.mod5Incorrect.replace('{dot}', exactDot.toFixed(2)).replace('{cross}', exactCrossMag.toFixed(2)));
+                showFeedback('warning', t.mod5Incorrect.replace('{dot}', expectedDot).replace('{cross}', expectedCrossMag));
             }
         }
     }
-
-    function showFeedback(isSuccess, htmlContent) {
-        const feedback = document.getElementById('feedback');
-        feedback.className = `feedback ${isSuccess ? 'success' : 'error'}`;
-        feedback.innerHTML = htmlContent;
-        feedback.style.display = 'block';
-    }
 </script>
-
 </body>
 </html>

@@ -11,22 +11,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* CSS Variables - Light Theme (Default) */
+        /* CSS Variables - Light Theme */
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
             --secondary: #0f172a;
             --accent: #38bdf8;
             --bg: #f8fafc;
+            --sidebar-bg: #ffffff;
+            --sidebar-border: #e2e8f0;
             --card-bg: #ffffff;
             --card-border: #e2e8f0;
             --text-main: #1e293b;
             --text-muted: #64748b;
-            --hero-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #1e3a8a 100%);
-            --hero-text: #ffffff;
-            --hero-desc: #94a3b8;
+            --hover-bg: #f1f5f9;
+            --active-bg: #eff6ff;
             --icon-bg: #eff6ff;
-            --footer-bg: #ffffff;
         }
 
         /* CSS Variables - Dark Theme */
@@ -36,15 +36,15 @@
             --secondary: #f8fafc;
             --accent: #38bdf8;
             --bg: #0f172a;
+            --sidebar-bg: #1e293b;
+            --sidebar-border: #334155;
             --card-bg: #1e293b;
             --card-border: #334155;
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
-            --hero-bg: linear-gradient(135deg, #020617 0%, #0f172a 60%, #172554 100%);
-            --hero-text: #ffffff;
-            --hero-desc: #cbd5e1;
-            --icon-bg: #1e293b;
-            --footer-bg: #0f172a;
+            --hover-bg: #334155;
+            --active-bg: #1e3a8a;
+            --icon-bg: #334155;
         }
 
         * {
@@ -52,7 +52,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Plus Jakarta Sans', sans-serif;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
 
         body {
@@ -60,207 +60,296 @@
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            overflow-x: hidden;
         }
 
-        /* FLOATING CONTROLS (MELAYANG DI POJOK KANAN ATAS) */
-        .floating-controls {
+        /* SIDEBAR STYLES */
+        .sidebar {
+            width: 280px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--sidebar-border);
+            display: flex;
+            flex-direction: column;
             position: fixed;
-            top: 20px;
-            right: 20px;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.8rem 1.5rem 1.2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--sidebar-border);
+        }
+
+        .avatar-img {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+            margin-bottom: 0.8rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .profile-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+            font-weight: 500;
+        }
+
+        /* Navigation List & Sub-Menu */
+        .sidebar-nav {
+            padding: 1.2rem 1rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .nav-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            z-index: 9999;
-        }
-
-        .floating-lang-switch {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            padding: 4px;
-            display: flex;
-            gap: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-        }
-
-        .floating-lang-btn {
-            background: transparent;
-            border: none;
+            gap: 12px;
+            padding: 0.75rem 1rem;
             color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.92rem;
+            margin-bottom: 0.4rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .floating-lang-btn.active {
-            background: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+        .nav-item i {
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
         }
 
-        .floating-theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
+        .nav-item:hover {
+            background-color: var(--hover-bg);
             color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background-color: var(--active-bg);
+            color: var(--primary);
+        }
+
+        /* Sub-menu styling untuk Modul Direct Links */
+        .sub-nav {
+            margin-left: 1.8rem;
+            padding-left: 0.8rem;
+            border-left: 2px solid var(--sidebar-border);
+            margin-bottom: 0.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .sub-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.45rem 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .sub-nav-item i {
+            font-size: 0.8rem;
+        }
+
+        .sub-nav-item:hover, .sub-nav-item.active {
+            background-color: var(--hover-bg);
+            color: var(--primary);
+        }
+
+        /* Sidebar Social Links (Academic Profiles) */
+        .sidebar-profiles {
+            padding: 1rem 1.2rem;
+            border-top: 1px solid var(--sidebar-border);
+        }
+
+        .profiles-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .profile-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.55rem 0.8rem;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-bottom: 0.3rem;
+            border: 1px solid var(--sidebar-border);
+            background: var(--card-bg);
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .profile-btn:hover, .profile-btn.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--hover-bg);
+        }
+
+        .profile-btn i {
+            font-size: 1rem;
+        }
+
+        /* CONTROLS (THEME & LANG) IN SIDEBAR */
+        .sidebar-controls {
+            padding: 1rem 1.2rem;
+            border-top: 1px solid var(--sidebar-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 4px;
+            background: var(--hover-bg);
+            padding: 3px;
+            border-radius: 20px;
+        }
+
+        .lang-btn {
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 0.3rem 0.6rem;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .theme-btn {
+            background: var(--hover-bg);
+            border: 1px solid var(--sidebar-border);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            color: var(--text-main);
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
+            font-size: 0.9rem;
         }
 
-        .floating-theme-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
-        }
-
-        /* Modern Hero Banner */
-        .hero {
-            background: var(--hero-bg);
-            color: var(--hero-text);
-            padding: 5rem 1.5rem 7rem;
-            position: relative;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50px;
-            left: 0;
-            right: 0;
-            height: 100px;
-            background: var(--bg);
-            transform: skewY(-2deg);
-        }
-
-        .hero-container {
-            max-width: 1000px;
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            gap: 2.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-avatar-wrapper {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .hero-img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-        }
-
-        .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--accent);
-            padding: 0.35rem 0.9rem;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            border: 1px solid rgba(56, 189, 248, 0.3);
-        }
-
-        .hero-info h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            letter-spacing: -0.025em;
-            margin-bottom: 0.4rem;
-        }
-
-        .hero-info .title {
-            color: var(--accent);
-            font-weight: 600;
-            font-size: 1.05rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .hero-info .desc {
-            color: var(--hero-desc);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            max-width: 650px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .social-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            padding: 0.5rem 1.1rem;
-            border-radius: 8px;
-            font-size: 0.88rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.2s;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(5px);
-        }
-
-        .social-btn:hover {
-            background: var(--primary);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        /* Main Container */
-        .container {
-            max-width: 1000px;
-            margin: -2rem auto 3rem;
-            padding: 0 1.5rem;
-            position: relative;
-            z-index: 2;
+        /* MAIN CONTENT AREA */
+        .main-wrapper {
+            margin-left: 280px;
             flex: 1;
-        }
-
-        /* Section Styling */
-        .section-header {
             display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: calc(100% - 280px);
+        }
+
+        /* Mobile Header */
+        .mobile-header {
+            display: none;
+            position: sticky;
+            top: 0;
+            background: var(--sidebar-bg);
+            border-bottom: 1px solid var(--sidebar-border);
+            padding: 0.8rem 1.2rem;
             align-items: center;
-            gap: 10px;
-            margin-top: 2rem;
-            margin-bottom: 1.2rem;
+            justify-content: space-between;
+            z-index: 900;
         }
 
-        .section-header h3 {
-            font-size: 1.25rem;
-            color: var(--secondary);
-            font-weight: 700;
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            font-size: 1.3rem;
+            color: var(--text-main);
+            cursor: pointer;
         }
 
-        /* Grid Layouts */
+        .main-content {
+            padding: 2.5rem;
+            flex: 1;
+            max-width: 1050px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Page Content Switching (SPA) */
+        .page-section {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CARDS & UI COMPONENTS */
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.8rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+        }
+
         .grid-2 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
         }
 
@@ -270,49 +359,89 @@
             gap: 1.5rem;
         }
 
-        /* Card Styles */
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 1.8rem;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            border: 1px solid var(--card-border);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Education Component */
+        .edu-item {
+            display: flex;
+            gap: 1.2rem;
+            align-items: flex-start;
+            padding-bottom: 1.2rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid var(--card-border);
         }
 
-        /* Interactive Card Hover */
+        .edu-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .edu-icon {
+            background: var(--icon-bg);
+            color: var(--primary);
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            border: 1px solid var(--card-border);
+        }
+
+        .edu-details h5 {
+            font-size: 1.05rem;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .edu-details .inst {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.92rem;
+            margin-top: 0.2rem;
+        }
+
+        /* Course List */
+        .course-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .course-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .course-list li i {
+            color: var(--primary);
+        }
+
+        /* Interactive Module Cards */
         .card-interactive {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
             overflow: hidden;
-        }
-
-        .card-interactive::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            opacity: 0;
-            transition: opacity 0.3s;
+            transition: all 0.3s ease;
         }
 
         .card-interactive:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
-        }
-
-        .card-interactive:hover::before {
-            opacity: 1;
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
         }
 
         .card-icon {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 12px;
             background: var(--icon-bg);
             color: var(--primary);
@@ -326,73 +455,32 @@
 
         .card h4 {
             font-size: 1.15rem;
-            color: var(--secondary);
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-main);
         }
 
         .card p {
             color: var(--text-muted);
             font-size: 0.92rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
 
-        /* Education List */
-        .education-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-        }
-
-        .edu-item {
-            display: flex;
-            gap: 1rem;
-            align-items: flex-start;
-        }
-
-        .edu-icon {
-            background: var(--icon-bg);
-            color: var(--primary);
-            padding: 0.8rem;
+        /* Embed Iframe Container */
+        .embed-container {
+            width: 100%;
+            height: 80vh;
             border-radius: 12px;
-            font-size: 1.2rem;
-            flex-shrink: 0;
             border: 1px solid var(--card-border);
+            overflow: hidden;
+            background: #fff;
         }
 
-        .edu-details h5 {
-            font-size: 1rem;
-            color: var(--secondary);
-            font-weight: 700;
-        }
-
-        .edu-details .inst {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* Teaching List */
-        .course-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-        }
-
-        .course-list li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: var(--text-main);
-            font-size: 0.95rem;
-            font-weight: 500;
-        }
-
-        .course-list li i {
-            color: var(--primary);
-            font-size: 0.85rem;
+        .embed-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* Buttons */
@@ -403,17 +491,17 @@
             gap: 8px;
             background-color: var(--primary);
             color: #fff;
-            padding: 0.7rem 1.3rem;
+            padding: 0.7rem 1.2rem;
             border-radius: 10px;
             text-decoration: none;
             font-weight: 600;
             font-size: 0.9rem;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .btn:hover {
             background-color: var(--primary-dark);
-            gap: 10px;
         }
 
         .btn-disabled {
@@ -425,178 +513,342 @@
 
         /* Footer */
         footer {
-            text-align: center;
-            padding: 2rem 1.5rem;
+            padding: 1.5rem 2.5rem;
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             border-top: 1px solid var(--card-border);
-            background: var(--footer-bg);
+            background: var(--sidebar-bg);
+            text-align: center;
         }
 
-        /* Responsive Layout */
-        @media (max-width: 768px) {
-            .hero-container {
-                flex-direction: column;
-                text-align: center;
-                gap: 1.5rem;
+        /* Responsive Layout Adjustments */
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
             }
 
-            .hero-info .desc {
-                margin-left: auto;
-                margin-right: auto;
+            .sidebar.open {
+                transform: translateX(0);
             }
 
-            .social-links {
-                justify-content: center;
+            .main-wrapper {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .mobile-header {
+                display: flex;
+            }
+
+            .main-content {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- FLOATING CONTROLS (MELAYANG DI POJOK KANAN ATAS) -->
-    <div class="floating-controls">
-        <!-- Floating Language Switcher -->
-        <div class="floating-lang-switch">
-            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
-            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-        </div>
-        
-        <!-- Floating Dark Mode Toggle Button -->
-        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
-            <i class="fa-solid fa-moon" id="theme-icon"></i>
+    <!-- MOBILE HEADER -->
+    <div class="mobile-header">
+        <div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main);">Nauval Franata</div>
+        <button class="mobile-menu-btn" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
         </button>
     </div>
 
-    <!-- Header & Profile Hero -->
-    <section class="hero">
-        <div class="hero-container">
-            <div class="hero-avatar-wrapper">
-                <img src="foto-dosen.jpg" alt="Nauval Franata" class="hero-img" onerror="this.src='https://ui-avatars.com/api/?name=Nauval+Franata&background=0D8ABC&color=fff&size=150'">
-            </div>
-            <div class="hero-info">
-                <span class="badge"><i class="fa-solid fa-globe"></i> <span data-key="badge">Personal Website & Academic Hub</span></span>
-                <h1>Nauval Franata, S.Si., M.T.</h1>
-                <div class="title"><i class="fa-solid fa-university"></i> <span data-key="role">Dosen Universitas Sultan Ageng Tirtayasa</span></div>
-                <p class="desc" data-key="hero_desc">Selamat datang di portal akademik pribadi saya. Situs ini ditujukan untuk membagikan modul pembelajaran interaktif, media pengajaran, serta berbagai fasilitas belajar digital bagi mahasiswa dan peneliti.</p>
-                
-                <div class="social-links">
-                    <a href="mailto:nauval.franata@untirta.ac.id" class="social-btn"><i class="fa-solid fa-envelope"></i> <span data-key="email_btn">Kontak Email</span></a>
-                    <a href="https://scholar.google.com/citations?user=e6UEwY8AAAAJ&hl=en" target="_blank" class="social-btn"><i class="fa-solid fa-graduation-cap"></i> Google Scholar</a>
-                </div>
-            </div>
+    <!-- SIDEBAR NAVIGATION -->
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar Profile Header -->
+        <div class="sidebar-header">
+            <img src="foto-dosen.jpg" alt="Nauval Franata" class="avatar-img" onerror="this.src='https://ui-avatars.com/api/?name=Nauval+Franata&background=0D8ABC&color=fff&size=150'">
+            <div class="profile-name">Nauval Franata, S.Si., M.T.</div>
+            <div class="profile-title" data-key="role">Dosen Untirta</div>
         </div>
-    </section>
 
-    <div class="container">
-
-        <!-- Bagian 1: Latar Belakang Pendidikan & Pengajaran -->
-        <div class="grid-2">
+        <!-- Navigation Menu -->
+        <nav class="sidebar-nav">
+            <a class="nav-item active" id="nav-home" onclick="switchPage('home')">
+                <i class="fa-solid fa-house"></i>
+                <span data-key="nav_home">Beranda</span>
+            </a>
             
-            <!-- Riwayat Pendidikan -->
-            <div>
-                <div class="section-header">
-                    <h3><i class="fa-solid fa-user-graduate" style="color: var(--primary);"></i> <span data-key="edu_title">Latar Belakang Pendidikan</span></h3>
-                </div>
-                <div class="card education-list">
-                    
-                    <div class="edu-item">
-                        <div class="edu-icon"><i class="fa-solid fa-microchip"></i></div>
-                        <div class="edu-details">
-                            <h5 data-key="master_degree">Magister Teknik (M.T.)</h5>
-                            <div class="inst" data-key="master_dept">Teknik Elektro — Universitas Indonesia</div>
-                        </div>
-                    </div>
+            <a class="nav-item" id="nav-education" onclick="switchPage('education')">
+                <i class="fa-solid fa-user-graduate"></i>
+                <span data-key="nav_edu">Pendidikan & Pengajaran</span>
+            </a>
 
-                    <div class="edu-item">
-                        <div class="edu-icon"><i class="fa-solid fa-atom"></i></div>
-                        <div class="edu-details">
-                            <h5 data-key="bachelor_degree">Sarjana Sains (S.Si.)</h5>
-                            <div class="inst" data-key="bachelor_dept">Fisika — Universitas Indonesia</div>
-                        </div>
-                    </div>
+            <!-- Menu Utama Modul Interaktif -->
+            <a class="nav-item" id="nav-modules" onclick="switchPage('modules')">
+                <i class="fa-solid fa-laptop-code"></i>
+                <span data-key="nav_modules">Modul Interaktif</span>
+            </a>
 
-                </div>
+            <!-- Sub-Menu Tautan Langsung ke Modul (In-App Viewing) -->
+            <div class="sub-nav">
+                <a onclick="switchPage('physica')" class="sub-nav-item" id="btn-physica">
+                    <i class="fa-solid fa-atom"></i>
+                    <span>Physica</span>
+                </a>
+                <a onclick="switchPage('physicode')" class="sub-nav-item" id="btn-physicode">
+                    <i class="fa-solid fa-microchip"></i>
+                    <span>PhysiCode</span>
+                </a>
             </div>
+        </nav>
 
-            <!-- Mata Kuliah yang Diampu -->
-            <div>
-                <div class="section-header">
-                    <h3><i class="fa-solid fa-book-open-reader" style="color: var(--primary);"></i> <span data-key="teaching_title">Mata Kuliah yang Diampu</span></h3>
-                </div>
+        <!-- Academic Profiles Section -->
+        <div class="sidebar-profiles">
+            <div class="profiles-title" data-key="profiles_header">Profil Akademik</div>
+            
+            <a onclick="switchPage('sinta')" class="profile-btn" id="btn-sinta">
+                <i class="fa-solid fa-award" style="color: #0284c7;"></i>
+                <span>SINTA Profile</span>
+            </a>
+
+            <a onclick="switchPage('scholar')" class="profile-btn" id="btn-scholar">
+                <i class="fa-solid fa-graduation-cap" style="color: #4285f4;"></i>
+                <span>Google Scholar</span>
+            </a>
+
+            <a href="mailto:nauval.franata@untirta.ac.id" class="profile-btn">
+                <i class="fa-solid fa-envelope" style="color: #ea4335;"></i>
+                <span data-key="email_btn">Kontak Email</span>
+            </a>
+        </div>
+
+        <!-- Sidebar Footer Controls (Lang & Theme) -->
+        <div class="sidebar-controls">
+            <div class="lang-switch">
+                <button class="lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
+                <button class="lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
+            </div>
+            <button class="theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
+                <i class="fa-solid fa-moon" id="theme-icon"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA (SPA) -->
+    <div class="main-wrapper">
+        <main class="main-content">
+
+            <!-- HALAMAN 1: BERANDA -->
+            <section id="page-home" class="page-section active">
+                <h1 class="page-title" data-key="welcome_title">Selamat Datang</h1>
+                <p class="page-subtitle" data-key="hero_desc">Selamat datang di portal akademik pribadi saya. Situs ini ditujukan untuk membagikan modul pembelajaran interaktif, media pengajaran, serta berbagai fasilitas belajar digital bagi mahasiswa dan peneliti.</p>
+
                 <div class="card">
-                    <ul class="course-list">
-                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c1">Fisika 1</span></li>
-                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c2">Fisika 2</span></li>
-                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c3">Matematika 2</span></li>
-                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c4">Teknologi Sensor dan Transduser</span></li>
-                        <li><i class="fa-solid fa-circle-check"></i> <span data-key="c5">Sistem Tertanam</span></li>
-                    </ul>
+                    <h3 style="margin-bottom: 0.8rem; font-size: 1.2rem;" data-key="quick_overview">Informasi Singkat</h3>
+                    <p style="color: var(--text-muted); line-height: 1.6;" data-key="about_me">Saya adalah Dosen di Universitas Sultan Ageng Tirtayasa yang berfokus pada bidang Fisika, Sistem Tertanam, serta Teknologi Sensor. Melalui platform ini, Anda dapat mengakses berbagai media pembelajaran digital dan modul praktikum interaktif.</p>
                 </div>
-            </div>
 
-        </div>
-
-        <!-- Bagian 2: Media & Modul Pembelajaran Interaktif -->
-        <div class="section-header">
-            <h3><i class="fa-solid fa-laptop-code" style="color: var(--primary);"></i> <span data-key="module_title">Media & Modul Pembelajaran Interaktif</span></h3>
-        </div>
-
-        <div class="grid-3">
-            <!-- Modul 1: Physica -->
-            <div class="card card-interactive">
-                <div>
-                    <div class="card-icon">
-                        <i class="fa-solid fa-atom"></i>
+                <div class="grid-2">
+                    <div class="card card-interactive" onclick="switchPage('education')" style="cursor: pointer;">
+                        <div>
+                            <div class="card-icon"><i class="fa-solid fa-book-open"></i></div>
+                            <h4 data-key="nav_edu">Pendidikan & Pengajaran</h4>
+                            <p data-key="edu_summary">Lihat latar belakang pendidikan formal dan daftar mata kuliah yang sedang diampu.</p>
+                        </div>
+                        <span class="btn" style="align-self: flex-start;" data-key="view_details">Lihat Detail <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
-                    <h4>Physica</h4>
-                    <p data-key="physica_desc">Platform web interaktif yang dirancang untuk pembelajaran Fisika Dasar, dilengkapi simulasi visual dan alat bantu untuk memahami konsep-konsep fisika secara intuitif.</p>
-                </div>
-                <a href="physica.html" class="btn"><span data-key="open_physica">Buka Physica</span> <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
 
-            <!-- Modul 2: PhysiCode -->
-            <div class="card card-interactive">
-                <div>
-                    <div class="card-icon">
-                        <i class="fa-solid fa-microchip"></i>
+                    <div class="card card-interactive" onclick="switchPage('modules')" style="cursor: pointer;">
+                        <div>
+                            <div class="card-icon"><i class="fa-solid fa-microchip"></i></div>
+                            <h4 data-key="nav_modules">Modul Interaktif</h4>
+                            <p data-key="module_summary">Akses platform pembelajaran interaktif Physica, PhysiCode, dan Lab Virtual.</p>
+                        </div>
+                        <span class="btn" style="align-self: flex-start;" data-key="view_details">Lihat Detail <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
-                    <h4>PhysiCode</h4>
-                    <p data-key="physicode_desc">Modul pembelajaran interaktif yang mengintegrasikan konsep sensor, transduser, dan sistem tertanam untuk menjembatani fenomena fisik dunia nyata dengan sistem komputasi digital.</p>
                 </div>
-                <a href="physicode.html" class="btn"><span data-key="open_physicode">Buka PhysiCode</span> <i class="fa-solid fa-arrow-right"></i></a>
-            </div>
+            </section>
 
-            <!-- Modul 3: Virtual Lab -->
-            <div class="card card-interactive">
-                <div>
-                    <div class="card-icon">
-                        <i class="fa-solid fa-flask"></i>
+            <!-- HALAMAN 2: PENDIDIKAN & PENGAJARAN -->
+            <section id="page-education" class="page-section">
+                <h1 class="page-title" data-key="nav_edu">Pendidikan & Pengajaran</h1>
+                <p class="page-subtitle" data-key="edu_page_subtitle">Riwayat akademis dan daftar mata kuliah yang saya bimbing di Universitas Sultan Ageng Tirtayasa.</p>
+
+                <div class="grid-2">
+                    <!-- Riwayat Pendidikan -->
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-user-graduate" style="color: var(--primary);"></i>
+                            <span data-key="edu_title">Latar Belakang Pendidikan</span>
+                        </h3>
+                        
+                        <div class="edu-item">
+                            <div class="edu-icon"><i class="fa-solid fa-microchip"></i></div>
+                            <div class="edu-details">
+                                <h5 data-key="master_degree">Magister Teknik (M.T.)</h5>
+                                <div class="inst" data-key="master_dept">Teknik Elektro — Universitas Indonesia</div>
+                            </div>
+                        </div>
+
+                        <div class="edu-item">
+                            <div class="edu-icon"><i class="fa-solid fa-atom"></i></div>
+                            <div class="edu-details">
+                                <h5 data-key="bachelor_degree">Sarjana Sains (S.Si.)</h5>
+                                <div class="inst" data-key="bachelor_dept">Fisika — Universitas Indonesia</div>
+                            </div>
+                        </div>
                     </div>
-                    <h4 data-key="vlab_title">Laboratorium Virtual</h4>
-                    <p data-key="vlab_desc">Panduan praktikum interaktif, simulasi pengambilan data eksperimen, dan alat ukur digital.</p>
-                </div>
-                <a href="#" id="vlab-btn" class="btn btn-disabled" onclick="alert(currentLang === 'id' ? 'Modul ini sedang dalam tahap pengembangan.' : 'This module is currently under development.'); return false;" data-key="coming_soon">Segera Hadir</a>
-            </div>
-        </div>
 
+                    <!-- Mata Kuliah -->
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fa-solid fa-book-open-reader" style="color: var(--primary);"></i>
+                            <span data-key="teaching_title">Mata Kuliah yang Diampu</span>
+                        </h3>
+                        <ul class="course-list">
+                            <li><i class="fa-solid fa-circle-check"></i> <span data-key="c1">Fisika 1</span></li>
+                            <li><i class="fa-solid fa-circle-check"></i> <span data-key="c2">Fisika 2</span></li>
+                            <li><i class="fa-solid fa-circle-check"></i> <span data-key="c3">Matematika 2</span></li>
+                            <li><i class="fa-solid fa-circle-check"></i> <span data-key="c4">Teknologi Sensor dan Transduser</span></li>
+                            <li><i class="fa-solid fa-circle-check"></i> <span data-key="c5">Sistem Tertanam</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HALAMAN 3: MODUL INTERAKTIF (OVERVIEW) -->
+            <section id="page-modules" class="page-section">
+                <h1 class="page-title" data-key="nav_modules">Media & Modul Pembelajaran Interaktif</h1>
+                <p class="page-subtitle" data-key="module_page_subtitle">Fasilitas platform berbasis web untuk mendukung pemahaman konsep fisika dan sistem komputasi secara visual.</p>
+
+                <div class="grid-3">
+                    <!-- Modul 1: Physica -->
+                    <div class="card card-interactive">
+                        <div>
+                            <div class="card-icon">
+                                <i class="fa-solid fa-atom"></i>
+                            </div>
+                            <h4>Physica</h4>
+                            <p data-key="physica_desc">Platform web interaktif yang dirancang untuk pembelajaran Fisika Dasar, dilengkapi simulasi visual dan alat bantu untuk memahami konsep-konsep fisika secara intuitif.</p>
+                        </div>
+                        <a onclick="switchPage('physica')" class="btn"><span data-key="open_physica">Buka Physica</span> <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- Modul 2: PhysiCode -->
+                    <div class="card card-interactive">
+                        <div>
+                            <div class="card-icon">
+                                <i class="fa-solid fa-microchip"></i>
+                            </div>
+                            <h4>PhysiCode</h4>
+                            <p data-key="physicode_desc">Modul pembelajaran interaktif yang mengintegrasikan konsep sensor, transduser, dan sistem tertanam untuk menjembatani fenomena fisik dunia nyata dengan sistem komputasi digital.</p>
+                        </div>
+                        <a onclick="switchPage('physicode')" class="btn"><span data-key="open_physicode">Buka PhysiCode</span> <i class="fa-solid fa-arrow-right"></i></a>
+                    </div>
+
+                    <!-- Modul 3: Virtual Lab -->
+                    <div class="card card-interactive">
+                        <div>
+                            <div class="card-icon">
+                                <i class="fa-solid fa-flask"></i>
+                            </div>
+                            <h4 data-key="vlab_title">Laboratorium Virtual</h4>
+                            <p data-key="vlab_desc">Panduan praktikum interaktif, simulasi pengambilan data eksperimen, dan alat ukur digital.</p>
+                        </div>
+                        <a href="#" class="btn btn-disabled" onclick="alert(currentLang === 'id' ? 'Modul ini sedang dalam tahap pengembangan.' : 'This module is currently under development.'); return false;" data-key="coming_soon">Segera Hadir</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- HALAMAN MODUL: PHYSICA (EMBED IFRAME) -->
+            <section id="page-physica" class="page-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <h1 class="page-title">Physica</h1>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Simulasi & Modul Interaktif Fisika Dasar</p>
+                    </div>
+                    <a href="physica.html" target="_blank" class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka di Tab Baru
+                    </a>
+                </div>
+                <div class="embed-container">
+                    <iframe src="physica.html" class="embed-iframe" title="Physica Module"></iframe>
+                </div>
+            </section>
+
+            <!-- HALAMAN MODUL: PHYSICODE (EMBED IFRAME) -->
+            <section id="page-physicode" class="page-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <h1 class="page-title">PhysiCode</h1>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Modul Pembelajaran Sensor & Sistem Tertanam</p>
+                    </div>
+                    <a href="physicode.html" target="_blank" class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka di Tab Baru
+                    </a>
+                </div>
+                <div class="embed-container">
+                    <iframe src="physicode.html" class="embed-iframe" title="PhysiCode Module"></iframe>
+                </div>
+            </section>
+
+            <!-- HALAMAN: EMBED SINTA -->
+            <section id="page-sinta" class="page-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <h1 class="page-title">SINTA Profile</h1>
+                        <p style="color: var(--text-muted); font-size: 0.9rem;">Pratinjau langsung profil SINTA Kemdiktisaintek.</p>
+                    </div>
+                    <a href="https://sinta.kemdiktisaintek.go.id/authors/profile/6914974" target="_blank" class="btn" style="padding: 0.5rem 1rem; font-size: 0.8rem;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka di Tab Baru
+                    </a>
+                </div>
+                <div class="embed-container">
+                    <iframe src="https://sinta.kemdiktisaintek.go.id/authors/profile/6914974" class="embed-iframe" title="SINTA Profile"></iframe>
+                </div>
+            </section>
+
+            <!-- HALAMAN: GOOGLE SCHOLAR -->
+            <section id="page-scholar" class="page-section">
+                <h1 class="page-title">Google Scholar Profile</h1>
+                <p class="page-subtitle">Publikasi ilmiah dan kutipan penelitian.</p>
+
+                <div class="card" style="text-align: center; padding: 3rem 1.5rem;">
+                    <div class="card-icon" style="margin: 0 auto 1.5rem auto; width: 70px; height: 70px; font-size: 2rem;">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 style="margin-bottom: 0.8rem;">Lihat Profil Google Scholar</h3>
+                    <p style="max-width: 500px; margin: 0 auto 1.8rem auto; color: var(--text-muted);">
+                        Google Scholar membatasi penampil web langsung (iframe) demi alasan keamanan. Silakan klik tombol di bawah untuk melihat daftar publikasi lengkap.
+                    </p>
+                    <a href="https://scholar.google.com/citations?user=e6UEwY8AAAAJ&hl=en" target="_blank" class="btn" style="padding: 0.8rem 1.8rem; font-size: 1rem;">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Google Scholar
+                    </a>
+                </div>
+            </section>
+
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Nauval Franata, S.Si., M.T. — Universitas Sultan Ageng Tirtayasa.</p>
+        </footer>
     </div>
 
-    <footer>
-        <p>&copy; 2026 Nauval Franata, S.Si., M.T. — Universitas Sultan Ageng Tirtayasa.</p>
-    </footer>
-
-    <!-- Script Multibahasa & Dark Mode Toggle -->
+    <!-- JAVASCRIPT FOR SPA, THEME & TRANSLATION -->
     <script>
         let currentLang = 'id';
         let currentTheme = 'light';
 
         const translations = {
             id: {
-                badge: "Personal Website & Academic Hub",
-                role: "Dosen Universitas Sultan Ageng Tirtayasa",
-                hero_desc: "Selamat datang di portal akademik pribadi saya. Situs ini ditujukan untuk membagikan modul pembelajaran interaktif, media pengajaran, serta berbagai fasilitas belajar digital bagi mahasiswa dan peneliti.",
+                role: "Dosen Untirta",
+                nav_home: "Beranda",
+                nav_edu: "Pendidikan & Pengajaran",
+                nav_modules: "Modul Interaktif",
+                profiles_header: "Profil Akademik",
                 email_btn: "Kontak Email",
+                welcome_title: "Selamat Datang",
+                hero_desc: "Selamat datang di portal akademik pribadi saya. Situs ini ditujukan untuk membagikan modul pembelajaran interaktif, media pengajaran, serta berbagai fasilitas belajar digital bagi mahasiswa dan peneliti.",
+                quick_overview: "Informasi Singkat",
+                about_me: "Saya adalah Dosen di Universitas Sultan Ageng Tirtayasa yang berfokus pada bidang Fisika, Sistem Tertanam, serta Teknologi Sensor. Melalui platform ini, Anda dapat mengakses berbagai media pembelajaran digital dan modul praktikum interaktif.",
+                edu_summary: "Lihat latar belakang pendidikan formal dan daftar mata kuliah yang sedang diampu.",
+                module_summary: "Akses platform pembelajaran interaktif Physica, PhysiCode, dan Lab Virtual.",
+                view_details: "Lihat Detail",
+                edu_page_subtitle: "Riwayat akademis dan daftar mata kuliah yang saya bimbing di Universitas Sultan Ageng Tirtayasa.",
                 edu_title: "Latar Belakang Pendidikan",
                 master_degree: "Magister Teknik (M.T.)",
                 master_dept: "Teknik Elektro — Universitas Indonesia",
@@ -608,7 +860,7 @@
                 c3: "Matematika 2",
                 c4: "Teknologi Sensor dan Transduser",
                 c5: "Sistem Tertanam",
-                module_title: "Media & Modul Pembelajaran Interaktif",
+                module_page_subtitle: "Fasilitas platform berbasis web untuk mendukung pemahaman konsep fisika dan sistem komputasi secara visual.",
                 physica_desc: "Platform web interaktif yang dirancang untuk pembelajaran Fisika Dasar, dilengkapi simulasi visual dan alat bantu untuk memahami konsep-konsep fisika secara intuitif.",
                 open_physica: "Buka Physica",
                 physicode_desc: "Modul pembelajaran interaktif yang mengintegrasikan konsep sensor, transduser, dan sistem tertanam untuk menjembatani fenomena fisik dunia nyata dengan sistem komputasi digital.",
@@ -618,10 +870,20 @@
                 coming_soon: "Segera Hadir"
             },
             en: {
-                badge: "Personal Website & Academic Hub",
-                role: "Lecturer at Sultan Ageng Tirtayasa University",
-                hero_desc: "Welcome to my personal academic portal. This website serves to share interactive learning modules, teaching resources, and digital learning tools for students and researchers.",
+                role: "Lecturer at Untirta",
+                nav_home: "Home",
+                nav_edu: "Education & Teaching",
+                nav_modules: "Interactive Modules",
+                profiles_header: "Academic Profiles",
                 email_btn: "Email Contact",
+                welcome_title: "Welcome",
+                hero_desc: "Welcome to my personal academic portal. This website serves to share interactive learning modules, teaching resources, and digital learning tools for students and researchers.",
+                quick_overview: "Quick Overview",
+                about_me: "I am a Lecturer at Sultan Ageng Tirtayasa University focusing on Physics, Embedded Systems, and Sensor Technology. Through this platform, you can access digital learning tools and interactive lab modules.",
+                edu_summary: "View formal educational background and current courses taught.",
+                module_summary: "Access Physica, PhysiCode, and Virtual Lab learning platforms.",
+                view_details: "View Details",
+                edu_page_subtitle: "Academic history and courses taught at Sultan Ageng Tirtayasa University.",
                 edu_title: "Educational Background",
                 master_degree: "Master of Engineering (M.Eng.)",
                 master_dept: "Electrical Engineering — Universitas Indonesia",
@@ -633,7 +895,7 @@
                 c3: "Mathematics 2",
                 c4: "Sensor and Transducer Technology",
                 c5: "Embedded Systems",
-                module_title: "Interactive Learning Modules & Media",
+                module_page_subtitle: "Web-based interactive tools designed to facilitate intuitive understanding of physics and embedded systems.",
                 physica_desc: "An interactive web platform designed for General Physics learning, featuring visual simulations and tools to understand physical concepts intuitively.",
                 open_physica: "Open Physica",
                 physicode_desc: "An interactive learning module integrating sensor, transducer, and embedded system concepts to bridge real-world physical phenomena with digital computing systems.",
@@ -644,24 +906,48 @@
             }
         };
 
-        // Inisialisasi Tema & Bahasa
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load Preferensi Bahasa
-            const savedLang = localStorage.getItem('user_lang') || 'id';
-            setLanguage(savedLang);
+        // Navigation Switching (Single Page Application Concept)
+        function switchPage(pageId) {
+            // Sembunyikan semua halaman
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
 
-            // Load Preferensi Tema
-            const savedTheme = localStorage.getItem('user_theme');
-            if (savedTheme) {
-                setTheme(savedTheme);
-            } else {
-                // Ikuti preferensi OS pengguna jika belum ada pilihan tersimpan
-                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                setTheme(prefersDark ? 'dark' : 'light');
+            // Tampilkan halaman tujuan
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.add('active');
             }
-        });
 
-        // Fitur Ganti Bahasa
+            // Reset status aktif pada seluruh tombol navigasi
+            document.querySelectorAll('.nav-item, .sub-nav-item, .profile-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Set status aktif sesuai halaman yang dibuka
+            if (pageId === 'home') document.getElementById('nav-home')?.classList.add('active');
+            else if (pageId === 'education') document.getElementById('nav-education')?.classList.add('active');
+            else if (pageId === 'modules') document.getElementById('nav-modules')?.classList.add('active');
+            else if (pageId === 'physica') document.getElementById('btn-physica')?.classList.add('active');
+            else if (pageId === 'physicode') document.getElementById('btn-physicode')?.classList.add('active');
+            else if (pageId === 'sinta') document.getElementById('btn-sinta')?.classList.add('active');
+            else if (pageId === 'scholar') document.getElementById('btn-scholar')?.classList.add('active');
+
+            // Tutup sidebar jika di layar mobile
+            if (window.innerWidth <= 900) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+
+            // Scroll ke atas
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle Mobile Sidebar Drawer
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Set Language
         function setLanguage(lang) {
             currentLang = lang;
             localStorage.setItem('user_lang', lang);
@@ -679,7 +965,7 @@
             });
         }
 
-        // Fitur Ganti Tema (Dark / Light)
+        // Toggle Theme (Dark / Light)
         function toggleTheme() {
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
             setTheme(newTheme);
@@ -688,7 +974,6 @@
         function setTheme(theme) {
             currentTheme = theme;
             localStorage.setItem('user_theme', theme);
-            
             document.documentElement.setAttribute('data-theme', theme);
             
             const icon = document.getElementById('theme-icon');
@@ -698,6 +983,20 @@
                 icon.className = 'fa-solid fa-moon';
             }
         }
+
+        // Initialize Preferences
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('user_lang') || 'id';
+            setLanguage(savedLang);
+
+            const savedTheme = localStorage.getItem('user_theme');
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                setTheme(prefersDark ? 'dark' : 'light');
+            }
+        });
     </script>
 </body>
 </html>

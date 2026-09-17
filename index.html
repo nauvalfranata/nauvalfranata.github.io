@@ -900,25 +900,35 @@
             }
         };
 
-        // Navigation Switching (Single Page Application Concept)
+        // Fungsi Sinkronisasi Sinyal ke Seluruh Iframe
+        function syncIframeState() {
+            document.querySelectorAll('iframe').forEach(iframe => {
+                try {
+                    if (iframe.contentWindow) {
+                        iframe.contentWindow.postMessage({ type: 'CHANGE_LANG', lang: currentLang }, '*');
+                        iframe.contentWindow.postMessage({ type: 'CHANGE_THEME', theme: currentTheme }, '*');
+                    }
+                } catch (e) {
+                    // Abaikan galat jika ada iframe cross-origin (misalnya SINTA)
+                }
+            });
+        }
+
+        // Navigation Switching (Single Page Application)
         function switchPage(pageId) {
-            // Sembunyikan semua halaman
             document.querySelectorAll('.page-section').forEach(section => {
                 section.classList.remove('active');
             });
 
-            // Tampilkan halaman tujuan
             const targetPage = document.getElementById(`page-${pageId}`);
             if (targetPage) {
                 targetPage.classList.add('active');
             }
 
-            // Reset status aktif pada seluruh tombol navigasi
             document.querySelectorAll('.nav-item, .sub-nav-item, .profile-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
 
-            // Set status aktif sesuai halaman yang dibuka
             if (pageId === 'home') document.getElementById('nav-home')?.classList.add('active');
             else if (pageId === 'education') document.getElementById('nav-education')?.classList.add('active');
             else if (pageId === 'modules') document.getElementById('nav-modules')?.classList.add('active');
@@ -927,13 +937,14 @@
             else if (pageId === 'sinta') document.getElementById('btn-sinta')?.classList.add('active');
             else if (pageId === 'scholar') document.getElementById('btn-scholar')?.classList.add('active');
 
-            // Tutup sidebar jika di layar mobile
             if (window.innerWidth <= 900) {
                 document.getElementById('sidebar').classList.remove('open');
             }
 
-            // Scroll ke atas
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Kirim sinyal sinkronisasi saat berpindah halaman
+            setTimeout(syncIframeState, 150);
         }
 
         // Toggle Mobile Sidebar Drawer
@@ -957,6 +968,9 @@
                     element.textContent = translations[lang][key];
                 }
             });
+
+            // Kirim sinyal bahasa baru ke iframe
+            syncIframeState();
         }
 
         // Toggle Theme (Dark / Light)
@@ -976,9 +990,12 @@
             } else {
                 icon.className = 'fa-solid fa-moon';
             }
+
+            // Kirim sinyal tema baru ke iframe
+            syncIframeState();
         }
 
-        // Initialize Preferences
+        // Initialize Preferences & Listeners
         document.addEventListener('DOMContentLoaded', () => {
             const savedLang = localStorage.getItem('user_lang') || 'id';
             setLanguage(savedLang);
@@ -990,21 +1007,24 @@
                 const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                 setTheme(prefersDark ? 'dark' : 'light');
             }
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            // Ambil parameter dari URL (misal: index.html?page=physica)
+
+            // Ambil parameter URL (misal: index.html?page=physica)
             const urlParams = new URLSearchParams(window.location.search);
             const page = urlParams.get('page');
-    
-            // Jika terdapat parameter 'page', muat halaman tersebut ke dalam iframe
+
             if (page) {
-                const mainIframe = document.querySelector('iframe'); // Sesuaikan selector iframe jika ada ID/Class khusus
+                const mainIframe = document.querySelector('iframe');
                 if (mainIframe) {
                     mainIframe.src = `${page}.html`;
                 }
             }
+
+            // Pasang event listener agar iframe tersinkron otomatis begitu selesai dimuat
+            document.querySelectorAll('iframe').forEach(iframe => {
+                iframe.addEventListener('load', () => {
+                    syncIframeState();
+                });
+            });
         });
     </script>
 </body>

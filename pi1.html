@@ -10,6 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <script>
+        // Redirect jika dibuka langsung di luar iframe (Pencegahan Akses Langsung)
+        if (window.self === window.top) {
+            window.location.href = "index.html?page=physicode";
+        }
+    </script>
+
     <style>
         /* CSS Variables - Light Theme (Default) */
         :root {
@@ -81,68 +88,6 @@
             justify-content: center;
             align-items: flex-start;
             padding: 30px 20px;
-        }
-
-        /* FLOATING CONTROLS */
-        .floating-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 9999;
-        }
-
-        .floating-lang-switch {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            padding: 4px;
-            display: flex;
-            gap: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-        }
-
-        .floating-lang-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .floating-lang-btn.active {
-            background: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-        }
-
-        .floating-theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .floating-theme-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
         }
 
         .container {
@@ -505,20 +450,8 @@
 </head>
 <body>
 
-    <!-- FLOATING CONTROLS -->
-    <div class="floating-controls">
-        <div class="floating-lang-switch">
-            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
-            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-        </div>
-        
-        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
-            <i class="fa-solid fa-moon" id="theme-icon"></i>
-        </button>
-    </div>
-
 <div class="container">
-    <!-- INFORMASI KURSUS DI LUAR KOTAK UTAMA (Posisikan di Atas Kotak) -->
+    <!-- INFORMASI KURSUS DI LUAR KOTAK UTAMA -->
     <div class="course-info-banner">
         <div class="course-title-tag" id="course-tag">Course: Embedded Systems — Meeting 9</div>
         <div class="course-dept" id="dept-tag">Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa</div>
@@ -1014,10 +947,12 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
     let activeDirKey = 'root';
 
     document.addEventListener('DOMContentLoaded', () => {
-        const savedLang = localStorage.getItem('user_lang') || 'id';
+        // Init Bahasa dari LocalStorage / Window
+        const savedLang = localStorage.getItem('user_lang') || localStorage.getItem('language') || 'id';
         setLanguage(savedLang);
 
-        const savedTheme = localStorage.getItem('user_theme');
+        // Init Tema dari LocalStorage
+        const savedTheme = localStorage.getItem('user_theme') || localStorage.getItem('theme');
         if (savedTheme) {
             setTheme(savedTheme);
         } else {
@@ -1026,40 +961,48 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
         }
     });
 
+    // Event Listener 1: Membaca Perubahan LocalStorage (Cross-tab/Cross-frame)
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'user_lang' || e.key === 'language') {
+            if (e.newValue) setLanguage(e.newValue);
+        }
+        if (e.key === 'user_theme' || e.key === 'theme') {
+            if (e.newValue) setTheme(e.newValue);
+        }
+    });
+
+    // Event Listener 2: Membaca Pesan dari Parent Window (Iframe Communication)
+    window.addEventListener('message', (event) => {
+        if (!event.data) return;
+
+        // Tangkap event pergantian bahasa
+        if (event.data.type === 'setLanguage' || event.data.type === 'changeLanguage' || event.data.lang) {
+            const lang = event.data.lang || event.data.language;
+            if (lang) setLanguage(lang);
+        }
+
+        // Tangkap event pergantian tema
+        if (event.data.type === 'setTheme' || event.data.type === 'changeTheme' || event.data.theme) {
+            const theme = event.data.theme;
+            if (theme) setTheme(theme);
+        }
+    });
+
     function setLanguage(lang) {
+        if (lang !== 'id' && lang !== 'en') return;
         currentLang = lang;
-        localStorage.setItem('user_lang', lang);
-
-        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-
         document.documentElement.lang = lang;
-
         updateUIContent();
         updateProgress();
     }
 
-    function toggleTheme() {
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-    }
-
     function setTheme(theme) {
         currentTheme = theme;
-        localStorage.setItem('user_theme', theme);
-
         document.documentElement.setAttribute('data-theme', theme);
-
-        const icon = document.getElementById('theme-icon');
-        if (theme === 'dark') {
-            icon.className = 'fa-solid fa-sun';
-        } else {
-            icon.className = 'fa-solid fa-moon';
-        }
     }
 
     function updateUIContent() {
-        const t = translations[currentLang];
+        const t = translations[currentLang] || translations['id'];
         
         document.getElementById('course-tag').innerText = t.courseTag;
         document.getElementById('dept-tag').innerText = t.deptTag;
@@ -1156,7 +1099,7 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
         const percentage = Math.round((checkedCount / checkboxes.length) * 100);
         document.getElementById('progress-bar').style.width = percentage + '%';
 
-        const t = translations[currentLang];
+        const t = translations[currentLang] || translations['id'];
         document.getElementById('progress-text').innerText = t.progressText
             .replace('{percent}', percentage)
             .replace('{count}', checkedCount);
@@ -1167,8 +1110,8 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
         const info = dirData[key];
         if (info) {
             document.getElementById('dir-title').innerText = info.title;
-            document.getElementById('dir-desc').innerText = info.desc[currentLang];
-            document.getElementById('dir-type-val').innerText = info.type[currentLang];
+            document.getElementById('dir-desc').innerText = info.desc[currentLang] || info.desc['id'];
+            document.getElementById('dir-type-val').innerText = info.type[currentLang] || info.type['id'];
             document.getElementById('dir-cmd').innerText = info.cmd;
 
             if (element) {

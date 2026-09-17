@@ -64,7 +64,6 @@
             transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
 
-        /* PERBAIKAN 1: Pastikan Scroll & Tinggi Viewport Utama Tetap Stabil */
         html, body {
             width: 100%;
             min-height: 100vh;
@@ -278,6 +277,7 @@
 
         .sidebar-backdrop.active { display: block; }
 
+        /* MAIN WRAPPER FIXED LAYOUT */
         .main-wrapper {
             margin-left: 280px;
             flex: 1;
@@ -286,10 +286,13 @@
             min-height: 100vh;
             width: calc(100% - 280px);
             max-width: 100%;
+            overflow-x: hidden;
         }
 
+        /* MOBILE HEADER FIXED */
         .mobile-header {
             display: none;
+            width: 100%;
             position: sticky;
             top: 0;
             background: var(--sidebar-bg);
@@ -364,7 +367,6 @@
             gap: 1.5rem;
         }
 
-        /* EDU & TEACHING ITEMS IN HOME */
         .edu-item {
             display: flex;
             align-items: flex-start;
@@ -525,7 +527,7 @@
             text-align: center;
         }
 
-        /* PERBAIKAN 2: Media Queries Khusus Mobile/Tampilan Seluler (max-width: 900px) */
+        /* PERBAIKAN RESPONSIVE SELULER / MOBILE */
         @media (max-width: 900px) {
             .sidebar { 
                 transform: translateX(-100%);
@@ -539,7 +541,9 @@
                 margin-left: 0; 
                 width: 100%; 
             }
-            .mobile-header { display: flex; }
+            .mobile-header { 
+                display: flex; 
+            }
             .main-content { 
                 padding: 1rem; 
                 width: 100%;
@@ -552,14 +556,12 @@
                 grid-template-columns: 1fr;
             }
 
-            /* Memastikan section aktif mengambil lebar penuh */
             .page-section.active {
                 display: block !important;
                 width: 100%;
                 height: auto;
             }
 
-            /* Ukuran terukur & pasti untuk iframe di HP */
             .embed-container {
                 height: 75vh;
                 min-height: 420px;
@@ -575,13 +577,6 @@
 <body>
 
     <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="closeSidebar()"></div>
-
-    <div class="mobile-header">
-        <div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main);">Nauval Franata</div>
-        <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-    </div>
 
     <!-- SIDEBAR NAVIGATION -->
     <aside class="sidebar" id="sidebar">
@@ -634,6 +629,15 @@
 
     <!-- MAIN CONTENT AREA -->
     <div class="main-wrapper">
+        
+        <!-- HEADER MOBILE DALAM MAIN WRAPPER -->
+        <div class="mobile-header">
+            <div style="font-weight: 800; font-size: 1.1rem; color: var(--text-main);">Nauval Franata</div>
+            <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Buka Menu">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
         <main class="main-content">
 
             <!-- HALAMAN UTAMA / BERANDA -->
@@ -923,7 +927,6 @@
             });
         }
 
-        /* PERBAIKAN 3: Penyempurnaan Navigasi dan Rendering di HP */
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(section => {
                 section.classList.remove('active');
@@ -945,10 +948,8 @@
 
             closeSidebar();
 
-            // Memastikan posisi scroll kembali ke paling atas halaman saat berpindah menu
             window.scrollTo({ top: 0, behavior: 'instant' });
 
-            // Mengirim ulang ukuran/sinkronisasi iframe
             setTimeout(syncIframeState, 150);
         }
 

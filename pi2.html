@@ -423,6 +423,10 @@
             transition: background 0.2s;
             margin-top: 10px;
             width: 100%;
+            /* Properti CSS untuk mencegah seleksi teks & zoom tak sengaja di HP */
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .sim-btn-interactive:hover {
@@ -620,7 +624,8 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                         <label id="sim-pins-label" style="display:block; margin-top:10px; margin-bottom:5px; font-weight:bold; font-size:0.9rem;"></label>
                         <ul id="sim-pins-list" style="font-size:0.85rem; padding-left:15px; margin-bottom:15px;"></ul>
 
-                        <button id="sim-btn" class="sim-btn-interactive" onmousedown="setSimState(true)" onmouseup="setSimState(false)" onmouseleave="setSimState(false)"></button>
+                        <!-- Button tanpa event mouse inline, akan dikontrol via Pointer Events JS -->
+                        <button id="sim-btn" class="sim-btn-interactive"></button>
                     </div>
 
                     <div class="sim-display">
@@ -794,21 +799,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Output:</strong> GPIO 17 (LED)</li>
             `,
             simBtn: "Press Push Button (Hold)",
-            cp4Text: "<b>Checkpoint 4:</b> Student understands the HIGH/LOW logic transition relationship between Input and Output Pins.",
-            
-            step5Header: `Step 5: Assignment (2-Button & 2-LED Case Study) <span class="badge">Assignment</span>`,
-            step5Intro: "Complete the following independent lab assignment to complete Meeting 10 grade:",
-            step5List: `
-                <li>Connect <strong>2 Push Buttons</strong> (on GPIO 2 & GPIO 3) and <strong>2 LEDs</strong> (on GPIO 17 & GPIO 27).</li>
-                <li>Create Python script named <code>tugas_gpio.py</code> with following logic rules:
-                    <ul>
-                        <li><strong>Button 1 Pressed:</strong> LED 1 blinks rapidly with 0.2 second interval.</li>
-                        <li><strong>Button 2 Pressed:</strong> LED 2 stays continuously ON.</li>
-                        <li><strong>Both Buttons Released:</strong> All LEDs turn OFF.</li>
-                    </ul>
-                </li>
-            `,
-            cp5Text: "<b>Checkpoint 5:</b> Script assignment <code>tugas_gpio.py</code> successfully tested on Raspberry Pi hardware."
+            cp4Text: "<b>Checkpoint 4:</b> Student understands the HIGH/LOW logic transition relationship between Input and Output Pins."
         }
     };
 
@@ -826,16 +817,6 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
         }
     });
 
-    // Tambahkan event listener ini di dalam file pi2.html
-    window.addEventListener('storage', (event) => {
-        if (event.key === 'user_lang') {
-            setLanguage(event.newValue);
-        }
-        if (event.key === 'user_theme') {
-            setTheme(event.newValue);
-        }
-    });
-    
     document.addEventListener('DOMContentLoaded', () => {
         // Ambil konfigurasi tersimpan dari localStorage
         const savedLang = localStorage.getItem('user_lang') || 'id';
@@ -844,6 +825,26 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
 
         setLanguage(savedLang);
         setTheme(savedTheme);
+
+        // INISIALISASI POINTER EVENTS UNTUK DUKUNGAN DESKTOP & MOBIL (TOUCH)
+        const simBtn = document.getElementById('sim-btn');
+        if (simBtn) {
+            // Saat ditekan (baik klik mouse maupun sentuhan layar HP)
+            simBtn.addEventListener('pointerdown', (e) => {
+                e.preventDefault(); // Mencegah emulasi mouse ganda & seleksi
+                setSimState(true);
+            });
+
+            // Saat dilepas
+            simBtn.addEventListener('pointerup', (e) => {
+                e.preventDefault();
+                setSimState(false);
+            });
+
+            // Saat sentuhan/kursor keluar dari area tombol atau dibatalkan oleh sistem
+            simBtn.addEventListener('pointerleave', () => setSimState(false));
+            simBtn.addEventListener('pointercancel', () => setSimState(false));
+        }
     });
 
     function setLanguage(lang) {

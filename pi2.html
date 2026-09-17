@@ -925,6 +925,16 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
     let currentTheme = 'light';
     let isSimPressed = false;
 
+    // Tambahkan event listener ini di dalam file pi2.html
+    window.addEventListener('storage', (event) => {
+        if (event.key === 'user_lang') {
+            setLanguage(event.newValue);
+        }
+        if (event.key === 'user_theme') {
+            setTheme(event.newValue);
+        }
+    });
+    
     document.addEventListener('DOMContentLoaded', () => {
         const savedLang = localStorage.getItem('user_lang') || 'id';
         setLanguage(savedLang);

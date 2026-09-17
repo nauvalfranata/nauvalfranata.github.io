@@ -64,15 +64,17 @@
             transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
 
+        /* PERBAIKAN 1: Pastikan Scroll & Tinggi Viewport Utama Tetap Stabil */
         html, body {
             width: 100%;
+            min-height: 100vh;
             overflow-x: hidden;
+            overflow-y: auto;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text-main);
-            min-height: 100vh;
             display: flex;
         }
 
@@ -504,6 +506,7 @@
             overflow: hidden;
             background: var(--card-bg);
             -webkit-overflow-scrolling: touch;
+            position: relative;
         }
 
         .embed-iframe {
@@ -522,7 +525,7 @@
             text-align: center;
         }
 
-        /* MOBILE & RESPONSIVE MEDIA QUERIES */
+        /* PERBAIKAN 2: Media Queries Khusus Mobile/Tampilan Seluler (max-width: 900px) */
         @media (max-width: 900px) {
             .sidebar { 
                 transform: translateX(-100%);
@@ -537,7 +540,11 @@
                 width: 100%; 
             }
             .mobile-header { display: flex; }
-            .main-content { padding: 1rem; }
+            .main-content { 
+                padding: 1rem; 
+                width: 100%;
+                overflow-x: hidden;
+            }
             .page-title { font-size: 1.4rem; }
             .card { padding: 1.2rem; }
             
@@ -545,9 +552,18 @@
                 grid-template-columns: 1fr;
             }
 
+            /* Memastikan section aktif mengambil lebar penuh */
+            .page-section.active {
+                display: block !important;
+                width: 100%;
+                height: auto;
+            }
+
+            /* Ukuran terukur & pasti untuk iframe di HP */
             .embed-container {
-                height: calc(100vh - 160px);
-                min-height: 450px;
+                height: 75vh;
+                min-height: 420px;
+                width: 100%;
             }
 
             footer {
@@ -907,6 +923,7 @@
             });
         }
 
+        /* PERBAIKAN 3: Penyempurnaan Navigasi dan Rendering di HP */
         function switchPage(pageId) {
             document.querySelectorAll('.page-section').forEach(section => {
                 section.classList.remove('active');
@@ -927,8 +944,11 @@
             else if (pageId === 'physicode') document.getElementById('btn-physicode')?.classList.add('active');
 
             closeSidebar();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
 
+            // Memastikan posisi scroll kembali ke paling atas halaman saat berpindah menu
+            window.scrollTo({ top: 0, behavior: 'instant' });
+
+            // Mengirim ulang ukuran/sinkronisasi iframe
             setTimeout(syncIframeState, 150);
         }
 

@@ -10,6 +10,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <script>
+        // Redirect jika dibuka langsung di luar iframe (Pencegahan Akses Langsung)
+        if (window.self === window.top) {
+            window.location.href = "index.html?page=physicode";
+        }
+    </script>
+
     <style>
         /* CSS Variables - Light Theme (Default) */
         :root {
@@ -81,68 +88,6 @@
             justify-content: center;
             align-items: flex-start;
             padding: 30px 20px;
-        }
-
-        /* FLOATING CONTROLS */
-        .floating-controls {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 9999;
-        }
-
-        .floating-lang-switch {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 30px;
-            padding: 4px;
-            display: flex;
-            gap: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-        }
-
-        .floating-lang-btn {
-            background: transparent;
-            border: none;
-            color: var(--text-muted);
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .floating-lang-btn.active {
-            background: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
-        }
-
-        .floating-theme-btn {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            backdrop-filter: blur(8px);
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-        }
-
-        .floating-theme-btn:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary);
         }
 
         .container {
@@ -502,34 +447,22 @@
 </head>
 <body>
 
-    <!-- FLOATING CONTROLS -->
-    <div class="floating-controls">
-        <div class="floating-lang-switch">
-            <button class="floating-lang-btn active" id="btn-id" onclick="setLanguage('id')">ID</button>
-            <button class="floating-lang-btn" id="btn-en" onclick="setLanguage('en')">EN</button>
-        </div>
-        
-        <button class="floating-theme-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Ganti Tema">
-            <i class="fa-solid fa-moon" id="theme-icon"></i>
-        </button>
-    </div>
-
 <div class="container">
     <!-- INFORMASI KURSUS DI LUAR KOTAK UTAMA -->
     <div class="course-info-banner">
-        <div class="course-title-tag" id="course-tag">Course: Embedded Systems — Meeting 10</div>
-        <div class="course-dept" id="dept-tag">Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa</div>
+        <div class="course-title-tag" id="course-tag"></div>
+        <div class="course-dept" id="dept-tag"></div>
     </div>
 
     <!-- KOTAK UTAMA PANDUAN PRAKTIKUM -->
     <div class="main-card">
         <header>
             <div>
-                <h1 id="header-title">Panduan Praktikum Interaktif: Pemrograman Python & GPIO Digital Input/Output</h1>
+                <h1 id="header-title"></h1>
             </div>
             <div class="header-actions">
                 <a href="pi.html" class="btn-back" id="home-link">
-                    <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Raspberry Pi</span>
+                    <i class="fa-solid fa-arrow-left"></i> <span id="home-text"></span>
                 </a>
             </div>
         </header>
@@ -537,8 +470,8 @@
         <!-- Progress Indicator Interaktif -->
         <div class="progress-card">
             <div class="progress-title">
-                <span id="progress-title-text">Kemajuan Praktikum Anda</span>
-                <span id="progress-text">0% Selesai (0/5 Checkpoint)</span>
+                <span id="progress-title-text"></span>
+                <span id="progress-text"></span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progress-bar"></div>
@@ -547,65 +480,50 @@
 
         <!-- Info Target Pembelajaran -->
         <div class="task-card">
-            <h3 id="target-title">Target Pembelajaran</h3>
-            <p id="target-desc">Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi, termasuk pemrograman GPIO (General Purpose Input/Output) digital input/output, integrasi komponen, serta eksekusi skrip Python.</p>
+            <h3 id="target-title"></h3>
+            <p id="target-desc"></p>
         </div>
 
         <!-- Standar Pinout & Limit Hardware -->
         <div class="card" style="margin-bottom: 20px;">
-            <h3 id="params-title">Standar Alokasi Pinout & Tegangan Logika (Hardware Limit)</h3>
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc">Perhatikan spesifikasi operasional pinout GPIO Raspberry Pi berikut sebelum menyambungkan komponen fisik:</p>
-            <ul id="params-list">
-                <li><strong>Logic Level Voltase:</strong> <code>3.3V Logika High</code> (TIDAK toleran terhadap masukan 5V langsung).</li>
-                <li><strong>Pin Output Digital (LED):</strong> GPIO 17 (Pin Fisik 11) &mdash; Gunakan Resistor Serial (220Ω &ndash; 330Ω).</li>
-                <li><strong>Pin Input Digital (Push Button):</strong> GPIO 2 (Pin Fisik 3) &mdash; Menggunakan Pull-Up Internal bawaan library.</li>
-                <li><strong>Ground (GND):</strong> Pin Fisik 6, 9, 14, 20, atau 34.</li>
-            </ul>
+            <h3 id="params-title"></h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc"></p>
+            <ul id="params-list"></ul>
         </div>
 
         <!-- Requirements Grid -->
         <div class="grid-2">
             <div class="card">
-                <h3 id="hw-title">Persyaratan Perangkat Keras (Hardware)</h3>
-                <ul id="hw-list">
-                    <li><strong>Raspberry Pi</strong> (Ter-setup Headless/SSH)</li>
-                    <li><strong>Breadboard / Papan Uji</strong> + Kabel Jumper Male-to-Female</li>
-                    <li><strong>2x LED</strong> (Merah / Hijau)</li>
-                    <li><strong>2x Resistor 220Ω / 330Ω</strong> (Pembatas Arus LED)</li>
-                    <li><strong>2x Push Button</strong> (Sakelar Tekan)</li>
-                </ul>
+                <h3 id="hw-title"></h3>
+                <ul id="hw-list"></ul>
             </div>
             <div class="card">
-                <h3 id="sw-title">Persyaratan Perangkat Lunak (Software)</h3>
-                <ul id="sw-list">
-                    <li><strong>Raspberry Pi OS Terminal / SSH Client</strong> (PuTTY / PowerShell)</li>
-                    <li><strong>Python 3 & Standard Lib:</strong> <code>gpiozero</code> (Rekomendasi) / <code>RPi.GPIO</code></li>
-                    <li><strong>Text Editor Terminal:</strong> <code>nano</code> atau <code>vim</code></li>
-                </ul>
+                <h3 id="sw-title"></h3>
+                <ul id="sw-list"></ul>
             </div>
         </div>
 
         <!-- Tahap 1 -->
         <div class="step-section active" id="section-1">
             <div class="step-header" onclick="toggleAccordion('section-1')">
-                <span id="step1-header">Tahap 1: Verifikasi Lingkungan Pemrograman Python & Pustaka GPIO <span class="badge">Environment</span></span>
+                <span id="step1-header"></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
                 <ol id="step1-list">
-                    <li>Hubungkan laptop ke Raspberry Pi via SSH:
+                    <li><span id="step1-i1"></span>
                         <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
-                    <li>Periksa ketersediaan modul Python 3 dan versi pustaka <code>gpiozero</code> yang terinstal di sistem:
+                    <li><span id="step1-i2"></span>
                         <pre><code>python3 --version
 python3 -c "import importlib.metadata; print('gpiozero version:', importlib.metadata.version('gpiozero'))"</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
-                    <li>Buat folder khusus untuk menyimpan seluruh skrip praktikum Pertemuan 10:
+                    <li><span id="step1-i3"></span>
                         <pre><code>mkdir -p ~/praktikum_gpio && cd ~/praktikum_gpio</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                 </ol>
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Checkpoint 1:</b> Modul Python 3 dan versi library <code>gpiozero</code> terkonfirmasi terinstal serta folder kerja <code>praktikum_gpio</code> berhasil dibuat.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"></span></label>
                 </div>
             </div>
         </div>
@@ -613,14 +531,14 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
         <!-- Tahap 2 -->
         <div class="step-section" id="section-2">
             <div class="step-header" onclick="toggleAccordion('section-2')">
-                <span id="step2-header">Tahap 2: Implementasi Digital Output (LED Blink & Control) <span class="badge">Digital Output</span></span>
+                <span id="step2-header"></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p style="font-size: 0.9rem;"><span id="step2-s1">1. Buat berkas Python baru bernama <code>led_blink.py</code> menggunakan editor nano:</span></p>
+                <p style="font-size: 0.9rem;"><span id="step2-s1"></span></p>
                 <pre><code>nano led_blink.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-                <p style="font-size: 0.9rem;"><span id="step2-s2">2. Salin dan tempelkan kode program berikut:</span></p>
+                <p style="font-size: 0.9rem;"><span id="step2-s2"></span></p>
                 <pre><code>from gpiozero import LED
 from time import sleep
 
@@ -641,11 +559,11 @@ except KeyboardInterrupt:
     print("\nProgram dihentikan secara aman.")
     led.close()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-                <p style="font-size: 0.9rem;"><span id="step2-s3">3. Simpan berkas (Tekan <code>Ctrl+O</code> &rarr; <code>Enter</code> &rarr; Keluar <code>Ctrl+X</code>), lalu jalankan program:</span></p>
+                <p style="font-size: 0.9rem;"><span id="step2-s3"></span></p>
                 <pre><code>python3 led_blink.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Checkpoint 2:</b> Program berhasil dijalankan dan LED pada GPIO 17 berkedip secara periodik setiap 1 detik.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"></span></label>
                 </div>
             </div>
         </div>
@@ -653,16 +571,16 @@ except KeyboardInterrupt:
         <!-- Tahap 3 -->
         <div class="step-section" id="section-3">
             <div class="step-header" onclick="toggleAccordion('section-3')">
-                <span id="step3-header">Tahap 3: Implementasi Digital Input (Pembacaan Push Button) <span class="badge">Digital Input</span></span>
+                <span id="step3-header"></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Pada tahap ini, skrip Python akan membaca kondisi masukan sakelar (<i>digital input</i>) pada GPIO 2 untuk mengendalikan keluaran LED pada GPIO 17 secara interaktif (<i>Event-Driven</i>).</p>
+                <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
 
-                <p style="font-size: 0.9rem;"><span id="step3-s1">1. Buat berkas baru bernama <code>button_control.py</code>:</span></p>
+                <p style="font-size: 0.9rem;"><span id="step3-s1"></span></p>
                 <pre><code>nano button_control.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-                <p style="font-size: 0.9rem;"><span id="step3-s2">2. Salin kode program di bawah ini:</span></p>
+                <p style="font-size: 0.9rem;"><span id="step3-s2"></span></p>
                 <pre><code>from gpiozero import LED, Button
 from signal import pause
 
@@ -676,11 +594,11 @@ button.when_released = led.off
 print("Sistem Siap! Tekan Push Button pada GPIO 2...")
 pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-                <p style="font-size: 0.9rem;"><span id="step3-s3">3. Jalankan skrip Python input tersebut:</span></p>
+                <p style="font-size: 0.9rem;"><span id="step3-s3"></span></p>
                 <pre><code>python3 button_control.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"><b>Checkpoint 3:</b> LED menyala instan saat tombol ditekan dan mati saat tombol dilepas tanpa delay.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"></span></label>
                 </div>
             </div>
         </div>
@@ -688,28 +606,21 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
         <!-- Tahap 4 -->
         <div class="step-section" id="section-4">
             <div class="step-header" onclick="toggleAccordion('section-4')">
-                <span id="step4-header">Tahap 4: Simulasi Logika Digital Input/Output Interaktif <span class="badge">Modul Interaktif</span></span>
+                <span id="step4-header"></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main);">Uji pemahaman alur kerja pembacaan input dan kontrol output secara virtual melalui modul simulator di bawah ini:</p>
+                <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main);"></p>
 
                 <div class="gpio-sim-container">
                     <div class="sim-controls">
-                        <h4 id="sim-panel-title" style="margin-top:0; color:var(--primary); font-weight: 700;">Panel Sakelar & Parameter</h4>
-                        <p id="sim-model-text" style="font-size:0.9rem; margin-top:5px; color: var(--text-muted);">Model Logika: <strong>Active High Input & Push Button</strong></p>
+                        <h4 id="sim-panel-title" style="margin-top:0; color:var(--primary); font-weight: 700;"></h4>
+                        <p id="sim-model-text" style="font-size:0.9rem; margin-top:5px; color: var(--text-muted);"></p>
                         
-                        <label id="sim-pins-label" style="display:block; margin-top:10px; margin-bottom:5px; font-weight:bold; font-size:0.9rem;">
-                            Pin Terhubung:
-                        </label>
-                        <ul id="sim-pins-list" style="font-size:0.85rem; padding-left:15px; margin-bottom:15px;">
-                            <li><strong>Input:</strong> GPIO 2 (Button)</li>
-                            <li><strong>Output:</strong> GPIO 17 (LED)</li>
-                        </ul>
+                        <label id="sim-pins-label" style="display:block; margin-top:10px; margin-bottom:5px; font-weight:bold; font-size:0.9rem;"></label>
+                        <ul id="sim-pins-list" style="font-size:0.85rem; padding-left:15px; margin-bottom:15px;"></ul>
 
-                        <button id="sim-btn" class="sim-btn-interactive" onmousedown="setSimState(true)" onmouseup="setSimState(false)" onmouseleave="setSimState(false)">
-                            Tekan Push Button (Hold)
-                        </button>
+                        <button id="sim-btn" class="sim-btn-interactive" onmousedown="setSimState(true)" onmouseup="setSimState(false)" onmouseleave="setSimState(false)"></button>
                     </div>
 
                     <div class="sim-display">
@@ -720,7 +631,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 </div>
 
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"><b>Checkpoint 4:</b> Mahasiswa memahami hubungan transisi logika HIGH/LOW antara Pin Input dan Pin Output.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"></span></label>
                 </div>
             </div>
         </div>
@@ -728,23 +639,14 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
         <!-- Tahap 5 -->
         <div class="step-section" id="section-5">
             <div class="step-header" onclick="toggleAccordion('section-5')">
-                <span id="step5-header">Tahap 5: Tugas Mandiri / Kelompok (Studi Kasus 2-Button & 2-LED) <span class="badge">Penugasan</span></span>
+                <span id="step5-header"></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Selesaikan penugasan praktikum mandiri berikut untuk melengkapi nilai responsi Pertemuan 10:</p>
-                <ol id="step5-list">
-                    <li>Hubungkan <strong>2 Push Button</strong> (pada GPIO 2 & GPIO 3) dan <strong>2 LED</strong> (pada GPIO 17 & GPIO 27).</li>
-                    <li>Buat skrip Python bernama <code>tugas_gpio.py</code> dengan aturan logika berikut:
-                        <ul>
-                            <li><strong>Button 1 Ditekan:</strong> LED 1 berkedip (<i>blink</i>) cepat dengan interval 0.2 detik.</li>
-                            <li><strong>Button 2 Ditekan:</strong> LED 2 menyala kontinu (ON).</li>
-                            <li><strong>Kedua Button Dilepas:</strong> Seluruh LED mati (OFF).</li>
-                        </ul>
-                    </li>
-                </ol>
+                <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
+                <ol id="step5-list"></ol>
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"><b>Checkpoint 5:</b> Penugasan skrip <code>tugas_gpio.py</code> berhasil diuji pada perangkat hardware Raspberry Pi.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"></span></label>
                 </div>
             </div>
         </div>
@@ -753,7 +655,6 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
 </div>
 
 <script>
-    // Translation Data
     const translations = {
         id: {
             courseTag: "Course: Embedded Systems — Meeting 10",
@@ -788,30 +689,24 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Text Editor Terminal:</strong> <code>nano</code> atau <code>vim</code></li>
             `,
             step1Header: `Tahap 1: Verifikasi Lingkungan Pemrograman Python & Pustaka GPIO <span class="badge">Environment</span>`,
-            step1List: `
-                <li>Hubungkan laptop ke Raspberry Pi via SSH:
-                    <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-                <li>Periksa ketersediaan modul Python 3 dan versi pustaka <code>gpiozero</code> yang terinstal di sistem:
-                    <pre><code>python3 --version
-python3 -c "import importlib.metadata; print('gpiozero version:', importlib.metadata.version('gpiozero'))"</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-                <li>Buat folder khusus untuk menyimpan seluruh skrip praktikum Pertemuan 10:
-                    <pre><code>mkdir -p ~/praktikum_gpio && cd ~/praktikum_gpio</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-            `,
+            step1I1: "Hubungkan laptop ke Raspberry Pi via SSH:",
+            step1I2: "Periksa ketersediaan modul Python 3 dan versi pustaka gpiozero yang terinstal di sistem:",
+            step1I3: "Buat folder khusus untuk menyimpan seluruh skrip praktikum Pertemuan 10:",
             cp1Text: "<b>Checkpoint 1:</b> Modul Python 3 dan versi library <code>gpiozero</code> terkonfirmasi terinstal serta folder kerja <code>praktikum_gpio</code> berhasil dibuat.",
+            
             step2Header: `Tahap 2: Implementasi Digital Output (LED Blink & Control) <span class="badge">Digital Output</span>`,
             step2S1: "1. Buat berkas Python baru bernama led_blink.py menggunakan editor nano:",
             step2S2: "2. Salin dan tempelkan kode program berikut:",
             step2S3: "3. Simpan berkas (Tekan Ctrl+O → Enter → Keluar Ctrl+X), lalu jalankan program:",
             cp2Text: "<b>Checkpoint 2:</b> Program berhasil dijalankan dan LED pada GPIO 17 berkedip secara periodik setiap 1 detik.",
+            
             step3Header: `Tahap 3: Implementasi Digital Input (Pembacaan Push Button) <span class="badge">Digital Input</span>`,
             step3Intro: "Pada tahap ini, skrip Python akan membaca kondisi masukan sakelar (<i>digital input</i>) pada GPIO 2 untuk mengendalikan keluaran LED pada GPIO 17 secara interaktif (<i>Event-Driven</i>).",
             step3S1: "1. Buat berkas baru bernama button_control.py:",
             step3S2: "2. Salin kode program di bawah ini:",
             step3S3: "3. Jalankan skrip Python input tersebut:",
             cp3Text: "<b>Checkpoint 3:</b> LED menyala instan saat tombol ditekan dan mati saat tombol dilepas tanpa delay.",
+            
             step4Header: `Tahap 4: Simulasi Logika Digital Input/Output Interaktif <span class="badge">Modul Interaktif</span>`,
             step4Intro: "Uji pemahaman alur kerja pembacaan input dan kontrol output secara virtual melalui modul simulator di bawah ini:",
             simPanelTitle: "Panel Sakelar & Parameter",
@@ -823,6 +718,7 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
             `,
             simBtn: "Tekan Push Button (Hold)",
             cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami hubungan transisi logika HIGH/LOW antara Pin Input dan Pin Output.",
+            
             step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Studi Kasus 2-Button & 2-LED) <span class="badge">Penugasan</span>`,
             step5Intro: "Selesaikan penugasan praktikum mandiri berikut untuk melengkapi nilai responsi Pertemuan 10:",
             step5List: `
@@ -870,30 +766,24 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
                 <li><strong>Terminal Text Editor:</strong> <code>nano</code> or <code>vim</code></li>
             `,
             step1Header: `Step 1: Python Environment & GPIO Library Verification <span class="badge">Environment</span>`,
-            step1List: `
-                <li>Connect laptop to Raspberry Pi via SSH:
-                    <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-                <li>Check Python 3 availability and installed <code>gpiozero</code> library version:
-                    <pre><code>python3 --version
-python3 -c "import importlib.metadata; print('gpiozero version:', importlib.metadata.version('gpiozero'))"</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-                <li>Create dedicated directory for Meeting 10 lab scripts:
-                    <pre><code>mkdir -p ~/praktikum_gpio && cd ~/praktikum_gpio</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-            `,
+            step1I1: "Connect laptop to Raspberry Pi via SSH:",
+            step1I2: "Check Python 3 availability and installed gpiozero library version:",
+            step1I3: "Create dedicated directory for Meeting 10 lab scripts:",
             cp1Text: "<b>Checkpoint 1:</b> Python 3 module and <code>gpiozero</code> library confirmed installed, working directory <code>praktikum_gpio</code> created.",
+            
             step2Header: `Step 2: Digital Output Implementation (LED Blink & Control) <span class="badge">Digital Output</span>`,
             step2S1: "1. Create a new Python file named led_blink.py using nano editor:",
             step2S2: "2. Copy and paste the following program code:",
             step2S3: "3. Save file (Press Ctrl+O → Enter → Exit Ctrl+X), then run the program:",
             cp2Text: "<b>Checkpoint 2:</b> Program successfully executed and LED on GPIO 17 blinks periodically every 1 second.",
+            
             step3Header: `Step 3: Digital Input Implementation (Push Button Reading) <span class="badge">Digital Input</span>`,
             step3Intro: "In this step, Python script reads switch input state (<i>digital input</i>) on GPIO 2 to interactively control LED output on GPIO 17 (<i>Event-Driven</i>).",
             step3S1: "1. Create a new file named button_control.py:",
             step3S2: "2. Copy the program code below:",
             step3S3: "3. Run the input Python script:",
             cp3Text: "<b>Checkpoint 3:</b> LED turns ON instantly when button is pressed and turns OFF when released without delay.",
+            
             step4Header: `Step 4: Interactive Digital I/O Logic Simulation <span class="badge">Interactive Module</span>`,
             step4Intro: "Test your understanding of input reading and output control virtually using the simulator below:",
             simPanelTitle: "Switch Panel & Parameters",
@@ -905,6 +795,7 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
             `,
             simBtn: "Press Push Button (Hold)",
             cp4Text: "<b>Checkpoint 4:</b> Student understands the HIGH/LOW logic transition relationship between Input and Output Pins.",
+            
             step5Header: `Step 5: Assignment (2-Button & 2-LED Case Study) <span class="badge">Assignment</span>`,
             step5Intro: "Complete the following independent lab assignment to complete Meeting 10 grade:",
             step5List: `
@@ -925,6 +816,16 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
     let currentTheme = 'light';
     let isSimPressed = false;
 
+    // Mendengarkan pesan sinkronisasi Real-Time dari Parent Window (index.html)
+    window.addEventListener('message', (event) => {
+        if (!event.data) return;
+        if (event.data.type === 'CHANGE_LANG') {
+            setLanguage(event.data.lang);
+        } else if (event.data.type === 'CHANGE_THEME') {
+            setTheme(event.data.theme);
+        }
+    });
+
     // Tambahkan event listener ini di dalam file pi2.html
     window.addEventListener('storage', (event) => {
         if (event.key === 'user_lang') {
@@ -936,48 +837,29 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
     });
     
     document.addEventListener('DOMContentLoaded', () => {
+        // Ambil konfigurasi tersimpan dari localStorage
         const savedLang = localStorage.getItem('user_lang') || 'id';
-        setLanguage(savedLang);
+        const savedTheme = localStorage.getItem('user_theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
 
-        const savedTheme = localStorage.getItem('user_theme');
-        if (savedTheme) {
-            setTheme(savedTheme);
-        } else {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            setTheme(prefersDark ? 'dark' : 'light');
-        }
+        setLanguage(savedLang);
+        setTheme(savedTheme);
     });
 
     function setLanguage(lang) {
+        if (!translations[lang]) return;
         currentLang = lang;
-        localStorage.setItem('user_lang', lang);
-
-        document.getElementById('btn-id').classList.toggle('active', lang === 'id');
-        document.getElementById('btn-en').classList.toggle('active', lang === 'en');
-
         document.documentElement.lang = lang;
+        localStorage.setItem('user_lang', lang);
 
         updateUIContent();
         updateProgress();
     }
 
-    function toggleTheme() {
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        setTheme(newTheme);
-    }
-
     function setTheme(theme) {
         currentTheme = theme;
-        localStorage.setItem('user_theme', theme);
-
         document.documentElement.setAttribute('data-theme', theme);
-
-        const icon = document.getElementById('theme-icon');
-        if (theme === 'dark') {
-            icon.className = 'fa-solid fa-sun';
-        } else {
-            icon.className = 'fa-solid fa-moon';
-        }
+        localStorage.setItem('user_theme', theme);
     }
 
     function updateUIContent() {
@@ -1005,7 +887,9 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
         document.getElementById('sw-list').innerHTML = t.swList;
 
         document.getElementById('step1-header').innerHTML = t.step1Header;
-        document.getElementById('step1-list').innerHTML = t.step1List;
+        document.getElementById('step1-i1').innerText = t.step1I1;
+        document.getElementById('step1-i2').innerText = t.step1I2;
+        document.getElementById('step1-i3').innerText = t.step1I3;
         document.getElementById('cp1-text').innerHTML = t.cp1Text;
 
         document.getElementById('step2-header').innerHTML = t.step2Header;

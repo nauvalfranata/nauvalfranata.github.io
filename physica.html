@@ -18,6 +18,82 @@
     </script>
 
     <style>
+        /* 1. Reset & Handling Layout Iframe */
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation; /* Optimasi respons sentuhan pada seluler */
+        }
+    
+        body {
+            padding: 0.8rem; /* Padding minimal untuk layar seluler */
+            box-sizing: border-box;
+        }
+    
+        /* 2. Respon Layout Kontainer Utama */
+        .container, .wrapper, .main-content {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 0 !important;
+            margin: 0 auto !important;
+            box-sizing: border-box;
+        }
+    
+        /* 3. Handling Canvas & Area Simulasi Interaktif */
+        canvas, .simulation-canvas, svg {
+            max-width: 100% !important;
+            height: auto !important;
+            display: block;
+            margin: 0 auto;
+            touch-action: none; /* Mencegah layar ter-scroll saat menggeser elemen di dalam canvas */
+        }
+    
+        /* 4. Optimasi Grid Panel Kontrol / Input Parameter */
+        .control-panel, .input-group, .controls-grid {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+            gap: 0.6rem !important;
+            width: 100% !important;
+        }
+    
+        /* 5. Optimasi Tombol & Input Touch-Friendly */
+        button, input, select {
+            min-height: 40px; /* Ukuran area sentuh standar seluler */
+            font-size: 0.9rem !important;
+        }
+    
+        /* 6. Media Query Khusus Perangkat Seluler (iPhone SE & Layar < 480px) */
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+    
+            h1, h2, .title {
+                font-size: 1.2rem !important;
+            }
+    
+            .control-panel, .input-group, .controls-grid {
+                grid-template-columns: 1fr !important; /* Susun 1 kolom penuh di layar kecil */
+            }
+    
+            .btn, button {
+                width: 100% !important; /* Tombol dibuat full-width agar mudah ditekan */
+                margin-bottom: 0.3rem;
+            }
+    
+            table {
+                display: block;
+                overflow-x: auto; /* Mencegah tabel merusak lebar halaman */
+                white-space: nowrap;
+            }
+        }
+    </style>
+    
+    <style>
         /* CSS Variables - Light Theme (Sinkron dengan index.html) */
         :root {
             --primary: #2563eb;

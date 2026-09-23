@@ -245,6 +245,24 @@
             font-weight: 700;
         }
 
+        /* Styling Diagram Pinout Gambar */
+        .pinout-img-container {
+            margin-top: 15px;
+            text-align: center;
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--card-border);
+        }
+
+        .pinout-img-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+        }
+
         /* Step Sections (Accordion) */
         .step-section {
             background: var(--bg);
@@ -492,6 +510,11 @@
             <h3 id="params-title"></h3>
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc"></p>
             <ul id="params-list"></ul>
+            
+            <!-- Tambahan Diagram Pinout -->
+            <div class="pinout-img-container">
+                <img src="pin_pinout.png" alt="Diagram Pinout Raspberry Pi" loading="lazy">
+            </div>
         </div>
 
         <!-- Requirements Grid -->

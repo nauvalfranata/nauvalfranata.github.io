@@ -20,18 +20,18 @@
     <style>
         /* CSS Variables - Light Theme (Default) */
         :root {
-            --primary: #10b981; /* Emerald Green untuk Usaha & Energi */
-            --primary-dark: #047857;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
             --secondary: #0f172a;
-            --accent: #34d399;
-            --accent-light: #ecfdf5;
+            --accent: #38bdf8;
+            --accent-light: #e0f2fe;
             --bg: #f8fafc;
             --card-bg: #ffffff;
             --card-border: #e2e8f0;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --sensor-bg: #0f172a;
-            --sensor-text: #34d399;
+            --sensor-text: #38bdf8;
             --sensor-border: #1e293b;
             --input-bg: #ffffff;
             --input-border: #cbd5e1;
@@ -48,18 +48,18 @@
 
         /* CSS Variables - Dark Theme */
         [data-theme="dark"] {
-            --primary: #10b981;
-            --primary-dark: #059669;
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
             --secondary: #f8fafc;
-            --accent: #34d399;
-            --accent-light: rgba(52, 211, 153, 0.15);
+            --accent: #38bdf8;
+            --accent-light: rgba(56, 189, 248, 0.15);
             --bg: #0f172a;
             --card-bg: #1e293b;
             --card-border: #334155;
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
             --sensor-bg: #022c22;
-            --sensor-text: #34d399;
+            --sensor-text: #4ade80;
             --sensor-border: #065f46;
             --input-bg: #0f172a;
             --input-border: #475569;
@@ -181,11 +181,11 @@
         .mod-card:hover {
             border-color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
         }
 
         .mod-card.active {
-            background: rgba(16, 185, 129, 0.08);
+            background: rgba(37, 99, 235, 0.08);
             border-color: var(--primary);
             box-shadow: 0 0 0 1px var(--primary);
         }
@@ -291,7 +291,7 @@
         input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
         }
 
         .btn-action {
@@ -355,25 +355,27 @@
             color: var(--primary);
         }
 
-        .bar-chart-container {
-            width: 100%;
+        .fbd-vector-list {
             margin-top: 10px;
+            width: 100%;
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
 
-        .bar-row {
+        .fbd-vector-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 0.8rem;
-            font-weight: 600;
+            justify-content: space-between;
+            background: var(--bg);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            font-size: 0.82rem;
         }
 
-        .bar-label { width: 60px; text-align: right; }
-        .bar-outer { flex: 1; height: 12px; background: var(--card-border); border-radius: 6px; overflow: hidden; }
-        .bar-inner { height: 100%; width: 0%; transition: width 0.1s linear; }
+        .fbd-tag { font-weight: 700; color: var(--primary); }
+        .btn-del-vector { color: var(--error-color); background: none; border: none; cursor: pointer; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -405,27 +407,20 @@
             <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;" id="inst-name">Panel Visualisasi</div>
             <div class="sensor-display" id="sensor-display">Pilih modul untuk memulai</div>
             
-            <canvas id="energy-canvas" width="320" height="220" style="display: none;"></canvas>
+            <canvas id="dynamics-canvas" width="320" height="220" style="display: none;"></canvas>
             
             <div class="canvas-controls" id="canvas-btn-group" style="display: none;">
                 <button class="btn-sub" onclick="startSim()" id="btn-start-sim">▶️ Mulai Sim</button>
                 <button class="btn-sub" onclick="resetSim()" id="btn-reset-sim">⏹️ Reset</button>
             </div>
 
-            <!-- Visual Bar Grafik Energi Mekanik -->
-            <div class="bar-chart-container" id="energy-bars" style="display: none;">
-                <div class="bar-row">
-                    <span class="bar-label" style="color:#ef4444;">Ek:</span>
-                    <div class="bar-outer"><div class="bar-inner" id="bar-ek" style="background:#ef4444;"></div></div>
+            <!-- FBD / Energy Bar Controls -->
+            <div id="fbd-controls" style="display: none; width: 100%; margin-top: 8px;">
+                <div style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin-bottom:5px;" id="fbd-hint">
+                    💡 Tarik (drag) dari pusat benda untuk membuat garis vektor gaya
                 </div>
-                <div class="bar-row">
-                    <span class="bar-label" style="color:#3b82f6;">Ep:</span>
-                    <div class="bar-outer"><div class="bar-inner" id="bar-ep" style="background:#3b82f6;"></div></div>
-                </div>
-                <div class="bar-row">
-                    <span class="bar-label" style="color:#10b981;">Em:</span>
-                    <div class="bar-outer"><div class="bar-inner" id="bar-em" style="background:#10b981;"></div></div>
-                </div>
+                <div class="fbd-vector-list" id="fbd-vector-list"></div>
+                <button class="btn-sub" onclick="clearFbdVectors()" style="width:100%; margin-top:6px; color:var(--error-color);" id="btn-clear-fbd">🗑️ Hapus Semua Vektor</button>
             </div>
 
             <button class="btn-action" style="background: var(--bg); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px; margin-top: 10px;" onclick="generateNewData()" id="btn-new-sample">
@@ -454,240 +449,356 @@
     const translations = {
         id: {
             pageTitle: "Virtual Lab: Usaha dan Energi",
-            headerTitle: "Virtual Lab: Usaha dan Energi",
+            headerTitle: "Virtual Lab: Usaha & Kekekalan Energi",
             homeText: "Kembali ke Beranda",
             selectModLabel: "Pilih Mode Pembelajaran",
             btnNewSample: "🔄 Sampel / Soal Baru",
             btnSubmit: "Kirim Data Analisis",
             btnStartSim: "▶️ Mulai Sim",
             btnResetSim: "⏹️ Reset",
+            btnClearFbd: "🗑️ Hapus Semua Vektor",
+            fbdHint: "💡 Tarik (drag) dari pusat benda untuk membuat garis vektor gaya",
             selectCaseLabel: "📌 Pilih Kasus Fisika:",
             selectOptionPrompt: "-- Pilih Jawaban --",
+            vectorLabel: "Vektor",
+            noVectors: "Belum ada garis gaya yang digambar",
+            promptVectorName: "Beri nama gaya untuk vektor ini (contoh: N, w, F, f, T):",
             mainModules: [
-                { name: "Kalkulasi & Simulasi Usaha-Energi", icon: "🔢" },
-                { name: "Konsep Kekekalan Energi & Daya", icon: "💡" },
-                { name: "Sistem Pegas & Hukum Hooke", icon: "🌀" }
+                { name: "Kalkulasi Usaha & Energi", icon: "🔢" },
+                { name: "Konsep & Hukum Kekekalan Energi", icon: "💡" },
+                { name: "Diagram Gaya & Transfer Energi", icon: "✏️" }
             ],
             calcCases: [
-                "1. Usaha oleh Gaya Miring (W = F · s · cos θ)",
+                "1. Usaha oleh Gaya Bersudut (W = F · s · cos θ)",
                 "2. Teorema Usaha-Energi Kinetik (W = ΔEk)",
                 "3. Energi Potensial Gravitasi (Ep = m · g · h)",
-                "4. Kekekalan Energi Mekanik (Jatuh Bebas)",
-                "5. Daya dan Efisiensi Motor Listrik (P = W / t)"
+                "4. Hukum Kekekalan Energi Mekanik (Em1 = Em2)",
+                "5. Daya dan Efisiensi Mesin (P = W / t)"
             ],
             calcUI: {
-                title: "Kalkulasi & Simulasi Usaha dan Energi",
-                desc: "Pilih salah satu kasus di bawah ini, lalu hitung besaran fisika yang diminta berdasarkan data sensor.",
+                title: "Kalkulasi Usaha dan Perubahan Energi",
+                desc: "Pilih salah satu dari 5 kasus fisika di bawah ini, lalu hitung besaran usaha, energi, atau daya berdasarkan data sensor.",
                 instName: "Simulasi Usaha & Energi",
-                c1: { l1: "1. Komponen Gaya Horisontal Fₓ (N):", p1: "Masukkan nilai F cos θ", l2: "2. Usaha Total W (Joule):", p2: "Masukkan nilai Usaha W" },
-                c2: { l1: "1. Energi Kinetik Awal Ek₁ (J):", p1: "Masukkan nilai Ek₁", l2: "2. Usaha Total W (Joule):", p2: "Masukkan nilai ΔEk" },
-                c3: { l1: "1. Energi Potensial Ep (Joule):", p1: "Masukkan nilai Ep", l2: "2. Kecepatan Saat Menyentuh Tanah v (m/s):", p2: "Masukkan nilai v" },
-                c4: { l1: "1. Kecepatan di Ketinggian h₂ v₂ (m/s):", p1: "Masukkan nilai v₂", l2: "2. Energi Kinetik Ek₂ (Joule):", p2: "Masukkan nilai Ek₂" },
-                c5: { l1: "1. Daya Output Berguna P_out (Watt):", p1: "Masukkan nilai P_out", l2: "2. Efisiensi Motor η (%):", p2: "Masukkan nilai efisiensi dalam %" }
+                c1: { l1: "1. Komponen Gaya Sejajar Fₓ (N):", p1: "Masukkan F cos θ", l2: "2. Total Usaha W (Joule):", p2: "Masukkan nilai Usaha W" },
+                c2: { l1: "1. Energi Kinetik Akhir Ek₂ (Joule):", p1: "Masukkan Ek₂", l2: "2. Usaha Total W (Joule):", p2: "Masukkan nilai ΔEk" },
+                c3: { l1: "1. Energi Potensial Ep (Joule):", p1: "Masukkan Ep", l2: "2. Usaha Gravitasi W_g (Joule):", p2: "Masukkan nilai Usaha Gravitasi" },
+                c4: { l1: "1. Kecepatan Saat Menyentuh Tanah v (m/s):", p1: "Masukkan nilai v", l2: "2. Energi Kinetik Maksimum Ek_max (Joule):", p2: "Masukkan nilai Ek_max" },
+                c5: { l1: "1. Daya Output / Efektif P (Watt):", p1: "Masukkan daya P = W/t", l2: "2. Efisiensi Sistem η (%):", p2: "Masukkan efisiensi (%)" }
             },
             conceptUI: {
                 instName: "Studi Kasus Konsep Energi",
-                desc: "Baca narasi kasus fisika berikut, lalu pilih analisis energi dan daya yang paling tepat.",
+                desc: "Pahami narasi berikut, lalu tentukan analisis perubahan bentuk energi dan teorema usaha secara konseptual.",
                 q1Label: "Pertanyaan 1:",
                 q2Label: "Pertanyaan 2:",
-                narrativeHeader: "📖 NARASI KASUS:"
+                narrativeHeader: "📖 NARASI KASUS ENERGI:"
             },
-            springUI: {
-                title: "Analisis Energi Potensial Pegas (Hukum Hooke)",
-                desc: "Hitung gaya pemulih pegas dan Energi Potensial Pegas (Ep_pegas = 1/2 k Δx²) berdasarkan simpangan dan konstanta pegas.",
-                instName: "Simulasi Sistem Pegas",
-                l1: "1. Gaya Pemulih Pegas F (N):",
-                p1: "Masukkan nilai F (k · Δx)",
-                l2: "2. Energi Potensial Pegas Ep (Joule):",
-                p2: "Masukkan nilai Ep pegas"
+            fbdUI: {
+                instName: "Canvas Gaya & Arah Usaha",
+                selectScenarioLabel: "📌 Pilih Skenario Pergerakan Benda:",
+                instText: "✏️ INSTRUKSI INTERAKTIF:\nTarik garis gaya dari titik pusat balok pada canvas di bawah. Perhatikan apakah gaya tersebut melakukan usaha positif, negatif, atau nol!"
             },
             errFillFields: "⚠️ Silakan isi semua pilihan/kolom terlebih dahulu!",
-            evalSuccess: "✅ <b>Analisis Tepat!</b>",
+            errFbdNoVector: "⚠️ Silakan gambar minimal satu vektor gaya pada canvas!",
+            evalSuccess: "✅ <b>Kalkulasi Tepat!</b>",
             evalFailCalc: "❌ <b>Kalkulasi Belum Tepat!</b>",
-            evalSuccessConcept: "✅ <b>Jawaban Sangat Tepat!</b>",
-            evalFailConcept: "❌ <b>Analisis Konsep Belum Tepat.</b>"
+            evalSuccessConcept: "✅ <b>Jawaban Konsep Sangat Tepat!</b>",
+            evalFailConcept: "❌ <b>Analisis Konsep Belum Tepat.</b>",
+            evalSuccessFbd: "✅ <b>Diagram Gaya & Analisis Tepat!</b><br>Anda berhasil menggambarkan vektor gaya yang melakukan usaha pada sistem dengan benar.",
+            evalFailFbd: "⚠️ <b>Diagram Gaya Belum Lengkap/Tepat.</b>"
         },
         en: {
             pageTitle: "Virtual Lab: Work and Energy",
-            headerTitle: "Virtual Lab: Work and Energy",
+            headerTitle: "Virtual Lab: Work & Conservation of Energy",
             homeText: "Back to Home",
             selectModLabel: "Select Learning Mode",
             btnNewSample: "🔄 New Sample / Problem",
             btnSubmit: "Submit Analysis Data",
             btnStartSim: "▶️ Start Sim",
             btnResetSim: "⏹️ Reset",
+            btnClearFbd: "🗑️ Clear All Vectors",
+            fbdHint: "💡 Drag from the center of the block to draw a force vector line",
             selectCaseLabel: "📌 Select Physics Case:",
             selectOptionPrompt: "-- Select Answer --",
+            vectorLabel: "Vector",
+            noVectors: "No force vectors drawn yet",
+            promptVectorName: "Enter the force name for this vector (e.g., N, w, F, f, T):",
             mainModules: [
-                { name: "Work & Energy Calculation & Simulation", icon: "🔢" },
-                { name: "Conservation of Energy & Power Concepts", icon: "💡" },
-                { name: "Spring System & Hooke's Law", icon: "🌀" }
+                { name: "Work & Energy Calculation", icon: "🔢" },
+                { name: "Energy Conservation Concepts", icon: "💡" },
+                { name: "Force Diagram & Energy Transfer", icon: "✏️" }
             ],
             calcCases: [
                 "1. Work by Angled Force (W = F · s · cos θ)",
                 "2. Work-Kinetic Energy Theorem (W = ΔEk)",
                 "3. Gravitational Potential Energy (Ep = m · g · h)",
-                "4. Conservation of Mechanical Energy (Free Fall)",
-                "5. Power & Electric Motor Efficiency (P = W / t)"
+                "4. Law of Conservation of Mechanical Energy (Em1 = Em2)",
+                "5. Power and Machine Efficiency (P = W / t)"
             ],
             calcUI: {
-                title: "Work & Energy Calculation & Simulation",
-                desc: "Choose one of the cases below, then calculate the requested physical quantities based on the sensor data.",
+                title: "Work and Energy Change Calculation",
+                desc: "Select one of the 5 physics cases below, then compute the work, energy, or power parameters based on sensor readings.",
                 instName: "Work & Energy Simulation",
-                c1: { l1: "1. Horizontal Force Component Fₓ (N):", p1: "Enter F cos θ value", l2: "2. Total Work W (Joules):", p2: "Enter Work W value" },
-                c2: { l1: "1. Initial Kinetic Energy Ek₁ (J):", p1: "Enter Ek₁ value", l2: "2. Net Work W (Joules):", p2: "Enter ΔEk value" },
-                c3: { l1: "1. Potential Energy Ep (Joules):", p1: "Enter Ep value", l2: "2. Impact Velocity v (m/s):", p2: "Enter v value" },
-                c4: { l1: "1. Velocity at Height h₂ v₂ (m/s):", p1: "Enter v₂ value", l2: "2. Kinetic Energy Ek₂ (Joules):", p2: "Enter Ek₂ value" },
-                c5: { l1: "1. Useful Output Power P_out (Watts):", p1: "Enter P_out value", l2: "2. Motor Efficiency η (%):", p2: "Enter efficiency in %" }
+                c1: { l1: "1. Parallel Force Component Fₓ (N):", p1: "Enter F cos θ", l2: "2. Total Work W (Joule):", p2: "Enter Work value W" },
+                c2: { l1: "1. Final Kinetic Energy Ek₂ (Joule):", p1: "Enter Ek₂", l2: "2. Total Work W (Joule):", p2: "Enter ΔEk value" },
+                c3: { l1: "1. Potential Energy Ep (Joule):", p1: "Enter Ep", l2: "2. Gravitational Work W_g (Joule):", p2: "Enter Gravitational Work value" },
+                c4: { l1: "1. Velocity Upon Ground Impact v (m/s):", p1: "Enter v value", l2: "2. Maximum Kinetic Energy Ek_max (Joule):", p2: "Enter Ek_max value" },
+                c5: { l1: "1. Output / Effective Power P (Watt):", p1: "Enter Power P = W/t", l2: "2. System Efficiency η (%):", p2: "Enter efficiency (%)" }
             },
             conceptUI: {
                 instName: "Energy Conceptual Case Study",
-                desc: "Read the scenario below, then choose the correct analysis regarding energy and power.",
+                desc: "Read the scenario below, then analyze energy transformation and work-energy theorem conceptually.",
                 q1Label: "Question 1:",
                 q2Label: "Question 2:",
-                narrativeHeader: "📖 CASE SCENARIO:"
+                narrativeHeader: "📖 ENERGY CASE NARRATIVE:"
             },
-            springUI: {
-                title: "Spring Potential Energy Analysis (Hooke's Law)",
-                desc: "Calculate spring restoring force and Elastic Potential Energy (Ep_spring = 1/2 k Δx²) based on displacement and spring constant.",
-                instName: "Spring System Simulation",
-                l1: "1. Spring Restoring Force F (N):",
-                p1: "Enter F value (k · Δx)",
-                l2: "2. Elastic Potential Energy Ep (Joules):",
-                p2: "Enter elastic Ep value"
+            fbdUI: {
+                instName: "Force & Work Direction Canvas",
+                selectScenarioLabel: "📌 Select Motion Scenario:",
+                instText: "✏️ INTERACTIVE INSTRUCTIONS:\nDraw force vectors from the center of the block on the canvas below. Determine if the force does positive, negative, or zero work!"
             },
             errFillFields: "⚠️ Please fill in all selections/fields first!",
-            evalSuccess: "✅ <b>Correct Analysis!</b>",
+            errFbdNoVector: "⚠️ Please draw at least one force vector on the canvas!",
+            evalSuccess: "✅ <b>Correct Calculation!</b>",
             evalFailCalc: "❌ <b>Incorrect Calculation!</b>",
-            evalSuccessConcept: "✅ <b>Excellent Answer!</b>",
-            evalFailConcept: "❌ <b>Incorrect Conceptual Analysis.</b>"
+            evalSuccessConcept: "✅ <b>Excellent Conceptual Answer!</b>",
+            evalFailConcept: "❌ <b>Incorrect Conceptual Analysis.</b>",
+            evalSuccessFbd: "✅ <b>Accurate Diagram & Analysis!</b><br>You successfully identified forces doing work on the system.",
+            evalFailFbd: "⚠️ <b>Incomplete or Incorrect Free-Body Diagram.</b>"
         }
     };
 
-    // Database Studi Kasus Konsep Usaha & Energi (Bilingual)
+    // Database Studi Kasus Konsep Usaha dan Energi (Bilingual)
     const energyConceptCasesData = {
         id: [
             {
                 id: 1,
-                title: "Wahana Roller Coaster Tanpa Gesekan",
-                story: "Kereta roller coaster meluncur dari puncaknya yang tinggi (Titik A) tanpa kecepatan awal menuju lembah (Titik B), lalu naik kembali ke puncak kedua yang lebih rendah (Titik C). Gesekan lintasan dianggap nol.",
-                q1: "Bagaimanakah perubahan bentuk energi saat kereta bergerak dari Titik A ke Titik B?",
+                title: "Rintangan Roller Coaster tanpa Gesekan",
+                story: "Sebuah kereta roller coaster (m = 500 kg) diam di puncak bukit pertama setinggi h = 30 meter, lalu meluncur bebas ke lembah paling bawah.",
+                q1: "Bagaimana transformasi energi yang terjadi selama kereta meluncur turun?",
                 options1: [
-                    "Energi Potensial berubah seluruhnya menjadi Energi Kinetik.",
-                    "Energi Kinetik berubah menjadi Energi Potensial.",
-                    "Energi Mekanik total bertambah karena kecepatan meningkat."
+                    "Energi Potensial berkurang dan diubah seluruhnya menjadi Energi Kinetik.",
+                    "Energi Kinetik berkurang dan diubah menjadi Energi Potensial.",
+                    "Energi Mekanik total terus bertambah karena ada percepatan gravitasi."
                 ],
                 ans1: 0,
-                q2: "Mengapa Energi Mekanik total kereta konstan sepanjang lintasan?",
+                q2: "Pernyataan manakah yang bernilai BENAR mengenai Energi Mekanik (Em) kereta jika gesekan diabaikan?",
                 options2: [
-                    "Karena tidak ada gaya luar non-konservatif (seperti gesekan) yang melakukan usaha.",
-                    "Karena gaya berat tidak bekerja pada kereta.",
-                    "Karena kelajuan kereta selalu konstan dari awal hingga akhir."
+                    "Em di puncak bernilai sama dengan Em di titik terendah (Konstan).",
+                    "Em di titik terendah bernilai nol karena ketinggiannya h = 0.",
+                    "Em berubah-ubah tergantung kecepatan kereta."
                 ],
                 ans2: 0,
-                diffExplanation: "<b>Prinsip Utama:</b> Jika hanya gaya konservatif (gravitasi) yang bekerja, Energi Mekanik (Em = Ep + Ek) bernilai kekal. Ep berinterkonversi dengan Ek tanpa ada energi terbuang sebagai kalor."
+                diffExplanation: "<b>Prinsip Utama:</b> Jika hanya ada gaya konservatif (gravitasi) dan tanpa gesekan, maka *Hukum Kekekalan Energi Mekanik* berlaku mutlak (Em1 = Em2)."
             },
             {
                 id: 2,
-                title: "Mendorong Tembok vs Mendorong Kotak Berpindah",
-                story: "Andi menguras tenaganya mendorong tembok beton yang kokoh selama 10 menit hingga mandi keringat (tembok tidak bergeser). Budi mendorong kotak di atas lantai sejauh 5 meter.",
-                q1: "Menurut konsep Fisika, berapa besarnya Usaha (W) yang dilakukan Andi pada tembok?",
+                title: "Mengerem Mobil di Jalan Raya (Usaha Negatif)",
+                story: "Mobil melaju dengan kecepatan v. Pengemudi mengerem hingga mobil berhenti dalam jarak s meter.",
+                q1: "Mengapa gaya gesek rem dikatakan melakukan USAHA NEGATIF pada mobil?",
                 options1: [
-                    "Sangat besar karena Andi mengeluarkan banyak energi biologis.",
-                    "Nol (W = 0) karena perpindahan tembok sama dengan nol (s = 0).",
-                    "Sama dengan usaha Budi karena waktu dorongnya lama."
+                    "Karena arah gaya gesek berlawanan dengan arah perpindahan mobil.",
+                    "Karena gaya gesek menyebabkan nilai energi potensial mobil berkurang.",
+                    "Karena gaya gesek nilainya selalu lebih kecil dari nol."
                 ],
-                ans1: 1,
-                q2: "Syarat mutlak agar suatu gaya dikatakan melakukan Usaha mekanik adalah:",
+                ans1: 0,
+                q2: "Sesuai Teorema Usaha-Energi (W_total = ΔEk), ke mana perginya Energi Kinetik awal mobil saat berhenti?",
                 options2: [
-                    "Adanya gaya bernilai positif dan waktu yang lama.",
-                    "Adanya gaya yang menyebabkan benda mengalami perpindahan searah gaya.",
-                    "Adanya perubahan suhu pada benda yang didorong."
+                    "Diubah menjadi energi panas (kalor) dan bunyi akibat gesekan rem.",
+                    "Hilang begitu saja dari sistem alam semesta.",
+                    "Diubah kembali menjadi energi potensial bahan bakar."
                 ],
-                ans2: 1,
-                diffExplanation: "<b>Prinsip Utama:</b> Usaha dalam fisika dirumuskan W = F · s · cos θ. Walaupun energi biologis tubuh Andi terpakai, Usaha Fisika bernilai 0 jika benda tidak mengalami perpindahan (s = 0)."
+                ans2: 0,
+                diffExplanation: "<b>Prinsip Utama:</b> Usaha berharga *negatif* jika θ = 180° (F berlawanan s), yang mengurangi Energi Kinetik benda dan diubah menjadi bentuk energi lain seperti kalor."
             },
             {
                 id: 3,
-                title: "Mobil Melakukan Pengereman Mendadak",
-                story: "Sebuah mobil bermassa m melaju dengan kecepatan v. Pengemudi menginjak rem hingga mobil berhenti secara bertahap dalam jarak s akibat gaya gesek ban dengan jalan f.",
-                q1: "Teorema apakah yang menghubungkan gaya gesek, jarak pengereman, dan perubahan kecepatan mobil?",
+                title: "Membawa Ember Air Sambil Berjalan Horisontal",
+                story: "Seorang petani mengangkat ember berisi air vertikal ke atas dengan gaya F, lalu berjalan lurus secara horisontal sejauh 10 meter dengan kecepatan tetap.",
+                q1: "Berapakah usaha yang dilakukan oleh gaya angkat tangan petani terhadap ember SELAMA BERJALAN HORISONTAL?",
                 options1: [
-                    "Teorema Usaha-Energi Kinetik (W_total = ΔEk)",
-                    "Hukum Kekekalan Energi Potensial",
-                    "Hukum Hooke Pegas"
+                    "Nol (W = 0 Joule)",
+                    "W = F × 10 Joule",
+                    "W = m × g × 10 Joule"
                 ],
                 ans1: 0,
-                q2: "Jika kecepatan mobil dilipatgandakan menjadi 2v, berapakah jarak pengereman s' yang dibutuhkan hingga mobil berhenti?",
+                q2: "Mengapa nilai usaha gaya angkat tersebut bernilai nol?",
                 options2: [
-                    "2 kali jarak awal",
-                    "4 kali jarak awal (karena Ek sebanding dengan v²)",
-                    "Sama dengan jarak awal"
+                    "Karena gaya angkat (ke atas) tegak lurus (90°) terhadap arah perpindahan (horisontal).",
+                    "Karena ember tidak memiliki massa.",
+                    "Karena petani bergerak dengan kecepatan tetap sehingga energi mekanik berubah."
                 ],
-                ans2: 1,
-                diffExplanation: "<b>Prinsip Utama:</b> Energi Kinetik berbanding lurus dengan kuadrat kecepatan (Ek = 1/2 m v²). Usaha pengereman f · s = 1/2 m v². Jika v naik 2 kali, Ek naik 4 kali, sehingga jarak s juga naik 4 kali lipat."
+                ans2: 0,
+                diffExplanation: "<b>Prinsip Utama:</b> W = F · s · cos(θ). Ketika gaya tegak lurus perpindahan (θ = 90°), nilai cos(90°) = 0, sehingga *tidak ada usaha yang dilakukan* oleh gaya tersebut."
+            },
+            {
+                id: 4,
+                title: "Batu Jatuh Bebas ke Dalam Tanah Kasar",
+                story: "Batu jatuh bebas dari ketinggian h. Saat mengenai permukaan tanah, batu masuk sedalam d meter sebelum akhirnya berhenti total.",
+                q1: "Gaya manakah yang melakukan usaha untuk menghentikan batu di dalam tanah?",
+                options1: [
+                    "Gaya hambat/penahan tanah.",
+                    "Gaya dorong angin.",
+                    "Gaya gravitasi bumi semata."
+                ],
+                ans1: 0,
+                q2: "Bagaimanakah persamaan usaha penahan tanah (F_tanah) berdasarkan perubahan energi potensial awal batu?",
+                options2: [
+                    "Usaha penahan tanah = m · g · (h + d)",
+                    "Usaha penahan tanah = m · g · h / d",
+                    "Usaha penahan tanah = 1/2 m v² - m g h"
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Prinsip Utama:</b> Seluruh Energi Potensial awal dari ketinggian total (h + d) diserap dan diubah menjadi usaha penahan oleh gaya gesek tanah (F_tanah · d)."
             }
         ],
         en: [
             {
                 id: 1,
-                title: "Frictionless Roller Coaster Ride",
-                story: "A roller coaster car glides from a high peak (Point A) from rest down to a valley (Point B), then ascends to a lower secondary peak (Point C). Track friction is zero.",
-                q1: "How does energy transform as the car moves from Point A to Point B?",
+                title: "Frictionless Roller Coaster Loop",
+                story: "A roller coaster cart (m = 500 kg) starts from rest at the top of a hill at height h = 30 meters, then slides down freely to the valley.",
+                q1: "What energy transformation occurs as the cart glides downward?",
                 options1: [
-                    "Potential Energy is completely converted into Kinetic Energy.",
-                    "Kinetic Energy transforms into Potential Energy.",
-                    "Total Mechanical Energy increases as speed increases."
+                    "Potential Energy decreases and is fully converted into Kinetic Energy.",
+                    "Kinetic Energy decreases and transforms into Potential Energy.",
+                    "Total Mechanical Energy increases continuously due to gravity."
                 ],
                 ans1: 0,
-                q2: "Why is the total Mechanical Energy conserved along the track?",
+                q2: "Which statement is TRUE regarding Mechanical Energy (Em) if friction is neglected?",
                 options2: [
-                    "Because no non-conservative external force (like friction) does work.",
-                    "Because gravity does not act on the car.",
-                    "Because speed remains constant throughout the track."
+                    "Em at the top equals Em at the lowest point (Constant).",
+                    "Em at the lowest point is zero because height h = 0.",
+                    "Em fluctuates depending on the cart speed."
                 ],
                 ans2: 0,
-                diffExplanation: "<b>Core Principle:</b> When only conservative forces (gravity) act, Mechanical Energy (Em = Ep + Ek) remains strictly constant. Ep converts to Ek without thermal loss."
+                diffExplanation: "<b>Key Principle:</b> Under conservative forces (gravity) without friction, the *Law of Conservation of Mechanical Energy* strictly holds (Em1 = Em2)."
             },
             {
                 id: 2,
-                title: "Pushing a Concrete Wall vs Moving a Box",
-                story: "Andi exerts full effort pushing a rigid concrete wall for 10 minutes until sweating profusely (the wall does not move). Budi pushes a crate across the floor for 5 meters.",
-                q1: "In physics terms, how much Work (W) did Andi perform on the wall?",
+                title: "Braking a Car on Highway (Negative Work)",
+                story: "A car moves at speed v. The driver applies the brakes until coming to a complete stop over distance s meters.",
+                q1: "Why is brake friction force said to perform NEGATIVE WORK on the car?",
                 options1: [
-                    "Very high because Andi spent a lot of biological energy.",
-                    "Zero (W = 0) because wall displacement is zero (s = 0).",
-                    "Equal to Budi's work due to time spent."
+                    "Because the friction force opposes the direction of displacement.",
+                    "Because friction reduces the car's potential energy.",
+                    "Because friction force values are mathematically negative."
                 ],
-                ans1: 1,
-                q2: "The mandatory condition for a force to perform mechanical Work is:",
+                ans1: 0,
+                q2: "According to the Work-Energy Theorem (W_net = ΔEk), where does the initial Kinetic Energy go when stopped?",
                 options2: [
-                    "Positive force exerted over a long time.",
-                    "Applied force causing displacement along the line of action.",
-                    "Temperature change in the pushed object."
+                    "Dissipated into thermal energy (heat) and sound due to friction.",
+                    "Completely destroyed and lost from the universe.",
+                    "Converted back into chemical potential energy of fuel."
                 ],
-                ans2: 1,
-                diffExplanation: "<b>Core Principle:</b> Work in physics is W = F · s · cos θ. Even if biological energy is expended, Physics Work equals zero if displacement s = 0."
+                ans2: 0,
+                diffExplanation: "<b>Key Principle:</b> Work is *negative* when θ = 180° (F opposite to s), which reduces Kinetic Energy and converts it into heat."
             },
             {
                 id: 3,
-                title: "Car Braking to a Stop",
-                story: "A car with mass m travels at speed v. The driver applies brakes, bringing the car to a stop over distance s via tire friction f.",
-                q1: "Which theorem directly connects friction, braking distance, and velocity change?",
+                title: "Carrying a Water Bucket Horizontally",
+                story: "A farmer lifts a water bucket vertically with force F, then walks straight horizontally for 10 meters at constant speed.",
+                q1: "How much work is done by the upward lifting force on the bucket WHILE WALKING HORIZONTALLY?",
                 options1: [
-                    "Work-Kinetic Energy Theorem (W_net = ΔEk)",
-                    "Law of Potential Energy Conservation",
-                    "Hooke's Spring Law"
+                    "Zero (W = 0 Joules)",
+                    "W = F × 10 Joules",
+                    "W = m × g × 10 Joules"
                 ],
                 ans1: 0,
-                q2: "If initial speed doubles to 2v, how does the required braking distance s' change?",
+                q2: "Why is the work done by the lifting force equal to zero?",
                 options2: [
-                    "2 times original distance",
-                    "4 times original distance (since Ek is proportional to v²)",
-                    "Equal to original distance"
+                    "Because the upward lifting force is perpendicular (90°) to horizontal displacement.",
+                    "Because the bucket has no mass.",
+                    "Because moving at constant velocity means mechanical energy changes."
                 ],
-                ans2: 1,
-                diffExplanation: "<b>Core Principle:</b> Kinetic Energy is proportional to velocity squared (Ek = 1/2 m v²). Braking work f · s = 1/2 m v². Doubling velocity quadruples Ek, requiring 4x braking distance."
+                ans2: 0,
+                diffExplanation: "<b>Key Principle:</b> W = F · s · cos(θ). When force is perpendicular to displacement (θ = 90°), cos(90°) = 0, so *no work is done*."
+            },
+            {
+                id: 4,
+                title: "Free Fall Stone Penetrating Rough Soil",
+                story: "A stone falls freely from height h. Upon hitting the ground, it penetrates depth d meters into the soil before stopping.",
+                q1: "Which force performs work to halt the stone inside the soil?",
+                options1: [
+                    "Soil resistive friction force.",
+                    "Air thrust force.",
+                    "Earth's gravitational force alone."
+                ],
+                ans1: 0,
+                q2: "What is the equation for soil resistive work (F_soil) based on initial potential energy?",
+                options2: [
+                    "Soil Resistive Work = m · g · (h + d)",
+                    "Soil Resistive Work = m · g · h / d",
+                    "Soil Resistive Work = 1/2 m v² - m g h"
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Key Principle:</b> All initial Potential Energy from total elevation (h + d) is absorbed and dissipated as work by soil friction (F_soil · d)."
+            }
+        ]
+    };
+
+    // Database Kasus Diagram Gaya & Arah Usaha (FBD + Energy)
+    const fbdCasesData = {
+        id: [
+            {
+                id: 0,
+                title: "Balok Ditarik Miring (Usaha Positif)",
+                desc: "Gambarlah vektor gaya tarik F bersudut ke kanan atas dan gaya gesek f ke kiri. (Diperlukan: F ke kanan atas, f ke kiri, w ke bawah, N ke atas).",
+                requiredVectors: [
+                    { name: "F (Gaya Tarik)", angle: 315 },
+                    { name: "f (Gaya Gesek)", angle: 180 },
+                    { name: "N (Gaya Normal)", angle: 270 },
+                    { name: "w (Gaya Berat)", angle: 90 }
+                ]
+            },
+            {
+                id: 1,
+                title: "Benda Meluncur Turun Bidang Miring",
+                desc: "Gambarlah gaya-gaya pada balok miring! (Diperlukan: w ke bawah, N tegak lurus bidang miring/kiri-atas, f ke kanan-atas menyusur bidang).",
+                requiredVectors: [
+                    { name: "w (Gaya Berat)", angle: 90 },
+                    { name: "N (Gaya Normal)", angle: 300 },
+                    { name: "f (Gaya Gesek)", angle: 30 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Beban Diangkat Ke Atas dengan Katrol",
+                desc: "Gambarlah gaya yang melakukan usaha positif pada beban saat diangkat ke atas! (Diperlukan: T ke atas, w ke bawah).",
+                requiredVectors: [
+                    { name: "T (Tegangan Tali)", angle: 270 },
+                    { name: "w (Gaya Berat)", angle: 90 }
+                ]
+            }
+        ],
+        en: [
+            {
+                id: 0,
+                title: "Block Pulled at Angle (Positive Work)",
+                desc: "Draw angled pull force F top-right and friction f left. (Required: F top-right, f left, w downwards, N upwards).",
+                requiredVectors: [
+                    { name: "F (Pull Force)", angle: 315 },
+                    { name: "f (Friction Force)", angle: 180 },
+                    { name: "N (Normal Force)", angle: 270 },
+                    { name: "w (Weight)", angle: 90 }
+                ]
+            },
+            {
+                id: 1,
+                title: "Block Sliding Down Inclined Plane",
+                desc: "Draw forces on inclined block! (Required: w downwards, N normal top-left, f friction top-right along slope).",
+                requiredVectors: [
+                    { name: "w (Weight)", angle: 90 },
+                    { name: "N (Normal Force)", angle: 300 },
+                    { name: "f (Friction Force)", angle: 30 }
+                ]
+            },
+            {
+                id: 2,
+                title: "Load Lifted Upwards via Pulley",
+                desc: "Draw forces performing work on the load lifted vertically! (Required: Tension T upwards, Weight w downwards).",
+                requiredVectors: [
+                    { name: "T (Tension)", angle: 270 },
+                    { name: "w (Weight)", angle: 90 }
+                ]
             }
         ]
     };
@@ -695,10 +806,17 @@
     // State System Variables
     let currentLang = 'id';
     let currentTheme = 'light';
-    let currentMainMod = 0; // 0: Perhitungan, 1: Konsep, 2: Pegas
+    let currentMainMod = 0; // 0: Perhitungan, 1: Konsep, 2: FBD
     let currentSubCalcCase = 0; // 0..4
     let currentRawData = {};
     let currentConceptIndex = 0;
+    let currentFbdIndex = 0;
+
+    // FBD Drawing Canvas Variables
+    let userFbdVectors = [];
+    let isDrawingVector = false;
+    let dragStartPos = { x: 0, y: 0 };
+    let dragCurrentPos = { x: 0, y: 0 };
 
     // Canvas Animation Control
     let canvas, ctx;
@@ -721,6 +839,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         applySettings();
+        initFbdEvents();
     });
 
     window.addEventListener('storage', (e) => {
@@ -739,6 +858,8 @@
         document.getElementById('btn-submit').innerText = t.btnSubmit;
         document.getElementById('btn-start-sim').innerText = t.btnStartSim;
         document.getElementById('btn-reset-sim').innerText = t.btnResetSim;
+        document.getElementById('btn-clear-fbd').innerText = t.btnClearFbd;
+        document.getElementById('fbd-hint').innerText = t.fbdHint;
     }
 
     function initNav() {
@@ -766,37 +887,37 @@
 
     function renderMainModule() {
         const t = translations[currentLang];
-        const canvasEl = document.getElementById('energy-canvas');
+        const canvasEl = document.getElementById('dynamics-canvas');
         const btnGroup = document.getElementById('canvas-btn-group');
-        const barChart = document.getElementById('energy-bars');
+        const fbdControls = document.getElementById('fbd-controls');
         document.getElementById('feedback').style.display = 'none';
 
-        if (currentMainMod === 0) { // Mode 1: Perhitungan Usaha & Energi
+        if (currentMainMod === 0) { // Mode 1: Perhitungan & Simulasi
             canvasEl.style.display = 'block';
             btnGroup.style.display = 'flex';
-            barChart.style.display = (currentSubCalcCase === 2 || currentSubCalcCase === 3) ? 'flex' : 'none';
+            fbdControls.style.display = 'none';
             document.getElementById('inst-name').innerText = t.calcUI.instName;
-            document.getElementById('inst-icon').innerText = "🔢";
+            document.getElementById('inst-icon').innerText = "⚡";
 
             renderCalcModuleUI();
 
-        } else if (currentMainMod === 1) { // Mode 2: Konsep
+        } else if (currentMainMod === 1) { // Mode 2: Pemahaman Konsep
             canvasEl.style.display = 'none';
             btnGroup.style.display = 'none';
-            barChart.style.display = 'none';
+            fbdControls.style.display = 'none';
             document.getElementById('inst-name').innerText = t.conceptUI.instName;
             document.getElementById('inst-icon').innerText = "💡";
 
             renderConceptModuleUI();
 
-        } else if (currentMainMod === 2) { // Mode 3: Pegas (Hukum Hooke)
+        } else if (currentMainMod === 2) { // Mode 3: FBD Drawing & Usaha
             canvasEl.style.display = 'block';
-            btnGroup.style.display = 'flex';
-            barChart.style.display = 'none';
-            document.getElementById('inst-name').innerText = t.springUI.instName;
-            document.getElementById('inst-icon').innerText = "🌀";
+            btnGroup.style.display = 'none';
+            fbdControls.style.display = 'block';
+            document.getElementById('inst-name').innerText = t.fbdUI.instName;
+            document.getElementById('inst-icon').innerText = "✏️";
 
-            renderSpringModuleUI();
+            renderFbdModuleUI();
         }
     }
 
@@ -853,31 +974,31 @@
 
         if (currentSubCalcCase === 0) {
             txt = isEn 
-                ? `[Work by Angled Force]\nForce (F) = ${d.F} N | Angle (θ) = ${d.theta}°\nDisplacement (s) = ${d.s} m`
-                : `[Usaha oleh Gaya Miring]\nGaya (F) = ${d.F} N | Sudut (θ) = ${d.theta}°\nPerpindahan (s) = ${d.s} m`;
+                ? `[Angled Work]\nForce (F) = ${d.F} N | Angle (θ) = ${d.theta}°\nDisplacement (s) = ${d.s} m`
+                : `[Usaha Gaya Bersudut]\nGaya (F) = ${d.F} N | Sudut (θ) = ${d.theta}°\nPerpindahan (s) = ${d.s} m`;
         } else if (currentSubCalcCase === 1) {
             txt = isEn 
-                ? `[Work-Kinetic Energy Theorem]\nMass (m) = ${d.m} kg\nInitial Velocity (v₁) = ${d.v1} m/s\nFinal Velocity (v₂) = ${d.v2} m/s`
-                : `[Teorema Usaha-Energi Kinetik]\nMassa (m) = ${d.m} kg\nKecepatan Awal (v₁) = ${d.v1} m/s\nKecepatan Akhir (v₂) = ${d.v2} m/s`;
+                ? `[Work-Energy Theorem]\nMass (m) = ${d.m} kg\nInitial Vel (v₁) = ${d.v1} m/s | Final Vel (v₂) = ${d.v2} m/s`
+                : `[Teorema Usaha-Energi]\nMassa (m) = ${d.m} kg\nKecepatan Awal (v₁) = ${d.v1} m/s | Akhir (v₂) = ${d.v2} m/s`;
         } else if (currentSubCalcCase === 2) {
             txt = isEn 
-                ? `[Gravitational Potential Energy]\nMass (m) = ${d.m} kg\nHeight (h) = ${d.h} m\nGravity (g) = 9.8 m/s²`
-                : `[Energi Potensial Gravitasi]\nMassa (m) = ${d.m} kg\nKetinggian (h) = ${d.h} m\nGravitasi (g) = 9.8 m/s²`;
+                ? `[Potential Energy]\nMass (m) = ${d.m} kg | Height (h) = ${d.h} m\nGravity (g) = 9.8 m/s²`
+                : `[Energi Potensial Gravitasi]\nMassa (m) = ${d.m} kg | Ketinggian (h) = ${d.h} m\nGravitasi (g) = 9.8 m/s²`;
         } else if (currentSubCalcCase === 3) {
             txt = isEn 
-                ? `[Mechanical Energy Conservation]\nMass (m) = ${d.m} kg\nInitial Height (h₁) = ${d.h1} m\nTarget Height (h₂) = ${d.h2} m`
-                : `[Kekekalan Energi Mekanik]\nMassa (m) = ${d.m} kg\nKetinggian Awal (h₁) = ${d.h1} m\nKetinggian Target (h₂) = ${d.h2} m`;
+                ? `[Conservation of Mechanical Energy]\nFree Fall Mass (m) = ${d.m} kg\nInitial Height (h) = ${d.h} m | Initial Speed (v₁) = 0 m/s`
+                : `[Kekekalan Energi Mekanik]\nJatuh Bebas Massa (m) = ${d.m} kg\nKetinggian Awal (h) = ${d.h} m | Kec. Awal (v₁) = 0 m/s`;
         } else if (currentSubCalcCase === 4) {
             txt = isEn 
-                ? `[Motor Power & Efficiency]\nLoad Weight (w) = ${d.w} N | Height (h) = ${d.h} m\nTime (t) = ${d.t} s | Input Power (P_in) = ${d.Pin} W`
-                : `[Daya & Efisiensi Motor]\nBeban Berat (w) = ${d.w} N | Tinggi (h) = ${d.h} m\nWaktu (t) = ${d.t} s | Daya Input (P_in) = ${d.Pin} W`;
+                ? `[Power & Efficiency]\nInput Energy (E_in) = ${d.Ein} J\nTime (t) = ${d.t} s | Useful Work (W_out) = ${d.Wout} J`
+                : `[Daya & Efisiensi]\nEnergi Input (E_in) = ${d.Ein} J\nWaktu (t) = ${d.t} s | Usaha Berguna (W_out) = ${d.Wout} J`;
         }
 
         document.getElementById('sensor-display').innerText = txt;
     }
 
     /* =========================================================
-       MODE 2: PEMAHAMAN KONSEP ENERGI
+       MODE 2: PEMAHAMAN KONSEP USAHA DAN ENERGI
        ========================================================= */
     function renderConceptModuleUI() {
         const t = translations[currentLang];
@@ -909,37 +1030,195 @@
     }
 
     /* =========================================================
-       MODE 3: PEGAS & HUKUM HOOKE
+       MODE 3: MENGGAMBAR DIAGRAM GAYA & TRANSFER ENERGI
        ========================================================= */
-    function renderSpringModuleUI() {
+    function renderFbdModuleUI() {
         const t = translations[currentLang];
+        const cases = fbdCasesData[currentLang];
+        const c = cases[currentFbdIndex];
+
+        document.getElementById('task-title').innerText = `${t.mainModules[2].name}: ${c.title}`;
+        document.getElementById('task-desc').innerText = c.desc;
+
+        document.getElementById('sensor-display').innerText = t.fbdUI.instText;
+
         const dynamicInputs = document.getElementById('dynamic-inputs');
-
-        document.getElementById('task-title').innerText = t.springUI.title;
-        document.getElementById('task-desc').innerText = t.springUI.desc;
-
-        const isEn = currentLang === 'en';
-        const d = currentRawData;
-        document.getElementById('sensor-display').innerText = isEn
-            ? `[Spring System Data]\nSpring Constant (k) = ${d.k} N/m\nDisplacement (Δx) = ${d.dx} m`
-            : `[Data Sistem Pegas]\nKonstanta Pegas (k) = ${d.k} N/m\nSimpangan (Δx) = ${d.dx} m`;
-
         dynamicInputs.innerHTML = `
             <div class="control-group">
-                <label>${t.springUI.l1}</label>
-                <input type="number" id="mod-val-1" step="any" placeholder="${t.springUI.p1}">
-            </div>
-            <div class="control-group">
-                <label>${t.springUI.l2}</label>
-                <input type="number" id="mod-val-2" step="any" placeholder="${t.springUI.p2}">
+                <label>${t.fbdUI.selectScenarioLabel}</label>
+                <select id="fbd-case-select" onchange="changeFbdCase(this.value)">
+                    ${cases.map((fc, i) => `<option value="${i}" ${i === currentFbdIndex ? 'selected' : ''}>${fc.title}</option>`).join('')}
+                </select>
             </div>
         `;
 
-        resetSim();
+        drawFbdCanvas();
+        updateFbdVectorListUI();
+    }
+
+    function changeFbdCase(val) {
+        currentFbdIndex = parseInt(val);
+        userFbdVectors = [];
+        renderFbdModuleUI();
+    }
+
+    /* Event Handler Canvas FBD Drawing */
+    function initFbdEvents() {
+        const cvs = document.getElementById('dynamics-canvas');
+        
+        const getCanvasCoords = (e) => {
+            const rect = cvs.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top
+            };
+        };
+
+        const handleStart = (e) => {
+            if (currentMainMod !== 2) return;
+            isDrawingVector = true;
+            dragStartPos = { x: cvs.width / 2, y: cvs.height / 2 };
+            dragCurrentPos = getCanvasCoords(e);
+        };
+
+        const handleMove = (e) => {
+            if (currentMainMod !== 2 || !isDrawingVector) return;
+            dragCurrentPos = getCanvasCoords(e);
+            drawFbdCanvas();
+        };
+
+        const handleEnd = () => {
+            if (currentMainMod !== 2 || !isDrawingVector) return;
+            isDrawingVector = false;
+
+            const dx = dragCurrentPos.x - dragStartPos.x;
+            const dy = dragCurrentPos.y - dragStartPos.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist > 20) {
+                let rad = Math.atan2(dy, dx);
+                let deg = Math.round(rad * (180 / Math.PI));
+                if (deg < 0) deg += 360;
+
+                const t = translations[currentLang];
+                let forceName = prompt(t.promptVectorName, "F");
+                if (forceName) {
+                    userFbdVectors.push({
+                        name: forceName.trim().toUpperCase(),
+                        angle: deg,
+                        dx: dx,
+                        dy: dy
+                    });
+                }
+            }
+            drawFbdCanvas();
+            updateFbdVectorListUI();
+        };
+
+        cvs.addEventListener('mousedown', handleStart);
+        cvs.addEventListener('mousemove', handleMove);
+        window.addEventListener('mouseup', handleEnd);
+
+        cvs.addEventListener('touchstart', handleStart);
+        cvs.addEventListener('touchmove', handleMove);
+        window.addEventListener('touchend', handleEnd);
+    }
+
+    function clearFbdVectors() {
+        userFbdVectors = [];
+        drawFbdCanvas();
+        updateFbdVectorListUI();
+    }
+
+    function removeFbdVector(idx) {
+        userFbdVectors.splice(idx, 1);
+        drawFbdCanvas();
+        updateFbdVectorListUI();
+    }
+
+    function updateFbdVectorListUI() {
+        const container = document.getElementById('fbd-vector-list');
+        if (!container) return;
+        container.innerHTML = '';
+        const t = translations[currentLang];
+
+        if (userFbdVectors.length === 0) {
+            container.innerHTML = `<div style="font-size:0.8rem; color:var(--text-muted); text-align:center;">${t.noVectors}</div>`;
+            return;
+        }
+
+        userFbdVectors.forEach((v, idx) => {
+            const item = document.createElement('div');
+            item.className = 'fbd-vector-item';
+            item.innerHTML = `
+                <span><span class="fbd-tag">${t.vectorLabel} ${v.name}</span> (${v.angle}°)</span>
+                <button class="btn-del-vector" onclick="removeFbdVector(${idx})"><i class="fa-solid fa-trash"></i></button>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    function drawFbdCanvas() {
+        if (currentMainMod !== 2) return;
+        canvas = document.getElementById('dynamics-canvas');
+        ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const cx = canvas.width / 2;
+        const cy = canvas.height / 2;
+
+        ctx.fillStyle = '#2563eb';
+        ctx.fillRect(cx - 30, cy - 25, 60, 50);
+        ctx.strokeStyle = '#1d4ed8';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(cx - 30, cy - 25, 60, 50);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('m', cx, cy);
+
+        userFbdVectors.forEach(v => {
+            drawArrow(ctx, cx, cy, cx + v.dx, cy + v.dy, '#ef4444', v.name);
+        });
+
+        if (isDrawingVector) {
+            drawArrow(ctx, cx, cy, dragCurrentPos.x, dragCurrentPos.y, '#38bdf8', '...');
+        }
+    }
+
+    function drawArrow(context, fromx, fromy, tox, toy, color, label) {
+        const headlen = 10;
+        const dx = tox - fromx;
+        const dy = toy - fromy;
+        const angle = Math.atan2(dy, dx);
+        
+        context.strokeStyle = color;
+        context.lineWidth = 3;
+        context.beginPath();
+        context.moveTo(fromx, fromy);
+        context.lineTo(tox, toy);
+        context.stroke();
+
+        context.fillStyle = color;
+        context.beginPath();
+        context.moveTo(tox, toy);
+        context.lineTo(tox - headlen * Math.cos(angle - Math.PI / 6), toy - headlen * Math.sin(angle - Math.PI / 6));
+        context.lineTo(tox - headlen * Math.cos(angle + Math.PI / 6), toy - headlen * Math.sin(angle + Math.PI / 6));
+        context.fill();
+
+        if (label) {
+            context.fillStyle = color;
+            context.font = 'bold 12px sans-serif';
+            context.fillText(label, tox + 12 * Math.cos(angle), toy + 12 * Math.sin(angle));
+        }
     }
 
     /* =========================================================
-       GENERASI DATA BARU & ANIMASI SIMULASI
+       GENERASI DATA BARU & ANIMASI SIMULASI USAHA/ENERGI
        ========================================================= */
     function generateNewData() {
         document.getElementById('feedback').style.display = 'none';
@@ -949,29 +1228,26 @@
                 const F = Math.floor(Math.random() * 40) + 20;
                 const angles = [0, 30, 45, 60];
                 const theta = angles[Math.floor(Math.random() * angles.length)];
-                const s = Math.floor(Math.random() * 10) + 5;
+                const s = Math.floor(Math.random() * 15) + 5;
                 currentRawData = { F, theta, s };
             } else if (currentSubCalcCase === 1) {
-                const m = Math.floor(Math.random() * 5) + 2;
-                const v1 = Math.floor(Math.random() * 4) + 2;
-                const v2 = v1 + Math.floor(Math.random() * 6) + 3;
+                const m = Math.floor(Math.random() * 8) + 2;
+                const v1 = Math.floor(Math.random() * 5) + 2;
+                const v2 = v1 + Math.floor(Math.random() * 8) + 3;
                 currentRawData = { m, v1, v2 };
             } else if (currentSubCalcCase === 2) {
-                const m = Math.floor(Math.random() * 6) + 2;
-                const h = Math.floor(Math.random() * 15) + 5;
+                const m = Math.floor(Math.random() * 10) + 2;
+                const h = Math.floor(Math.random() * 20) + 5;
                 currentRawData = { m, h };
             } else if (currentSubCalcCase === 3) {
-                const m = Math.floor(Math.random() * 4) + 2;
-                const h1 = Math.floor(Math.random() * 10) + 12;
-                const h2 = Math.floor(Math.random() * 6) + 2;
-                currentRawData = { m, h1, h2 };
+                const m = Math.floor(Math.random() * 6) + 2;
+                const h = Math.floor(Math.random() * 25) + 10;
+                currentRawData = { m, h };
             } else if (currentSubCalcCase === 4) {
-                const w = Math.floor(Math.random() * 200) + 100;
-                const h = Math.floor(Math.random() * 8) + 4;
-                const t = Math.floor(Math.random() * 5) + 5;
-                const PoutCalculated = (w * h) / t;
-                const Pin = Math.round(PoutCalculated + Math.random() * 50 + 20);
-                currentRawData = { w, h, t, Pin };
+                const Ein = (Math.floor(Math.random() * 20) + 10) * 100;
+                const Wout = Math.floor(Ein * (Math.random() * 0.4 + 0.5));
+                const t = Math.floor(Math.random() * 10) + 5;
+                currentRawData = { Ein, Wout, t };
             }
             renderMainModule();
             drawCanvasState(0);
@@ -982,16 +1258,15 @@
             renderMainModule();
 
         } else if (currentMainMod === 2) {
-            const k = (Math.floor(Math.random() * 5) + 2) * 50; // 100 - 350 N/m
-            const dx = parseFloat((Math.random() * 0.3 + 0.1).toFixed(2)); // 0.10 - 0.40 m
-            currentRawData = { k, dx };
+            const cases = fbdCasesData[currentLang];
+            currentFbdIndex = Math.floor(Math.random() * cases.length);
+            userFbdVectors = [];
             renderMainModule();
-            drawCanvasState(0);
         }
     }
 
     function startSim() {
-        if (isSimRunning) return;
+        if (isSimRunning || currentMainMod !== 0) return;
         isSimRunning = true;
         let startTime = null;
         const duration = 2500;
@@ -1015,167 +1290,98 @@
         isSimRunning = false;
         if (animationId) cancelAnimationFrame(animationId);
         simProgress = 0;
-        drawCanvasState(0);
-    }
-
-    function updateEnergyBars(epPercent, ekPercent) {
-        const barEp = document.getElementById('bar-ep');
-        const barEk = document.getElementById('bar-ek');
-        const barEm = document.getElementById('bar-em');
-
-        if (barEp && barEk && barEm) {
-            barEp.style.width = `${Math.max(0, Math.min(100, epPercent))}%`;
-            barEk.style.width = `${Math.max(0, Math.min(100, ekPercent))}%`;
-            barEm.style.width = `100%`;
-        }
+        if (currentMainMod === 0) drawCanvasState(0);
     }
 
     function drawCanvasState(p) {
-        canvas = document.getElementById('energy-canvas');
-        if (!canvas) return;
+        if (currentMainMod !== 0) return;
+        canvas = document.getElementById('dynamics-canvas');
         ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const w = canvas.width;
         const h = canvas.height;
 
-        if (currentMainMod === 0) {
+        if (currentSubCalcCase === 0 || currentSubCalcCase === 1) {
+            // Balok ditarik di permukaan datar
+            const groundY = 160;
+            ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(20, groundY); ctx.lineTo(w - 20, groundY); ctx.stroke();
+
+            const blockX = 30 + p * (w - 100);
+            const blockY = groundY - 30;
+
+            ctx.fillStyle = '#2563eb';
+            ctx.fillRect(blockX, blockY, 40, 30);
+            ctx.fillStyle = '#ffffff'; ctx.font = '12px sans-serif';
+            ctx.fillText('m', blockX + 15, blockY + 20);
+
             if (currentSubCalcCase === 0) {
-                // Balok ditarik gaya miring
-                const groundY = 160;
-                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(20, groundY); ctx.lineTo(w - 20, groundY); ctx.stroke();
-
-                const bx = 30 + p * (w - 110);
-                const by = groundY - 30;
-
-                ctx.fillStyle = '#10b981';
-                ctx.fillRect(bx, by, 40, 30);
-                ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif';
-                ctx.fillText('m', bx + 15, by + 20);
-
-                // Garis Gaya Miring F
-                const rad = ((currentRawData.theta || 30) * Math.PI) / 180;
-                const arrowLen = 50;
-                const ax = bx + 40 + arrowLen * Math.cos(rad);
-                const ay = by + 15 - arrowLen * Math.sin(rad);
-
-                ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3;
-                ctx.beginPath(); ctx.moveTo(bx + 40, by + 15); ctx.lineTo(ax, ay); ctx.stroke();
-
-                // Sudut θ
-                ctx.setLineDash([2, 2]); ctx.strokeStyle = '#94a3b8';
-                ctx.beginPath(); ctx.moveTo(bx + 40, by + 15); ctx.lineTo(bx + 90, by + 15); ctx.stroke();
-                ctx.setLineDash([]);
-
-            } else if (currentSubCalcCase === 1) {
-                // Mobil berakselerasi (Teorema Usaha-Energi)
-                const groundY = 160;
-                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(20, groundY); ctx.lineTo(w - 20, groundY); ctx.stroke();
-
-                // Bergerak makin cepat (p^2)
-                const bx = 30 + (p * p) * (w - 100);
-                const by = groundY - 25;
-
-                ctx.fillStyle = '#3b82f6';
-                ctx.fillRect(bx, by, 45, 25);
-                ctx.fillStyle = '#ffffff'; ctx.font = '10px sans-serif';
-                ctx.fillText('v(t)', bx + 12, by + 16);
-
-            } else if (currentSubCalcCase === 2) {
-                // Jatuh Bebas dari ketinggian h
-                const groundY = 190;
-                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(40, groundY); ctx.lineTo(w - 40, groundY); ctx.stroke();
-
-                // Bola jatuh
-                const startY = 40;
-                const ballY = startY + (p * p) * (groundY - startY - 15);
-
-                ctx.fillStyle = '#ef4444';
-                ctx.beginPath(); ctx.arc(w / 2, ballY, 15, 0, Math.PI * 2); ctx.fill();
-
-                // Update Grafik Energi
-                const epPct = (1 - (ballY - startY) / (groundY - startY - 15)) * 100;
-                const ekPct = 100 - epPct;
-                updateEnergyBars(epPct, ekPct);
-
-            } else if (currentSubCalcCase === 3) {
-                // Jatuh dari h1 ke h2
-                const groundY = 190;
-                ctx.strokeStyle = '#64748b'; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(40, groundY); ctx.lineTo(w - 40, groundY); ctx.stroke();
-
-                const h1Y = 40;
-                const h2Y = 130;
-                const currentY = h1Y + p * (h2Y - h1Y);
-
-                // Garis penanda ketinggian h2
-                ctx.setLineDash([3, 3]); ctx.strokeStyle = '#f59e0b';
-                ctx.beginPath(); ctx.moveTo(40, h2Y); ctx.lineTo(w - 40, h2Y); ctx.stroke();
-                ctx.setLineDash([]);
-
-                ctx.fillStyle = '#8b5cf6';
-                ctx.beginPath(); ctx.arc(w / 2, currentY, 14, 0, Math.PI * 2); ctx.fill();
-
-                const epPct = (1 - (currentY - h1Y) / (groundY - h1Y)) * 100;
-                const ekPct = 100 - epPct;
-                updateEnergyBars(epPct, ekPct);
-
-            } else if (currentSubCalcCase === 4) {
-                // Motor Listrik mengangkat beban
-                const topY = 40;
-                const pulleyX = w / 2;
-
-                ctx.fillStyle = '#64748b';
-                ctx.beginPath(); ctx.arc(pulleyX, topY, 18, 0, Math.PI * 2); ctx.fill();
-
-                const boxY = 170 - p * 90; // terangkat naik
-                ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(pulleyX, topY); ctx.lineTo(pulleyX, boxY); ctx.stroke();
-
-                ctx.fillStyle = '#10b981';
-                ctx.fillRect(pulleyX - 15, boxY, 30, 30);
-                ctx.fillStyle = '#ffffff'; ctx.font = '10px sans-serif';
-                ctx.fillText('w', pulleyX - 4, boxY + 18);
+                // Gambar Vektor Gaya Bersudut
+                const rad = ((currentRawData.theta || 0) * Math.PI) / 180;
+                const fx = Math.cos(rad) * 45;
+                const fy = -Math.sin(rad) * 45;
+                drawArrow(ctx, blockX + 40, blockY + 15, blockX + 40 + fx, blockY + 15 + fy, '#38bdf8', 'F');
+            } else {
+                // Tampilkan perubahan Vektor Kecepatan (v1 -> v2)
+                const vScale = 20 + p * 30;
+                drawArrow(ctx, blockX + 40, blockY + 15, blockX + 40 + vScale, blockY + 15, '#22c55e', 'v');
             }
 
-        } else if (currentMainMod === 2) {
-            // Mode Pegas (Hukum Hooke)
-            const wallX = 30;
-            const centerY = h / 2;
-            const eqX = 140; // posisi setimbang
-            const stretchX = eqX + p * (currentRawData.dx || 0.2) * 200; // animasi meregang
+        } else if (currentSubCalcCase === 2 || currentSubCalcCase === 3) {
+            // Simulasi Benda Jatuh Bebas / Energi Potensial
+            const topY = 40;
+            const bottomY = 180;
+            const startX = w / 2 - 20;
+            const currentY = topY + p * (bottomY - topY);
 
-            // Tembok kiri
-            ctx.fillStyle = '#64748b';
-            ctx.fillRect(10, centerY - 40, 20, 80);
-
-            // Garis setimbang
-            ctx.setLineDash([2, 2]); ctx.strokeStyle = '#cbd5e1';
-            ctx.beginPath(); ctx.moveTo(eqX, centerY - 50); ctx.lineTo(eqX, centerY + 50); ctx.stroke();
+            // Garis Ketinggian h
+            ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
+            ctx.beginPath(); ctx.moveTo(startX - 30, topY); ctx.lineTo(startX - 30, bottomY); ctx.stroke();
             ctx.setLineDash([]);
 
-            // Gambar Pegas (Zig-zag)
-            ctx.strokeStyle = '#10b981'; ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(wallX, centerY);
-            
-            const coils = 10;
-            const springWidth = stretchX - wallX;
-            for (let i = 0; i <= coils; i++) {
-                const x = wallX + (i / coils) * springWidth;
-                const y = (i === 0 || i === coils) ? centerY : centerY + (i % 2 === 0 ? 15 : -15);
-                ctx.lineTo(x, y);
-            }
-            ctx.stroke();
+            ctx.fillStyle = '#64748b'; ctx.font = '11px sans-serif';
+            ctx.fillText('h', startX - 45, (topY + bottomY) / 2);
 
-            // Beban di ujung pegas
-            ctx.fillStyle = '#3b82f6';
-            ctx.fillRect(stretchX, centerY - 20, 35, 40);
+            // Tanah
+            ctx.strokeStyle = '#334155'; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.moveTo(40, bottomY + 20); ctx.lineTo(w - 40, bottomY + 20); ctx.stroke();
+
+            // Bola / Balok
+            ctx.fillStyle = '#ef4444';
+            ctx.beginPath(); ctx.arc(startX + 20, currentY, 16, 0, Math.PI * 2); ctx.fill();
             ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif';
-            ctx.fillText('m', stretchX + 12, centerY + 5);
+            ctx.fillText('m', startX + 15, currentY + 4);
+
+            // Diagram Batang Energi (Ep vs Ek)
+            const barWidth = 15;
+            const maxBarH = 120;
+            const epH = (1 - p) * maxBarH;
+            const ekH = p * maxBarH;
+
+            // Ep Bar (Biru)
+            ctx.fillStyle = '#3b82f6';
+            ctx.fillRect(w - 50, bottomY - epH, barWidth, epH);
+            // Ek Bar (Hijau)
+            ctx.fillStyle = '#22c55e';
+            ctx.fillRect(w - 30, bottomY - ekH, barWidth, ekH);
+
+            ctx.fillStyle = '#64748b'; ctx.font = '10px sans-serif';
+            ctx.fillText('Ep Ek', w - 52, bottomY + 12);
+
+        } else if (currentSubCalcCase === 4) {
+            // Diagram Daya & Efisiensi Mesin
+            const cx = w / 2;
+            ctx.fillStyle = '#0f172a';
+            ctx.fillRect(cx - 60, 60, 120, 80);
+
+            ctx.fillStyle = '#ffffff'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('MESIN / GENERATOR', cx, 100);
+
+            // Panah Input (Kiri)
+            drawArrow(ctx, cx - 110, 100, cx - 65, 100, '#38bdf8', 'E_in');
+            // Panah Output (Kanan)
+            drawArrow(ctx, cx + 65, 100, cx + 110, 100, '#22c55e', 'W_out');
         }
     }
 
@@ -1199,60 +1405,59 @@
             if (isNaN(val1) || isNaN(val2)) { showFeedback('error', t.errFillFields); return; }
 
             if (currentSubCalcCase === 0) {
-                const { F, theta, s } = currentRawData;
-                const rad = (theta * Math.PI) / 180;
-                const expectedFx = F * Math.cos(rad);
-                const expectedW = expectedFx * s;
+                const rad = (currentRawData.theta * Math.PI) / 180;
+                const expectedFx = currentRawData.F * Math.cos(rad);
+                const expectedW = expectedFx * currentRawData.s;
 
                 if (Math.abs(val1 - expectedFx) < 0.3 && Math.abs(val2 - expectedW) < 0.5) {
-                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Force Fₓ:' : 'Gaya Fₓ:'} <b>${expectedFx.toFixed(2)} N</b><br>• ${isEn ? 'Work W:' : 'Usaha W:'} <b>${expectedW.toFixed(2)} J</b>`);
+                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Parallel Force Fₓ:' : 'Gaya Sejajar Fₓ:'} <b>${expectedFx.toFixed(2)} N</b><br>• ${isEn ? 'Total Work W:' : 'Usaha W:'} <b>${expectedW.toFixed(2)} Joule</b>`);
                 } else {
-                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be Fₓ:' : 'Seharusnya Fₓ:'} <b>${expectedFx.toFixed(2)} N</b><br>• ${isEn ? 'Should be W:' : 'Seharusnya W:'} <b>${expectedW.toFixed(2)} J</b>`);
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be Fₓ:' : 'Seharusnya Fₓ:'} <b>${expectedFx.toFixed(2)} N</b><br>• ${isEn ? 'Should be W:' : 'Seharusnya W:'} <b>${expectedW.toFixed(2)} Joule</b>`);
                 }
 
             } else if (currentSubCalcCase === 1) {
                 const { m, v1, v2 } = currentRawData;
-                const expectedEk1 = 0.5 * m * Math.pow(v1, 2);
                 const expectedEk2 = 0.5 * m * Math.pow(v2, 2);
-                const expectedW = expectedEk2 - expectedEk1;
+                const ek1 = 0.5 * m * Math.pow(v1, 2);
+                const expectedW = expectedEk2 - ek1;
 
-                if (Math.abs(val1 - expectedEk1) < 0.3 && Math.abs(val2 - expectedW) < 0.5) {
-                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Initial Ek₁:' : 'Ek Awal:'} <b>${expectedEk1.toFixed(2)} J</b><br>• ${isEn ? 'Work W:' : 'Usaha W:'} <b>${expectedW.toFixed(2)} J</b>`);
+                if (Math.abs(val1 - expectedEk2) < 0.5 && Math.abs(val2 - expectedW) < 0.5) {
+                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Final Ek₂:' : 'Energi Kinetik Akhir Ek₂:'} <b>${expectedEk2.toFixed(1)} J</b><br>• ${isEn ? 'Work ΔEk:' : 'Usaha Total W:'} <b>${expectedW.toFixed(1)} Joule</b>`);
                 } else {
-                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be Ek₁:' : 'Seharusnya Ek₁:'} <b>${expectedEk1.toFixed(2)} J</b><br>• ${isEn ? 'Should be W:' : 'Seharusnya W:'} <b>${expectedW.toFixed(2)} J</b>`);
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be Ek₂:' : 'Seharusnya Ek₂:'} <b>${expectedEk2.toFixed(1)} J</b><br>• ${isEn ? 'Should be W:' : 'Seharusnya W:'} <b>${expectedW.toFixed(1)} Joule</b>`);
                 }
 
             } else if (currentSubCalcCase === 2) {
                 const { m, h } = currentRawData;
                 const expectedEp = m * G * h;
-                const expectedV = Math.sqrt(2 * G * h);
+                const expectedWg = expectedEp; // Usaha gravitasi mengangkat = mgh
 
-                if (Math.abs(val1 - expectedEp) < 0.5 && Math.abs(val2 - expectedV) < 0.3) {
-                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Potential Energy Ep:' : 'Energi Potensial Ep:'} <b>${expectedEp.toFixed(2)} J</b><br>• ${isEn ? 'Impact Velocity v:' : 'Kecepatan v:'} <b>${expectedV.toFixed(2)} m/s</b>`);
+                if (Math.abs(val1 - expectedEp) < 0.5 && Math.abs(val2 - expectedWg) < 0.5) {
+                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Potential Energy Ep:' : 'Energi Potensial Ep:'} <b>${expectedEp.toFixed(1)} J</b><br>• ${isEn ? 'Gravity Work W_g:' : 'Usaha Gravitasi W_g:'} <b>${expectedWg.toFixed(1)} Joule</b>`);
                 } else {
-                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be Ep:' : 'Seharusnya Ep:'} <b>${expectedEp.toFixed(2)} J</b><br>• ${isEn ? 'Should be v:' : 'Seharusnya v:'} <b>${expectedV.toFixed(2)} m/s</b>`);
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be Ep:' : 'Seharusnya Ep:'} <b>${expectedEp.toFixed(1)} J</b><br>• ${isEn ? 'Should be W_g:' : 'Seharusnya W_g:'} <b>${expectedWg.toFixed(1)} Joule</b>`);
                 }
 
             } else if (currentSubCalcCase === 3) {
-                const { m, h1, h2 } = currentRawData;
-                const expectedV2 = Math.sqrt(2 * G * (h1 - h2));
-                const expectedEk2 = 0.5 * m * Math.pow(expectedV2, 2);
+                const { m, h } = currentRawData;
+                const expectedV = Math.sqrt(2 * G * h);
+                const expectedEkMax = m * G * h;
 
-                if (Math.abs(val1 - expectedV2) < 0.3 && Math.abs(val2 - expectedEk2) < 0.5) {
-                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Velocity v₂:' : 'Kecepatan v₂:'} <b>${expectedV2.toFixed(2)} m/s</b><br>• ${isEn ? 'Kinetic Energy Ek₂:' : 'Energi Kinetik Ek₂:'} <b>${expectedEk2.toFixed(2)} J</b>`);
+                if (Math.abs(val1 - expectedV) < 0.3 && Math.abs(val2 - expectedEkMax) < 0.5) {
+                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Velocity v:' : 'Kecepatan v:'} <b>${expectedV.toFixed(2)} m/s</b><br>• ${isEn ? 'Max Ek:' : 'Ek Maksimum:'} <b>${expectedEkMax.toFixed(1)} Joule</b>`);
                 } else {
-                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be v₂:' : 'Seharusnya v₂:'} <b>${expectedV2.toFixed(2)} m/s</b><br>• ${isEn ? 'Should be Ek₂:' : 'Seharusnya Ek₂:'} <b>${expectedEk2.toFixed(2)} J</b>`);
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be v:' : 'Seharusnya v:'} <b>${expectedV.toFixed(2)} m/s</b><br>• ${isEn ? 'Should be Ek:' : 'Seharusnya Ek:'} <b>${expectedEkMax.toFixed(1)} Joule</b>`);
                 }
 
             } else if (currentSubCalcCase === 4) {
-                const { w, h, t: timeVal, Pin } = currentRawData;
-                const expectedPout = (w * h) / timeVal;
-                const expectedEta = (expectedPout / Pin) * 100;
+                const { Ein, Wout, t: time } = currentRawData;
+                const expectedP = Wout / time;
+                const expectedEta = (Wout / Ein) * 100;
 
-                if (Math.abs(val1 - expectedPout) < 0.3 && Math.abs(val2 - expectedEta) < 0.5) {
-                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Output Power P_out:' : 'Daya Output P_out:'} <b>${expectedPout.toFixed(2)} W</b><br>• ${isEn ? 'Efficiency η:' : 'Efisiensi η:'} <b>${expectedEta.toFixed(1)}%</b>`);
+                if (Math.abs(val1 - expectedP) < 0.3 && Math.abs(val2 - expectedEta) < 0.5) {
+                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Power Output P:' : 'Daya P:'} <b>${expectedP.toFixed(2)} Watt</b><br>• ${isEn ? 'Efficiency η:' : 'Efisiensi η:'} <b>${expectedEta.toFixed(1)}%</b>`);
                 } else {
-                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be P_out:' : 'Seharusnya P_out:'} <b>${expectedPout.toFixed(2)} W</b><br>• ${isEn ? 'Should be η:' : 'Seharusnya η:'} <b>${expectedEta.toFixed(1)}%</b>`);
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be P:' : 'Seharusnya P:'} <b>${expectedP.toFixed(2)} Watt</b><br>• ${isEn ? 'Should be η:' : 'Seharusnya η:'} <b>${expectedEta.toFixed(1)}%</b>`);
                 }
             }
 
@@ -1276,19 +1481,32 @@
                 showFeedback('warning', `${t.evalFailConcept}<br>• ${t.conceptUI.q1Label} <b>${c.options1[c.ans1]}</b><br>• ${t.conceptUI.q2Label} <b>${c.options2[c.ans2]}</b><br><br>${c.diffExplanation}`);
             }
 
-        } else if (currentMainMod === 2) { // Mode 3: Pegas (Hukum Hooke)
-            const val1 = parseFloat(document.getElementById('mod-val-1').value);
-            const val2 = parseFloat(document.getElementById('mod-val-2').value);
-            if (isNaN(val1) || isNaN(val2)) { showFeedback('error', t.errFillFields); return; }
+        } else if (currentMainMod === 2) { // Mode 3: FBD Evaluation
+            if (userFbdVectors.length === 0) {
+                showFeedback('error', t.errFbdNoVector);
+                return;
+            }
 
-            const { k, dx } = currentRawData;
-            const expectedF = k * dx;
-            const expectedEp = 0.5 * k * Math.pow(dx, 2);
+            const cases = fbdCasesData[currentLang];
+            const c = cases[currentFbdIndex];
+            let score = 0;
+            let totalReq = c.requiredVectors.length;
 
-            if (Math.abs(val1 - expectedF) < 0.3 && Math.abs(val2 - expectedEp) < 0.3) {
-                showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Spring Force F:' : 'Gaya Pegas F:'} <b>${expectedF.toFixed(2)} N</b><br>• ${isEn ? 'Potential Energy Ep:' : 'Energi Potensial Ep:'} <b>${expectedEp.toFixed(2)} J</b>`);
+            c.requiredVectors.forEach(req => {
+                const match = userFbdVectors.some(uv => {
+                    const angleDiff = Math.abs(uv.angle - req.angle);
+                    return angleDiff < 35 || Math.abs(angleDiff - 360) < 35;
+                });
+                if (match) score++;
+            });
+
+            if (score === totalReq) {
+                showFeedback('success', t.evalSuccessFbd);
             } else {
-                showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be F:' : 'Seharusnya F:'} <b>${expectedF.toFixed(2)} N</b><br>• ${isEn ? 'Should be Ep:' : 'Seharusnya Ep:'} <b>${expectedEp.toFixed(2)} J</b>`);
+                const promptText = isEn 
+                    ? `⚠️ <b>Incomplete or Incorrect Free-Body Diagram.</b><br>Score Detected: <b>${score} of ${totalReq} required forces</b>.<br>Ensure you draw the following forces in correct directions:<br>`
+                    : `⚠️ <b>Diagram Gaya Belum Lengkap/Tepat.</b><br>Skor Terdeteksi: <b>${score} dari ${totalReq} gaya utama</b>.<br>Pastikan Anda menggambar gaya berikut dengan arah yang benar:<br>`;
+                showFeedback('warning', promptText + c.requiredVectors.map(r => `• ${r.name}`).join('<br>'));
             }
         }
     }

@@ -532,7 +532,7 @@
                         <pre><code>sudo raspi-config</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                     <li><span id="step1-i2"></span>
-                        <pre><code>sudo apt update && sudo apt install -y i2c-tools python3-pip && pip3 install RPLCD RPi.GPIO</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                        <pre><code>sudo apt update && sudo apt install -y i2c-tools python3-smbus python3-rpi.gpio</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                     <li><span id="step1-i3"></span>
                         <pre><code>ls /dev/i2c*</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
@@ -558,16 +558,62 @@
                 <pre><code>nano lcd_i2c.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step2-s3"></span></p>
-                <pre><code>from RPLCD.i2c import CharLCD
+                <pre><code>import smbus
 import time
 
-# Inisialisasi LCD I2C (Alamat: 0x27, Chip Backlight: PCF8574)
-lcd = CharLCD('PCF8574', 0x27)
+I2C_ADDR = 0x27 # Alamat umum PCF8574 (bisa 0x3F)
+LCD_WIDTH = 16  # Karakter per baris
 
-lcd.clear()
-lcd.write_string('Sistem Tertanam\nPraktikum LCD')
-time.sleep(3)
-lcd.clear()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+# Command LCD Mode
+LCD_CHR = 1 # Data Mode
+LCD_CMD = 0 # Command Mode
+
+LINE_1 = 0x80 # Alamat baris pertama LCD
+LINE_2 = 0xC0 # Alamat baris kedua LCD
+
+LCD_BACKLIGHT = 0x08  # On
+ENABLE = 0b00000100   # Enable bit
+
+bus = smbus.SMBus(1)
+
+def lcd_byte(bits, mode):
+    bits_high = mode | (bits & 0xF0) | LCD_BACKLIGHT
+    bits_low = mode | ((bits << 4) & 0xF0) | LCD_BACKLIGHT
+    bus.write_byte(I2C_ADDR, bits_high)
+    lcd_toggle_enable(bits_high)
+    bus.write_byte(I2C_ADDR, bits_low)
+    lcd_toggle_enable(bits_low)
+
+def lcd_toggle_enable(bits):
+    time.sleep(0.0005)
+    bus.write_byte(I2C_ADDR, (bits | ENABLE))
+    time.sleep(0.0005)
+    bus.write_byte(I2C_ADDR, (bits & ~ENABLE))
+    time.sleep(0.0005)
+
+def lcd_init():
+    lcd_byte(0x33, LCD_CMD)
+    lcd_byte(0x32, LCD_CMD)
+    lcd_byte(0x06, LCD_CMD)
+    lcd_byte(0x0C, LCD_CMD)
+    lcd_byte(0x28, LCD_CMD)
+    lcd_byte(0x01, LCD_CMD)
+    time.sleep(0.0005)
+
+def lcd_string(message, line):
+    message = message.ljust(LCD_WIDTH, " ")
+    lcd_byte(line, LCD_CMD)
+    for i in range(LCD_WIDTH):
+        lcd_byte(ord(message[i]), LCD_CHR)
+
+try:
+    lcd_init()
+    lcd_string("LCD I2C Ready!", LINE_1)
+    lcd_string("Raspberry Pi", LINE_2)
+    print("LCD I2C Berhasil Diinisialisasi.")
+except Exception as e:
+    print("Gagal berkomunikasi dengan LCD I2C. Periksa koneksi dan alamat I2C.")
+    print("Error:", e)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step2-s4"></span></p>
                 <pre><code>python3 lcd_i2c.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
@@ -595,6 +641,7 @@ lcd.clear()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
 import time
 
 GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
 
 TRIG = 23
 ECHO = 24
@@ -603,7 +650,7 @@ GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
 
 def get_distance():
-    # Mengirimkan pulsa trigger 10us
+    # Kirim sinyal trigger 10us
     GPIO.output(TRIG, True)
     time.sleep(0.00001)
     GPIO.output(TRIG, False)
@@ -611,15 +658,18 @@ def get_distance():
     start_time = time.time()
     stop_time = time.time()
 
+    # Simpan waktu saat Echo HIGH
     while GPIO.input(ECHO) == 0:
         start_time = time.time()
 
+    # Simpan waktu saat Echo LOW kembali
     while GPIO.input(ECHO) == 1:
         stop_time = time.time()
 
-    time_elapsed = stop_time - start_time
-    # Kecepatan suara 34300 cm/s, dibagi 2 (pergi-pulang)
-    distance = (time_elapsed * 34300) / 2
+    # Hitung selisih waktu
+    elapsed_time = stop_time - start_time
+    # Kecepatan suara = 34300 cm/s, dibagi 2 (bolak-balik)
+    distance = (elapsed_time * 34300) / 2
     return distance
 
 try:
@@ -630,7 +680,7 @@ try:
         time.sleep(0.5)
 except KeyboardInterrupt:
     GPIO.cleanup()
-    print("\nPembacaan sensor dihentikan.")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    print("\nPembacaan ultrasonik dihentikan.")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step3-s3"></span></p>
                 <pre><code>python3 ultrasonic.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
@@ -655,8 +705,8 @@ except KeyboardInterrupt:
                         <h4 id="sim-panel-title" style="margin-top:0; color:var(--primary); font-weight: 700;"></h4>
                         <p id="sim-model-text" style="font-size:0.9rem; margin-top:5px; color: var(--text-muted);"></p>
 
-                        <label for="distance-slider" id="sim-slider-label" style="display:block; margin-top:10px; font-weight:bold; font-size:0.85rem;"></label>
-                        <input type="range" id="distance-slider" class="sim-slider" min="2" max="400" value="50" oninput="updateSimulator()">
+                        <label for="pot-slider" id="sim-slider-label" style="display:block; margin-top:10px; font-weight:bold; font-size:0.85rem;"></label>
+                        <input type="range" id="pot-slider" class="sim-slider" min="2" max="400" value="25" oninput="updateSimulator()">
 
                         <label id="sim-pins-label" style="display:block; margin-top:10px; margin-bottom:5px; font-weight:bold; font-size:0.9rem;"></label>
                         <ul id="sim-pins-list" style="font-size:0.85rem; padding-left:15px; margin-bottom:15px;"></ul>
@@ -664,10 +714,10 @@ except KeyboardInterrupt:
 
                     <div class="sim-display">
                         <div class="lcd-screen">
-                            <div class="lcd-line" id="lcd-line-1">HC-SR04 RADAR</div>
-                            <div class="lcd-line" id="lcd-line-2">Jarak: 50.0 cm</div>
+                            <div class="lcd-line" id="lcd-line-1">JARAK ULTRASONIK</div>
+                            <div class="lcd-line" id="lcd-line-2">25.0 cm [AMAN]</div>
                         </div>
-                        <div id="sim-detail" style="font-size:0.8rem; color:var(--sensor-text); text-align:center;">TRIG: GPIO 23 | ECHO: GPIO 24 | I2C: 0x27</div>
+                        <div id="sim-detail" style="font-size:0.8rem; color:var(--sensor-text); text-align:center;">I2C Address: 0x27 | TRIG: GPIO23 | ECHO: GPIO24</div>
                     </div>
                 </div>
 
@@ -701,167 +751,167 @@ except KeyboardInterrupt:
             courseTag: "Course: Embedded Systems — Meeting 11",
             deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Panduan Interaktif Pertemuan 11 - Sistem Tertanam (TEL624307)",
-            headerTitle: "Panduan Praktikum Interaktif: Sensor Ultrasonik HC-SR04 & Display LCD 16x2 I2C",
+            headerTitle: "Panduan Praktikum Interaktif: Antarmuka Sensor Ultrasonik HC-SR04 & Display LCD I2C",
             homeText: "Kembali ke Raspberry Pi",
             progressTitleText: "Kemajuan Praktikum Anda",
             progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
             targetTitle: "Target Pembelajaran",
-            targetDesc: "Mahasiswa mampu mengonfigurasi modul sensor jarak ultrasonik (HC-SR04) dan display LCD 16x2 I2C pada Raspberry Pi, mengimplementasikan pembagi tegangan (voltage divider) untuk pin Echo, serta menampilkan data jarak secara aktual pada layar LCD menggunakan skrip Python.",
-            paramsTitle: "Standar Pinout & Limit Hardware Sensor & Display",
-            paramsDesc: "Perhatikan fungsi pinout dan pembagian tegangan pada Raspberry Pi sebelum menghubungkan sensor ultrasonik dan modul LCD I2C:",
+            targetDesc: "Mahasiswa mampu mengonfigurasi antarmuka bus I2C untuk layar LCD 16x2, mengukur jarak objek menggunakan Sensor Ultrasonik HC-SR04 melalui GPIO, serta menampilkan data pengukuran secara real-time pada display LCD.",
+            paramsTitle: "Standar Pinout & Integrasi Komponen (Hardware Limit)",
+            paramsDesc: "Perhatikan fungsi pinout dan pembagi tegangan saat menghubungkan komponen ke Raspberry Pi:",
             paramsList: `
-                <li><strong>Modul LCD I2C:</strong> VCC = 5V, GND = GND, SDA = GPIO 2 (Pin Fisik 3), SCL = GPIO 3 (Pin Fisik 5).</li>
-                <li><strong>Sensor Ultrasonik (HC-SR04):</strong> VCC = 5V, TRIG = GPIO 23 (Pin 16), ECHO = GPIO 24 (Pin 18 via Voltage Divider).</li>
-                <li><strong>Peringatan Tegangan Logika (WAJIB):</strong> Pin ECHO menghasilkan sinyal 5V. Gunakan R1 = 1kΩ dan R2 = 2kΩ sebagai <i>Voltage Divider</i> untuk menurunkan sinyal ECHO ke 3.3V demi keamanan GPIO Raspberry Pi!</li>
+                <li><strong>Layar LCD I2C (PCF8574):</strong> VCC = 5V, GND = GND, SDA = GPIO 2 (Pin 3), SCL = GPIO 3 (Pin 5).</li>
+                <li><strong>Ultrasonik HC-SR04:</strong> VCC = 5V, GND = GND, TRIG = GPIO 23 (Pin 16), ECHO = GPIO 24 (Pin 18).</li>
+                <li><strong>PERINGATAN PEMBAGI TEGANGAN (Voltage Divider):</strong> Sinyal ECHO HC-SR04 beroperasi pada logika 5V. Gunakan pembagi tegangan R1 (1kΩ) dan R2 (2kΩ) pada pin ECHO untuk menurunkan sinyal ke 3.3V demi keamanan GPIO Raspberry Pi!</li>
             `,
             hwTitle: "Persyaratan Perangkat Keras (Hardware)",
             hwList: `
                 <li><strong>Raspberry Pi</strong> (OS Linux terkonfigurasi SSH)</li>
-                <li><strong>Sensor Jarak Ultrasonik:</strong> HC-SR04</li>
-                <li><strong>Display:</strong> Modul LCD 16x2 + Backpack I2C PCF8574</li>
-                <li><strong>Resistor:</strong> 1x 1kΩ & 1x 2kΩ (Untuk Voltage Divider Pin Echo)</li>
+                <li><strong>Modul Sensor Ultrasonik:</strong> HC-SR04</li>
+                <li><strong>Modul Display:</strong> LCD 16x2 dengan Modul I2C Backpack (PCF8574)</li>
+                <li><strong>Resistor:</strong> 1x 1kΩ dan 1x 2kΩ (Pembagi Tegangan Pin Echo)</li>
                 <li><strong>Breadboard</strong> & Kabel Jumper Male-to-Female / Male-to-Male</li>
             `,
             swTitle: "Persyaratan Perangkat Lunak (Software)",
             swList: `
                 <li><strong>Raspberry Pi OS Terminal / SSH Client</strong></li>
                 <li><strong>Perkakas Alamat I2C:</strong> <code>i2c-tools</code></li>
-                <li><strong>Pustaka Python:</strong> <code>RPLCD</code> (LCD I2C) & <code>RPi.GPIO</code> (Sinyal Trigger & Echo)</li>
+                <li><strong>Pustaka Python GPIO & Bus:</strong> <code>python3-rpi.gpio</code> & <code>python3-smbus</code></li>
             `,
-            step1Header: `Tahap 1: Aktivasi Interface I2C & Pustaka Python <span class="badge">Konfigurasi Bus</span>`,
-            step1I1: "Buka menu konfigurasi sistem Raspberry Pi via SSH untuk mengaktifkan antarmuka I2C (Menu Interface Options):",
-            step1I2: "Install perkakas analisis bus I2C serta pustaka RPLCD & RPi.GPIO di Python:",
-            step1I3: "Verifikasi keberadaan berkas driver perangkat I2C di sistem Linux:",
-            cp1Text: "<b>Checkpoint 1:</b> Driver <code>/dev/i2c-1</code> terkonfirmasi aktif dan pustaka RPLCD terinstall.",
+            step1Header: `Tahap 1: Aktivasi Interface I2C & Persiapan Library Python <span class="badge">Konfigurasi Sistem</span>`,
+            step1I1: "Buka menu konfigurasi sistem Raspberry Pi via SSH untuk mengaktifkan antarmuka I2C (Menu Interface Options -> I2C -> Enable):",
+            step1I2: "Install perkakas analisis bus I2C dan paket pustaka Python GPIO/I2C:",
+            step1I3: "Verifikasi keberadaan driver I2C di hirarki berkas Linux:",
+            cp1Text: "<b>Checkpoint 1:</b> Driver <code>/dev/i2c-1</code> terkonfirmasi aktif di sistem.",
 
-            step2Header: `Tahap 2: Deteksi Alamat I2C & Pemrograman LCD 16x2 <span class="badge">LCD I2C</span>`,
-            step2S1: "1. Pindai alamat I2C modul backpack LCD 16x2 yang terhubung:",
-            step2S2: "2. Buat skrip Python untuk menguji tampilan teks pada LCD 16x2:",
-            step2S3: "3. Salin kode program pengujian LCD I2C berikut:",
-            step2S4: "4. Jalankan program untuk menampilkan teks pada layar LCD:",
-            cp2Text: "<b>Checkpoint 2:</b> Alamat LCD I2C (misal: <code>0x27</code>) terdeteksi dan berhasil menampilkan pesan di layar LCD.",
+            step2Header: `Tahap 2: Pemrograman Display LCD 16x2 via I2C Bus <span class="badge">LCD I2C</span>`,
+            step2S1: "1. Pindai alamat I2C modul LCD PCF8574 yang terhubung pada bus 1:",
+            step2S2: "2. Buat skrip Python untuk mengontrol tampilan LCD 16x2:",
+            step2S3: "3. Salin kode program pengujian karakter pada LCD I2C berikut:",
+            step2S4: "4. Jalankan program untuk memverifikasi teks pada LCD:",
+            cp2Text: "<b>Checkpoint 2:</b> Alamat LCD (misal: <code>0x27</code>) terdeteksi dan pesan 'LCD I2C Ready!' berhasil ditampilkan di layar.",
 
-            step3Header: `Tahap 3: Pembacaan Sensor Ultrasonik HC-SR04 <span class="badge">HC-SR04</span>`,
-            step3Intro: "Pada tahap ini, Raspberry Pi mengirimkan pulsa Trigger dan menghitung durasi pantulan sinyal Echo dari sensor ultrasonik.",
+            step3Header: `Tahap 3: Pemrograman Pembacaan Sensor Ultrasonik HC-SR04 <span class="badge">HC-SR04 GPIO</span>`,
+            step3Intro: "Pada tahap ini, Raspberry Pi memicu pulsa ultrasonik (TRIG Pin) dan mengukur durasi pulsa pantulan (ECHO Pin) untuk mengkalkulasi jarak.",
             step3S1: "1. Buat berkas Python baru bernama ultrasonic.py:",
-            step3S2: "2. Salin kode program pengukuran jarak HC-SR04 di bawah ini:",
-            step3S3: "3. Jalankan skrip Python pengujian ultrasonik:",
-            cp3Text: "<b>Checkpoint 3:</b> Nilai jarak terukur (dalam cm) berhasil dibaca kontinu melalui terminal.",
+            step3S2: "2. Salin kode program perhitungan jarak waktu tempuh pulsa di bawah ini:",
+            step3S3: "3. Jalankan skrip Python pengujian sensor ultrasonik:",
+            cp3Text: "<b>Checkpoint 3:</b> Nilai pengukuran jarak dalam centimeter (cm) berhasil dibaca secara terus-menerus via terminal.",
 
-            step4Header: `Tahap 4: Simulasi Integrasi Sensor Jarak & LCD <span class="badge">Modul Interaktif</span>`,
-            step4Intro: "Simulasikan perubah nilai pengukuran jarak sensor ultrasonik yang langsung ditampilkan pada LCD I2C secara virtual:",
-            simPanelTitle: "Simulasi Jarak Sensor Ultrasonik",
-            simModelText: "Model Sistem: <strong>HC-SR04 -> Raspberry Pi (GPIO) -> Display LCD 16x2 (I2C)</strong>",
-            simSliderLabel: "Geser Nilai Jarak Objek (2 cm - 400 cm):",
+            step4Header: `Tahap 4: Simulasi Integrasi HC-SR04 & LCD I2C <span class="badge">Modul Interaktif</span>`,
+            step4Intro: "Simulasikan variasi pengukuran jarak objek dari sensor ultrasonik dan amati indikator status pada LCD I2C:",
+            simPanelTitle: "Simulasi Pengukuran Jarak Objek",
+            simModelText: "Model Sistem: <strong>HC-SR04 -> GPIO Pi -> Bus I2C -> Display LCD 16x2</strong>",
+            simSliderLabel: "Geser Simulasi Jarak Objek (2 cm - 400 cm):",
             simPinsLabel: "Konfigurasi Pin Interaksi:",
             simPinsList: `
-                <li><strong>I2C LCD:</strong> GPIO 2 (SDA), GPIO 3 (SCL) -> Alamat 0x27</li>
-                <li><strong>Ultrasonik:</strong> TRIG = GPIO 23, ECHO = GPIO 24 (via Voltage Divider)</li>
+                <li><strong>LCD I2C:</strong> SDA = GPIO 2, SCL = GPIO 3 (Alamat 0x27)</li>
+                <li><strong>HC-SR04:</strong> TRIG = GPIO 23, ECHO = GPIO 24 (via Pembagi Tegangan)</li>
             `,
-            cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami skema kerja pembagi tegangan pin Echo dan pengiriman data jarak ke LCD I2C.",
+            cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami kalkulasi waktu tempuh pulsa ultrasonik dan integrasi output data ke modul LCD.",
 
-            step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Sistem Peringatan Jarak) <span class="badge">Penugasan</span>`,
-            step5Intro: "Selesaikan tugas praktikum integrasi Ultrasonik & LCD I2C berikut untuk melengkapi evaluasi Pertemuan 11:",
+            step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Sistem Radar & Alert Jarak) <span class="badge">Penugasan</span>`,
+            step5Intro: "Selesaikan tugas praktikum sistem monitoring jarak terintegrasi berikut untuk melengkapi evaluasi Pertemuan 11:",
             step5List: `
-                <li>Integrasikan <strong>HC-SR04</strong> dan <strong>LCD 16x2 I2C</strong> dengan menambahkan logika Peringatan Jarak.</li>
-                <li>Buat skrip Python bernama <code>tugas_ultrasonic_lcd.py</code> dengan ketentuan fungsional:
+                <li>Gabungkan modul **HC-SR04** dan **LCD 16x2 I2C** dalam satu skrip Python utuh bernama <code>tugas_ultrasonic_lcd.py</code>.</li>
+                <li>Ketentuan Fungsional Program:
                     <ul>
-                        <li><strong>Baris 1 LCD:</strong> Menampilkan teks nilai jarak aktual (misal: "Jarak: 15.4 cm").</li>
-                        <li><strong>Baris 2 LCD:</strong> Menampilkan status kondisi:
+                        <li><strong>Baris 1 LCD:</strong> Menampilkan pembacaan jarak real-time (contoh: <code>Jarak: 15.4 cm</code>).</li>
+                        <li><strong>Baris 2 LCD:</strong> Menampilkan status peringatan jarak:
                             <ul>
-                                <li>Jika Jarak < 10 cm: Tampilkan <code>"STATUS: BAHAYA!"</code></li>
-                                <li>Jika Jarak 10 - 30 cm: Tampilkan <code>"STATUS: WASPADA"</code></li>
-                                <li>Jika Jarak > 30 cm: Tampilkan <code>"STATUS: AMAN   "</code></li>
+                                <li>Jarak &lt; 10 cm: Tampilkan status <code>[BAHAYA!]</code></li>
+                                <li>Jarak 10 cm - 30 cm: Tampilkan status <code>[WASPADA]</code></li>
+                                <li>Jarak &gt; 30 cm: Tampilkan status <code>[AMAN]</code></li>
                             </ul>
                         </li>
-                        <li><strong>Update Rate:</strong> Perbarui data pada layar LCD setiap 0.3 detik.</li>
+                        <li><strong>Refresh Rate:</strong> Perbarui data LCD setiap 0.3 detik.</li>
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Skrip integrasi <code>tugas_ultrasonic_lcd.py</code> berhasil diuji dan menampilkan status peringatan jarak secara realtime."
+            cp5Text: "<b>Checkpoint 5:</b> Skrip <code>tugas_ultrasonic_lcd.py</code> berhasil diuji dan indikator bahaya/aman pada LCD merespon jarak objek dengan akurat."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 11",
             deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Interactive Guide Meeting 11 - Embedded Systems (TEL624307)",
-            headerTitle: "Interactive Lab Guide: HC-SR04 Ultrasonic Sensor & 16x2 I2C LCD Display",
+            headerTitle: "Interactive Lab Guide: HC-SR04 Ultrasonic Sensor & I2C LCD Display Interface",
             homeText: "Back to Raspberry Pi",
             progressTitleText: "Your Lab Progress",
             progressText: "{percent}% Completed ({count}/5 Checkpoints)",
             targetTitle: "Learning Objective",
-            targetDesc: "Students are able to configure HC-SR04 ultrasonic distance sensor module and 16x2 I2C LCD display on Raspberry Pi, implement a voltage divider for the Echo pin, and display real-time distance data on the LCD screen using Python scripts.",
-            paramsTitle: "Pinout Standards & Hardware Safety Limits",
-            paramsDesc: "Check the pinout function and voltage constraints before connecting the ultrasonic sensor and I2C LCD module:",
+            targetDesc: "Students are able to configure I2C bus interface for 16x2 LCD display, measure object distance using HC-SR04 Ultrasonic Sensor via GPIO, and display real-time measurement data on the LCD display.",
+            paramsTitle: "Pinout Standards & Component Integration (Hardware Limit)",
+            paramsDesc: "Check pinout functions and voltage division when connecting components to Raspberry Pi:",
             paramsList: `
-                <li><strong>I2C LCD Module:</strong> VCC = 5V, GND = GND, SDA = GPIO 2 (Physical Pin 3), SCL = GPIO 3 (Physical Pin 5).</li>
-                <li><strong>Ultrasonic Sensor (HC-SR04):</strong> VCC = 5V, TRIG = GPIO 23 (Pin 16), ECHO = GPIO 24 (Pin 18 via Voltage Divider).</li>
-                <li><strong>Logic Level Warning (MANDATORY):</strong> Echo pin outputs 5V. You MUST use R1 = 1kΩ and R2 = 2kΩ as a <i>Voltage Divider</i> to step down ECHO signal to 3.3V to protect Raspberry Pi GPIO!</li>
+                <li><strong>I2C LCD Display (PCF8574):</strong> VCC = 5V, GND = GND, SDA = GPIO 2 (Pin 3), SCL = GPIO 3 (Pin 5).</li>
+                <li><strong>HC-SR04 Ultrasonic:</strong> VCC = 5V, GND = GND, TRIG = GPIO 23 (Pin 16), ECHO = GPIO 24 (Pin 18).</li>
+                <li><strong>VOLTAGE DIVIDER WARNING:</strong> HC-SR04 ECHO signal outputs 5V logic. Use a voltage divider R1 (1kΩ) and R2 (2kΩ) on ECHO pin to step down to 3.3V for Raspberry Pi GPIO safety!</li>
             `,
             hwTitle: "Hardware Requirements",
             hwList: `
                 <li><strong>Raspberry Pi</strong> (Linux OS SSH-configured)</li>
-                <li><strong>Ultrasonic Distance Sensor:</strong> HC-SR04</li>
-                <li><strong>Display:</strong> 16x2 LCD Module + PCF8574 I2C Backpack</li>
-                <li><strong>Resistors:</strong> 1x 1kΩ & 1x 2kΩ (For Echo Pin Voltage Divider)</li>
+                <li><strong>Ultrasonic Sensor Module:</strong> HC-SR04</li>
+                <li><strong>Display Module:</strong> 16x2 LCD with I2C Backpack Module (PCF8574)</li>
+                <li><strong>Resistors:</strong> 1x 1kΩ and 1x 2kΩ (Echo Pin Voltage Divider)</li>
                 <li><strong>Breadboard</strong> & Male-to-Female / Male-to-Male Jumper Wires</li>
             `,
             swTitle: "Software Requirements",
             swList: `
                 <li><strong>Raspberry Pi OS Terminal / SSH Client</strong></li>
                 <li><strong>I2C Address Utilities:</strong> <code>i2c-tools</code></li>
-                <li><strong>Python Libraries:</strong> <code>RPLCD</code> (I2C LCD) & <code>RPi.GPIO</code> (Trigger & Echo Signals)</li>
+                <li><strong>Python GPIO & Bus Libraries:</strong> <code>python3-rpi.gpio</code> & <code>python3-smbus</code></li>
             `,
-            step1Header: `Step 1: Enabling I2C Interface & Python Libraries <span class="badge">Bus Config</span>`,
-            step1I1: "Open system configuration menu via SSH to enable the I2C interface (Interface Options menu):",
-            step1I2: "Install I2C bus tools and Python RPLCD & RPi.GPIO library packages:",
-            step1I3: "Verify serial device drivers in the Linux system file hierarchy:",
-            cp1Text: "<b>Checkpoint 1:</b> Driver <code>/dev/i2c-1</code> confirmed active and RPLCD library installed.",
+            step1Header: `Step 1: Enabling I2C Interface & Python Library Setup <span class="badge">System Config</span>`,
+            step1I1: "Open system configuration menu via SSH to enable I2C interface (Interface Options -> I2C -> Enable):",
+            step1I2: "Install I2C bus analysis tools and Python GPIO/I2C library packages:",
+            step1I3: "Verify I2C driver in Linux file system hierarchy:",
+            cp1Text: "<b>Checkpoint 1:</b> Driver <code>/dev/i2c-1</code> confirmed active in system.",
 
-            step2Header: `Step 2: Address Detection & 16x2 LCD Programming <span class="badge">I2C LCD</span>`,
-            step2S1: "1. Scan I2C address of connected LCD backpack module:",
-            step2S2: "2. Create a Python script to test display output on 16x2 LCD:",
-            step2S3: "3. Copy the following I2C LCD test script:",
-            step2S4: "4. Run the program to display text on the LCD screen:",
-            cp2Text: "<b>Checkpoint 2:</b> LCD I2C address (e.g., <code>0x27</code>) detected and test message displayed on LCD.",
+            step2Header: `Step 2: Programming 16x2 LCD Display via I2C Bus <span class="badge">I2C LCD</span>`,
+            step2S1: "1. Scan I2C address of connected PCF8574 LCD module on bus 1:",
+            step2S2: "2. Create a Python script to control the 16x2 LCD display:",
+            step2S3: "3. Copy the following LCD character test script:",
+            step2S4: "4. Run program to verify LCD text output:",
+            cp2Text: "<b>Checkpoint 2:</b> LCD module address (e.g., <code>0x27</code>) detected and 'LCD I2C Ready!' displayed successfully.",
 
-            step3Header: `Step 3: Reading HC-SR04 Ultrasonic Distance Sensor <span class="badge">HC-SR04</span>`,
-            step3Intro: "In this step, Raspberry Pi sends a Trigger pulse and calculates the Echo pulse duration from the ultrasonic sensor.",
+            step3Header: `Step 3: HC-SR04 Ultrasonic Sensor Measurement Programming <span class="badge">HC-SR04 GPIO</span>`,
+            step3Intro: "In this step, Raspberry Pi triggers ultrasonic pulse (TRIG Pin) and measures reflection time (ECHO Pin) to calculate distance.",
             step3S1: "1. Create a new Python file named ultrasonic.py:",
-            step3S2: "2. Copy the distance measurement script below:",
-            step3S3: "3. Run the ultrasonic test Python script:",
-            cp3Text: "<b>Checkpoint 3:</b> Measured distance values (in cm) read continuously in the terminal.",
+            step3S2: "2. Copy the pulse time-of-flight distance calculation script below:",
+            step3S3: "3. Run the ultrasonic sensor test Python script:",
+            cp3Text: "<b>Checkpoint 3:</b> Distance measurement in centimeters (cm) read continuously via terminal.",
 
-            step4Header: `Step 4: Interactive Distance Sensor & LCD Simulation <span class="badge">Interactive Module</span>`,
-            step4Intro: "Simulate changing ultrasonic sensor distance readings and view them displayed directly on the I2C LCD virtually:",
-            simPanelTitle: "Ultrasonic Sensor Distance Simulation",
-            simModelText: "System Model: <strong>HC-SR04 -> Raspberry Pi (GPIO) -> 16x2 LCD Display (I2C)</strong>",
-            simSliderLabel: "Adjust Object Distance Value (2 cm - 400 cm):",
+            step4Header: `Step 4: Interactive HC-SR04 & I2C LCD Integration Simulation <span class="badge">Interactive Module</span>`,
+            step4Intro: "Simulate varying object distance measurements from ultrasonic sensor and observe status indicators on I2C LCD:",
+            simPanelTitle: "Object Distance Measurement Simulation",
+            simModelText: "System Model: <strong>HC-SR04 -> Pi GPIO -> I2C Bus -> 16x2 LCD Display</strong>",
+            simSliderLabel: "Adjust Simulated Object Distance (2 cm - 400 cm):",
             simPinsLabel: "Interaction Pin Allocation:",
             simPinsList: `
-                <li><strong>I2C LCD:</strong> GPIO 2 (SDA), GPIO 3 (SCL) -> Address 0x27</li>
-                <li><strong>Ultrasonic:</strong> TRIG = GPIO 23, ECHO = GPIO 24 (via Voltage Divider)</li>
+                <li><strong>I2C LCD:</strong> SDA = GPIO 2, SCL = GPIO 3 (Address 0x27)</li>
+                <li><strong>HC-SR04:</strong> TRIG = GPIO 23, ECHO = GPIO 24 (via Voltage Divider)</li>
             `,
-            cp4Text: "<b>Checkpoint 4:</b> Student understands the voltage divider circuit on Echo pin and sending distance data to I2C LCD.",
+            cp4Text: "<b>Checkpoint 4:</b> Student understands ultrasonic time-of-flight calculation and data output integration to LCD module.",
 
-            step5Header: `Step 5: Independent / Group Assignment (Distance Warning System) <span class="badge">Assignment</span>`,
-            step5Intro: "Complete the following integrated Ultrasonic & I2C LCD lab assignment to fulfill the Meeting 11 evaluation:",
+            step5Header: `Step 5: Independent / Group Assignment (Distance Radar & Alert System) <span class="badge">Assignment</span>`,
+            step5Intro: "Complete the following integrated distance monitoring assignment to fulfill the Meeting 11 evaluation:",
             step5List: `
-                <li>Integrate <strong>HC-SR04</strong> and <strong>16x2 I2C LCD</strong> by adding distance alert status logic.</li>
-                <li>Create a Python script named <code>tugas_ultrasonic_lcd.py</code> meeting these requirements:
+                <li>Combine **HC-SR04** and **16x2 I2C LCD** in a single Python script named <code>tugas_ultrasonic_lcd.py</code>.</li>
+                <li>Functional Program Requirements:
                     <ul>
-                        <li><strong>LCD Line 1:</strong> Display live distance value (e.g., "Jarak: 15.4 cm").</li>
-                        <li><strong>LCD Line 2:</strong> Display alert status condition:
+                        <li><strong>LCD Line 1:</strong> Display real-time distance reading (e.g., <code>Distance: 15.4cm</code>).</li>
+                        <li><strong>LCD Line 2:</strong> Display distance warning alert status:
                             <ul>
-                                <li>If Distance < 10 cm: Display <code>"STATUS: BAHAYA!"</code></li>
-                                <li>If Distance 10 - 30 cm: Display <code>"STATUS: WASPADA"</code></li>
-                                <li>If Distance > 30 cm: Display <code>"STATUS: AMAN   "</code></li>
+                                <li>Distance &lt; 10 cm: Display status <code>[DANGER!]</code></li>
+                                <li>Distance 10 cm - 30 cm: Display status <code>[WARNING]</code></li>
+                                <li>Distance &gt; 30 cm: Display status <code>[SAFE]</code></li>
                             </ul>
                         </li>
-                        <li><strong>Update Rate:</strong> Refresh LCD display every 0.3 seconds.</li>
+                        <li><strong>Refresh Rate:</strong> Update LCD screen every 0.3 seconds.</li>
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Integrated script <code>tugas_ultrasonic_lcd.py</code> tested successfully with live warning status output."
+            cp5Text: "<b>Checkpoint 5:</b> Integrated script <code>tugas_ultrasonic_lcd.py</code> tested successfully with accurate distance status responses."
         }
     };
 
@@ -1005,17 +1055,23 @@ except KeyboardInterrupt:
     }
 
     function updateSimulator() {
-        const distVal = parseFloat(document.getElementById('distance-slider').value).toFixed(1);
+        const dist = parseInt(document.getElementById('pot-slider').value, 10);
+        let statusText = "[AMAN]";
         
-        let statusText = "STATUS: AMAN   ";
-        if (distVal < 10) {
-            statusText = "STATUS: BAHAYA!";
-        } else if (distVal <= 30) {
-            statusText = "STATUS: WASPADA";
+        if (dist < 10) {
+            statusText = "[BAHAYA!]";
+        } else if (dist <= 30) {
+            statusText = "[WASPADA]";
         }
 
-        document.getElementById('lcd-line-1').innerText = `Jarak: ${distVal} cm`;
-        document.getElementById('lcd-line-2').innerText = statusText;
+        if (currentLang === 'en') {
+            if (dist < 10) statusText = "[DANGER!]";
+            else if (dist <= 30) statusText = "[WARNING]";
+            else statusText = "[SAFE]";
+        }
+
+        document.getElementById('lcd-line-1').innerText = currentLang === 'en' ? `Dist: ${dist}.0 cm` : `Jarak: ${dist}.0 cm`;
+        document.getElementById('lcd-line-2').innerText = `Status: ${statusText}`;
     }
 </script>
 

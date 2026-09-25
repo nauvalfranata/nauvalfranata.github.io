@@ -532,10 +532,10 @@
                         <pre><code>sudo raspi-config</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                     <li><span id="step1-i2"></span>
-                        <pre><code>sudo apt update && sudo apt install -y i2c-tools python3-smbus python3-spidev</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                        <pre><code>sudo apt update && sudo apt install -y i2c-tools python3-pip && pip3 install RPLCD RPi.GPIO</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                     <li><span id="step1-i3"></span>
-                        <pre><code>ls /dev/i2c* /dev/spidev*</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                        <pre><code>ls /dev/i2c*</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                 </ol>
                 <div class="checkpoint">
@@ -555,28 +555,22 @@
                 <pre><code>sudo i2cdetect -y 1</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step2-s2"></span></p>
-                <pre><code>nano i2c_sensor.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <pre><code>nano lcd_i2c.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step2-s3"></span></p>
-                <pre><code>import smbus
+                <pre><code>from RPLCD.i2c import CharLCD
 import time
 
-# Alamat I2C umum (misal: LCD I2C = 0x27, BME280 = 0x76, PCF8574 = 0x27)
-I2C_ADDR = 0x27
-bus = smbus.SMBus(1)
+# Inisialisasi LCD I2C (Alamat: 0x27, Chip Backlight: PCF8574)
+lcd = CharLCD('PCF8574', 0x27)
 
-print(f"Mencoba berkomunikasi dengan perangkat I2C di alamat 0x{I2C_ADDR:02X}...")
-
-try:
-    # Membaca 1 byte data dari register 0x00
-    data = bus.read_byte_data(I2C_ADDR, 0x00)
-    print(f"Berhasil membaca data I2C: {hex(data)}")
-except Exception as e:
-    print("Gagal membaca bus I2C. Periksa kembali pengkabelan dan alamat I2C perangkat Anda.")
-    print("Detail Error:", e)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+lcd.clear()
+lcd.write_string('Sistem Tertanam\nPraktikum LCD')
+time.sleep(3)
+lcd.clear()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step2-s4"></span></p>
-                <pre><code>python3 i2c_sensor.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <pre><code>python3 lcd_i2c.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"></span></label>
@@ -594,38 +588,52 @@ except Exception as e:
                 <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
 
                 <p style="font-size: 0.9rem;"><span id="step3-s1"></span></p>
-                <pre><code>nano spi_adc.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <pre><code>nano ultrasonic.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step3-s2"></span></p>
-                <pre><code>import spidev
+                <pre><code>import RPi.GPIO as GPIO
 import time
 
-# Inisialisasi SPI (Bus 0, Device CE0)
-spi = spidev.SpiDev()
-spi.open(0, 0)
-spi.max_speed_hz = 1350000
+GPIO.setmode(GPIO.BCM)
 
-def read_adc(channel):
-    if channel < 0 or channel > 7:
-        return -1
-    # Protokol MCP3008: Start bit + Single-ended bit + Channel select
-    adc = spi.xfer2([1, (8 + channel) << 4, 0])
-    data = ((adc[1] & 3) << 8) + adc[2]
-    return data
+TRIG = 23
+ECHO = 24
+
+GPIO.setup(TRIG, GPIO.OUT)
+GPIO.setup(ECHO, GPIO.IN)
+
+def get_distance():
+    # Mengirimkan pulsa trigger 10us
+    GPIO.output(TRIG, True)
+    time.sleep(0.00001)
+    GPIO.output(TRIG, False)
+
+    start_time = time.time()
+    stop_time = time.time()
+
+    while GPIO.input(ECHO) == 0:
+        start_time = time.time()
+
+    while GPIO.input(ECHO) == 1:
+        stop_time = time.time()
+
+    time_elapsed = stop_time - start_time
+    # Kecepatan suara 34300 cm/s, dibagi 2 (pergi-pulang)
+    distance = (time_elapsed * 34300) / 2
+    return distance
 
 try:
-    print("Membaca data ADC MCP3008 via SPI (Ctrl+C untuk keluar)...")
+    print("Membaca Sensor Ultrasonik HC-SR04 (Ctrl+C untuk keluar)...")
     while True:
-        val = read_adc(0)
-        voltage = (val * 3.3) / 1023.0
-        print(f"Channel 0 Raw: {val} | Tegangan: {voltage:.2f}V")
+        dist = get_distance()
+        print(f"Jarak Terukur: {dist:.1f} cm")
         time.sleep(0.5)
 except KeyboardInterrupt:
-    spi.close()
-    print("\nKomunikasi SPI dihentikan.")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    GPIO.cleanup()
+    print("\nPembacaan sensor dihentikan.")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step3-s3"></span></p>
-                <pre><code>python3 spi_adc.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <pre><code>python3 ultrasonic.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"></span></label>
@@ -647,8 +655,8 @@ except KeyboardInterrupt:
                         <h4 id="sim-panel-title" style="margin-top:0; color:var(--primary); font-weight: 700;"></h4>
                         <p id="sim-model-text" style="font-size:0.9rem; margin-top:5px; color: var(--text-muted);"></p>
 
-                        <label for="pot-slider" id="sim-slider-label" style="display:block; margin-top:10px; font-weight:bold; font-size:0.85rem;"></label>
-                        <input type="range" id="pot-slider" class="sim-slider" min="0" max="1023" value="512" oninput="updateSimulator()">
+                        <label for="distance-slider" id="sim-slider-label" style="display:block; margin-top:10px; font-weight:bold; font-size:0.85rem;"></label>
+                        <input type="range" id="distance-slider" class="sim-slider" min="2" max="400" value="50" oninput="updateSimulator()">
 
                         <label id="sim-pins-label" style="display:block; margin-top:10px; margin-bottom:5px; font-weight:bold; font-size:0.9rem;"></label>
                         <ul id="sim-pins-list" style="font-size:0.85rem; padding-left:15px; margin-bottom:15px;"></ul>
@@ -656,10 +664,10 @@ except KeyboardInterrupt:
 
                     <div class="sim-display">
                         <div class="lcd-screen">
-                            <div class="lcd-line" id="lcd-line-1">SYS: I2C & SPI OK</div>
-                            <div class="lcd-line" id="lcd-line-2">ADC CH0: 512 (1.65V)</div>
+                            <div class="lcd-line" id="lcd-line-1">HC-SR04 RADAR</div>
+                            <div class="lcd-line" id="lcd-line-2">Jarak: 50.0 cm</div>
                         </div>
-                        <div id="sim-detail" style="font-size:0.8rem; color:var(--sensor-text); text-align:center;">SDA: 0x27 | SPI0 CE0: Active</div>
+                        <div id="sim-detail" style="font-size:0.8rem; color:var(--sensor-text); text-align:center;">TRIG: GPIO 23 | ECHO: GPIO 24 | I2C: 0x27</div>
                     </div>
                 </div>
 
@@ -693,155 +701,167 @@ except KeyboardInterrupt:
             courseTag: "Course: Embedded Systems — Meeting 11",
             deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Panduan Interaktif Pertemuan 11 - Sistem Tertanam (TEL624307)",
-            headerTitle: "Panduan Praktikum Interaktif: Antarmuka Protokol Komunikasi I2C & SPI",
+            headerTitle: "Panduan Praktikum Interaktif: Sensor Ultrasonik HC-SR04 & Display LCD 16x2 I2C",
             homeText: "Kembali ke Raspberry Pi",
             progressTitleText: "Kemajuan Praktikum Anda",
             progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
             targetTitle: "Target Pembelajaran",
-            targetDesc: "Mahasiswa mampu mengonfigurasi antarmuka bus I2C dan SPI pada Raspberry Pi, memindai alamat modul periferal I2C, serta membaca data sensor/ADC serial menggunakan skrip Python.",
-            paramsTitle: "Standar Pinout & Alokasi Bus Serial (Hardware Limit)",
-            paramsDesc: "Perhatikan fungsi pinout komunikasi serial Raspberry Pi sebelum menghubungkan sensor atau modul periferal:",
+            targetDesc: "Mahasiswa mampu mengonfigurasi modul sensor jarak ultrasonik (HC-SR04) dan display LCD 16x2 I2C pada Raspberry Pi, mengimplementasikan pembagi tegangan (voltage divider) untuk pin Echo, serta menampilkan data jarak secara aktual pada layar LCD menggunakan skrip Python.",
+            paramsTitle: "Standar Pinout & Limit Hardware Sensor & Display",
+            paramsDesc: "Perhatikan fungsi pinout dan pembagian tegangan pada Raspberry Pi sebelum menghubungkan sensor ultrasonik dan modul LCD I2C:",
             paramsList: `
-                <li><strong>Bus I2C (I2C1):</strong> SDA = GPIO 2 (Pin Fisik 3), SCL = GPIO 3 (Pin Fisik 5). Tegangan logika: 3.3V.</li>
-                <li><strong>Bus SPI (SPI0):</strong> MOSI = GPIO 10 (Pin 19), MISO = GPIO 9 (Pin 21), SCLK = GPIO 11 (Pin 23), CE0 = GPIO 8 (Pin 24).</li>
-                <li><strong>Voltage Reference:</strong> Gunakan pin VCC 3.3V atau 5V sesuai dengan spesifikasi modul periferal yang digunakan.</li>
-                <li><strong>Peringatan Tegangan Logika:</strong> Modul sensor 5V WAJIB menggunakan <i>Logic Level Converter (LLC)</i> pada saluran data I2C/SPI.</li>
+                <li><strong>Modul LCD I2C:</strong> VCC = 5V, GND = GND, SDA = GPIO 2 (Pin Fisik 3), SCL = GPIO 3 (Pin Fisik 5).</li>
+                <li><strong>Sensor Ultrasonik (HC-SR04):</strong> VCC = 5V, TRIG = GPIO 23 (Pin 16), ECHO = GPIO 24 (Pin 18 via Voltage Divider).</li>
+                <li><strong>Peringatan Tegangan Logika (WAJIB):</strong> Pin ECHO menghasilkan sinyal 5V. Gunakan R1 = 1kΩ dan R2 = 2kΩ sebagai <i>Voltage Divider</i> untuk menurunkan sinyal ECHO ke 3.3V demi keamanan GPIO Raspberry Pi!</li>
             `,
             hwTitle: "Persyaratan Perangkat Keras (Hardware)",
             hwList: `
                 <li><strong>Raspberry Pi</strong> (OS Linux terkonfigurasi SSH)</li>
-                <li><strong>Modul Periferal I2C:</strong> LCD 16x2 I2C / Sensor BME280 / MPU6050</li>
-                <li><strong>Modul ADC SPI:</strong> MCP3008 (10-Bit ADC SPI) + Potensio 10kΩ</li>
+                <li><strong>Sensor Jarak Ultrasonik:</strong> HC-SR04</li>
+                <li><strong>Display:</strong> Modul LCD 16x2 + Backpack I2C PCF8574</li>
+                <li><strong>Resistor:</strong> 1x 1kΩ & 1x 2kΩ (Untuk Voltage Divider Pin Echo)</li>
                 <li><strong>Breadboard</strong> & Kabel Jumper Male-to-Female / Male-to-Male</li>
             `,
             swTitle: "Persyaratan Perangkat Lunak (Software)",
             swList: `
                 <li><strong>Raspberry Pi OS Terminal / SSH Client</strong></li>
                 <li><strong>Perkakas Alamat I2C:</strong> <code>i2c-tools</code></li>
-                <li><strong>Pustaka Python Serial:</strong> <code>python3-smbus</code> (I2C) & <code>python3-spidev</code> (SPI)</li>
+                <li><strong>Pustaka Python:</strong> <code>RPLCD</code> (LCD I2C) & <code>RPi.GPIO</code> (Sinyal Trigger & Echo)</li>
             `,
-            step1Header: `Tahap 1: Aktivasi Interface I2C & SPI pada Raspberry Pi <span class="badge">Konfigurasi Bus</span>`,
-            step1I1: "Buka menu konfigurasi sistem Raspberry Pi via SSH untuk mengaktifkan antarmuka I2C dan SPI (Menu Interface Options):",
-            step1I2: "Install perkakas analisis bus I2C dan modul pustaka Python I2C/SPI:",
-            step1I3: "Verifikasi keberadaan berkas driver perangkat serial di sistem Linux:",
-            cp1Text: "<b>Checkpoint 1:</b> Driver <code>/dev/i2c-1</code> dan <code>/dev/spidev0.0</code> terkonfirmasi aktif di sistem.",
+            step1Header: `Tahap 1: Aktivasi Interface I2C & Pustaka Python <span class="badge">Konfigurasi Bus</span>`,
+            step1I1: "Buka menu konfigurasi sistem Raspberry Pi via SSH untuk mengaktifkan antarmuka I2C (Menu Interface Options):",
+            step1I2: "Install perkakas analisis bus I2C serta pustaka RPLCD & RPi.GPIO di Python:",
+            step1I3: "Verifikasi keberadaan berkas driver perangkat I2C di sistem Linux:",
+            cp1Text: "<b>Checkpoint 1:</b> Driver <code>/dev/i2c-1</code> terkonfirmasi aktif dan pustaka RPLCD terinstall.",
 
-            step2Header: `Tahap 2: Deteksi Alamat & Pemrograman Bus I2C <span class="badge">I2C Protocol</span>`,
-            step2S1: "1. Pindai alamat I2C modul periferal yang terhubung pada bus 1:",
-            step2S2: "2. Buat skrip Python untuk membaca data dari modul I2C tersebut:",
-            step2S3: "3. Salin kode program pengujian komunikasi I2C berikut:",
-            step2S4: "4. Jalankan program untuk menguji pengiriman/pembacaan data I2C:",
-            cp2Text: "<b>Checkpoint 2:</b> Alamat modul I2C (misal: <code>0x27</code>) terdeteksi pada <code>i2cdetect</code> dan respon data berhasil dibaca.",
+            step2Header: `Tahap 2: Deteksi Alamat I2C & Pemrograman LCD 16x2 <span class="badge">LCD I2C</span>`,
+            step2S1: "1. Pindai alamat I2C modul backpack LCD 16x2 yang terhubung:",
+            step2S2: "2. Buat skrip Python untuk menguji tampilan teks pada LCD 16x2:",
+            step2S3: "3. Salin kode program pengujian LCD I2C berikut:",
+            step2S4: "4. Jalankan program untuk menampilkan teks pada layar LCD:",
+            cp2Text: "<b>Checkpoint 2:</b> Alamat LCD I2C (misal: <code>0x27</code>) terdeteksi dan berhasil menampilkan pesan di layar LCD.",
 
-            step3Header: `Tahap 3: Implementasi Komunikasi Serial SPI (ADC MCP3008) <span class="badge">SPI Protocol</span>`,
-            step3Intro: "Pada tahap ini, Raspberry Pi menggunakan bus SPI0 untuk membaca data analog dari potentiometer via chip ADC MCP3008.",
-            step3S1: "1. Buat berkas Python baru bernama spi_adc.py:",
-            step3S2: "2. Salin kode program pembacaan data ADC via SPI di bawah ini:",
-            step3S3: "3. Jalankan skrip Python pengujian SPI ADC:",
-            cp3Text: "<b>Checkpoint 3:</b> Nilai analog (0-1023) dan konversi tegangan (0-3.3V) berhasil dibaca kontinu melalui antarmuka SPI.",
+            step3Header: `Tahap 3: Pembacaan Sensor Ultrasonik HC-SR04 <span class="badge">HC-SR04</span>`,
+            step3Intro: "Pada tahap ini, Raspberry Pi mengirimkan pulsa Trigger dan menghitung durasi pantulan sinyal Echo dari sensor ultrasonik.",
+            step3S1: "1. Buat berkas Python baru bernama ultrasonic.py:",
+            step3S2: "2. Salin kode program pengukuran jarak HC-SR04 di bawah ini:",
+            step3S3: "3. Jalankan skrip Python pengujian ultrasonik:",
+            cp3Text: "<b>Checkpoint 3:</b> Nilai jarak terukur (dalam cm) berhasil dibaca kontinu melalui terminal.",
 
-            step4Header: `Tahap 4: Simulasi Integrasi Antarmuka I2C & SPI <span class="badge">Modul Interaktif</span>`,
-            step4Intro: "Simulasikan perubahan nilai pembacaan sensor analog SPI yang langsung ditampilkan pada LCD I2C secara virtual:",
-            simPanelTitle: "Simulasi Input Sensor Analog (SPI)",
-            simModelText: "Model Sistem: <strong>Potensiosmeter -> SPI ADC (MCP3008) -> Display LCD (I2C)</strong>",
-            simSliderLabel: "Geser Nilai Analog Potensiometer (0 - 1023):",
+            step4Header: `Tahap 4: Simulasi Integrasi Sensor Jarak & LCD <span class="badge">Modul Interaktif</span>`,
+            step4Intro: "Simulasikan perubah nilai pengukuran jarak sensor ultrasonik yang langsung ditampilkan pada LCD I2C secara virtual:",
+            simPanelTitle: "Simulasi Jarak Sensor Ultrasonik",
+            simModelText: "Model Sistem: <strong>HC-SR04 -> Raspberry Pi (GPIO) -> Display LCD 16x2 (I2C)</strong>",
+            simSliderLabel: "Geser Nilai Jarak Objek (2 cm - 400 cm):",
             simPinsLabel: "Konfigurasi Pin Interaksi:",
             simPinsList: `
-                <li><strong>I2C Bus:</strong> GPIO 2 (SDA), GPIO 3 (SCL) -> Alamat 0x27</li>
-                <li><strong>SPI Bus:</strong> GPIO 10 (MOSI), GPIO 9 (MISO), GPIO 11 (SCLK), GPIO 8 (CE0)</li>
+                <li><strong>I2C LCD:</strong> GPIO 2 (SDA), GPIO 3 (SCL) -> Alamat 0x27</li>
+                <li><strong>Ultrasonik:</strong> TRIG = GPIO 23, ECHO = GPIO 24 (via Voltage Divider)</li>
             `,
-            cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami peran perbedaan arsitektur bus paralel/serial I2C (2 kawat) dan SPI (4 kawat).",
+            cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami skema kerja pembagi tegangan pin Echo dan pengiriman data jarak ke LCD I2C.",
 
-            step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Sistem Monitor Terintegrasi) <span class="badge">Penugasan</span>`,
-            step5Intro: "Selesaikan tugas praktikum integrasi I2C & SPI berikut untuk melengkapi evaluasi Pertemuan 11:",
+            step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Sistem Peringatan Jarak) <span class="badge">Penugasan</span>`,
+            step5Intro: "Selesaikan tugas praktikum integrasi Ultrasonik & LCD I2C berikut untuk melengkapi evaluasi Pertemuan 11:",
             step5List: `
-                <li>Hubungkan <strong>MCP3008 (SPI)</strong> dengan Sensor Cahaya LDR pada Channel 0, dan <strong>LCD 16x2 (I2C)</strong> pada alamat 0x27.</li>
-                <li>Buat skrip Python bernama <code>tugas_i2c_spi.py</code> dengan ketentuan fungsional:
+                <li>Integrasikan <strong>HC-SR04</strong> dan <strong>LCD 16x2 I2C</strong> dengan menambahkan logika Peringatan Jarak.</li>
+                <li>Buat skrip Python bernama <code>tugas_ultrasonic_lcd.py</code> dengan ketentuan fungsional:
                     <ul>
-                        <li><strong>Baris 1 LCD:</strong> Menampilkan teks status intensitas cahaya (misal: "GELAP" / "TERANG").</li>
-                        <li><strong>Baris 2 LCD:</strong> Menampilkan nilai mentah ADC dan konversi persentase intensitas (0 - 100%).</li>
-                        <li><strong>Update Rate:</strong> Perbarui data pada layar LCD setiap 0.5 detik.</li>
+                        <li><strong>Baris 1 LCD:</strong> Menampilkan teks nilai jarak aktual (misal: "Jarak: 15.4 cm").</li>
+                        <li><strong>Baris 2 LCD:</strong> Menampilkan status kondisi:
+                            <ul>
+                                <li>Jika Jarak < 10 cm: Tampilkan <code>"STATUS: BAHAYA!"</code></li>
+                                <li>Jika Jarak 10 - 30 cm: Tampilkan <code>"STATUS: WASPADA"</code></li>
+                                <li>Jika Jarak > 30 cm: Tampilkan <code>"STATUS: AMAN   "</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Update Rate:</strong> Perbarui data pada layar LCD setiap 0.3 detik.</li>
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Skrip integrasi I2C & SPI <code>tugas_i2c_spi.py</code> berhasil diuji dan menampilkan data dengan stabil."
+            cp5Text: "<b>Checkpoint 5:</b> Skrip integrasi <code>tugas_ultrasonic_lcd.py</code> berhasil diuji dan menampilkan status peringatan jarak secara realtime."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 11",
             deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Interactive Guide Meeting 11 - Embedded Systems (TEL624307)",
-            headerTitle: "Interactive Lab Guide: I2C & SPI Communication Protocol Interfaces",
+            headerTitle: "Interactive Lab Guide: HC-SR04 Ultrasonic Sensor & 16x2 I2C LCD Display",
             homeText: "Back to Raspberry Pi",
             progressTitleText: "Your Lab Progress",
             progressText: "{percent}% Completed ({count}/5 Checkpoints)",
             targetTitle: "Learning Objective",
-            targetDesc: "Students are able to configure I2C and SPI bus interfaces on Raspberry Pi, scan I2C peripheral module addresses, and read serial sensor/ADC data using Python scripts.",
-            paramsTitle: "Pinout Standards & Serial Bus Allocation (Hardware Limit)",
-            paramsDesc: "Check the operational specifications of serial communication pinouts on Raspberry Pi before connecting sensors or peripheral modules:",
+            targetDesc: "Students are able to configure HC-SR04 ultrasonic distance sensor module and 16x2 I2C LCD display on Raspberry Pi, implement a voltage divider for the Echo pin, and display real-time distance data on the LCD screen using Python scripts.",
+            paramsTitle: "Pinout Standards & Hardware Safety Limits",
+            paramsDesc: "Check the pinout function and voltage constraints before connecting the ultrasonic sensor and I2C LCD module:",
             paramsList: `
-                <li><strong>I2C Bus (I2C1):</strong> SDA = GPIO 2 (Physical Pin 3), SCL = GPIO 3 (Physical Pin 5). Logic level: 3.3V.</li>
-                <li><strong>SPI Bus (SPI0):</strong> MOSI = GPIO 10 (Pin 19), MISO = GPIO 9 (Pin 21), SCLK = GPIO 11 (Pin 23), CE0 = GPIO 8 (Pin 24).</li>
-                <li><strong>Voltage Reference:</strong> Use 3.3V or 5V VCC pin according to the specs of the connected peripheral module.</li>
-                <li><strong>Logic Level Warning:</strong> 5V sensor modules MUST use a <i>Logic Level Converter (LLC)</i> on I2C/SPI data lines.</li>
+                <li><strong>I2C LCD Module:</strong> VCC = 5V, GND = GND, SDA = GPIO 2 (Physical Pin 3), SCL = GPIO 3 (Physical Pin 5).</li>
+                <li><strong>Ultrasonic Sensor (HC-SR04):</strong> VCC = 5V, TRIG = GPIO 23 (Pin 16), ECHO = GPIO 24 (Pin 18 via Voltage Divider).</li>
+                <li><strong>Logic Level Warning (MANDATORY):</strong> Echo pin outputs 5V. You MUST use R1 = 1kΩ and R2 = 2kΩ as a <i>Voltage Divider</i> to step down ECHO signal to 3.3V to protect Raspberry Pi GPIO!</li>
             `,
             hwTitle: "Hardware Requirements",
             hwList: `
                 <li><strong>Raspberry Pi</strong> (Linux OS SSH-configured)</li>
-                <li><strong>I2C Peripheral Module:</strong> 16x2 I2C LCD / BME280 Sensor / MPU6050</li>
-                <li><strong>SPI ADC Module:</strong> MCP3008 (10-Bit SPI ADC) + 10kΩ Potentiometer</li>
+                <li><strong>Ultrasonic Distance Sensor:</strong> HC-SR04</li>
+                <li><strong>Display:</strong> 16x2 LCD Module + PCF8574 I2C Backpack</li>
+                <li><strong>Resistors:</strong> 1x 1kΩ & 1x 2kΩ (For Echo Pin Voltage Divider)</li>
                 <li><strong>Breadboard</strong> & Male-to-Female / Male-to-Male Jumper Wires</li>
             `,
             swTitle: "Software Requirements",
             swList: `
                 <li><strong>Raspberry Pi OS Terminal / SSH Client</strong></li>
                 <li><strong>I2C Address Utilities:</strong> <code>i2c-tools</code></li>
-                <li><strong>Python Serial Libraries:</strong> <code>python3-smbus</code> (I2C) & <code>python3-spidev</code> (SPI)</li>
+                <li><strong>Python Libraries:</strong> <code>RPLCD</code> (I2C LCD) & <code>RPi.GPIO</code> (Trigger & Echo Signals)</li>
             `,
-            step1Header: `Step 1: Enabling I2C & SPI Interfaces on Raspberry Pi <span class="badge">Bus Config</span>`,
-            step1I1: "Open system configuration menu via SSH to enable I2C and SPI interfaces (Interface Options menu):",
-            step1I2: "Install I2C bus analysis tools and Python I2C/SPI library packages:",
+            step1Header: `Step 1: Enabling I2C Interface & Python Libraries <span class="badge">Bus Config</span>`,
+            step1I1: "Open system configuration menu via SSH to enable the I2C interface (Interface Options menu):",
+            step1I2: "Install I2C bus tools and Python RPLCD & RPi.GPIO library packages:",
             step1I3: "Verify serial device drivers in the Linux system file hierarchy:",
-            cp1Text: "<b>Checkpoint 1:</b> Drivers <code>/dev/i2c-1</code> and <code>/dev/spidev0.0</code> confirmed active in system.",
+            cp1Text: "<b>Checkpoint 1:</b> Driver <code>/dev/i2c-1</code> confirmed active and RPLCD library installed.",
 
-            step2Header: `Step 2: Address Detection & I2C Bus Programming <span class="badge">I2C Protocol</span>`,
-            step2S1: "1. Scan I2C address of connected peripheral module on bus 1:",
-            step2S2: "2. Create a Python script to read data from the I2C module:",
-            step2S3: "3. Copy the following I2C communication test script:",
-            step2S4: "4. Run the program to test I2C data transmission/reading:",
-            cp2Text: "<b>Checkpoint 2:</b> Module I2C address (e.g., <code>0x27</code>) detected on <code>i2cdetect</code> and data response read successfully.",
+            step2Header: `Step 2: Address Detection & 16x2 LCD Programming <span class="badge">I2C LCD</span>`,
+            step2S1: "1. Scan I2C address of connected LCD backpack module:",
+            step2S2: "2. Create a Python script to test display output on 16x2 LCD:",
+            step2S3: "3. Copy the following I2C LCD test script:",
+            step2S4: "4. Run the program to display text on the LCD screen:",
+            cp2Text: "<b>Checkpoint 2:</b> LCD I2C address (e.g., <code>0x27</code>) detected and test message displayed on LCD.",
 
-            step3Header: `Step 3: SPI Serial Communication Implementation (MCP3008 ADC) <span class="badge">SPI Protocol</span>`,
-            step3Intro: "In this step, Raspberry Pi uses SPI0 bus to read analog data from a potentiometer through an MCP3008 ADC chip.",
-            step3S1: "1. Create a new Python file named spi_adc.py:",
-            step3S2: "2. Copy the ADC data reading script via SPI below:",
-            step3S3: "3. Run the SPI ADC test Python script:",
-            cp3Text: "<b>Checkpoint 3:</b> Analog value (0-1023) and converted voltage (0-3.3V) read continuously via SPI interface.",
+            step3Header: `Step 3: Reading HC-SR04 Ultrasonic Distance Sensor <span class="badge">HC-SR04</span>`,
+            step3Intro: "In this step, Raspberry Pi sends a Trigger pulse and calculates the Echo pulse duration from the ultrasonic sensor.",
+            step3S1: "1. Create a new Python file named ultrasonic.py:",
+            step3S2: "2. Copy the distance measurement script below:",
+            step3S3: "3. Run the ultrasonic test Python script:",
+            cp3Text: "<b>Checkpoint 3:</b> Measured distance values (in cm) read continuously in the terminal.",
 
-            step4Header: `Step 4: Interactive I2C & SPI Integration Simulation <span class="badge">Interactive Module</span>`,
-            step4Intro: "Simulate changing SPI analog sensor readings and view them displayed directly on an I2C LCD virtually:",
-            simPanelTitle: "Analog Sensor Input Simulation (SPI)",
-            simModelText: "System Model: <strong>Potentiometer -> SPI ADC (MCP3008) -> LCD Display (I2C)</strong>",
-            simSliderLabel: "Adjust Potentiometer Analog Value (0 - 1023):",
+            step4Header: `Step 4: Interactive Distance Sensor & LCD Simulation <span class="badge">Interactive Module</span>`,
+            step4Intro: "Simulate changing ultrasonic sensor distance readings and view them displayed directly on the I2C LCD virtually:",
+            simPanelTitle: "Ultrasonic Sensor Distance Simulation",
+            simModelText: "System Model: <strong>HC-SR04 -> Raspberry Pi (GPIO) -> 16x2 LCD Display (I2C)</strong>",
+            simSliderLabel: "Adjust Object Distance Value (2 cm - 400 cm):",
             simPinsLabel: "Interaction Pin Allocation:",
             simPinsList: `
-                <li><strong>I2C Bus:</strong> GPIO 2 (SDA), GPIO 3 (SCL) -> Address 0x27</li>
-                <li><strong>SPI Bus:</strong> GPIO 10 (MOSI), GPIO 9 (MISO), GPIO 11 (SCLK), GPIO 8 (CE0)</li>
+                <li><strong>I2C LCD:</strong> GPIO 2 (SDA), GPIO 3 (SCL) -> Address 0x27</li>
+                <li><strong>Ultrasonic:</strong> TRIG = GPIO 23, ECHO = GPIO 24 (via Voltage Divider)</li>
             `,
-            cp4Text: "<b>Checkpoint 4:</b> Student understands structural differences between 2-wire I2C and 4-wire SPI bus protocols.",
+            cp4Text: "<b>Checkpoint 4:</b> Student understands the voltage divider circuit on Echo pin and sending distance data to I2C LCD.",
 
-            step5Header: `Step 5: Independent / Group Assignment (Integrated Monitor System) <span class="badge">Assignment</span>`,
-            step5Intro: "Complete the following integrated I2C & SPI lab assignment to fulfill the Meeting 11 evaluation:",
+            step5Header: `Step 5: Independent / Group Assignment (Distance Warning System) <span class="badge">Assignment</span>`,
+            step5Intro: "Complete the following integrated Ultrasonic & I2C LCD lab assignment to fulfill the Meeting 11 evaluation:",
             step5List: `
-                <li>Connect <strong>MCP3008 (SPI)</strong> with an LDR Light Sensor on Channel 0, and <strong>16x2 LCD (I2C)</strong> on address 0x27.</li>
-                <li>Create a Python script named <code>tugas_i2c_spi.py</code> meeting these functional requirements:
+                <li>Integrate <strong>HC-SR04</strong> and <strong>16x2 I2C LCD</strong> by adding distance alert status logic.</li>
+                <li>Create a Python script named <code>tugas_ultrasonic_lcd.py</code> meeting these requirements:
                     <ul>
-                        <li><strong>LCD Line 1:</strong> Display light intensity status text (e.g., "DARK" / "BRIGHT").</li>
-                        <li><strong>LCD Line 2:</strong> Display raw ADC reading and converted percentage value (0 - 100%).</li>
-                        <li><strong>Update Rate:</strong> Refresh screen data every 0.5 seconds.</li>
+                        <li><strong>LCD Line 1:</strong> Display live distance value (e.g., "Jarak: 15.4 cm").</li>
+                        <li><strong>LCD Line 2:</strong> Display alert status condition:
+                            <ul>
+                                <li>If Distance < 10 cm: Display <code>"STATUS: BAHAYA!"</code></li>
+                                <li>If Distance 10 - 30 cm: Display <code>"STATUS: WASPADA"</code></li>
+                                <li>If Distance > 30 cm: Display <code>"STATUS: AMAN   "</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Update Rate:</strong> Refresh LCD display every 0.3 seconds.</li>
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Integrated script <code>tugas_i2c_spi.py</code> tested successfully with stable display output."
+            cp5Text: "<b>Checkpoint 5:</b> Integrated script <code>tugas_ultrasonic_lcd.py</code> tested successfully with live warning status output."
         }
     };
 
@@ -985,11 +1005,17 @@ except KeyboardInterrupt:
     }
 
     function updateSimulator() {
-        const rawVal = parseInt(document.getElementById('pot-slider').value, 10);
-        const voltage = ((rawVal * 3.3) / 1023).toFixed(2);
+        const distVal = parseFloat(document.getElementById('distance-slider').value).toFixed(1);
+        
+        let statusText = "STATUS: AMAN   ";
+        if (distVal < 10) {
+            statusText = "STATUS: BAHAYA!";
+        } else if (distVal <= 30) {
+            statusText = "STATUS: WASPADA";
+        }
 
-        document.getElementById('lcd-line-1').innerText = "SYS: I2C & SPI OK";
-        document.getElementById('lcd-line-2').innerText = `ADC CH0:${rawVal.toString().padStart(4, ' ')} (${voltage}V)`;
+        document.getElementById('lcd-line-1').innerText = `Jarak: ${distVal} cm`;
+        document.getElementById('lcd-line-2').innerText = statusText;
     }
 </script>
 

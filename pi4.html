@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Panduan Interaktif Pertemuan 12 - Sistem Tertanam (TEL624307)</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // Redirect jika dibuka langsung di luar iframe (Pencegahan Akses Langsung)
+        if (window.self === window.top) {
+            window.location.href = "index.html?page=physicode";
+        }
+    </script>
+
+    <style>
+        /* CSS Variables - Light Theme (Default) */
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #0f172a;
+            --accent: #38bdf8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sensor-bg: #0f172a;
+            --sensor-text: #38bdf8;
+            --sensor-border: #1e293b;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --success-bg: #dcfce7;
+            --success-color: #16a34a;
+            --success-border: #86efac;
+            --warning-bg: #fef3c7;
+            --warning-color: #d97706;
+            --warning-border: #fcd34d;
+            --error-bg: #fee2e2;
+            --error-color: #dc2626;
+            --error-border: #fca5a5;
+        }
+
+        /* CSS Variables - Dark Theme */
+        [data-theme="dark"] {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --secondary: #f8fafc;
+            --accent: #38bdf8;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --sensor-bg: #022c22;
+            --sensor-text: #4ade80;
+            --sensor-border: #065f46;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --success-bg: rgba(34, 197, 94, 0.15);
+            --success-color: #4ade80;
+            --success-border: #22c55e;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-color: #fbbf24;
+            --warning-border: #f59e0b;
+            --error-bg: rgba(239, 68, 68, 0.15);
+            --error-color: #f87171;
+            --error-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+        }
+
+        /* HEADER & COURSE INFO (Luar Kotak Utama) */
+        .course-info-banner {
+            margin-bottom: 20px;
+            padding: 0 5px;
+        }
+
+        .course-title-tag {
+            display: inline-block;
+            background: var(--primary);
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 800;
+            padding: 6px 14px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+        }
+
+        .course-dept {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.4;
+        }
+
+        .main-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--card-border);
+        }
+
+        header {
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
+
+        /* Progress Card Styling */
+        .progress-card {
+            background: var(--bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 20px;
+        }
+
+        .progress-title {
+            display: flex;
+            justify-content: space-between;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .progress-bar-bg {
+            background: var(--card-border);
+            height: 10px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: var(--primary);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Information Cards & Tasks */
+        .task-card {
+            background: var(--bg);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .task-card h3, .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; }
+        .task-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background: var(--bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 8px;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        /* Pinout Image Container */
+        .pinout-container {
+            text-align: center;
+            margin: 15px 0 20px 0;
+            padding: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+        }
+
+        .pinout-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Step Sections (Accordion) */
+        .step-section {
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .step-section.completed {
+            border-color: var(--success-border);
+        }
+
+        .step-header {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        .step-header:hover {
+            background: var(--card-border);
+        }
+
+        .step-header .toggle-icon {
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+        }
+
+        .step-section.active .step-header .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .step-content {
+            padding: 20px;
+            display: none;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .step-section.active .step-content {
+            display: block;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        pre {
+            background: var(--sensor-bg);
+            color: var(--sensor-text);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--sensor-border);
+            overflow-x: auto;
+            position: relative;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 10px 0;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.15);
+            color: var(--sensor-text);
+            border: 1px solid var(--sensor-border);
+            padding: 4px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        ul, ol {
+            padding-left: 20px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        li { margin-bottom: 8px; }
+
+        .checkpoint {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            color: var(--warning-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkpoint label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .checkpoint input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+
+        /* Modul Simulator Interaktif IoT */
+        .gpio-sim-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .gpio-sim-container { flex-direction: column; }
+        }
+
+        .sim-controls {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .sim-display {
+            flex: 1;
+            background: var(--sensor-bg);
+            color: var(--text-main);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--sensor-border);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sim-slider {
+            width: 100%;
+            margin: 10px 0;
+            accent-color: var(--primary);
+        }
+
+        .lcd-screen {
+            width: 100%;
+            background: #0f172a;
+            border: 2px solid #1e3a8a;
+            border-radius: 6px;
+            padding: 12px;
+            color: #38bdf8;
+            font-family: 'Courier New', Courier, monospace;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+            margin-bottom: 10px;
+        }
+
+        .lcd-line {
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            margin-bottom: 4px;
+        }
+
+        .sim-btn {
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: all 0.2s;
+        }
+
+        .sim-btn:hover {
+            background: var(--primary-dark);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- INFORMASI KURSUS DI LUAR KOTAK UTAMA -->
+    <div class="course-info-banner">
+        <div class="course-title-tag" id="course-tag"></div>
+        <div class="course-dept" id="dept-tag"></div>
+    </div>
+
+    <!-- KOTAK UTAMA PANDUAN PRAKTIKUM -->
+    <div class="main-card">
+        <header>
+            <div>
+                <h1 id="header-title"></h1>
+            </div>
+            <div class="header-actions">
+                <a href="pi.html" class="btn-back" id="home-link">
+                    <i class="fa-solid fa-arrow-left"></i> <span id="home-text"></span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Progress Indicator Interaktif -->
+        <div class="progress-card">
+            <div class="progress-title">
+                <span id="progress-title-text"></span>
+                <span id="progress-text"></span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <!-- Info Target Pembelajaran -->
+        <div class="task-card">
+            <h3 id="target-title"></h3>
+            <p id="target-desc"></p>
+        </div>
+
+        <!-- Standar Pinout & Limit Hardware -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3 id="params-title"></h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc"></p>
+            
+            <!-- Elemen Gambar Pinout Raspberry Pi -->
+            <div class="pinout-container">
+                <img src="pi_pinout.png" alt="Raspberry Pi GPIO Pinout Diagram" class="pinout-img">
+            </div>
+
+            <ul id="params-list"></ul>
+        </div>
+
+        <!-- Requirements Grid -->
+        <div class="grid-2">
+            <div class="card">
+                <h3 id="hw-title"></h3>
+                <ul id="hw-list"></ul>
+            </div>
+            <div class="card">
+                <h3 id="sw-title"></h3>
+                <ul id="sw-list"></ul>
+            </div>
+        </div>
+
+        <!-- Tahap 1 -->
+        <div class="step-section active" id="section-1">
+            <div class="step-header" onclick="toggleAccordion('section-1')">
+                <span id="step1-header"></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <ol id="step1-list">
+                    <li><span id="step1-i1"></span>
+                        <pre><code>hostname -I</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                    </li>
+                    <li><span id="step1-i2"></span>
+                        <pre><code>sudo systemctl enable --now ssh
+sudo systemctl enable --now vncserver-x11-serviced</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                    </li>
+                    <li><span id="step1-i3"></span>
+                        <pre><code>ssh pi@&lt;IP_RASPBERRY_PI&gt;</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                    </li>
+                </ol>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"></span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 2 -->
+        <div class="step-section" id="section-2">
+            <div class="step-header" onclick="toggleAccordion('section-2')">
+                <span id="step2-header"></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p style="font-size: 0.9rem;"><span id="step2-s1"></span></p>
+                <pre><code>sudo apt update && sudo apt install -y python3-flask python3-paho-mqtt mosquitto mosquitto-clients</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <p style="font-size: 0.9rem;"><span id="step2-s2"></span></p>
+                <pre><code>nano app_flask.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <p style="font-size: 0.9rem;"><span id="step2-s3"></span></p>
+                <pre><code>from flask import Flask, jsonify
+import random
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "<h1>Raspberry Pi HTTP Web Server</h1><p>Gunakan endpoint /api/sensor untuk membaca data.</p>"
+
+@app.route('/api/sensor', methods=['GET'])
+def get_sensor_data():
+    # Simulasi pembacaan suhu dan kelembaban
+    data = {
+        "status": "success",
+        "suhu": round(random.uniform(25.0, 32.0), 2),
+        "kelembaban": round(random.uniform(50.0, 80.0), 2)
+    }
+    return jsonify(data)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <p style="font-size: 0.9rem;"><span id="step2-s4"></span></p>
+                <pre><code>python3 app_flask.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"></span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 3 -->
+        <div class="step-section" id="section-3">
+            <div class="step-header" onclick="toggleAccordion('section-3')">
+                <span id="step3-header"></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
+
+                <p style="font-size: 0.9rem;"><span id="step3-s1"></span></p>
+                <pre><code>nano mqtt_pub.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <p style="font-size: 0.9rem;"><span id="step3-s2"></span></p>
+                <pre><code>import paho.mqtt.client as mqtt
+import time
+import json
+import random
+
+BROKER = "broker.hivemq.com"
+PORT = 1883
+TOPIC = "untirta/elektro/iot/sensor"
+
+client = mqtt.Client()
+client.connect(BROKER, PORT, 60)
+
+print(f"Mulai mempublikasikan data MQTT ke Broker: {BROKER}...")
+
+try:
+    while True:
+        payload = {
+            "device": "RaspberryPi_Node1",
+            "suhu": round(random.uniform(26.0, 33.0), 1),
+            "status": "NORMAL"
+        }
+        json_data = json.dumps(payload)
+        client.publish(TOPIC, json_data)
+        print(f"[PUBLISH] Topic: {TOPIC} | Data: {json_data}")
+        time.sleep(2)
+except KeyboardInterrupt:
+    client.disconnect()
+    print("\nPengiriman data MQTT dihentikan.")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <p style="font-size: 0.9rem;"><span id="step3-s3"></span></p>
+                <pre><code>python3 mqtt_pub.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"></span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 4 -->
+        <div class="step-section" id="section-4">
+            <div class="step-header" onclick="toggleAccordion('section-4')">
+                <span id="step4-header"></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main);"></p>
+
+                <div class="gpio-sim-container">
+                    <div class="sim-controls">
+                        <h4 id="sim-panel-title" style="margin-top:0; color:var(--primary); font-weight: 700;"></h4>
+                        <p id="sim-model-text" style="font-size:0.9rem; margin-top:5px; color: var(--text-muted);"></p>
+
+                        <label for="temp-slider" id="sim-slider-label" style="display:block; margin-top:10px; font-weight:bold; font-size:0.85rem;"></label>
+                        <input type="range" id="temp-slider" class="sim-slider" min="15" max="50" value="28" oninput="updateSimulator()">
+
+                        <button class="sim-btn" onclick="publishSimData()"><i class="fa-solid fa-paper-plane"></i> Publish Payload</button>
+
+                        <label id="sim-pins-label" style="display:block; margin-top:15px; margin-bottom:5px; font-weight:bold; font-size:0.9rem;"></label>
+                        <ul id="sim-pins-list" style="font-size:0.85rem; padding-left:15px; margin-bottom:15px;"></ul>
+                    </div>
+
+                    <div class="sim-display">
+                        <div class="lcd-screen">
+                            <div class="lcd-line" id="lcd-line-1">[MQTT BROKER LOG]: broker.hivemq.com</div>
+                            <div class="lcd-line" id="lcd-line-2">[TOPIC]: untirta/elektro/iot/sensor</div>
+                            <div class="lcd-line" id="lcd-line-3">[PAYLOAD]: {"suhu": 28, "status": "OK"}</div>
+                        </div>
+                        <div id="sim-detail" style="font-size:0.8rem; color:var(--sensor-text); text-align:center;">Prototipe HTTP REST API & Telemetri MQTT</div>
+                    </div>
+                </div>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"></span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 5 -->
+        <div class="step-section" id="section-5">
+            <div class="step-header" onclick="toggleAccordion('section-5')">
+                <span id="step5-header"></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
+                <ol id="step5-list"></ol>
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"></span></label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const translations = {
+        id: {
+            courseTag: "Course: Embedded Systems — Meeting 12",
+            deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
+            pageTitle: "Panduan Interaktif Pertemuan 12 - Sistem Tertanam (TEL624307)",
+            headerTitle: "Panduan Praktikum Interaktif: Komunikasi Jaringan & IoT (HTTP/MQTT)",
+            homeText: "Kembali ke Raspberry Pi",
+            progressTitleText: "Kemajuan Praktikum Anda",
+            progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
+            targetTitle: "Target Pembelajaran",
+            targetDesc: "Mahasiswa mampu mengonfigurasi akses jarak jauh Raspberry Pi (SSH/VNC), membangun Web Service HTTP menggunakan Python Flask, serta mengimplementasikan protokol komunikasi MQTT untuk telemetri IoT secara real-time.",
+            paramsTitle: "Arsitektur Jaringan & Protokol Komunikasi (Network Standards)",
+            paramsDesc: "Perhatikan parameter alamat jaringan dan alokasi port layanan saat membangun jaringan IoT:",
+            paramsList: `
+                <li><strong>Remote Access SSH / VNC:</strong> SSH berjalan pada Port 22, VNC Server pada Port 5900.</li>
+                <li><strong>HTTP Server (Flask):</strong> Berjalan pada Port 5000 (Default Host: <code>0.0.0.0</code> agar dapat diakses jaringan lokal).</li>
+                <li><strong>MQTT Protocol:</strong> Port standar MQTT Unencrypted = 1883, MQTT over WebSockets = 8000/8083.</li>
+                <li><strong>PERINGATAN KEAMANAN JARINGAN:</strong> Pastikan Raspberry Pi dan komputer klien berada dalam satu subnet WiFi/LAN yang sama. Jangan gunakan kata sandi default untuk akses remote!</li>
+            `,
+            hwTitle: "Persyaratan Perangkat Keras (Hardware)",
+            hwList: `
+                <li><strong>Raspberry Pi</strong> (OS Linux terkonfigurasi Wi-Fi / Ethernet LAN)</li>
+                <li><strong>PC / Laptop Klien</strong> (Terhubung ke jaringan Wi-Fi/LAN yang sama)</li>
+                <li><strong>Router / Hotspot Wi-Fi</strong> lokal</li>
+            `,
+            swTitle: "Persyaratan Perangkat Lunak (Software)",
+            swList: `
+                <li><strong>Client SSH / VNC:</strong> PuTTY, OpenSSH, atau RealVNC Viewer</li>
+                <li><strong>Python Web Framework:</strong> <code>python3-flask</code></li>
+                <li><strong>Pustaka & Broker MQTT:</strong> <code>python3-paho-mqtt</code> & <code>mosquitto</code></li>
+            `,
+            step1Header: `Tahap 1: Akses Jarak Jauh (SSH/VNC) & Konfigurasi IP <span class="badge">Remote Access</span>`,
+            step1I1: "Periksa alamat IP lokal Raspberry Pi pada jaringan terhubung:",
+            step1I2: "Aktifkan layanan SSH dan VNC Server melalui terminal Linux:",
+            step1I3: "Lakukan pengujian koneksi remote SSH dari komputer/laptop klien:",
+            cp1Text: "<b>Checkpoint 1:</b> Alamat IP teridentifikasi dan terminal Raspberry Pi berhasil diakses via SSH secara headless.",
+
+            step2Header: `Tahap 2: Merekayasa Web Server & HTTP REST API (Flask) <span class="badge">HTTP Service</span>`,
+            step2S1: "1. Install pustaka Python Flask dan dependensi komunikasi jaringan:",
+            step2S2: "2. Buat skrip Python Web Server Flask baru:",
+            step2S3: "3. Salin kode program REST API server berikut:",
+            step2S4: "4. Jalankan aplikasi web server Python di Raspberry Pi:",
+            cp2Text: "<b>Checkpoint 2:</b> Endpoint <code>http://&lt;IP_PI&gt;:5000/api/sensor</code> berhasil diakses dari browser komputer klien.",
+
+            step3Header: `Tahap 3: Implementasi Publisher Telemetri IoT Berbasis MQTT <span class="badge">MQTT Protocol</span>`,
+            step3Intro: "Pada tahap ini, Raspberry Pi bertindak sebagai Publisher MQTT yang mengirimkan payload JSON data sensor ke Broker MQTT.",
+            step3S1: "1. Buat berkas Python baru bernama mqtt_pub.py:",
+            step3S2: "2. Salin kode program MQTT Publisher berikut:",
+            step3S3: "3. Jalankan skrip Python Publisher telemetri MQTT:",
+            cp3Text: "<b>Checkpoint 3:</b> Payload MQTT dikirim secara periodik ke Public Broker HiveMQ tanpa error.",
+
+            step4Header: `Tahap 4: Simulasi Telemetri Telekontrol IoT & Broker Data <span class="badge">Modul Interaktif</span>`,
+            step4Intro: "Simulasikan variasi data sensor pada node Raspberry Pi dan amatilah transmisi pesan MQTT yang dikirim ke Broker:",
+            simPanelTitle: "Simulasi Telemetri MQTT Node Sensor",
+            simModelText: "Model Sistem: <strong>Node Raspberry Pi -> Paho MQTT Client -> HiveMQ Broker</strong>",
+            simSliderLabel: "Atur Nilai Telemetri Suhu (°C):",
+            simPinsLabel: "Parameter Koneksi MQTT:",
+            simPinsList: `
+                <li><strong>Broker:</strong> broker.hivemq.com (Port 1883)</li>
+                <li><strong>Topic:</strong> untirta/elektro/iot/sensor</li>
+            `,
+            cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami arsitektur publish/subscribe MQTT dan pembentukan payload format JSON.",
+
+            step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Sistem IoT Smart Gateway) <span class="badge">Penugasan</span>`,
+            step5Intro: "Selesaikan tugas praktikum pembuatan Smart IoT Gateway terintegrasi berikut untuk melengkapi evaluasi Pertemuan 12:",
+            step5List: `
+                <li>Buatlah skrip Python terpadu bernama <code>tugas_iot_gateway.py</code>.</li>
+                <li>Ketentuan Fungsional Program:
+                    <ul>
+                        <li><strong>Publikasi MQTT:</strong> Kirim data telemetri (Suhu, Kelembaban, dan Status Alarm) setiap 3 detik ke topik <code>untirta/nim_anda/iot</code>.</li>
+                        <li><strong>Server HTTP REST API:</strong> Sediakan dua endpoint Flask:
+                            <ul>
+                                <li><code>/status</code>: Mengembalikan JSON status perangkat dan uptime sistem.</li>
+                                <li><code>/control?relay=on|off</code>: Mengendalikan status pin GPIO (misal GPIO 17) untuk mengaktifkan aktuator/relay dari jarak jauh.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            `,
+            cp5Text: "<b>Checkpoint 5:</b> Skrip <code>tugas_iot_gateway.py</code> berhasil diuji; pesan MQTT terkirim dan kontrol relay HTTP merespon dengan baik."
+        },
+        en: {
+            courseTag: "Course: Embedded Systems — Meeting 12",
+            deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
+            pageTitle: "Interactive Guide Meeting 12 - Embedded Systems (TEL624307)",
+            headerTitle: "Interactive Lab Guide: Network Communication & IoT (HTTP/MQTT)",
+            homeText: "Back to Raspberry Pi",
+            progressTitleText: "Your Lab Progress",
+            progressText: "{percent}% Completed ({count}/5 Checkpoints)",
+            targetTitle: "Learning Objective",
+            targetDesc: "Students are able to configure Raspberry Pi remote access (SSH/VNC), build HTTP Web Services using Python Flask, and implement MQTT communication protocols for real-time IoT telemetry.",
+            paramsTitle: "Network Architecture & Communication Standards (Network Standards)",
+            paramsDesc: "Observe network IP address parameters and service port allocations when deploying IoT networks:",
+            paramsList: `
+                <li><strong>Remote Access SSH / VNC:</strong> SSH runs on Port 22, VNC Server on Port 5900.</li>
+                <li><strong>HTTP Server (Flask):</strong> Runs on Port 5000 (Default Host: <code>0.0.0.0</code> for local network access).</li>
+                <li><strong>MQTT Protocol:</strong> Standard Unencrypted MQTT Port = 1883, MQTT over WebSockets = 8000/8083.</li>
+                <li><strong>NETWORK SECURITY WARNING:</strong> Ensure Raspberry Pi and client PC reside in the same WiFi/LAN subnet. Never use default passwords for remote access!</li>
+            `,
+            hwTitle: "Hardware Requirements",
+            hwList: `
+                <li><strong>Raspberry Pi</strong> (Linux OS Wi-Fi / Ethernet LAN configured)</li>
+                <li><strong>Client PC / Laptop</strong> (Connected to the same local Wi-Fi/LAN network)</li>
+                <li><strong>Local Router / Wi-Fi Hotspot</strong></li>
+            `,
+            swTitle: "Software Requirements",
+            swList: `
+                <li><strong>SSH / VNC Client:</strong> PuTTY, OpenSSH, or RealVNC Viewer</li>
+                <li><strong>Python Web Framework:</strong> <code>python3-flask</code></li>
+                <li><strong>MQTT Libraries & Broker:</strong> <code>python3-paho-mqtt</code> & <code>mosquitto</code></li>
+            `,
+            step1Header: `Step 1: Remote Access (SSH/VNC) & Network IP Setup <span class="badge">Remote Access</span>`,
+            step1I1: "Check Raspberry Pi local IP address on the connected network:",
+            step1I2: "Enable SSH and VNC Server services via Linux terminal:",
+            step1I3: "Test remote SSH connection from client PC/laptop:",
+            cp1Text: "<b>Checkpoint 1:</b> IP address identified and Raspberry Pi terminal successfully accessed via SSH headless mode.",
+
+            step2Header: `Step 2: Building Web Server & HTTP REST API (Flask) <span class="badge">HTTP Service</span>`,
+            step2S1: "1. Install Python Flask library and network communication dependencies:",
+            step2S2: "2. Create a new Flask Web Server Python script:",
+            step2S3: "3. Copy the following REST API server code:",
+            step2S4: "4. Run Python web server application on Raspberry Pi:",
+            cp2Text: "<b>Checkpoint 2:</b> Endpoint <code>http://&lt;PI_IP&gt;:5000/api/sensor</code> accessed successfully from client browser.",
+
+            step3Header: `Step 3: Implementing MQTT-Based IoT Telemetry Publisher <span class="badge">MQTT Protocol</span>`,
+            step3Intro: "In this step, Raspberry Pi acts as an MQTT Publisher sending sensor data JSON payloads to an MQTT Broker.",
+            step3S1: "1. Create a new Python file named mqtt_pub.py:",
+            step3S2: "2. Copy the MQTT Publisher script below:",
+            step3S3: "3. Run the MQTT telemetry Publisher Python script:",
+            cp3Text: "<b>Checkpoint 3:</b> MQTT payload transmitted periodically to Public HiveMQ Broker without errors.",
+
+            step4Header: `Step 4: Interactive IoT Telemetry Simulation & Data Broker <span class="badge">Interactive Module</span>`,
+            step4Intro: "Simulate sensor data variations on the Raspberry Pi node and observe MQTT message transmissions sent to the Broker:",
+            simPanelTitle: "MQTT Sensor Node Telemetry Simulation",
+            simModelText: "System Model: <strong>Raspberry Pi Node -> Paho MQTT Client -> HiveMQ Broker</strong>",
+            simSliderLabel: "Adjust Temperature Telemetry Value (°C):",
+            simPinsLabel: "MQTT Connection Parameters:",
+            simPinsList: `
+                <li><strong>Broker:</strong> broker.hivemq.com (Port 1883)</li>
+                <li><strong>Topic:</strong> untirta/elektro/iot/sensor</li>
+            `,
+            cp4Text: "<b>Checkpoint 4:</b> Student understands MQTT publish/subscribe architecture and JSON payload formatting.",
+
+            step5Header: `Step 5: Independent / Group Assignment (Smart IoT Gateway System) <span class="badge">Assignment</span>`,
+            step5Intro: "Complete the following integrated Smart IoT Gateway assignment to fulfill the Meeting 12 evaluation:",
+            step5List: `
+                <li>Develop a unified Python script named <code>tugas_iot_gateway.py</code>.</li>
+                <li>Functional Program Requirements:
+                    <ul>
+                        <li><strong>MQTT Publishing:</strong> Send telemetry data (Temperature, Humidity, Alarm Status) every 3 seconds to topic <code>untirta/your_id/iot</code>.</li>
+                        <li><strong>HTTP REST API Server:</strong> Provide two Flask endpoints:
+                            <ul>
+                                <li><code>/status</code>: Returns device status JSON and system uptime.</li>
+                                <li><code>/control?relay=on|off</code>: Controls GPIO pin state (e.g., GPIO 17) to actuate remote relays.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            `,
+            cp5Text: "<b>Checkpoint 5:</b> Integrated script <code>tugas_iot_gateway.py</code> tested successfully with valid MQTT output and HTTP relay responses."
+        }
+    };
+
+    let currentLang = 'id';
+    let currentTheme = 'light';
+
+    // Mendengarkan pesan sinkronisasi Real-Time dari Parent Window (index.html)
+    window.addEventListener('message', (event) => {
+        if (!event.data) return;
+        if (event.data.type === 'CHANGE_LANG') {
+            setLanguage(event.data.lang);
+        } else if (event.data.type === 'CHANGE_THEME') {
+            setTheme(event.data.theme);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedLang = localStorage.getItem('user_lang') || 'id';
+        const savedTheme = localStorage.getItem('user_theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+        setLanguage(savedLang);
+        setTheme(savedTheme);
+        updateSimulator();
+    });
+
+    function setLanguage(lang) {
+        if (!translations[lang]) return;
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        localStorage.setItem('user_lang', lang);
+
+        updateUIContent();
+        updateProgress();
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('user_theme', theme);
+    }
+
+    function updateUIContent() {
+        const t = translations[currentLang];
+
+        document.getElementById('course-tag').innerText = t.courseTag;
+        document.getElementById('dept-tag').innerText = t.deptTag;
+
+        document.getElementById('page-title').innerText = t.pageTitle;
+        document.getElementById('header-title').innerText = t.headerTitle;
+        document.getElementById('home-text').innerText = t.homeText;
+        document.getElementById('progress-title-text').innerText = t.progressTitleText;
+
+        document.getElementById('target-title').innerText = t.targetTitle;
+        document.getElementById('target-desc').innerHTML = t.targetDesc;
+
+        document.getElementById('params-title').innerText = t.paramsTitle;
+        document.getElementById('params-desc').innerText = t.paramsDesc;
+        document.getElementById('params-list').innerHTML = t.paramsList;
+
+        document.getElementById('hw-title').innerText = t.hwTitle;
+        document.getElementById('hw-list').innerHTML = t.hwList;
+
+        document.getElementById('sw-title').innerText = t.swTitle;
+        document.getElementById('sw-list').innerHTML = t.swList;
+
+        document.getElementById('step1-header').innerHTML = t.step1Header;
+        document.getElementById('step1-i1').innerText = t.step1I1;
+        document.getElementById('step1-i2').innerText = t.step1I2;
+        document.getElementById('step1-i3').innerText = t.step1I3;
+        document.getElementById('cp1-text').innerHTML = t.cp1Text;
+
+        document.getElementById('step2-header').innerHTML = t.step2Header;
+        document.getElementById('step2-s1').innerText = t.step2S1;
+        document.getElementById('step2-s2').innerText = t.step2S2;
+        document.getElementById('step2-s3').innerText = t.step2S3;
+        document.getElementById('step2-s4').innerText = t.step2S4;
+        document.getElementById('cp2-text').innerHTML = t.cp2Text;
+
+        document.getElementById('step3-header').innerHTML = t.step3Header;
+        document.getElementById('step3-intro').innerHTML = t.step3Intro;
+        document.getElementById('step3-s1').innerText = t.step3S1;
+        document.getElementById('step3-s2').innerText = t.step3S2;
+        document.getElementById('step3-s3').innerText = t.step3S3;
+        document.getElementById('cp3-text').innerHTML = t.cp3Text;
+
+        document.getElementById('step4-header').innerHTML = t.step4Header;
+        document.getElementById('step4-intro').innerText = t.step4Intro;
+        document.getElementById('sim-panel-title').innerText = t.simPanelTitle;
+        document.getElementById('sim-model-text').innerHTML = t.simModelText;
+        document.getElementById('sim-slider-label').innerText = t.simSliderLabel;
+        document.getElementById('sim-pins-label').innerText = t.simPinsLabel;
+        document.getElementById('sim-pins-list').innerHTML = t.simPinsList;
+        document.getElementById('cp4-text').innerHTML = t.cp4Text;
+
+        document.getElementById('step5-header').innerHTML = t.step5Header;
+        document.getElementById('step5-intro').innerText = t.step5Intro;
+        document.getElementById('step5-list').innerHTML = t.step5List;
+        document.getElementById('cp5-text').innerHTML = t.cp5Text;
+
+        updateSimulator();
+    }
+
+    function toggleAccordion(sectionId) {
+        const section = document.getElementById(sectionId);
+        section.classList.toggle('active');
+    }
+
+    function copyCode(button) {
+        const pre = button.parentElement;
+        const code = pre.querySelector('code').innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            button.innerText = 'Copied!';
+            setTimeout(() => {
+                button.innerText = 'Copy';
+            }, 2000);
+        });
+    }
+
+    function updateProgress() {
+        const checkboxes = document.querySelectorAll('.checkpoint input[type="checkbox"]');
+        let checkedCount = 0;
+
+        checkboxes.forEach((cb) => {
+            const section = cb.closest('.step-section');
+            if (cb.checked) {
+                checkedCount++;
+                section.classList.add('completed');
+            } else {
+                section.classList.remove('completed');
+            }
+        });
+
+        const percentage = Math.round((checkedCount / checkboxes.length) * 100);
+        document.getElementById('progress-bar').style.width = percentage + '%';
+
+        const t = translations[currentLang];
+        document.getElementById('progress-text').innerText = t.progressText
+            .replace('{percent}', percentage)
+            .replace('{count}', checkedCount);
+    }
+
+    function updateSimulator() {
+        const temp = parseInt(document.getElementById('temp-slider').value, 10);
+        let status = "OK";
+        if (temp > 35) {
+            status = "OVERHEAT!";
+        }
+
+        document.getElementById('lcd-line-1').innerText = `[MQTT BROKER LOG]: broker.hivemq.com`;
+        document.getElementById('lcd-line-2').innerText = `[TOPIC]: untirta/elektro/iot/sensor`;
+        document.getElementById('lcd-line-3').innerText = `[PAYLOAD]: {"suhu": ${temp}, "status": "${status}"}`;
+    }
+
+    function publishSimData() {
+        updateSimulator();
+        const line3 = document.getElementById('lcd-line-3');
+        line3.style.color = '#4ade80';
+        setTimeout(() => {
+            line3.style.color = '#38bdf8';
+        }, 500);
+    }
+</script>
+
+</body>
+</html>

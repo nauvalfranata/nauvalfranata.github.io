@@ -3,10 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topik 6: Impuls, Momentum & Dinamika Rotasi</title>
+    <title id="page-title">Virtual Lab: Impuls, Momentum & Dinamika Rotasi</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // Redirect jika dibuka langsung di luar iframe
+        if (window.self === window.top) {
+            window.location.href = "index.html?page=phys6";
+        }
+    </script>
+
     <style>
+        /* CSS Variables - Light Theme (Default) */
         :root {
             --primary: #2563eb;
             --primary-dark: #1d4ed8;
@@ -34,6 +46,7 @@
             --error-border: #fca5a5;
         }
 
+        /* CSS Variables - Dark Theme */
         [data-theme="dark"] {
             --primary: #3b82f6;
             --primary-dark: #2563eb;
@@ -76,7 +89,7 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
         .container {
@@ -106,29 +119,28 @@
             gap: 10px;
         }
 
-        .btn-back, .btn-theme, .btn-lang {
+        .btn-back {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             color: var(--text-main);
             background: var(--bg);
-            padding: 0.5rem 0.9rem;
+            padding: 0.5rem 1rem;
             border-radius: 30px;
             text-decoration: none;
             font-size: 0.85rem;
             font-weight: 600;
             border: 1px solid var(--card-border);
-            cursor: pointer;
             transition: all 0.2s ease;
         }
 
-        .btn-back:hover, .btn-theme:hover, .btn-lang:hover {
+        .btn-back:hover {
             background: var(--primary);
             color: #ffffff;
             border-color: var(--primary);
         }
 
-        h1 { margin: 0; font-size: 1.4rem; color: var(--primary); font-weight: 800; }
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
 
         .module-selector-container {
             margin-bottom: 20px;
@@ -140,7 +152,7 @@
             font-size: 0.85rem;
             font-weight: 700;
             color: var(--text-muted);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -150,7 +162,7 @@
 
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 12px;
         }
 
@@ -158,7 +170,7 @@
             background: var(--bg);
             border: 2px solid var(--card-border);
             border-radius: 12px;
-            padding: 12px 14px;
+            padding: 14px 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -179,10 +191,10 @@
         }
 
         .mod-card-icon {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             background: var(--card-bg);
-            width: 38px;
-            height: 38px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -198,7 +210,7 @@
         }
 
         .mod-card-title {
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: var(--text-main);
             line-height: 1.3;
@@ -224,25 +236,24 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 280px;
+            min-height: 250px;
         }
 
         .sensor-display {
             background: var(--sensor-bg);
             color: var(--sensor-text);
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.92rem;
+            font-size: 1.05rem;
             padding: 15px;
             border-radius: 8px;
             border: 2px solid var(--sensor-border);
             margin: 15px 0;
-            text-align: left;
+            text-align: center;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
             word-break: break-all;
             width: 100%;
             box-sizing: border-box;
             white-space: pre-line;
-            line-height: 1.5;
         }
 
         .task-card {
@@ -257,7 +268,7 @@
         }
 
         .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; font-size: 1.05rem; }
-        .task-card p { margin: 0; color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; }
+        .task-card p { margin: 0; color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
 
         .control-group {
             width: 100%;
@@ -305,7 +316,7 @@
             border-radius: 8px;
             font-size: 0.88rem;
             display: none;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         .feedback.success { background: var(--success-bg); color: var(--success-color); border: 1px solid var(--success-border); }
@@ -318,8 +329,6 @@
             border-radius: 8px;
             margin-top: 10px;
             touch-action: none;
-            width: 100%;
-            max-width: 340px;
         }
 
         .canvas-controls {
@@ -352,36 +361,35 @@
 <div class="container">
     <header>
         <div>
-            <h1 id="title-txt">Impuls, Tumbukan & Dinamika Rotasi</h1>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 2px;" id="subtitle-txt">Modul Interaktif Fisika Dasar</p>
+            <h1 id="header-title">Virtual Lab: Impuls & Dinamika Rotasi</h1>
         </div>
         <div class="header-actions">
-            <button class="btn-lang" onclick="toggleLanguage()" id="btn-lang">🌐 EN</button>
-            <button class="btn-theme" onclick="toggleTheme()" id="btn-theme">🌙 Mode</button>
+            <a href="physica.html" class="btn-back" id="home-link">
+                <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Beranda</span>
+            </a>
         </div>
     </header>
 
-    <!-- Module Selector -->
+    <!-- Main Module Selector -->
     <div class="module-selector-container">
         <div class="module-selector-label" id="select-mod-label">
-            <i class="fa-solid fa-compass"></i> Pilih Sub-Topik Pembelajaran
+            <i class="fa-solid fa-compass"></i> Pilih Mode Pembelajaran
         </div>
         <div class="module-grid" id="module-nav"></div>
     </div>
 
     <div class="lab-grid">
-        <!-- Visual Display Panel -->
+        <!-- Instrument / Visual Display Panel -->
         <div class="instrument-panel">
-            <div class="instrument-icon" id="inst-icon" style="font-size: 2rem;">🚀</div>
-            <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 700; margin-top: 5px;" id="inst-name">Panel Visualisasi</div>
+            <div class="instrument-icon" id="inst-icon">💫</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;" id="inst-name">Panel Visualisasi</div>
+            <div class="sensor-display" id="sensor-display">Pilih modul untuk memulai</div>
             
-            <div class="sensor-display" id="sensor-display">Memuat data...</div>
-            
-            <canvas id="sim-canvas" width="340" height="200" style="display: none;"></canvas>
+            <canvas id="rot-canvas" width="320" height="220" style="display: none;"></canvas>
             
             <div class="canvas-controls" id="canvas-btn-group" style="display: none;">
-                <button class="btn-sub" onclick="startAnim()" id="btn-start-sim">▶️ Mulai Sim</button>
-                <button class="btn-sub" onclick="resetAnim()" id="btn-reset-sim">⏹️ Reset</button>
+                <button class="btn-sub" onclick="startSim()" id="btn-start-sim">▶️ Mulai Sim</button>
+                <button class="btn-sub" onclick="resetSim()" id="btn-reset-sim">⏹️ Reset</button>
             </div>
 
             <button class="btn-action" style="background: var(--bg); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px; margin-top: 10px;" onclick="generateNewData()" id="btn-new-sample">
@@ -389,13 +397,14 @@
             </button>
         </div>
 
-        <!-- Student Input / Analysis Panel -->
+        <!-- Student Input / Dynamic Panel -->
         <div>
             <div class="task-card">
                 <h4 id="task-title">Judul Modul</h4>
                 <p id="task-desc">Petunjuk tugas akan muncul di sini.</p>
             </div>
 
+            <!-- Dynamic Input Container -->
             <div id="dynamic-inputs"></div>
 
             <button class="btn-action" id="btn-submit" onclick="submitAnalysis()">Kirim Data Analisis</button>
@@ -405,510 +414,670 @@
 </div>
 
 <script>
-    // Language State
+    // System Translations & Data
+    const translations = {
+        id: {
+            pageTitle: "Virtual Lab: Impuls, Momentum & Dinamika Rotasi",
+            headerTitle: "Virtual Lab: Impuls & Dinamika Rotasi",
+            homeText: "Kembali ke Beranda",
+            selectModLabel: "Pilih Mode Pembelajaran",
+            btnNewSample: "🔄 Sampel / Soal Baru",
+            btnSubmit: "Kirim Data Analisis",
+            btnStartSim: "▶️ Mulai Sim",
+            btnResetSim: "⏹️ Reset",
+            selectCaseLabel: "📌 Pilih Kasus Fisika:",
+            selectOptionPrompt: "-- Pilih Jawaban --",
+            mainModules: [
+                { name: "Kalkulasi & Simulasi Impuls / Rotasi", icon: "🔢" },
+                { name: "Pemahaman Konsep Rotasi & Momentum", icon: "💡" },
+                { name: "Kekekalan Momentum Sudut & Momen Inersia", icon: "🎡" }
+            ],
+            calcCases: [
+                "1. Impuls & Perubahan Momentum (I = Δp)",
+                "2. Tumbukan Lenting Sempurna (Kekekalan Momentum)",
+                "3. Torsi / Momen Gaya (τ = F · r · sin θ)",
+                "4. Momen Inersia Silinder (I = ½ m r²)",
+                "5. Dinamika Rotasi & Percepatan Sudut (τ = I · α)"
+            ],
+            calcUI: {
+                title: "Kalkulasi & Simulasi Impuls / Rotasi",
+                desc: "Pilih kasus fisika dari menu di bawah, lalu hitung besaran fisika berdasarkan data eksperimen.",
+                instName: "Simulasi Visual",
+                c1: { l1: "1. Impuls I (N·s):", p1: "Masukkan nilai impuls I", l2: "2. Kecepatan Akhir v₂ (m/s):", p2: "Masukkan kecepatan v₂" },
+                c2: { l1: "1. Kecepatan Akhir Balok 1 v₁' (m/s):", p1: "Masukkan v₁'", l2: "2. Kecepatan Akhir Balok 2 v₂' (m/s):", p2: "Masukkan v₂'" },
+                c3: { l1: "1. Komponen Gaya Tegak Lurus F⊥ (N):", p1: "Masukkan F sin θ", l2: "2. Torsi / Momen Gaya τ (N·m):", p2: "Masukkan nilai torsi τ" },
+                c4: { l1: "1. Momen Inersia Silinder Pejal I (kg·m²):", p1: "Masukkan nilai I", l2: "2. Momentum Sudut L (kg·m²/s):", p2: "Masukkan nilai L" },
+                c5: { l1: "1. Torsi Netto τ (N·m):", p1: "Masukkan nilai τ", l2: "2. Percepatan Sudut α (rad/s²):", p2: "Masukkan nilai α" }
+            },
+            conceptUI: {
+                instName: "Studi Kasus Konsep",
+                desc: "Baca narasi kasus fisika berikut, lalu pilih analisis gerak rotasi / momentum yang paling tepat.",
+                q1Label: "Pertanyaan 1:",
+                q2Label: "Pertanyaan 2:",
+                narrativeHeader: "📖 NARASI KASUS:"
+            },
+            rotUI: {
+                title: "Kekekalan Momentum Sudut Penari Es",
+                desc: "Analisis perubahan kecepatan sudut penari es saat merentangkan dan merapatkan tangannya.",
+                instName: "Simulasi Momentum Sudut",
+                l1: "1. Momen Inersia Awal I₁ (kg·m²):",
+                p1: "Hitung I₁ (I_badan + 2·m_tangan·r₁²)",
+                l2: "2. Kecepatan Sudut Akhir ω₂ (rad/s):",
+                p2: "Hitung ω₂ menggunakan L₁ = L₂"
+            },
+            errFillFields: "⚠️ Silakan isi semua pilihan/kolom terlebih dahulu!",
+            evalSuccess: "✅ <b>Analisis Tepat!</b>",
+            evalFailCalc: "❌ <b>Kalkulasi Belum Tepat!</b>",
+            evalSuccessConcept: "✅ <b>Jawaban Sangat Tepat!</b>",
+            evalFailConcept: "❌ <b>Analisis Konsep Belum Tepat.</b>"
+        },
+        en: {
+            pageTitle: "Virtual Lab: Impulse, Momentum & Rotational Dynamics",
+            headerTitle: "Virtual Lab: Impulse & Rotational Dynamics",
+            homeText: "Back to Home",
+            selectModLabel: "Select Learning Mode",
+            btnNewSample: "🔄 New Sample / Problem",
+            btnSubmit: "Submit Analysis Data",
+            btnStartSim: "▶️ Start Sim",
+            btnResetSim: "⏹️ Reset",
+            selectCaseLabel: "📌 Select Physics Case:",
+            selectOptionPrompt: "-- Select Answer --",
+            mainModules: [
+                { name: "Impulse / Rotation Calculation", icon: "🔢" },
+                { name: "Rotation & Momentum Conceptual Understanding", icon: "💡" },
+                { name: "Angular Momentum Conservation & Inertia", icon: "🎡" }
+            ],
+            calcCases: [
+                "1. Impulse & Momentum Change (I = Δp)",
+                "2. Elastic Collision (Conservation of Momentum)",
+                "3. Torque / Moment of Force (τ = F · r · sin θ)",
+                "4. Moment of Inertia of Cylinder (I = ½ m r²)",
+                "5. Rotational Dynamics & Angular Acceleration (τ = I · α)"
+            ],
+            calcUI: {
+                title: "Impulse / Rotation Calculation & Simulation",
+                desc: "Select a physics case below, then calculate the physical quantities based on experimental data.",
+                instName: "Visual Simulation",
+                c1: { l1: "1. Impulse I (N·s):", p1: "Enter impulse value I", l2: "2. Final Velocity v₂ (m/s):", p2: "Enter velocity v₂" },
+                c2: { l1: "1. Final Velocity Block 1 v₁' (m/s):", p1: "Enter v₁'", l2: "2. Final Velocity Block 2 v₂' (m/s):", p2: "Enter v₂'" },
+                c3: { l1: "1. Perpendicular Force Component F⊥ (N):", p1: "Enter F sin θ", l2: "2. Torque τ (N·m):", p2: "Enter torque value τ" },
+                c4: { l1: "1. Solid Cylinder Moment of Inertia I (kg·m²):", p1: "Enter value I", l2: "2. Angular Momentum L (kg·m²/s):", p2: "Enter value L" },
+                c5: { l1: "1. Net Torque τ (N·m):", p1: "Enter value τ", l2: "2. Angular Acceleration α (rad/s²):", p2: "Enter value α" }
+            },
+            conceptUI: {
+                instName: "Conceptual Case Study",
+                desc: "Read the physics scenario narrative below, then select the most accurate rotation / momentum analysis.",
+                q1Label: "Question 1:",
+                q2Label: "Question 2:",
+                narrativeHeader: "📖 CASE SCENARIO:"
+            },
+            rotUI: {
+                title: "Conservation of Angular Momentum of Ice Skater",
+                desc: "Analyze the angular velocity changes of an ice skater when extending and folding arms.",
+                instName: "Angular Momentum Sim",
+                l1: "1. Initial Moment of Inertia I₁ (kg·m²):",
+                p1: "Calculate I₁ (I_body + 2·m_arms·r₁²)",
+                l2: "2. Final Angular Velocity ω₂ (rad/s):",
+                p2: "Calculate ω₂ using L₁ = L₂"
+            },
+            errFillFields: "⚠️ Please fill in all selections/fields first!",
+            evalSuccess: "✅ <b>Correct Analysis!</b>",
+            evalFailCalc: "❌ <b>Incorrect Calculation!</b>",
+            evalSuccessConcept: "✅ <b>Excellent Answer!</b>",
+            evalFailConcept: "❌ <b>Incorrect Conceptual Analysis.</b>"
+        }
+    };
+
+    // Database Studi Kasus Konsep (Bilingual)
+    const rotConceptCasesData = {
+        id: [
+            {
+                id: 1,
+                title: "Airbag Mobil dan Impuls Saat Benturan",
+                story: "Saat terjadi kecelakaan, sistem airbag mengembang dengan cepat untuk menahan kepala pengemudi. Hal ini memperpanjang selang waktu kontak (Δt) saat penghentian terjadi.",
+                q1: "Mengapa perpanjangan waktu kontak Δt dapat mengurangi tingkat keparahan cedera?",
+                options1: [
+                    "Karena memperkecil gaya impulsif rata-rata (F) yang bekerja pada tubuh.",
+                    "Karena menghilangkan perubahan momentum total menjadi nol secara instan.",
+                    "Karena meningkatkan nilai impuls total yang diterima pengendara."
+                ],
+                ans1: 0,
+                q2: "Bagaimana hubungan antara Impuls (I) dan Perubahan Momentum (Δp)?",
+                options2: [
+                    "Impuls sama dengan perubahan momentum (I = Δp).",
+                    "Impuls adalah turunan dari momen gaya terhadap waktu.",
+                    "Impuls selalu berbanding terbalik dengan perubahan kecepatan."
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Penjelasan:</b> Impuls I = F · Δt = Δp. Jika Δp konstan (menghentikan benda bermassa m dari v ke 0), memperbesar Δt akan memperkecil gaya gaya rata-rata F = Δp / Δt secara signifikan."
+            },
+            {
+                id: 2,
+                title: "Membuka Pintu: Posisi Pegangan Pintu",
+                story: "Pegangan pintu selalu dipasang di ujung luar pintu yang jauh dari engsel, bukan di dekat engsel.",
+                q1: "Mengapa mendorong pintu di bagian ujung luar terasa lebih mudah daripada di dekat engsel?",
+                options1: [
+                    "Karena lengan gaya (r) lebih panjang sehingga menghasilkan Torsi (τ) yang lebih besar.",
+                    "Karena momen inersia pintu menjadi berkurang saat didorong dari ujung.",
+                    "Karena gaya gesek engsel hilang ketika didorong dari ujung luar."
+                ],
+                ans1: 0,
+                q2: "Besaran manakah yang menentukan tingkat efektivitas rotasi suatu benda?",
+                options2: [
+                    "Torsi / Momen Gaya (τ = F · r · sin θ).",
+                    "Momentum Linear (p = m · v).",
+                    "Gaya Sentripetal (Fs = m·v²/r)."
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Penjelasan:</b> Torsi τ = F · r · sin θ. Semakin besar jarak r dari poros (engsel), semakin besar torsi yang dihasilkan untuk gaya F yang sama."
+            },
+            {
+                id: 3,
+                title: "Putaran Penari Es / Atlet Loncat Indah",
+                story: "Seorang penari es melipat kedua tangannya ke dada saat berputar di atas es. Seketika putaran tubuhnya menjadi jauh lebih cepat.",
+                q1: "Hukum fisika manakah yang menyebabkan peningkatan kecepatan putaran tersebut?",
+                options1: [
+                    "Hukum Kekekalan Momentum Sudut (L₁ = L₂).",
+                    "Hukum Kekekalan Energi Mekanik saja.",
+                    "Hukum III Newton tentang Aksi-Reaksi."
+                ],
+                ans1: 0,
+                q2: "Apa yang terjadi pada Momen Inersia (I) dan Kecepatan Sudut (ω) saat tangan dilipat?",
+                options2: [
+                    "Momen Inersia (I) berkurang, sehingga kecepatan sudut (ω) meningkat.",
+                    "Momen Inersia (I) bertambah, sehingga kecepatan sudut (ω) meningkat.",
+                    "Momen Inersia (I) dan kecepatan sudut (ω) keduanya bertambah."
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Penjelasan:</b> Karena tidak ada torsi luar (Στ = 0), L = I · ω = konstan. Saat tangan dilipat, distribusi massa lebih dekat ke poros sehingga I berkurang dan ω bertambah secara otomatis."
+            }
+        ],
+        en: [
+            {
+                id: 1,
+                title: "Car Airbag and Impulse During Collision",
+                story: "During a collision, the airbag inflates rapidly to cushion the driver's head, extending the contact time interval (Δt) during stopping.",
+                q1: "Why does extending the contact time Δt reduce injury severity?",
+                options1: [
+                    "Because it reduces the average impulsive force (F) acting on the body.",
+                    "Because it instantly eliminates the total momentum change to zero.",
+                    "Because it increases the total impulse received by the driver."
+                ],
+                ans1: 0,
+                q2: "What is the relationship between Impulse (I) and Change in Momentum (Δp)?",
+                options2: [
+                    "Impulse equals the change in momentum (I = Δp).",
+                    "Impulse is the derivative of torque with respect to time.",
+                    "Impulse is always inversely proportional to velocity change."
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Explanation:</b> Impulse I = F · Δt = Δp. For a fixed Δp (stopping mass m from v to 0), increasing Δt drastically reduces the average force F = Δp / Δt."
+            },
+            {
+                id: 2,
+                title: "Opening a Door: Handle Placement",
+                story: "Door handles are always placed on the outer edge far from the hinges, rather than near the hinges.",
+                q1: "Why is it easier to push a door open from the far edge than near the hinge?",
+                options1: [
+                    "Because the lever arm (r) is longer, producing a larger Torque (τ).",
+                    "Because the door's moment of inertia decreases when pushed from the edge.",
+                    "Because hinge friction vanishes when pushed from the outer edge."
+                ],
+                ans1: 0,
+                q2: "Which quantity governs the rotational effectiveness on a rigid body?",
+                options2: [
+                    "Torque / Moment of Force (τ = F · r · sin θ).",
+                    "Linear Momentum (p = m · v).",
+                    "Centripetal Force (Fs = m·v²/r)."
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Explanation:</b> Torque τ = F · r · sin θ. The larger the distance r from the pivot (hinge), the greater the torque generated for the same force F."
+            },
+            {
+                id: 3,
+                title: "Ice Skater Spin",
+                story: "An ice skater pulls her arms tightly inwards toward her chest while spinning. Instantly, her rotational speed increases significantly.",
+                q1: "Which physical law explains this speed increase?",
+                options1: [
+                    "Law of Conservation of Angular Momentum (L₁ = L₂).",
+                    "Law of Conservation of Mechanical Energy only.",
+                    "Newton's Third Law of Action-Reaction."
+                ],
+                ans1: 0,
+                q2: "What happens to the Moment of Inertia (I) and Angular Velocity (ω) when arms are folded?",
+                options2: [
+                    "Moment of Inertia (I) decreases, causing angular velocity (ω) to increase.",
+                    "Moment of Inertia (I) increases, causing angular velocity (ω) to increase.",
+                    "Both Moment of Inertia (I) and angular velocity (ω) increase."
+                ],
+                ans2: 0,
+                diffExplanation: "<b>Explanation:</b> Without external torque (Στ = 0), L = I · ω = constant. Folding arms brings mass distribution closer to the rotational axis, reducing I and increasing ω."
+            }
+        ]
+    };
+
+    // State Variables
     let currentLang = 'id';
     let currentTheme = 'light';
-    let currentModule = 0;
-    let currentData = {};
-    let animFrame = null;
-    let animRunning = false;
-    let animTime = 0;
+    let currentMainMod = 0; // 0: Perhitungan, 1: Konsep, 2: Conserv. Angular Momentum
+    let currentSubCalcCase = 0;
+    let currentRawData = {};
+    let currentConceptIndex = 0;
 
-    const modules = [
-        {
-            id: 'impulse_momentum',
-            icon: '⚡',
-            title: { id: 'Impuls & Teorema Impuls-Momentum', en: 'Impulse & Impulse-Momentum Theorem' },
-            desc: {
-                id: 'Analisis gaya impulsif F yang bekerja pada benda bermassa m selama selang waktu dt untuk mengubah kecepatannya dari v1 ke v2 (J = F*dt = m*(v2 - v1)).',
-                en: 'Analyze the impulsive force F acting on mass m over duration dt to change velocity from v1 to v2 (J = F*dt = m*(v2 - v1)).'
-            }
-        },
-        {
-            id: 'collisions_elastic',
-            icon: '💥',
-            title: { id: 'Tumbukan Lenting Sempurna (e=1)', en: 'Elastic Collision (e=1)' },
-            desc: {
-                id: 'Tumbukan 1-Dimensi di mana hukum kekekalan momentum dan energi kinetik berlaku penuh. Hitung kecepatan akhir v1\' dan v2\'.',
-                en: '1D collision preserving both momentum and kinetic energy (e=1). Calculate final velocities v1\' and v2\'.'
-            }
-        },
-        {
-            id: 'collisions_inelastic',
-            icon: '🧱',
-            title: { id: 'Tumbukan Tak Lenting Sama Sekali', en: 'Perfectly Inelastic Collision' },
-            desc: {
-                id: 'Dua benda bertumbukan dan menyatu (e=0). Hitung kecepatan bersama vf dan hilangnya energi kinetik (Delta EK).',
-                en: 'Two bodies collide and stick together (e=0). Calculate common velocity vf and kinetic energy loss (Delta EK).'
-            }
-        },
-        {
-            id: 'coefficient_restitution',
-            icon: '🎾',
-            title: { id: 'Koefisien Restitusi (e)', en: 'Coefficient of Restitution (e)' },
-            desc: {
-                id: 'Analisis tumbukan sebagian lenting (0 < e < 1) atau pantulan bola dari ketinggian h1 ke h2 di mana e = sqrt(h2/h1).',
-                en: 'Analyze partially elastic collision (0 < e < 1) or ball bounce from h1 to h2 where e = sqrt(h2/h1).'
-            }
-        },
-        {
-            id: 'torque_inertia',
-            icon: '🔩',
-            title: { id: 'Torsi & Momen Inersia', en: 'Torque & Moment of Inertia' },
-            desc: {
-                id: 'Hitung torsi tau = F * r * sin(theta) dan momen inersia I untuk berbagai bentuk benda tegar.',
-                en: 'Calculate torque tau = F * r * sin(theta) and moment of inertia I for rigid bodies.'
-            }
-        },
-        {
-            id: 'rotational_dynamics',
-            icon: '🎡',
-            title: { id: 'Dinamika & Kinematika Rotasi', en: 'Rotational Dynamics & Kinematics' },
-            desc: {
-                id: 'Simulasi roda berotasi dengan percepatan sudut alpha = tau / I. Hitung kecepatan sudut omega dan sudut tempuh theta.',
-                en: 'Simulate rotating wheel with angular acceleration alpha = tau / I. Compute angular velocity omega and angle theta.'
-            }
-        }
-    ];
+    // Canvas Animation Control
+    let canvas, ctx;
+    let animationId = null;
+    let simProgress = 0;
+    let isSimRunning = false;
 
-    function init() {
-        renderModuleNav();
-        loadModule(0);
-    }
+    function applySettings() {
+        currentLang = localStorage.getItem('user_lang') || 'id';
+        currentTheme = localStorage.getItem('user_theme') || 'light';
 
-    function toggleLanguage() {
-        currentLang = currentLang === 'id' ? 'en' : 'id';
-        document.getElementById('btn-lang').innerText = currentLang === 'id' ? '🌐 EN' : '🌐 ID';
-        document.getElementById('title-txt').innerText = currentLang === 'id' ? 'Impuls, Tumbukan & Dinamika Rotasi' : 'Impulse, Collisions & Rotational Dynamics';
-        document.getElementById('subtitle-txt').innerText = currentLang === 'id' ? 'Modul Interaktif Fisika Dasar' : 'Basic Physics Interactive Module';
-        document.getElementById('select-mod-label').innerHTML = `<i class="fa-solid fa-compass"></i> ${currentLang === 'id' ? 'Pilih Sub-Topik Pembelajaran' : 'Select Learning Sub-Topic'}`;
-        document.getElementById('btn-submit').innerText = currentLang === 'id' ? 'Kirim Data Analisis' : 'Submit Analysis Data';
-        document.getElementById('btn-new-sample').innerText = currentLang === 'id' ? '🔄 Sampel / Soal Baru' : '🔄 New Sample / Problem';
-        document.getElementById('btn-start-sim').innerText = currentLang === 'id' ? '▶️ Mulai Sim' : '▶️ Start Sim';
-        document.getElementById('btn-reset-sim').innerText = currentLang === 'id' ? '⏹️ Reset' : '⏹️ Reset';
-        
-        renderModuleNav();
-        loadModule(currentModule, false);
-    }
-
-    function toggleTheme() {
-        currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.lang = currentLang;
         document.documentElement.setAttribute('data-theme', currentTheme);
-        document.getElementById('btn-theme').innerText = currentTheme === 'light' ? '🌙 Mode' : '☀️ Mode';
-        drawCanvas();
+
+        updateUIStaticText();
+        initNav();
+        renderMainModule();
     }
 
-    function renderModuleNav() {
+    document.addEventListener('DOMContentLoaded', () => {
+        applySettings();
+    });
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'user_theme' || e.key === 'user_lang') {
+            applySettings();
+        }
+    });
+
+    function updateUIStaticText() {
+        const t = translations[currentLang];
+        document.getElementById('page-title').innerText = t.pageTitle;
+        document.getElementById('header-title').innerText = t.headerTitle;
+        document.getElementById('home-text').innerText = t.homeText;
+        document.getElementById('select-mod-label').innerHTML = `<i class="fa-solid fa-compass"></i> ${t.selectModLabel}`;
+        document.getElementById('btn-new-sample').innerText = t.btnNewSample;
+        document.getElementById('btn-submit').innerText = t.btnSubmit;
+        document.getElementById('btn-start-sim').innerText = t.btnStartSim;
+        document.getElementById('btn-reset-sim').innerText = t.btnResetSim;
+    }
+
+    function initNav() {
         const nav = document.getElementById('module-nav');
         nav.innerHTML = '';
-        modules.forEach((mod, idx) => {
+        const t = translations[currentLang];
+        t.mainModules.forEach((modMeta, idx) => {
             const card = document.createElement('div');
-            card.className = `mod-card ${idx === currentModule ? 'active' : ''}`;
-            card.onclick = () => loadModule(idx);
+            card.className = `mod-card ${idx === currentMainMod ? 'active' : ''}`;
+            card.onclick = () => switchMainModule(idx);
+            
             card.innerHTML = `
-                <div class="mod-card-icon">${mod.icon}</div>
-                <div class="mod-card-title">${mod.title[currentLang]}</div>
+                <div class="mod-card-icon">${modMeta.icon}</div>
+                <div class="mod-card-title">${modMeta.name}</div>
             `;
             nav.appendChild(card);
         });
     }
 
-    function loadModule(idx, generateNew = true) {
-        currentModule = idx;
-        renderModuleNav();
-        const mod = modules[idx];
-        
-        document.getElementById('inst-icon').innerText = mod.icon;
-        document.getElementById('inst-name').innerText = mod.title[currentLang];
-        document.getElementById('task-title').innerText = mod.title[currentLang];
-        document.getElementById('task-desc').innerText = mod.desc[currentLang];
+    function switchMainModule(index) {
+        currentMainMod = index;
+        initNav();
+        generateNewData();
+    }
 
+    function renderMainModule() {
+        const t = translations[currentLang];
+        const canvasEl = document.getElementById('rot-canvas');
+        const btnGroup = document.getElementById('canvas-btn-group');
         document.getElementById('feedback').style.display = 'none';
 
-        if (generateNew) {
-            generateNewData();
-        } else {
-            updateDisplay();
-            renderInputs();
+        if (currentMainMod === 0) { // Kalkulasi
+            canvasEl.style.display = 'block';
+            btnGroup.style.display = 'flex';
+            document.getElementById('inst-name').innerText = t.calcUI.instName;
+            document.getElementById('inst-icon').innerText = "🔢";
+
+            renderCalcModuleUI();
+
+        } else if (currentMainMod === 1) { // Konsep
+            canvasEl.style.display = 'none';
+            btnGroup.style.display = 'none';
+            document.getElementById('inst-name').innerText = t.conceptUI.instName;
+            document.getElementById('inst-icon').innerText = "💡";
+
+            renderConceptModuleUI();
+
+        } else if (currentMainMod === 2) { // Skater Angular Momentum Sim
+            canvasEl.style.display = 'block';
+            btnGroup.style.display = 'flex';
+            document.getElementById('inst-name').innerText = t.rotUI.instName;
+            document.getElementById('inst-icon').innerText = "🎡";
+
+            renderRotModuleUI();
         }
     }
 
+    /* =========================================================
+       MODE 1: KALKULASI DINAMIKA ROTASI
+       ========================================================= */
+    function renderCalcModuleUI() {
+        const t = translations[currentLang];
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        
+        document.getElementById('task-title').innerText = t.calcUI.title;
+        document.getElementById('task-desc').innerText = t.calcUI.desc;
+
+        let optionsHtml = t.calcCases.map((c, i) => `<option value="${i}" ${i === currentSubCalcCase ? 'selected' : ''}>${c}</option>`).join('');
+
+        let caseSelectHtml = `
+            <div class="control-group">
+                <label>${t.selectCaseLabel}</label>
+                <select id="calc-case-select" onchange="changeCalcCase(this.value)">
+                    ${optionsHtml}
+                </select>
+            </div>
+            <hr style="border: 0; border-top: 1px dashed var(--card-border); margin: 15px 0;">
+        `;
+
+        const cInfo = t.calcUI[`c${currentSubCalcCase + 1}`];
+
+        dynamicInputs.innerHTML = caseSelectHtml + `
+            <div class="control-group">
+                <label>${cInfo.l1}</label>
+                <input type="number" id="mod-val-1" step="any" placeholder="${cInfo.p1}">
+            </div>
+            <div class="control-group">
+                <label>${cInfo.l2}</label>
+                <input type="number" id="mod-val-2" step="any" placeholder="${cInfo.p2}">
+            </div>
+        `;
+
+        updateCalcSensorDisplay();
+        resetSim();
+    }
+
+    function changeCalcCase(val) {
+        currentSubCalcCase = parseInt(val);
+        generateNewData();
+    }
+
+    function updateCalcSensorDisplay() {
+        const d = currentRawData;
+        if (!d || Object.keys(d).length === 0) return;
+
+        let txt = "";
+        const isEn = currentLang === 'en';
+
+        if (currentSubCalcCase === 0) {
+            txt = isEn 
+                ? `[Impulse & Momentum]\nMass (m) = ${d.m} kg\nInitial Velocity (v₁) = ${d.v1} m/s\nForce (F) = ${d.F} N | Contact Time (Δt) = ${d.dt} s`
+                : `[Impuls & Momentum]\nMassa (m) = ${d.m} kg\nKecepatan Awal (v₁) = ${d.v1} m/s\nGaya (F) = ${d.F} N | Selang Waktu (Δt) = ${d.dt} s`;
+        } else if (currentSubCalcCase === 1) {
+            txt = isEn 
+                ? `[Elastic Collision]\nMass 1 (m₁) = ${d.m1} kg, Initial Vel (v₁) = ${d.v1} m/s\nMass 2 (m₂) = ${d.m2} kg, Initial Vel (v₂) = ${d.v2} m/s`
+                : `[Tumbukan Lenting Sempurna]\nMassa 1 (m₁) = ${d.m1} kg, Kecepatan (v₁) = ${d.v1} m/s\nMassa 2 (m₂) = ${d.m2} kg, Kecepatan (v₂) = ${d.v2} m/s`;
+        } else if (currentSubCalcCase === 2) {
+            txt = isEn 
+                ? `[Torque]\nForce (F) = ${d.F} N\nLever Arm (r) = ${d.r} m\nAngle (θ) = ${d.theta}°`
+                : `[Torsi / Momen Gaya]\nGaya (F) = ${d.F} N\nLengan Gaya (r) = ${d.r} m\nSudut (θ) = ${d.theta}°`;
+        } else if (currentSubCalcCase === 3) {
+            txt = isEn 
+                ? `[Cylinder Moment of Inertia]\nMass (m) = ${d.m} kg\nRadius (r) = ${d.r} m\nAngular Velocity (ω) = ${d.omega} rad/s`
+                : `[Momen Inersia Silinder]\nMassa (m) = ${d.m} kg\nJari-jari (r) = ${d.r} m\nKecepatan Sudut (ω) = ${d.omega} rad/s`;
+        } else if (currentSubCalcCase === 4) {
+            txt = isEn 
+                ? `[Rotational Dynamics]\nMoment of Inertia (I) = ${d.I} kg·m²\nApplied Force (F) = ${d.F} N, Arm (r) = ${d.r} m`
+                : `[Dinamika Rotasi]\nMomen Inersia (I) = ${d.I} kg·m²\nGaya Tangan (F) = ${d.F} N, Lengan (r) = ${d.r} m`;
+        }
+
+        document.getElementById('sensor-display').innerText = txt;
+    }
+
+    /* =========================================================
+       MODE 2: PEMAHAMAN KONSEP
+       ========================================================= */
+    function renderConceptModuleUI() {
+        const t = translations[currentLang];
+        const cases = rotConceptCasesData[currentLang];
+        const c = cases[currentConceptIndex];
+
+        document.getElementById('task-title').innerText = `${t.conceptUI.instName} ${currentConceptIndex + 1}: ${c.title}`;
+        document.getElementById('task-desc').innerText = t.conceptUI.desc;
+
+        document.getElementById('sensor-display').innerText = `${t.conceptUI.narrativeHeader}\n"${c.story}"`;
+
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        dynamicInputs.innerHTML = `
+            <div class="control-group">
+                <label><b>${t.conceptUI.q1Label}</b> ${c.q1}</label>
+                <select id="concept-ans-1">
+                    <option value="">${t.selectOptionPrompt}</option>
+                    ${c.options1.map((opt, idx) => `<option value="${idx}">${opt}</option>`).join('')}
+                </select>
+            </div>
+            <div class="control-group" style="margin-top:15px;">
+                <label><b>${t.conceptUI.q2Label}</b> ${c.q2}</label>
+                <select id="concept-ans-2">
+                    <option value="">${t.selectOptionPrompt}</option>
+                    ${c.options2.map((opt, idx) => `<option value="${idx}">${opt}</option>`).join('')}
+                </select>
+            </div>
+        `;
+    }
+
+    /* =========================================================
+       MODE 3: KEKEKALAN MOMENTUM SUDUT (PENARI ES)
+       ========================================================= */
+    function renderRotModuleUI() {
+        const t = translations[currentLang];
+        const d = currentRawData;
+
+        document.getElementById('task-title').innerText = t.rotUI.title;
+        document.getElementById('task-desc').innerText = t.rotUI.desc;
+
+        const isEn = currentLang === 'en';
+        document.getElementById('sensor-display').innerText = isEn
+            ? `[Ice Skater Setup]\nBody Inertia (I_body) = ${d.I_body} kg·m²\nHand Mass (m_hand) = ${d.m_hand} kg each\nInitial Arm Length (r₁) = ${d.r1} m -> Final (r₂) = ${d.r2} m\nInitial Angular Speed (ω₁) = ${d.w1} rad/s`
+            : `[Eksperimen Penari Es]\nInersia Badan (I_badan) = ${d.I_body} kg·m²\nMassa Tangan (m_tangan) = ${d.m_hand} kg (masing-masing)\nPanjang Tangan Awal (r₁) = ${d.r1} m -> Akhir (r₂) = ${d.r2} m\nKecepatan Sudut Awal (ω₁) = ${d.w1} rad/s`;
+
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        dynamicInputs.innerHTML = `
+            <div class="control-group">
+                <label>${t.rotUI.l1}</label>
+                <input type="number" id="mod-val-1" step="any" placeholder="${t.rotUI.p1}">
+            </div>
+            <div class="control-group">
+                <label>${t.rotUI.l2}</label>
+                <input type="number" id="mod-val-2" step="any" placeholder="${t.rotUI.p2}">
+            </div>
+        `;
+
+        resetSim();
+    }
+
+    /* =========================================================
+       GENERASI DATA & ANIMASI
+       ========================================================= */
     function generateNewData() {
-        cancelAnimationFrame(animFrame);
-        animRunning = false;
-        animTime = 0;
+        document.getElementById('feedback').style.display = 'none';
 
-        switch (currentModule) {
-            case 0: // Impulse & Momentum
-                currentData = {
-                    m: +(Math.random() * 2 + 0.5).toFixed(2), // 0.5 - 2.5 kg
-                    v1: +(Math.random() * 10 - 5).toFixed(1), // -5 to 5 m/s
-                    v2: +(Math.random() * 15 + 5).toFixed(1), // 5 to 20 m/s
-                    dt: +(Math.random() * 0.05 + 0.01).toFixed(3) // 0.01 - 0.06 s
-                };
-                break;
-
-            case 1: // Elastic Collision
-                currentData = {
-                    m1: +(Math.random() * 3 + 1).toFixed(1),
-                    v1: +(Math.random() * 8 + 2).toFixed(1),
-                    m2: +(Math.random() * 3 + 1).toFixed(1),
-                    v2: -(+(Math.random() * 5 + 1).toFixed(1))
-                };
-                break;
-
-            case 2: // Perfectly Inelastic Collision
-                currentData = {
-                    m1: +(Math.random() * 4 + 1).toFixed(1),
-                    v1: +(Math.random() * 10 + 2).toFixed(1),
-                    m2: +(Math.random() * 4 + 1).toFixed(1),
-                    v2: +(Math.random() * 4 - 2).toFixed(1)
-                };
-                break;
-
-            case 3: // Coefficient of Restitution
-                currentData = {
-                    h1: +(Math.random() * 5 + 2).toFixed(2), // Initial height 2-7 m
-                    e: +(Math.random() * 0.5 + 0.4).toFixed(2) // e between 0.4 - 0.9
-                };
-                // Calculate resulting h2
-                currentData.h2 = +(currentData.h1 * currentData.e * currentData.e).toFixed(2);
-                break;
-
-            case 4: // Torque & Moment of Inertia
-                const shapes = [
-                    { name: 'Silinder Pejal (1/2 M R²)', k: 0.5 },
-                    { name: 'Bola Pejal (2/5 M R²)', k: 0.4 },
-                    { name: 'Cincin / Silinder Tipis (M R²)', k: 1.0 }
-                ];
-                const selectedShape = shapes[Math.floor(Math.random() * shapes.length)];
-                currentData = {
-                    shapeName: selectedShape.name,
-                    k: selectedShape.k,
-                    m: +(Math.random() * 5 + 1).toFixed(1),
-                    r: +(Math.random() * 0.5 + 0.1).toFixed(2),
-                    f: +(Math.random() * 20 + 5).toFixed(1),
-                    thetaDeg: [30, 45, 60, 90][Math.floor(Math.random() * 4)]
-                };
-                break;
-
-            case 5: // Rotational Dynamics & Kinematics
-                currentData = {
-                    I: +(Math.random() * 0.8 + 0.2).toFixed(2), // kg m2
-                    tau: +(Math.random() * 4 + 1).toFixed(2), // N m
-                    t: +(Math.random() * 4 + 2).toFixed(1) // 2 - 6 s
-                };
-                break;
-        }
-
-        updateDisplay();
-        renderInputs();
-        drawCanvas();
-    }
-
-    function updateDisplay() {
-        const disp = document.getElementById('sensor-display');
-        const canvas = document.getElementById('sim-canvas');
-        const btnGroup = document.getElementById('canvas-btn-group');
-
-        canvas.style.display = 'none';
-        btnGroup.style.display = 'none';
-
-        if (currentLang === 'id') {
-            switch (currentModule) {
-                case 0:
-                    disp.innerHTML = `Massa Benda (m)     : ${currentData.m} kg\nKecepatan Awal (v1) : ${currentData.v1} m/s\nKecepatan Akhir (v2): ${currentData.v2} m/s\nDurasi Gaya (dt)    : ${currentData.dt} s`;
-                    break;
-                case 1:
-                    disp.innerHTML = `Benda 1: m1 = ${currentData.m1} kg, v1 = ${currentData.v1} m/s\nBenda 2: m2 = ${currentData.m2} kg, v2 = ${currentData.v2} m/s\n\nSifat: Tumbukan Lenting Sempurna (e = 1.0)`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
-                case 2:
-                    disp.innerHTML = `Benda 1: m1 = ${currentData.m1} kg, v1 = ${currentData.v1} m/s\nBenda 2: m2 = ${currentData.m2} kg, v2 = ${currentData.v2} m/s\n\nSifat: Tumbukan Tak Lenting Sama Sekali (e = 0)`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
-                case 3:
-                    disp.innerHTML = `Tinggi Awal Bola (h1)  : ${currentData.h1} m\nTinggi Pantulan (h2)   : ${currentData.h2} m\nPercepatan Gravitasi g : 9.8 m/s²`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
-                case 4:
-                    disp.innerHTML = `Bentuk Benda  : ${currentData.shapeName}\nMassa (M)     : ${currentData.m} kg\nJari-jari (R) : ${currentData.r} m\nGaya Tangensial (F): ${currentData.f} N\nSudut Gaya (θ): ${currentData.thetaDeg}°`;
-                    break;
-                case 5:
-                    disp.innerHTML = `Momen Inersia (I) : ${currentData.I} kg·m²\nTorsi Total (τ)   : ${currentData.tau} N·m\nWaktu Rotasi (t)  : ${currentData.t} s`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
+        if (currentMainMod === 0) {
+            if (currentSubCalcCase === 0) {
+                const m = Math.floor(Math.random() * 5) + 2;
+                const v1 = Math.floor(Math.random() * 6) + 2;
+                const F = Math.floor(Math.random() * 40) + 10;
+                const dt = parseFloat((Math.random() * 0.4 + 0.1).toFixed(2));
+                currentRawData = { m, v1, F, dt };
+            } else if (currentSubCalcCase === 1) {
+                const m1 = Math.floor(Math.random() * 3) + 2;
+                const m2 = Math.floor(Math.random() * 3) + 2;
+                const v1 = Math.floor(Math.random() * 8) + 4;
+                const v2 = 0;
+                currentRawData = { m1, m2, v1, v2 };
+            } else if (currentSubCalcCase === 2) {
+                const F = Math.floor(Math.random() * 50) + 20;
+                const r = parseFloat((Math.random() * 1.5 + 0.5).toFixed(2));
+                const angles = [30, 45, 60, 90];
+                const theta = angles[Math.floor(Math.random() * angles.length)];
+                currentRawData = { F, r, theta };
+            } else if (currentSubCalcCase === 3) {
+                const m = Math.floor(Math.random() * 8) + 2;
+                const r = parseFloat((Math.random() * 0.8 + 0.2).toFixed(2));
+                const omega = Math.floor(Math.random() * 10) + 5;
+                currentRawData = { m, r, omega };
+            } else if (currentSubCalcCase === 4) {
+                const I = parseFloat((Math.random() * 1.5 + 0.5).toFixed(2));
+                const F = Math.floor(Math.random() * 30) + 10;
+                const r = parseFloat((Math.random() * 0.8 + 0.2).toFixed(2));
+                currentRawData = { I, F, r };
             }
-        } else {
-            switch (currentModule) {
-                case 0:
-                    disp.innerHTML = `Mass (m)            : ${currentData.m} kg\nInitial Velocity(v1): ${currentData.v1} m/s\nFinal Velocity (v2) : ${currentData.v2} m/s\nForce Duration (dt) : ${currentData.dt} s`;
-                    break;
-                case 1:
-                    disp.innerHTML = `Body 1: m1 = ${currentData.m1} kg, v1 = ${currentData.v1} m/s\nBody 2: m2 = ${currentData.m2} kg, v2 = ${currentData.v2} m/s\n\nProperty: Perfectly Elastic Collision (e = 1.0)`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
-                case 2:
-                    disp.innerHTML = `Body 1: m1 = ${currentData.m1} kg, v1 = ${currentData.v1} m/s\nBody 2: m2 = ${currentData.m2} kg, v2 = ${currentData.v2} m/s\n\nProperty: Perfectly Inelastic Collision (e = 0)`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
-                case 3:
-                    disp.innerHTML = `Initial Height (h1) : ${currentData.h1} m\nBounce Height (h2)  : ${currentData.h2} m\nGravity (g)         : 9.8 m/s²`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
-                case 4:
-                    disp.innerHTML = `Shape Object : ${currentData.shapeName}\nMass (M)     : ${currentData.m} kg\nRadius (R)   : ${currentData.r} m\nForce (F)    : ${currentData.f} N\nForce Angle  : ${currentData.thetaDeg}°`;
-                    break;
-                case 5:
-                    disp.innerHTML = `Moment of Inertia (I): ${currentData.I} kg·m²\nNet Torque (τ)       : ${currentData.tau} N·m\nRotation Time (t)    : ${currentData.t} s`;
-                    canvas.style.display = 'block';
-                    btnGroup.style.display = 'flex';
-                    break;
-            }
+            renderMainModule();
+            drawCanvasState(0);
+
+        } else if (currentMainMod === 1) {
+            const cases = rotConceptCasesData[currentLang];
+            currentConceptIndex = Math.floor(Math.random() * cases.length);
+            renderMainModule();
+
+        } else if (currentMainMod === 2) {
+            const I_body = parseFloat((Math.random() * 1.0 + 1.0).toFixed(2));
+            const m_hand = parseFloat((Math.random() * 2.0 + 1.0).toFixed(1));
+            const r1 = 0.8;
+            const r2 = 0.2;
+            const w1 = Math.floor(Math.random() * 6) + 4;
+            currentRawData = { I_body, m_hand, r1, r2, w1 };
+            renderMainModule();
+            drawCanvasState(0);
         }
     }
 
-    function renderInputs() {
-        const container = document.getElementById('dynamic-inputs');
-        container.innerHTML = '';
+    function startSim() {
+        if (isSimRunning) return;
+        isSimRunning = true;
+        let startTime = null;
+        const duration = 3000;
 
-        if (currentModule === 0) {
-            container.innerHTML = `
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '1. Hitung Perubahan Momentum Δp (N·s / kg·m/s):' : '1. Calculate Momentum Change Δp (N·s):'}</label>
-                    <input type="number" step="0.01" id="in_dp" placeholder="e.g. 15.5">
-                </div>
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '2. Hitung Besar Gaya Impulsif Rata-Rata F (N):' : '2. Calculate Average Impulsive Force F (N):'}</label>
-                    <input type="number" step="0.1" id="in_f" placeholder="e.g. 350.0">
-                </div>
-            `;
-        } else if (currentModule === 1) {
-            container.innerHTML = `
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '1. Kecepatan Akhir Benda 1 v1\' (m/s):' : '1. Final Velocity of Object 1 v1\' (m/s):'}</label>
-                    <input type="number" step="0.01" id="in_v1_prime" placeholder="e.g. -2.4">
-                </div>
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '2. Kecepatan Akhir Benda 2 v2\' (m/s):' : '2. Final Velocity of Object 2 v2\' (m/s):'}</label>
-                    <input type="number" step="0.01" id="in_v2_prime" placeholder="e.g. 4.6">
-                </div>
-            `;
-        } else if (currentModule === 2) {
-            container.innerHTML = `
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '1. Kecepatan Bersama Setelah Tumbukan vf (m/s):' : '1. Common Velocity After Collision vf (m/s):'}</label>
-                    <input type="number" step="0.01" id="in_vf" placeholder="e.g. 3.25">
-                </div>
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '2. Energi Kinetik Hilang ΔEK (Joule):' : '2. Kinetic Energy Loss ΔEK (Joule):'}</label>
-                    <input type="number" step="0.1" id="in_dek" placeholder="e.g. 42.1">
-                </div>
-            `;
-        } else if (currentModule === 3) {
-            container.innerHTML = `
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '1. Nilai Koefisien Restitusi (e):' : '1. Coefficient of Restitution (e):'}</label>
-                    <input type="number" step="0.01" id="in_e" placeholder="e.g. 0.75">
-                </div>
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '2. Kecepatan Tumbuk Sebelum Pantulan v1 = sqrt(2gh1) (m/s):' : '2. Impact Velocity Before Bounce v1 = sqrt(2gh1) (m/s):'}</label>
-                    <input type="number" step="0.1" id="in_vimp" placeholder="e.g. 9.9">
-                </div>
-            `;
-        } else if (currentModule === 4) {
-            container.innerHTML = `
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '1. Momen Inersia I (kg·m²):' : '1. Moment of Inertia I (kg·m²):'}</label>
-                    <input type="number" step="0.001" id="in_inertia" placeholder="e.g. 0.125">
-                </div>
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '2. Torsi Murni τ = F·R·sin(θ) (N·m):' : '2. Torque τ = F·R·sin(θ) (N·m):'}</label>
-                    <input type="number" step="0.01" id="in_torque" placeholder="e.g. 1.85">
-                </div>
-            `;
-        } else if (currentModule === 5) {
-            container.innerHTML = `
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '1. Percepatan Sudut α (rad/s²):' : '1. Angular Acceleration α (rad/s²):'}</label>
-                    <input type="number" step="0.01" id="in_alpha" placeholder="e.g. 3.50">
-                </div>
-                <div class="control-group">
-                    <label>${currentLang === 'id' ? '2. Kecepatan Sudut Akhir ω (rad/s) pada detik ke-t:' : '2. Final Angular Velocity ω (rad/s) at time t:'}</label>
-                    <input type="number" step="0.1" id="in_omega" placeholder="e.g. 14.0">
-                </div>
-            `;
+        function step(timestamp) {
+            if (!startTime) startTime = timestamp;
+            const progress = Math.min((timestamp - startTime) / duration, 1);
+            simProgress = progress;
+            drawCanvasState(progress);
+
+            if (progress < 1 && isSimRunning) {
+                animationId = requestAnimationFrame(step);
+            } else {
+                isSimRunning = false;
+            }
+        }
+        animationId = requestAnimationFrame(step);
+    }
+
+    function resetSim() {
+        isSimRunning = false;
+        if (animationId) cancelAnimationFrame(animationId);
+        simProgress = 0;
+        drawCanvasState(0);
+    }
+
+    function drawCanvasState(p) {
+        canvas = document.getElementById('rot-canvas');
+        if (!canvas || canvas.style.display === 'none') return;
+        ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const w = canvas.width;
+        const h = canvas.height;
+
+        if (currentMainMod === 0) {
+            if (currentSubCalcCase === 0) { // Impuls
+                const bx = 40 + p * (w - 80);
+                const by = h / 2;
+                ctx.fillStyle = '#2563eb';
+                ctx.fillRect(bx, by - 20, 40, 40);
+                
+                if (p < 0.2) {
+                    ctx.fillStyle = '#ef4444';
+                    ctx.font = 'bold 14px sans-serif';
+                    ctx.fillText('F', bx - 20, by);
+                }
+
+            } else if (currentSubCalcCase === 1) { // Tumbukan
+                const d = currentRawData;
+                let b1x = 30 + p * 80;
+                let b2x = 180;
+
+                if (p >= 0.5) {
+                    const p2 = (p - 0.5) * 2;
+                    const v1p = ((d.m1 - d.m2) * d.v1) / (d.m1 + d.m2);
+                    const v2p = (2 * d.m1 * d.v1) / (d.m1 + d.m2);
+                    b1x = 110 + p2 * (v1p * 10);
+                    b2x = 180 + p2 * (v2p * 10);
+                }
+
+                ctx.fillStyle = '#2563eb'; ctx.fillRect(b1x, h / 2 - 15, 30, 30);
+                ctx.fillStyle = '#10b981'; ctx.fillRect(b2x, h / 2 - 15, 30, 30);
+
+            } else if (currentSubCalcCase === 2) { // Torsi
+                const cx = w / 2, cy = h / 2;
+                const angle = p * Math.PI * 0.5;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.strokeStyle = '#0f172a'; ctx.lineWidth = 6;
+                ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(80, 0); ctx.stroke();
+                ctx.restore();
+
+            } else if (currentSubCalcCase === 3 || currentSubCalcCase === 4) { // Rotasi Silinder
+                const cx = w / 2, cy = h / 2;
+                const angle = p * Math.PI * 6;
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(angle);
+                ctx.fillStyle = '#3b82f6'; ctx.beginPath(); ctx.arc(0, 0, 50, 0, Math.PI * 2); ctx.fill();
+                ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3;
+                ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(50, 0); ctx.stroke();
+                ctx.restore();
+            }
+
+        } else if (currentMainMod === 2) { // Penari Es
+            const cx = w / 2, cy = h / 2;
+            const d = currentRawData;
+            
+            // Hitung ω1 dan ω2 untuk simulasi visual kecepatan putar
+            const I1 = d.I_body + 2 * d.m_hand * Math.pow(d.r1, 2);
+            const I2 = d.I_body + 2 * d.m_hand * Math.pow(d.r2, 2);
+            const w2 = (I1 * d.w1) / I2;
+
+            const currentArmLength = d.r1 - p * (d.r1 - d.r2);
+            const speedFactor = d.w1 + p * (w2 - d.w1);
+            const angle = p * speedFactor * Math.PI * 2;
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(angle);
+
+            // Badan Penari
+            ctx.fillStyle = '#ec4899'; ctx.beginPath(); ctx.arc(0, 0, 20, 0, Math.PI * 2); ctx.fill();
+
+            // Tangan Rentang/Lipat
+            const armPx = currentArmLength * 60;
+            ctx.strokeStyle = '#38bdf8'; ctx.lineWidth = 6;
+            ctx.beginPath(); ctx.moveTo(-armPx, 0); ctx.lineTo(armPx, 0); ctx.stroke();
+
+            // Beban Tangan
+            ctx.fillStyle = '#f59e0b';
+            ctx.beginPath(); ctx.arc(-armPx, 0, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(armPx, 0, 8, 0, Math.PI * 2); ctx.fill();
+
+            ctx.restore();
         }
     }
 
-    function submitAnalysis() {
-        const fb = document.getElementById('feedback');
-        fb.style.display = 'block';
-
-        let correct = true;
-        let msg = '';
-
-        if (currentModule === 0) {
-            const userDp = parseFloat(document.getElementById('in_dp').value);
-            const userF = parseFloat(document.getElementById('in_f').value);
-
-            const trueDp = currentData.m * (currentData.v2 - currentData.v1);
-            const trueF = trueDp / currentData.dt;
-
-            if (isNaN(userDp) || isNaN(userF)) {
-                showFeedback('warning', currentLang === 'id' ? 'Isi semua nilai input!' : 'Fill in all inputs!');
-                return;
-            }
-
-            const errDp = Math.abs(userDp - trueDp);
-            const errF = Math.abs(userF - trueF);
-
-            if (errDp < 0.2 && errF < 2.0) {
-                msg = currentLang === 'id' 
-                    ? `<b>Sangat Tepat!</b><br>Δp = m(v2 - v1) = ${trueDp.toFixed(2)} kg·m/s.<br>Gaya Impulsif F = Δp / dt = ${trueF.toFixed(1)} N.`
-                    : `<b>Perfect!</b><br>Δp = m(v2 - v1) = ${trueDp.toFixed(2)} kg·m/s.<br>Impulsive Force F = Δp / dt = ${trueF.toFixed(1)} N.`;
-                showFeedback('success', msg);
-            } else {
-                msg = currentLang === 'id'
-                    ? `<b>Kurang Tepat.</b><br>Kunci: Δp = ${trueDp.toFixed(2)} kg·m/s, F = ${trueF.toFixed(1)} N.`
-                    : `<b>Incorrect.</b><br>Key: Δp = ${trueDp.toFixed(2)} kg·m/s, F = ${trueF.toFixed(1)} N.`;
-                showFeedback('error', msg);
-            }
-
-        } else if (currentModule === 1) {
-            const userV1 = parseFloat(document.getElementById('in_v1_prime').value);
-            const userV2 = parseFloat(document.getElementById('in_v2_prime').value);
-
-            const { m1, m2, v1, v2 } = currentData;
-            const trueV1 = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
-            const trueV2 = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
-
-            if (isNaN(userV1) || isNaN(userV2)) {
-                showFeedback('warning', currentLang === 'id' ? 'Isi semua nilai input!' : 'Fill in all inputs!');
-                return;
-            }
-
-            if (Math.abs(userV1 - trueV1) < 0.2 && Math.abs(userV2 - trueV2) < 0.2) {
-                msg = currentLang === 'id'
-                    ? `<b>Analisis Lenting Sempurna Tepat!</b><br>v1' = ${trueV1.toFixed(2)} m/s<br>v2' = ${trueV2.toFixed(2)} m/s.`
-                    : `<b>Elastic Collision Correct!</b><br>v1' = ${trueV1.toFixed(2)} m/s<br>v2' = ${trueV2.toFixed(2)} m/s.`;
-                showFeedback('success', msg);
-            } else {
-                msg = currentLang === 'id'
-                    ? `<b>Kurang Tepat.</b><br>Gunakan v1' = [(m1-m2)v1 + 2m2v2]/(m1+m2).<br>Hasil: v1' = ${trueV1.toFixed(2)} m/s, v2' = ${trueV2.toFixed(2)} m/s.`
-                    : `<b>Incorrect.</b><br>Use formulas for elastic 1D collision.<br>Expected: v1' = ${trueV1.toFixed(2)} m/s, v2' = ${trueV2.toFixed(2)} m/s.`;
-                showFeedback('error', msg);
-            }
-
-        } else if (currentModule === 2) {
-            const userVf = parseFloat(document.getElementById('in_vf').value);
-            const userDek = parseFloat(document.getElementById('in_dek').value);
-
-            const { m1, m2, v1, v2 } = currentData;
-            const trueVf = (m1 * v1 + m2 * v2) / (m1 + m2);
-            const ek1 = 0.5 * m1 * v1 * v1 + 0.5 * m2 * v2 * v2;
-            const ek2 = 0.5 * (m1 + m2) * trueVf * trueVf;
-            const trueDek = ek1 - ek2;
-
-            if (isNaN(userVf) || isNaN(userDek)) {
-                showFeedback('warning', currentLang === 'id' ? 'Isi semua nilai input!' : 'Fill in all inputs!');
-                return;
-            }
-
-            if (Math.abs(userVf - trueVf) < 0.15 && Math.abs(userDek - trueDek) < 1.0) {
-                msg = currentLang === 'id'
-                    ? `<b>Sangat Tepat!</b><br>vf = ${trueVf.toFixed(2)} m/s.<br>Energi Kinetik yang hilang ΔEK = ${trueDek.toFixed(1)} Joules.`
-                    : `<b>Great job!</b><br>vf = ${trueVf.toFixed(2)} m/s.<br>Lost Kinetic Energy ΔEK = ${trueDek.toFixed(1)} Joules.`;
-                showFeedback('success', msg);
-            } else {
-                msg = currentLang === 'id'
-                    ? `<b>Kurang Tepat.</b><br>Kunci: vf = ${trueVf.toFixed(2)} m/s, ΔEK = ${trueDek.toFixed(1)} J.`
-                    : `<b>Incorrect.</b><br>Key: vf = ${trueVf.toFixed(2)} m/s, ΔEK = ${trueDek.toFixed(1)} J.`;
-                showFeedback('error', msg);
-            }
-
-        } else if (currentModule === 3) {
-            const userE = parseFloat(document.getElementById('in_e').value);
-            const userVimp = parseFloat(document.getElementById('in_vimp').value);
-
-            const trueE = Math.sqrt(currentData.h2 / currentData.h1);
-            const trueVimp = Math.sqrt(2 * 9.8 * currentData.h1);
-
-            if (isNaN(userE) || isNaN(userVimp)) {
-                showFeedback('warning', currentLang === 'id' ? 'Isi semua nilai input!' : 'Fill in all inputs!');
-                return;
-            }
-
-            if (Math.abs(userE - trueE) < 0.05 && Math.abs(userVimp - trueVimp) < 0.3) {
-                msg = currentLang === 'id'
-                    ? `<b>Tepat Sekali!</b><br>e = sqrt(h2/h1) = ${trueE.toFixed(2)}.<br>Kecepatan sebelum tumbukan v1 = ${trueVimp.toFixed(1)} m/s.`
-                    : `<b>Correct!</b><br>e = sqrt(h2/h1) = ${trueE.toFixed(2)}.<br>Impact speed v1 = ${trueVimp.toFixed(1)} m/s.`;
-                showFeedback('success', msg);
-            } else {
-                msg = currentLang === 'id'
-                    ? `<b>Kurang Tepat.</b><br>Kunci: e = ${trueE.toFixed(2)}, v1 = ${trueVimp.toFixed(1)} m/s.`
-                    : `<b>Incorrect.</b><br>Key: e = ${trueE.toFixed(2)}, v1 = ${trueVimp.toFixed(1)} m/s.`;
-                showFeedback('error', msg);
-            }
-
-        } else if (currentModule === 4) {
-            const userI = parseFloat(document.getElementById('in_inertia').value);
-            const userTau = parseFloat(document.getElementById('in_torque').value);
-
-            const trueI = currentData.k * currentData.m * currentData.r * currentData.r;
-            const rad = (currentData.thetaDeg * Math.PI) / 180;
-            const trueTau = currentData.f * currentData.r * Math.sin(rad);
-
-            if (isNaN(userI) || isNaN(userTau)) {
-                showFeedback('warning', currentLang === 'id' ? 'Isi semua nilai input!' : 'Fill in all inputs!');
-                return;
-            }
-
-            if (Math.abs(userI - trueI) < 0.01 && Math.abs(userTau - trueTau) < 0.1) {
-                msg = currentLang === 'id'
-                    ? `<b>Perhitungan Torsi & Inersia Tepat!</b><br>I = ${trueI.toFixed(4)} kg·m²<br>τ = ${trueTau.toFixed(2)} N·m.`
-                    : `<b>Torque & Inertia Correct!</b><br>I = ${trueI.toFixed(4)} kg·m²<br>τ = ${trueTau.toFixed(2)} N·m.`;
-                showFeedback('success', msg);
-            } else {
-                msg = currentLang === 'id'
-                    ? `<b>Kurang Tepat.</b><br>I = k M R² = ${trueI.toFixed(4)} kg·m²<br>τ = F R sin(θ) = ${trueTau.toFixed(2)} N·m.`
-                    : `<b>Incorrect.</b><br>I = k M R² = ${trueI.toFixed(4)} kg·m²<br>τ = F R sin(θ) = ${trueTau.toFixed(2)} N·m.`;
-                showFeedback('error', msg);
-            }
-
-        } else if (currentModule === 5) {
-            const userAlpha = parseFloat(document.getElementById('in_alpha').value);
-            const userOmega = parseFloat(document.getElementById('in_omega').value);
-
-            const trueAlpha = currentData.tau / currentData.I;
-            const trueOmega = trueAlpha * currentData.t;
-
-            if (isNaN(userAlpha) || isNaN(userOmega)) {
-                showFeedback('warning', currentLang === 'id' ? 'Isi semua nilai input!' : 'Fill in all inputs!');
-                return;
-            }
-
-            if (Math.abs(userAlpha - trueAlpha) < 0.1 && Math.abs(userOmega - trueOmega) < 0.5) {
-                msg = currentLang === 'id'
-                    ? `<b>Sangat Tepat!</b><br>α = τ / I = ${trueAlpha.toFixed(2)} rad/s²<br>ω(t) = α · t = ${trueOmega.toFixed(1)} rad/s.`
-                    : `<b>Excellent!</b><br>α = τ / I = ${trueAlpha.toFixed(2)} rad/s²<br>ω(t) = α · t = ${trueOmega.toFixed(1)} rad/s.`;
-                showFeedback('success', msg);
-            } else {
-                msg = currentLang === 'id'
-                    ? `<b>Kurang Tepat.</b><br>Kunci: α = ${trueAlpha.toFixed(2)} rad/s², ω = ${trueOmega.toFixed(1)} rad/s.`
-                    : `<b>Incorrect.</b><br>Key: α = ${trueAlpha.toFixed(2)} rad/s², ω = ${trueOmega.toFixed(1)} rad/s.`;
-                showFeedback('error', msg);
-            }
-        }
-    }
-
+    /* =========================================================
+       SUBMIT & FEEDBACK
+       ========================================================= */
     function showFeedback(type, message) {
         const fb = document.getElementById('feedback');
         fb.className = `feedback ${type}`;
@@ -916,171 +1085,103 @@
         fb.style.display = 'block';
     }
 
-    // Animation & Canvas Functions
-    function drawCanvas() {
-        const canvas = document.getElementById('sim-canvas');
-        if (canvas.style.display === 'none') return;
+    function submitAnalysis() {
+        const t = translations[currentLang];
+        const isEn = currentLang === 'en';
 
-        const ctx = canvas.getContext('2d');
-        const width = canvas.width;
-        const height = canvas.height;
+        if (currentMainMod === 0) { // Kalkulasi
+            const val1 = parseFloat(document.getElementById('mod-val-1').value);
+            const val2 = parseFloat(document.getElementById('mod-val-2').value);
+            if (isNaN(val1) || isNaN(val2)) { showFeedback('error', t.errFillFields); return; }
 
-        ctx.clearRect(0, 0, width, height);
+            const d = currentRawData;
 
-        const isDark = currentTheme === 'dark';
-        const textColor = isDark ? '#f1f5f9' : '#1e293b';
+            if (currentSubCalcCase === 0) {
+                const expI = d.F * d.dt;
+                const expV2 = d.v1 + expI / d.m;
 
-        if (currentModule === 1 || currentModule === 2) {
-            // Collision Visualization
-            ctx.beginPath();
-            ctx.moveTo(10, height - 30);
-            ctx.lineTo(width - 10, height - 30);
-            ctx.strokeStyle = isDark ? '#475569' : '#cbd5e1';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            let x1 = 70;
-            let x2 = 250;
-
-            if (animRunning) {
-                animTime += 0.02;
-                if (currentModule === 1) { // Elastic
-                    const { m1, m2, v1, v2 } = currentData;
-                    const v1p = ((m1 - m2) * v1 + 2 * m2 * v2) / (m1 + m2);
-                    const v2p = ((m2 - m1) * v2 + 2 * m1 * v1) / (m1 + m2);
-
-                    const collideTime = 1.2;
-                    if (animTime < collideTime) {
-                        x1 = 70 + v1 * 12 * animTime;
-                        x2 = 250 + v2 * 12 * animTime;
-                    } else {
-                        const t2 = animTime - collideTime;
-                        const xCollide1 = 70 + v1 * 12 * collideTime;
-                        const xCollide2 = 250 + v2 * 12 * collideTime;
-                        x1 = xCollide1 + v1p * 12 * t2;
-                        x2 = xCollide2 + v2p * 12 * t2;
-                    }
-                } else { // Inelastic
-                    const { m1, m2, v1, v2 } = currentData;
-                    const vf = (m1 * v1 + m2 * v2) / (m1 + m2);
-                    const collideTime = 1.2;
-                    if (animTime < collideTime) {
-                        x1 = 70 + v1 * 12 * animTime;
-                        x2 = 250 + v2 * 12 * animTime;
-                    } else {
-                        const t2 = animTime - collideTime;
-                        const xCollide = 70 + v1 * 12 * collideTime;
-                        x1 = xCollide + vf * 12 * t2;
-                        x2 = x1 + 25;
-                    }
-                }
-            }
-
-            // Draw Block 1
-            ctx.fillStyle = '#2563eb';
-            ctx.fillRect(x1 - 15, height - 55, 30, 25);
-            ctx.fillStyle = '#ffffff';
-            ctx.font = 'bold 11px sans-serif';
-            ctx.fillText('m1', x1 - 8, height - 38);
-
-            // Draw Block 2
-            ctx.fillStyle = '#e11d48';
-            ctx.fillRect(x2 - 15, height - 55, 30, 25);
-            ctx.fillStyle = '#ffffff';
-            ctx.fillText('m2', x2 - 8, height - 38);
-
-        } else if (currentModule === 3) {
-            // Ball Bounce Simulation
-            ctx.beginPath();
-            ctx.moveTo(20, height - 20);
-            ctx.lineTo(width - 20, height - 20);
-            ctx.strokeStyle = isDark ? '#475569' : '#cbd5e1';
-            ctx.lineWidth = 3;
-            ctx.stroke();
-
-            let ballY = height - 20 - (currentData.h1 * 20);
-            if (animRunning) {
-                animTime += 0.03;
-                const g = 9.8;
-                const tImpact = Math.sqrt((2 * currentData.h1) / g);
-                if (animTime < tImpact) {
-                    const yPos = 0.5 * g * animTime * animTime;
-                    ballY = height - 20 - (currentData.h1 * 20) + (yPos * 20);
+                if (Math.abs(val1 - expI) < 0.2 && Math.abs(val2 - expV2) < 0.2) {
+                    showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Impulse I:' : 'Impuls I:'} <b>${expI.toFixed(2)} N·s</b><br>• ${isEn ? 'Final Vel v₂:' : 'Kecepatan Akhir v₂:'} <b>${expV2.toFixed(2)} m/s</b>`);
                 } else {
-                    const t2 = animTime - tImpact;
-                    const vUp = Math.sqrt(2 * g * currentData.h2);
-                    const yPos = vUp * t2 - 0.5 * g * t2 * t2;
-                    ballY = height - 20 - Math.max(0, yPos * 20);
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be I:' : 'Seharusnya I:'} <b>${expI.toFixed(2)} N·s</b><br>• ${isEn ? 'Should be v₂:' : 'Seharusnya v₂:'} <b>${expV2.toFixed(2)} m/s</b>`);
+                }
+
+            } else if (currentSubCalcCase === 1) {
+                const expV1p = ((d.m1 - d.m2) * d.v1) / (d.m1 + d.m2);
+                const expV2p = (2 * d.m1 * d.v1) / (d.m1 + d.m2);
+
+                if (Math.abs(val1 - expV1p) < 0.2 && Math.abs(val2 - expV2p) < 0.2) {
+                    showFeedback('success', `${t.evalSuccess}<br>• v₁': <b>${expV1p.toFixed(2)} m/s</b><br>• v₂': <b>${expV2p.toFixed(2)} m/s</b>`);
+                } else {
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be v₁\':' : 'Seharusnya v₁\':'} <b>${expV1p.toFixed(2)} m/s</b><br>• ${isEn ? 'Should be v₂\':' : 'Seharusnya v₂\':'} <b>${expV2p.toFixed(2)} m/s</b>`);
+                }
+
+            } else if (currentSubCalcCase === 2) {
+                const rad = (d.theta * Math.PI) / 180;
+                const expFperp = d.F * Math.sin(rad);
+                const expTau = expFperp * d.r;
+
+                if (Math.abs(val1 - expFperp) < 0.2 && Math.abs(val2 - expTau) < 0.2) {
+                    showFeedback('success', `${t.evalSuccess}<br>• F⊥: <b>${expFperp.toFixed(2)} N</b><br>• τ: <b>${expTau.toFixed(2)} N·m</b>`);
+                } else {
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be F⊥:' : 'Seharusnya F⊥:'} <b>${expFperp.toFixed(2)} N</b><br>• ${isEn ? 'Should be τ:' : 'Seharusnya τ:'} <b>${expTau.toFixed(2)} N·m</b>`);
+                }
+
+            } else if (currentSubCalcCase === 3) {
+                const expI = 0.5 * d.m * Math.pow(d.r, 2);
+                const expL = expI * d.omega;
+
+                if (Math.abs(val1 - expI) < 0.05 && Math.abs(val2 - expL) < 0.1) {
+                    showFeedback('success', `${t.evalSuccess}<br>• Inertia I: <b>${expI.toFixed(3)} kg·m²</b><br>• Angular Momentum L: <b>${expL.toFixed(3)} kg·m²/s</b>`);
+                } else {
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be I:' : 'Seharusnya I:'} <b>${expI.toFixed(3)} kg·m²</b><br>• ${isEn ? 'Should be L:' : 'Seharusnya L:'} <b>${expL.toFixed(3)} kg·m²/s</b>`);
+                }
+
+            } else if (currentSubCalcCase === 4) {
+                const expTau = d.F * d.r;
+                const expAlpha = expTau / d.I;
+
+                if (Math.abs(val1 - expTau) < 0.2 && Math.abs(val2 - expAlpha) < 0.2) {
+                    showFeedback('success', `${t.evalSuccess}<br>• Torque τ: <b>${expTau.toFixed(2)} N·m</b><br>• Alpha α: <b>${expAlpha.toFixed(2)} rad/s²</b>`);
+                } else {
+                    showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be τ:' : 'Seharusnya τ:'} <b>${expTau.toFixed(2)} N·m</b><br>• ${isEn ? 'Should be α:' : 'Seharusnya α:'} <b>${expAlpha.toFixed(2)} rad/s²</b>`);
                 }
             }
 
-            // Draw Ball
-            ctx.beginPath();
-            ctx.arc(width / 2, ballY, 12, 0, Math.PI * 2);
-            ctx.fillStyle = '#059669';
-            ctx.fill();
-            ctx.strokeStyle = '#ffffff';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+        } else if (currentMainMod === 1) { // Konsep
+            const a1 = document.getElementById('concept-ans-1').value;
+            const a2 = document.getElementById('concept-ans-2').value;
 
-        } else if (currentModule === 5) {
-            // Rotating Wheel Simulation
-            const centerX = width / 2;
-            const centerY = height / 2;
-            const radius = 60;
+            if (a1 === "" || a2 === "") { showFeedback('error', t.errFillFields); return; }
 
-            let angle = 0;
-            if (animRunning) {
-                animTime += 0.03;
-                const alpha = currentData.tau / currentData.I;
-                angle = 0.5 * alpha * animTime * animTime;
+            const cases = rotConceptCasesData[currentLang];
+            const c = cases[currentConceptIndex];
+            const isCorrect1 = parseInt(a1) === c.ans1;
+            const isCorrect2 = parseInt(a2) === c.ans2;
+
+            if (isCorrect1 && isCorrect2) {
+                showFeedback('success', `${t.evalSuccessConcept}<br>${c.diffExplanation}`);
+            } else {
+                showFeedback('warning', `${t.evalFailConcept}<br>• ${t.conceptUI.q1Label} <b>${c.options1[c.ans1]}</b><br>• ${t.conceptUI.q2Label} <b>${c.options2[c.ans2]}</b><br><br>${c.diffExplanation}`);
             }
 
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            ctx.rotate(angle);
+        } else if (currentMainMod === 2) { // Penari Es
+            const val1 = parseFloat(document.getElementById('mod-val-1').value);
+            const val2 = parseFloat(document.getElementById('mod-val-2').value);
+            if (isNaN(val1) || isNaN(val2)) { showFeedback('error', t.errFillFields); return; }
 
-            // Outer Wheel
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, Math.PI * 2);
-            ctx.strokeStyle = '#3b82f6';
-            ctx.lineWidth = 6;
-            ctx.stroke();
+            const d = currentRawData;
+            const expI1 = d.I_body + 2 * d.m_hand * Math.pow(d.r1, 2);
+            const expI2 = d.I_body + 2 * d.m_hand * Math.pow(d.r2, 2);
+            const expW2 = (expI1 * d.w1) / expI2;
 
-            // Spokes
-            for (let i = 0; i < 4; i++) {
-                ctx.beginPath();
-                ctx.moveTo(0, 0);
-                ctx.lineTo(radius * Math.cos((i * Math.PI) / 2), radius * Math.sin((i * Math.PI) / 2));
-                ctx.strokeStyle = textColor;
-                ctx.lineWidth = 2;
-                ctx.stroke();
+            if (Math.abs(val1 - expI1) < 0.1 && Math.abs(val2 - expW2) < 0.2) {
+                showFeedback('success', `${t.evalSuccess}<br>• ${isEn ? 'Initial Inertia I₁:' : 'Inersia Awal I₁:'} <b>${expI1.toFixed(2)} kg·m²</b><br>• ${isEn ? 'Final Angular Velocity ω₂:' : 'Kecepatan Sudut Akhir ω₂:'} <b>${expW2.toFixed(2)} rad/s</b>`);
+            } else {
+                showFeedback('warning', `${t.evalFailCalc}<br>• ${isEn ? 'Should be I₁:' : 'Seharusnya I₁:'} <b>${expI1.toFixed(2)} kg·m²</b><br>• ${isEn ? 'Should be ω₂:' : 'Seharusnya ω₂:'} <b>${expW2.toFixed(2)} rad/s</b>`);
             }
-
-            ctx.restore();
-        }
-
-        if (animRunning) {
-            animFrame = requestAnimationFrame(drawCanvas);
         }
     }
-
-    function startAnim() {
-        if (!animRunning) {
-            animRunning = true;
-            animTime = 0;
-            drawCanvas();
-        }
-    }
-
-    function resetAnim() {
-        animRunning = false;
-        cancelAnimationFrame(animFrame);
-        animTime = 0;
-        drawCanvas();
-    }
-
-    window.onload = init;
 </script>
 </body>
 </html>

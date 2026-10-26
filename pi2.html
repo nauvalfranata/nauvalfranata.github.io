@@ -960,14 +960,14 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
         document.getElementById('cp1-text').innerHTML = t.cp1Text;
 
         document.getElementById('step2-header').innerHTML = t.step2Header;
-        document.getElementById('step2-s1').innerText = t.step2S1;
-        document.getElementById('step2-s2').innerText = t.step2S2;
+        document.getElementById('step2-s1').innerHTML = t.step2S1;
+        document.getElementById('step2-s2').innerHTML = t.step2S2; // Menggunakan innerHTML agar tag <strong> dan <code> dirender dengan benar
         document.getElementById('cp2-text').innerHTML = t.cp2Text;
 
         document.getElementById('step3-header').innerHTML = t.step3Header;
         document.getElementById('step3-intro').innerHTML = t.step3Intro;
-        document.getElementById('step3-s1').innerText = t.step3S1;
-        document.getElementById('step3-s2').innerText = t.step3S2;
+        document.getElementById('step3-s1').innerHTML = t.step3S1;
+        document.getElementById('step3-s2').innerHTML = t.step3S2; // Menggunakan innerHTML agar tag <strong> dan <code> dirender dengan benar
         document.getElementById('cp3-text').innerHTML = t.cp3Text;
 
         document.getElementById('step4-header').innerHTML = t.step4Header;

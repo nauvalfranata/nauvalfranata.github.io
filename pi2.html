@@ -611,7 +611,7 @@ except KeyboardInterrupt:
 from signal import pause
 
 led = LED(17)
-button = Button(2) # GPIO 2 terhubung ke Push Button
+button = Button(2, pull_up=False) # GPIO 2 terhubung ke Push Button
 
 # Registrasi Callback Event Interupsi Input
 button.when_pressed = led.on

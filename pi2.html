@@ -541,7 +541,7 @@
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc"></p>
             <ul id="params-list"></ul>
             
-            <!-- Tambahan Diagram Pinout -->
+            <!-- Diagram Pinout -->
             <div class="pinout-img-container">
                 <img src="pi_pinout.png" alt="Diagram Pinout Raspberry Pi" loading="lazy">
             </div>
@@ -572,18 +572,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <ol id="step1-list">
-                    <li><span id="step1-i1"></span>
-                        <pre><code>apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                    </li>
-                    <li><span id="step1-i2"></span>
-                        <pre><code>python3 --version
-python3 -c "import importlib.metadata; print('gpiozero version:', importlib.metadata.version('gpiozero'))"</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                    </li>
-                    <li><span id="step1-i3"></span>
-                        <pre><code>mkdir -p ~/praktikum_gpio && cd ~/praktikum_gpio</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                    </li>
-                </ol>
+                <ol id="step1-list"></ol>
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"></span></label>
                 </div>
@@ -598,16 +587,13 @@ python3 -c "import importlib.metadata; print('gpiozero version:', importlib.meta
             </div>
             <div class="step-content">
                 <p style="font-size: 0.9rem;"><span id="step2-s1"></span></p>
-                <pre><code>nano led_blink.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-
-                <p style="font-size: 0.9rem;"><span id="step2-s2"></span></p>
                 <pre><code>from gpiozero import LED
 from time import sleep
 
-# Inisialisasi LED pada GPIO 17 (Pin 11)
+# Inisialisasi LED pada GPIO 17 (Pin Fisik 11)
 led = LED(17)
 
-print("Memulai Program LED Blink (Ctrl+C untuk berhenti)...")
+print("Memulai Program LED Blink (Tekan tombol Stop di Thonny untuk berhenti)...")
 
 try:
     while True:
@@ -618,11 +604,10 @@ try:
         print("Status: LOW (LED Mati)")
         sleep(1)
 except KeyboardInterrupt:
-    print("\nProgram dihentikan secara aman.")
+    print("\nProgram dihentikan.")
     led.close()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-                <p style="font-size: 0.9rem;"><span id="step2-s3"></span></p>
-                <pre><code>python3 led_blink.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.9rem;"><span id="step2-s2"></span></p>
 
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"></span></label>
@@ -640,9 +625,6 @@ except KeyboardInterrupt:
                 <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
 
                 <p style="font-size: 0.9rem;"><span id="step3-s1"></span></p>
-                <pre><code>nano button_control.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-
-                <p style="font-size: 0.9rem;"><span id="step3-s2"></span></p>
                 <pre><code>from gpiozero import LED, Button
 from signal import pause
 
@@ -656,8 +638,7 @@ button.when_released = led.off
 print("Sistem Siap! Tekan Push Button pada GPIO 2...")
 pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-                <p style="font-size: 0.9rem;"><span id="step3-s3"></span></p>
-                <pre><code>python3 button_control.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.9rem;"><span id="step3-s2"></span></p>
 
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"></span></label>
@@ -722,12 +703,12 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             courseTag: "Course: Embedded Systems — Meeting 10",
             deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Panduan Interaktif Pertemuan 10 - Sistem Tertanam (TEL624307)",
-            headerTitle: "Panduan Praktikum Interaktif: Pemrograman Python & GPIO Digital Input/Output via VNC Remote Desktop",
+            headerTitle: "Panduan Praktikum Interaktif: Pemrograman Python & GPIO Digital I/O via Thonny IDE (VNC Remote Desktop)",
             homeText: "Kembali ke Raspberry Pi",
             progressTitleText: "Kemajuan Praktikum Anda",
             progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
             targetTitle: "Target Pembelajaran",
-            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi melalui koneksi VNC Remote Desktop, mencakup pemrograman GPIO (General Purpose Input/Output) digital input/output, integrasi komponen hardware, serta eksekusi skrip Python via LXTerminal.",
+            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi melalui koneksi VNC Remote Desktop menggunakan aplikasi Thonny Python IDE, mencakup pemrograman GPIO (General Purpose Input/Output) digital input/output, integrasi komponen hardware, serta eksekusi program secara grafis.",
             paramsTitle: "Standar Alokasi Pinout & Tegangan Logika (Hardware Limit)",
             paramsDesc: "Perhatikan spesifikasi operasional pinout GPIO Raspberry Pi berikut sebelum menyambungkan komponen fisik:",
             paramsList: `
@@ -755,28 +736,27 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             swTitle: "Persyaratan Perangkat Lunak (Software)",
             swList: `
                 <li><strong>TigerVNC Viewer</strong> (Aplikasi Remote Desktop Client)</li>
-                <li><strong>LXTerminal pada Raspberry Pi Desktop</strong></li>
-                <li><strong>Python 3 & Standard Lib:</strong> <code>gpiozero</code> (Rekomendasi) / <code>RPi.GPIO</code></li>
-                <li><strong>Text Editor Terminal:</strong> <code>nano</code> atau <code>mousepad</code></li>
+                <li><strong>Thonny Python IDE</strong> (Aplikasi Bawaan Raspberry Pi OS Desktop)</li>
+                <li><strong>Python 3 & Standard Lib:</strong> <code>gpiozero</code> (Rekomendasi)</li>
             `,
-            step1Header: `Tahap 1: Akses Remote VNC & Verifikasi Pustaka GPIO <span class="badge">VNC & Environment</span>`,
-            step1I1: "Buka aplikasi TigerVNC Viewer di laptop Anda, lalu hubungkan ke Raspberry Pi menggunakan IP Address atau hostname:",
-            step1I2: "Buka LXTerminal dari desktop VNC, lalu periksa ketersediaan modul Python 3 dan pustaka gpiozero:",
-            step1I3: "Buat folder khusus untuk menyimpan seluruh skrip praktikum Pertemuan 10:",
-            cp1Text: "<b>Checkpoint 1:</b> Berhasil masuk ke Desktop VNC, modul Python 3 & library <code>gpiozero</code> terkonfirmasi, serta folder kerja <code>praktikum_gpio</code> berhasil dibuat.",
+            step1Header: `Tahap 1: Pembukaan Thonny IDE di VNC Desktop <span class="badge">GUI & IDE</span>`,
+            step1List: `
+                <li>Buka aplikasi <strong>TigerVNC Viewer</strong> di laptop Anda dan hubungkan ke Raspberry Pi (misal: <code>apeldua.local</code>).</li>
+                <li>Di dalam layar Desktop Raspberry Pi, klik <strong>Menu Raspberry Pi (ujung kiri atas)</strong> &rarr; pilih <strong>Programming</strong> &rarr; klik <strong>Thonny Python IDE</strong>.</li>
+                <li>Di Thonny IDE, klik menu <strong>File</strong> &rarr; <strong>Save As...</strong> &rarr; buat folder baru bernama <code>praktikum_gpio</code> di direktori Home (<code>/home/apel/praktikum_gpio</code>).</li>
+            `,
+            cp1Text: "<b>Checkpoint 1:</b> Berhasil membuka Thonny Python IDE di VNC Desktop dan menyiapkan folder kerja <code>praktikum_gpio</code>.",
             
-            step2Header: `Tahap 2: Implementasi Digital Output (LED Blink & Control) <span class="badge">Digital Output</span>`,
-            step2S1: "1. Pada LXTerminal di dalam VNC Desktop, buat berkas Python baru bernama led_blink.py menggunakan editor nano:",
-            step2S2: "2. Salin dan tempelkan kode program berikut:",
-            step2S3: "3. Simpan berkas (Tekan Ctrl+O → Enter → Keluar Ctrl+X), lalu jalankan program:",
-            cp2Text: "<b>Checkpoint 2:</b> Program berhasil dijalankan dari terminal VNC dan LED pada GPIO 17 berkedip secara periodik setiap 1 detik.",
+            step2Header: `Tahap 2: Implementasi Digital Output (LED Blink via Thonny) <span class="badge">Digital Output</span>`,
+            step2S1: "1. Salin dan tempelkan kode Python berikut ke dalam area editor Thonny IDE:",
+            step2S2: "2. Klik tombol <strong>Save</strong> lalu beri nama file <code>led_blink.py</code>. Klik tombol <strong>RUN (Ikon Panah Hijau / F5)</strong> di Thonny untuk menjalankan skrip. Perhatikan LED pada GPIO 17 berkedip setiap 1 detik. Klik tombol <strong>STOP (Ikon Merah)</strong> di Thonny untuk menghentikan program.",
+            cp2Text: "<b>Checkpoint 2:</b> Program berhasil dijalankan langsung dari Thonny IDE dan LED pada GPIO 17 berkedip secara periodik.",
             
-            step3Header: `Tahap 3: Implementasi Digital Input (Pembacaan Push Button) <span class="badge">Digital Input</span>`,
+            step3Header: `Tahap 3: Implementasi Digital Input (Pembacaan Push Button via Thonny) <span class="badge">Digital Input</span>`,
             step3Intro: "Pada tahap ini, skrip Python akan membaca kondisi masukan sakelar (<i>digital input</i>) pada GPIO 2 untuk mengendalikan keluaran LED pada GPIO 17 secara interaktif (<i>Event-Driven</i>).",
-            step3S1: "1. Buat berkas baru bernama button_control.py:",
-            step3S2: "2. Salin kode program di bawah ini:",
-            step3S3: "3. Jalankan skrip Python input tersebut:",
-            cp3Text: "<b>Checkpoint 3:</b> LED menyala instan saat tombol ditekan dan mati saat tombol dilepas tanpa delay.",
+            step3S1: "1. Buat berkas baru di Thonny (<strong>File → New</strong>), lalu ketikkan skrip berikut:",
+            step3S2: "2. Simpan dengan nama <code>button_control.py</code>, lalu klik tombol <strong>RUN</strong> di Thonny IDE. Tekan push button fisik pada breadboard untuk menyalakan LED.",
+            cp3Text: "<b>Checkpoint 3:</b> Program input berjalan sukses via Thonny; LED menyala instan saat tombol ditekan dan mati saat tombol dilepas.",
             
             step4Header: `Tahap 4: Simulasi Logika Digital Input/Output Interaktif <span class="badge">Modul Interaktif</span>`,
             step4Intro: "Uji pemahaman alur kerja pembacaan input dan kontrol output secara virtual melalui modul simulator di bawah ini:",
@@ -791,10 +771,10 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami hubungan transisi logika HIGH/LOW antara Pin Input dan Pin Output.",
             
             step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Studi Kasus 2-Button & 2-LED) <span class="badge">Penugasan</span>`,
-            step5Intro: "Selesaikan penugasan praktikum mandiri berikut untuk melengkapi nilai responsi Pertemuan 10:",
+            step5Intro: "Selesaikan penugasan praktikum mandiri berikut menggunakan Thonny IDE di VNC Desktop untuk melengkapi nilai responsi Pertemuan 10:",
             step5List: `
-                <li>Hubungkan <strong>2 Push Button</strong> (pada GPIO 2 & GPIO 3) dan <strong>2 LED</strong> (pada GPIO 17 & GPIO 27).</li>
-                <li>Buat skrip Python bernama <code>tugas_gpio.py</code> melalui terminal VNC dengan aturan logika berikut:
+                <li>Hubungkan <strong>2 Push Button</strong> (pada GPIO 2 & GPIO 3) dan <strong>2 LED</strong> (pada GPIO 17 & GPIO 27) di breadboard.</li>
+                <li>Buat file skrip Python baru di Thonny IDE bernama <code>tugas_gpio.py</code> dengan aturan logika berikut:
                     <ul>
                         <li><strong>Button 1 Ditekan:</strong> LED 1 berkedip (<i>blink</i>) cepat dengan interval 0.2 detik.</li>
                         <li><strong>Button 2 Ditekan:</strong> LED 2 menyala kontinu (ON).</li>
@@ -802,18 +782,18 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Penugasan skrip <code>tugas_gpio.py</code> berhasil diuji pada perangkat hardware Raspberry Pi via VNC."
+            cp5Text: "<b>Checkpoint 5:</b> Penugasan skrip <code>tugas_gpio.py</code> berhasil diuji dari Thonny IDE pada hardware Raspberry Pi."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 10",
             deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Interactive Guide Meeting 10 - Embedded Systems (TEL624307)",
-            headerTitle: "Interactive Lab Guide: Python Programming & Digital GPIO Input/Output via VNC Remote Desktop",
+            headerTitle: "Interactive Lab Guide: Python Programming & Digital GPIO I/O via Thonny IDE (VNC Remote Desktop)",
             homeText: "Back to Raspberry Pi",
             progressTitleText: "Your Lab Progress",
             progressText: "{percent}% Completed ({count}/5 Checkpoints)",
             targetTitle: "Learning Objective",
-            targetDesc: "Students are able to configure and develop Raspberry Pi-based embedded systems via VNC Remote Desktop connection, including digital input/output GPIO programming, hardware component integration, and Python script execution via LXTerminal.",
+            targetDesc: "Students are able to configure and develop Raspberry Pi-based embedded systems via VNC Remote Desktop connection using Thonny Python IDE, including digital input/output GPIO programming, hardware component integration, and graphical code execution.",
             paramsTitle: "Pinout Standards & Voltage Limits (Hardware Limit)",
             paramsDesc: "Observe the operational specifications of Raspberry Pi GPIO pinouts before wiring physical components:",
             paramsList: `
@@ -841,28 +821,27 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             swTitle: "Software Requirements",
             swList: `
                 <li><strong>TigerVNC Viewer</strong> (Remote Desktop Client Application)</li>
-                <li><strong>LXTerminal on Raspberry Pi Desktop</strong></li>
-                <li><strong>Python 3 & Standard Lib:</strong> <code>gpiozero</code> (Recommended) / <code>RPi.GPIO</code></li>
-                <li><strong>Terminal Text Editor:</strong> <code>nano</code> or <code>mousepad</code></li>
+                <li><strong>Thonny Python IDE</strong> (Built-in Application on Raspberry Pi OS Desktop)</li>
+                <li><strong>Python 3 & Standard Lib:</strong> <code>gpiozero</code> (Recommended)</li>
             `,
-            step1Header: `Step 1: VNC Remote Access & GPIO Library Verification <span class="badge">VNC & Environment</span>`,
-            step1I1: "Open TigerVNC Viewer on your laptop, then connect to Raspberry Pi using IP Address or hostname:",
-            step1I2: "Open LXTerminal from VNC desktop, then verify Python 3 and gpiozero library availability:",
-            step1I3: "Create a dedicated directory for Meeting 10 lab scripts:",
-            cp1Text: "<b>Checkpoint 1:</b> Successfully accessed VNC Desktop, Python 3 & <code>gpiozero</code> library confirmed, and <code>praktikum_gpio</code> directory created.",
+            step1Header: `Step 1: Launching Thonny IDE on VNC Desktop <span class="badge">GUI & IDE</span>`,
+            step1List: `
+                <li>Open <strong>TigerVNC Viewer</strong> on your laptop and connect to Raspberry Pi (e.g., <code>apeldua.local</code>).</li>
+                <li>On the Raspberry Pi Desktop, click <strong>Raspberry Pi Menu (top-left)</strong> &rarr; select <strong>Programming</strong> &rarr; click <strong>Thonny Python IDE</strong>.</li>
+                <li>In Thonny IDE, click <strong>File</strong> &rarr; <strong>Save As...</strong> &rarr; create a new folder named <code>praktikum_gpio</code> in the Home directory (<code>/home/apel/praktikum_gpio</code>).</li>
+            `,
+            cp1Text: "<b>Checkpoint 1:</b> Successfully launched Thonny Python IDE on VNC Desktop and created <code>praktikum_gpio</code> working folder.",
             
-            step2Header: `Step 2: Digital Output Implementation (LED Blink & Control) <span class="badge">Digital Output</span>`,
-            step2S1: "1. In LXTerminal inside VNC Desktop, create a new Python file named led_blink.py using nano editor:",
-            step2S2: "2. Copy and paste the following program code:",
-            step2S3: "3. Save file (Press Ctrl+O → Enter → Exit Ctrl+X), then run the program:",
-            cp2Text: "<b>Checkpoint 2:</b> Program successfully executed from VNC terminal and LED on GPIO 17 blinks periodically every 1 second.",
+            step2Header: `Step 2: Digital Output Implementation (LED Blink via Thonny) <span class="badge">Digital Output</span>`,
+            step2S1: "1. Copy and paste the following Python code into Thonny IDE editor area:",
+            step2S2: "2. Click <strong>Save</strong> and name the file <code>led_blink.py</code>. Click <strong>RUN (Green Play Icon / F5)</strong> in Thonny to execute the script. Observe the LED on GPIO 17 blinking every second. Click <strong>STOP (Red Icon)</strong> in Thonny to halt execution.",
+            cp2Text: "<b>Checkpoint 2:</b> Program executed directly from Thonny IDE and LED on GPIO 17 blinks periodically.",
             
-            step3Header: `Step 3: Digital Input Implementation (Push Button Reading) <span class="badge">Digital Input</span>`,
+            step3Header: `Step 3: Digital Input Implementation (Push Button Reading via Thonny) <span class="badge">Digital Input</span>`,
             step3Intro: "In this step, Python script reads switch input state (<i>digital input</i>) on GPIO 2 to interactively control LED output on GPIO 17 (<i>Event-Driven</i>).",
-            step3S1: "1. Create a new file named button_control.py:",
-            step3S2: "2. Copy the program code below:",
-            step3S3: "3. Run the input Python script:",
-            cp3Text: "<b>Checkpoint 3:</b> LED turns ON instantly when button is pressed and turns OFF when released without delay.",
+            step3S1: "1. Create a new file in Thonny (<strong>File → New</strong>), then enter the following script:",
+            step3S2: "2. Save as <code>button_control.py</code>, then click <strong>RUN</strong> in Thonny IDE. Press the physical push button on the breadboard to turn ON the LED.",
+            cp3Text: "<b>Checkpoint 3:</b> Input program runs successfully via Thonny; LED turns ON instantly when button is pressed and OFF when released.",
             
             step4Header: `Step 4: Interactive Digital I/O Logic Simulation <span class="badge">Interactive Module</span>`,
             step4Intro: "Test your understanding of input reading and output control virtually using the simulator below:",
@@ -877,10 +856,10 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             cp4Text: "<b>Checkpoint 4:</b> Student understands the HIGH/LOW logic transition relationship between Input and Output Pins.",
 
             step5Header: `Step 5: Independent / Group Assignment (2-Button & 2-LED Case Study) <span class="badge">Assignment</span>`,
-            step5Intro: "Complete the following independent practical assignment to fulfill the Meeting 10 task evaluation:",
+            step5Intro: "Complete the following independent practical assignment using Thonny IDE on VNC Desktop to fulfill Meeting 10 task evaluation:",
             step5List: `
-                <li>Connect <strong>2 Push Buttons</strong> (on GPIO 2 & GPIO 3) and <strong>2 LEDs</strong> (on GPIO 17 & GPIO 27).</li>
-                <li>Create a Python script named <code>tugas_gpio.py</code> via VNC terminal according to these logic rules:
+                <li>Connect <strong>2 Push Buttons</strong> (on GPIO 2 & GPIO 3) and <strong>2 LEDs</strong> (on GPIO 17 & GPIO 27) on the breadboard.</li>
+                <li>Create a new Python script file in Thonny IDE named <code>tugas_gpio.py</code> according to these logic rules:
                     <ul>
                         <li><strong>Button 1 Pressed:</strong> LED 1 blinks rapidly with an interval of 0.2 seconds.</li>
                         <li><strong>Button 2 Pressed:</strong> LED 2 turns ON continuously.</li>
@@ -888,7 +867,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Script assignment <code>tugas_gpio.py</code> successfully tested on Raspberry Pi hardware via VNC."
+            cp5Text: "<b>Checkpoint 5:</b> Script assignment <code>tugas_gpio.py</code> successfully tested from Thonny IDE on Raspberry Pi hardware."
         }
     };
 
@@ -977,22 +956,18 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
         document.getElementById('sw-list').innerHTML = t.swList;
 
         document.getElementById('step1-header').innerHTML = t.step1Header;
-        document.getElementById('step1-i1').innerText = t.step1I1;
-        document.getElementById('step1-i2').innerText = t.step1I2;
-        document.getElementById('step1-i3').innerText = t.step1I3;
+        document.getElementById('step1-list').innerHTML = t.step1List;
         document.getElementById('cp1-text').innerHTML = t.cp1Text;
 
         document.getElementById('step2-header').innerHTML = t.step2Header;
         document.getElementById('step2-s1').innerText = t.step2S1;
         document.getElementById('step2-s2').innerText = t.step2S2;
-        document.getElementById('step2-s3').innerText = t.step2S3;
         document.getElementById('cp2-text').innerHTML = t.cp2Text;
 
         document.getElementById('step3-header').innerHTML = t.step3Header;
         document.getElementById('step3-intro').innerHTML = t.step3Intro;
         document.getElementById('step3-s1').innerText = t.step3S1;
         document.getElementById('step3-s2').innerText = t.step3S2;
-        document.getElementById('step3-s3').innerText = t.step3S3;
         document.getElementById('cp3-text').innerHTML = t.cp3Text;
 
         document.getElementById('step4-header').innerHTML = t.step4Header;

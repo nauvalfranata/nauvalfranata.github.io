@@ -245,6 +245,36 @@
             font-weight: 700;
         }
 
+        /* Warning Box Style */
+        .warning-box {
+            background: var(--warning-bg);
+            border: 1px solid var(--warning-border);
+            border-left: 5px solid var(--warning-color);
+            color: var(--text-main);
+            padding: 15px 18px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .warning-box h4 {
+            color: var(--warning-color);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1rem;
+        }
+
+        .warning-box ul {
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .warning-box li {
+            margin-bottom: 6px;
+        }
+
         /* Styling Diagram Pinout Gambar */
         .pinout-img-container {
             margin-top: 15px;
@@ -515,6 +545,12 @@
             <div class="pinout-img-container">
                 <img src="pi_pinout.png" alt="Diagram Pinout Raspberry Pi" loading="lazy">
             </div>
+
+            <!-- Warning Box Keselamatan Perangkat Keras GPIO -->
+            <div class="warning-box">
+                <h4><i class="fa-solid fa-triangle-exclamation"></i> <span id="warn-title"></span></h4>
+                <ul id="warn-list"></ul>
+            </div>
         </div>
 
         <!-- Requirements Grid -->
@@ -538,7 +574,7 @@
             <div class="step-content">
                 <ol id="step1-list">
                     <li><span id="step1-i1"></span>
-                        <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                        <pre><code>apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                     <li><span id="step1-i2"></span>
                         <pre><code>python3 --version
@@ -686,12 +722,12 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             courseTag: "Course: Embedded Systems — Meeting 10",
             deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Panduan Interaktif Pertemuan 10 - Sistem Tertanam (TEL624307)",
-            headerTitle: "Panduan Praktikum Interaktif: Pemrograman Python & GPIO Digital Input/Output",
+            headerTitle: "Panduan Praktikum Interaktif: Pemrograman Python & GPIO Digital Input/Output via VNC Remote Desktop",
             homeText: "Kembali ke Raspberry Pi",
             progressTitleText: "Kemajuan Praktikum Anda",
             progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
             targetTitle: "Target Pembelajaran",
-            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi, termasuk pemrograman GPIO (General Purpose Input/Output) digital input/output, integrasi komponen, serta eksekusi skrip Python.",
+            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi melalui koneksi VNC Remote Desktop, mencakup pemrograman GPIO (General Purpose Input/Output) digital input/output, integrasi komponen hardware, serta eksekusi skrip Python via LXTerminal.",
             paramsTitle: "Standar Alokasi Pinout & Tegangan Logika (Hardware Limit)",
             paramsDesc: "Perhatikan spesifikasi operasional pinout GPIO Raspberry Pi berikut sebelum menyambungkan komponen fisik:",
             paramsList: `
@@ -700,9 +736,17 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Pin Input Digital (Push Button):</strong> GPIO 2 (Pin Fisik 3) &mdash; Menggunakan Pull-Up Internal bawaan library.</li>
                 <li><strong>Ground (GND):</strong> Pin Fisik 6, 9, 14, 20, atau 34.</li>
             `,
+            warnTitle: "Peringatan Penting Keselamatan Perangkat Keras (GPIO Warning)",
+            warnList: `
+                <li><strong>Ingin mengubah rangkaian?</strong> Selalu MATIKAN daya Raspberry Pi terlebih dahulu.</li>
+                <li><strong>Saat daya MENYALA:</strong> Hindari menyentuh komponen dan jalur rangkaian secara langsung.</li>
+                <li><strong>Periksa ulang 2-3 kali:</strong> Cek kembali seluruh perkabelan sebelum menghubungkan kabel daya.</li>
+                <li><strong>Mulai dengan GND:</strong> Awali pembuatan rangkaian dengan menyambungkan Ground (GND) untuk semua komponen.</li>
+                <li><strong>Batas Tegangan:</strong> Jangan pernah memberikan sinyal 5V langsung ke pin GPIO (maksimal 3.3V).</li>
+            `,
             hwTitle: "Persyaratan Perangkat Keras (Hardware)",
             hwList: `
-                <li><strong>Raspberry Pi</strong> (Ter-setup Headless/SSH)</li>
+                <li><strong>Raspberry Pi</strong> (Ter-setup VNC Remote Desktop)</li>
                 <li><strong>Breadboard / Papan Uji</strong> + Kabel Jumper Male-to-Female</li>
                 <li><strong>2x LED</strong> (Merah / Hijau)</li>
                 <li><strong>2x Resistor 220Ω / 330Ω</strong> (Pembatas Arus LED)</li>
@@ -710,21 +754,22 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             `,
             swTitle: "Persyaratan Perangkat Lunak (Software)",
             swList: `
-                <li><strong>Raspberry Pi OS Terminal / SSH Client</strong> (PuTTY / PowerShell)</li>
+                <li><strong>TigerVNC Viewer</strong> (Aplikasi Remote Desktop Client)</li>
+                <li><strong>LXTerminal pada Raspberry Pi Desktop</strong></li>
                 <li><strong>Python 3 & Standard Lib:</strong> <code>gpiozero</code> (Rekomendasi) / <code>RPi.GPIO</code></li>
-                <li><strong>Text Editor Terminal:</strong> <code>nano</code> atau <code>vim</code></li>
+                <li><strong>Text Editor Terminal:</strong> <code>nano</code> atau <code>mousepad</code></li>
             `,
-            step1Header: `Tahap 1: Verifikasi Lingkungan Pemrograman Python & Pustaka GPIO <span class="badge">Environment</span>`,
-            step1I1: "Hubungkan laptop ke Raspberry Pi via SSH:",
-            step1I2: "Periksa ketersediaan modul Python 3 dan versi pustaka gpiozero yang terinstal di sistem:",
+            step1Header: `Tahap 1: Akses Remote VNC & Verifikasi Pustaka GPIO <span class="badge">VNC & Environment</span>`,
+            step1I1: "Buka aplikasi TigerVNC Viewer di laptop Anda, lalu hubungkan ke Raspberry Pi menggunakan IP Address atau hostname:",
+            step1I2: "Buka LXTerminal dari desktop VNC, lalu periksa ketersediaan modul Python 3 dan pustaka gpiozero:",
             step1I3: "Buat folder khusus untuk menyimpan seluruh skrip praktikum Pertemuan 10:",
-            cp1Text: "<b>Checkpoint 1:</b> Modul Python 3 dan versi library <code>gpiozero</code> terkonfirmasi terinstal serta folder kerja <code>praktikum_gpio</code> berhasil dibuat.",
+            cp1Text: "<b>Checkpoint 1:</b> Berhasil masuk ke Desktop VNC, modul Python 3 & library <code>gpiozero</code> terkonfirmasi, serta folder kerja <code>praktikum_gpio</code> berhasil dibuat.",
             
             step2Header: `Tahap 2: Implementasi Digital Output (LED Blink & Control) <span class="badge">Digital Output</span>`,
-            step2S1: "1. Buat berkas Python baru bernama led_blink.py menggunakan editor nano:",
+            step2S1: "1. Pada LXTerminal di dalam VNC Desktop, buat berkas Python baru bernama led_blink.py menggunakan editor nano:",
             step2S2: "2. Salin dan tempelkan kode program berikut:",
             step2S3: "3. Simpan berkas (Tekan Ctrl+O → Enter → Keluar Ctrl+X), lalu jalankan program:",
-            cp2Text: "<b>Checkpoint 2:</b> Program berhasil dijalankan dan LED pada GPIO 17 berkedip secara periodik setiap 1 detik.",
+            cp2Text: "<b>Checkpoint 2:</b> Program berhasil dijalankan dari terminal VNC dan LED pada GPIO 17 berkedip secara periodik setiap 1 detik.",
             
             step3Header: `Tahap 3: Implementasi Digital Input (Pembacaan Push Button) <span class="badge">Digital Input</span>`,
             step3Intro: "Pada tahap ini, skrip Python akan membaca kondisi masukan sakelar (<i>digital input</i>) pada GPIO 2 untuk mengendalikan keluaran LED pada GPIO 17 secara interaktif (<i>Event-Driven</i>).",
@@ -749,7 +794,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             step5Intro: "Selesaikan penugasan praktikum mandiri berikut untuk melengkapi nilai responsi Pertemuan 10:",
             step5List: `
                 <li>Hubungkan <strong>2 Push Button</strong> (pada GPIO 2 & GPIO 3) dan <strong>2 LED</strong> (pada GPIO 17 & GPIO 27).</li>
-                <li>Buat skrip Python bernama <code>tugas_gpio.py</code> dengan aturan logika berikut:
+                <li>Buat skrip Python bernama <code>tugas_gpio.py</code> melalui terminal VNC dengan aturan logika berikut:
                     <ul>
                         <li><strong>Button 1 Ditekan:</strong> LED 1 berkedip (<i>blink</i>) cepat dengan interval 0.2 detik.</li>
                         <li><strong>Button 2 Ditekan:</strong> LED 2 menyala kontinu (ON).</li>
@@ -757,18 +802,18 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Penugasan skrip <code>tugas_gpio.py</code> berhasil diuji pada perangkat hardware Raspberry Pi."
+            cp5Text: "<b>Checkpoint 5:</b> Penugasan skrip <code>tugas_gpio.py</code> berhasil diuji pada perangkat hardware Raspberry Pi via VNC."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 10",
             deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Interactive Guide Meeting 10 - Embedded Systems (TEL624307)",
-            headerTitle: "Interactive Lab Guide: Python Programming & Digital GPIO Input/Output",
+            headerTitle: "Interactive Lab Guide: Python Programming & Digital GPIO Input/Output via VNC Remote Desktop",
             homeText: "Back to Raspberry Pi",
             progressTitleText: "Your Lab Progress",
             progressText: "{percent}% Completed ({count}/5 Checkpoints)",
             targetTitle: "Learning Objective",
-            targetDesc: "Students are able to configure and develop Raspberry Pi-based embedded systems, including digital input/output GPIO programming, component integration, and Python script execution.",
+            targetDesc: "Students are able to configure and develop Raspberry Pi-based embedded systems via VNC Remote Desktop connection, including digital input/output GPIO programming, hardware component integration, and Python script execution via LXTerminal.",
             paramsTitle: "Pinout Standards & Voltage Limits (Hardware Limit)",
             paramsDesc: "Observe the operational specifications of Raspberry Pi GPIO pinouts before wiring physical components:",
             paramsList: `
@@ -777,9 +822,17 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Digital Input Pin (Push Button):</strong> GPIO 2 (Physical Pin 3) &mdash; Uses library built-in Internal Pull-Up.</li>
                 <li><strong>Ground (GND):</strong> Physical Pin 6, 9, 14, 20, or 34.</li>
             `,
+            warnTitle: "Important Hardware Safety Warnings (GPIO Warning)",
+            warnList: `
+                <li><strong>Want to make a change in the circuit?</strong> Always power OFF the Pi first.</li>
+                <li><strong>When powered ON:</strong> Avoid touching the circuit directly.</li>
+                <li><strong>Double/Triple check:</strong> Verify all wiring before plugging in the power cable.</li>
+                <li><strong>Start with GND:</strong> Begin building the circuit by connecting Ground (GND) for all components.</li>
+                <li><strong>Voltage Limits:</strong> Never put a 5V signal on a GPIO pin (3.3V max).</li>
+            `,
             hwTitle: "Hardware Requirements",
             hwList: `
-                <li><strong>Raspberry Pi</strong> (Headless/SSH pre-configured)</li>
+                <li><strong>Raspberry Pi</strong> (VNC Remote Desktop pre-configured)</li>
                 <li><strong>Breadboard</strong> + Male-to-Female Jumper Wires</li>
                 <li><strong>2x LEDs</strong> (Red / Green)</li>
                 <li><strong>2x Resistors 220Ω / 330Ω</strong> (LED Current Limiters)</li>
@@ -787,21 +840,22 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             `,
             swTitle: "Software Requirements",
             swList: `
-                <li><strong>Raspberry Pi OS Terminal / SSH Client</strong> (PuTTY / PowerShell)</li>
+                <li><strong>TigerVNC Viewer</strong> (Remote Desktop Client Application)</li>
+                <li><strong>LXTerminal on Raspberry Pi Desktop</strong></li>
                 <li><strong>Python 3 & Standard Lib:</strong> <code>gpiozero</code> (Recommended) / <code>RPi.GPIO</code></li>
-                <li><strong>Terminal Text Editor:</strong> <code>nano</code> or <code>vim</code></li>
+                <li><strong>Terminal Text Editor:</strong> <code>nano</code> or <code>mousepad</code></li>
             `,
-            step1Header: `Step 1: Python Environment & GPIO Library Verification <span class="badge">Environment</span>`,
-            step1I1: "Connect laptop to Raspberry Pi via SSH:",
-            step1I2: "Check Python 3 availability and installed gpiozero library version:",
-            step1I3: "Create dedicated directory for Meeting 10 lab scripts:",
-            cp1Text: "<b>Checkpoint 1:</b> Python 3 module and <code>gpiozero</code> library confirmed installed, working directory <code>praktikum_gpio</code> created.",
+            step1Header: `Step 1: VNC Remote Access & GPIO Library Verification <span class="badge">VNC & Environment</span>`,
+            step1I1: "Open TigerVNC Viewer on your laptop, then connect to Raspberry Pi using IP Address or hostname:",
+            step1I2: "Open LXTerminal from VNC desktop, then verify Python 3 and gpiozero library availability:",
+            step1I3: "Create a dedicated directory for Meeting 10 lab scripts:",
+            cp1Text: "<b>Checkpoint 1:</b> Successfully accessed VNC Desktop, Python 3 & <code>gpiozero</code> library confirmed, and <code>praktikum_gpio</code> directory created.",
             
             step2Header: `Step 2: Digital Output Implementation (LED Blink & Control) <span class="badge">Digital Output</span>`,
-            step2S1: "1. Create a new Python file named led_blink.py using nano editor:",
+            step2S1: "1. In LXTerminal inside VNC Desktop, create a new Python file named led_blink.py using nano editor:",
             step2S2: "2. Copy and paste the following program code:",
             step2S3: "3. Save file (Press Ctrl+O → Enter → Exit Ctrl+X), then run the program:",
-            cp2Text: "<b>Checkpoint 2:</b> Program successfully executed and LED on GPIO 17 blinks periodically every 1 second.",
+            cp2Text: "<b>Checkpoint 2:</b> Program successfully executed from VNC terminal and LED on GPIO 17 blinks periodically every 1 second.",
             
             step3Header: `Step 3: Digital Input Implementation (Push Button Reading) <span class="badge">Digital Input</span>`,
             step3Intro: "In this step, Python script reads switch input state (<i>digital input</i>) on GPIO 2 to interactively control LED output on GPIO 17 (<i>Event-Driven</i>).",
@@ -826,7 +880,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             step5Intro: "Complete the following independent practical assignment to fulfill the Meeting 10 task evaluation:",
             step5List: `
                 <li>Connect <strong>2 Push Buttons</strong> (on GPIO 2 & GPIO 3) and <strong>2 LEDs</strong> (on GPIO 17 & GPIO 27).</li>
-                <li>Create a Python script named <code>tugas_gpio.py</code> according to these logic rules:
+                <li>Create a Python script named <code>tugas_gpio.py</code> via VNC terminal according to these logic rules:
                     <ul>
                         <li><strong>Button 1 Pressed:</strong> LED 1 blinks rapidly with an interval of 0.2 seconds.</li>
                         <li><strong>Button 2 Pressed:</strong> LED 2 turns ON continuously.</li>
@@ -834,7 +888,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                     </ul>
                 </li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Script assignment <code>tugas_gpio.py</code> successfully tested on Raspberry Pi hardware."
+            cp5Text: "<b>Checkpoint 5:</b> Script assignment <code>tugas_gpio.py</code> successfully tested on Raspberry Pi hardware via VNC."
         }
     };
 
@@ -912,6 +966,9 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
         document.getElementById('params-title').innerText = t.paramsTitle;
         document.getElementById('params-desc').innerText = t.paramsDesc;
         document.getElementById('params-list').innerHTML = t.paramsList;
+
+        document.getElementById('warn-title').innerText = t.warnTitle;
+        document.getElementById('warn-list').innerHTML = t.warnList;
 
         document.getElementById('hw-title').innerText = t.hwTitle;
         document.getElementById('hw-list').innerHTML = t.hwList;

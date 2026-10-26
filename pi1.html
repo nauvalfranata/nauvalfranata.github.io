@@ -446,6 +446,19 @@
 
         .indent-1 { padding-left: 20px; }
         .indent-2 { padding-left: 40px; }
+
+        /* VNC Note & Warning Box */
+        .info-box {
+            background: var(--card-bg);
+            border-left: 4px solid var(--accent);
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+            font-size: 0.88rem;
+        }
     </style>
 </head>
 <body>
@@ -461,7 +474,7 @@
     <div class="main-card">
         <header>
             <div>
-                <h1 id="header-title">Panduan Praktikum Interaktif: Headless Setup Raspberry Pi Zero 2 W</h1>
+                <h1 id="header-title">Panduan Praktikum Interaktif: Headless Setup & VNC Remote Raspberry Pi</h1>
             </div>
             <div class="header-actions">
                 <a href="pi.html" class="btn-back" id="home-link">
@@ -474,7 +487,7 @@
         <div class="progress-card">
             <div class="progress-title">
                 <span id="progress-title-text">Kemajuan Praktikum Anda</span>
-                <span id="progress-text">0% Selesai (0/5 Checkpoint)</span>
+                <span id="progress-text">0% Selesai (0/6 Checkpoint)</span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progress-bar"></div>
@@ -484,7 +497,7 @@
         <!-- Info Target Pembelajaran -->
         <div class="task-card">
             <h3 id="target-title">Target Pembelajaran</h3>
-            <p id="target-desc">Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi, termasuk instalasi OS, struktur Linux, terminal, konfigurasi SSH, dan komunikasi jaringan secara <i>headless</i> (tanpa monitor, keyboard, dan mouse tambahan).</p>
+            <p id="target-desc">Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi secara <i>headless</i>, meliputi instalasi OS, struktur Linux, SSH remote terminal, pengaktifan layanan VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, serta pemecahan masalah (troubleshooting) koneksi tampilan GUI.</p>
         </div>
 
         <!-- Parameter Akses Sistem -->
@@ -504,19 +517,20 @@
             <div class="card">
                 <h3 id="hw-title">Persyaratan Perangkat Keras (Hardware)</h3>
                 <ul id="hw-list">
-                    <li><strong>Raspberry Pi Zero 2 W</strong> (Board utama)</li>
+                    <li><strong>Raspberry Pi Zero 2 W / Pi 4 / Pi 5</strong> (Board utama)</li>
                     <li><strong>MicroSD Card</strong> (Minimal 16 GB, Class 10) + Card Reader</li>
-                    <li><strong>Kabel Micro-USB to USB-A</strong> (Untuk daya/koneksi daya)</li>
+                    <li><strong>Kabel Micro-USB / USB-C</strong> (Untuk daya/koneksi daya)</li>
                     <li><strong>Laptop Mahasiswa</strong> (Memiliki koneksi Wi-Fi/Hotspot)</li>
-                    <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (Nama SSID & Password diketahui)</li>
+                    <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (SSID & Password sama)</li>
                 </ul>
             </div>
             <div class="card">
                 <h3 id="sw-title">Persyaratan Perangkat Lunak (Software)</h3>
                 <ul id="sw-list">
-                    <li><strong>Raspberry Pi Imager</strong> (Aplikasi flasher resmi)</li>
-                    <li><strong>Terminal / PowerShell / Command Prompt</strong> (Bawaan OS Laptop)</li>
-                    <li><strong>Network Scanner Application</strong> (Fing App di smartphone / Advanced IP Scanner di Windows - <i>Opsional</i>)</li>
+                    <li><strong>Raspberry Pi Imager</strong> (Flasher resmi OS)</li>
+                    <li><strong>Terminal / PowerShell</strong> (Klien CLI Bawaan OS)</li>
+                    <li><strong>TigerVNC Viewer</strong> (Aplikasi Klien VNC Remote Desktop GUI)</li>
+                    <li><strong>Network Scanner</strong> (Fing / Advanced IP Scanner - <i>Opsional</i>)</li>
                 </ul>
             </div>
         </div>
@@ -531,19 +545,19 @@
                 <ol id="step1-list">
                     <li>Masukkan Kartu MicroSD ke Card Reader dan hubungkan ke laptop.</li>
                     <li>Buka aplikasi <strong>Raspberry Pi Imager</strong>.</li>
-                    <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit).</li>
+                    <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
                     <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
-                    <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog untuk menerapkan setelan kustomisasi (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
+                    <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog kustomisasi OS (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
                     <li>Atur parameter kustomisasi sebagai berikut:
                         <ul>
                             <li><strong>Hostname:</strong> <code>apeldua</code></li>
                             <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
-                            <li><strong>Configure wireless LAN:</strong> Masukkan SSID (Nama Wi-Fi/Hotspot) dan Password Wi-Fi yang sedang digunakan oleh laptop Anda.</li>
+                            <li><strong>Configure wireless LAN:</strong> Masukkan SSID & Password Wi-Fi/Hotspot yang sedang aktif di laptop Anda.</li>
                             <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
                             <li>Masuk ke tab <strong>SERVICES</strong> &rarr; Centang <strong>Enable SSH</strong> &rarr; Pilih <strong>Use password authentication</strong>.</li>
                         </ul>
                     </li>
-                    <li>Klik <strong>SAVE</strong>, lalu pilih <strong>YES</strong> untuk memulai proses pemformatan dan penulisan citra OS. Tunggu hingga selesai dan lakukan <i>eject</i> kartu MicroSD.</li>
+                    <li>Klik <strong>SAVE</strong>, pilih <strong>YES</strong> untuk menulis citra OS, lalu tunggu hingga selesai dan <i>eject</i> MicroSD.</li>
                 </ol>
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Checkpoint 1:</b> MicroSD berhasil di-flash dan berisi file konfigurasi SSH serta Wi-Fi otomatis.</span></label>
@@ -560,12 +574,12 @@
             <div class="step-content">
                 <p style="margin-bottom: 8px;"><strong id="step2-arch-title">Arsitektur Koneksi Headless:</strong></p>
                 <ul id="step2-list">
-                    <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang sudah di-flash ke slot MicroSD Raspberry Pi Zero 2 W.</li>
-                    <li><strong>Sumber Daya:</strong> Tancapkan kabel Micro-USB ke port berlabel <code>PWR IN</code> pada Raspberry Pi Zero 2 W, lalu hubungkan ujung USB-A ke port USB laptop atau adaptor daya 5V.</li>
-                    <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi Zero 2 W dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Saat booting, Raspberry Pi akan otomatis menyambung ke jaringan tersebut secara nirkabel.</li>
+                    <li><strong>MicroSD:</strong> Masukkan kartu MicroSD ke slot Raspberry Pi.</li>
+                    <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke laptop/adaptor daya 5V.</li>
+                    <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Pi akan otomatis terhubung saat selesai booting.</li>
                 </ul>
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Checkpoint 2:</b> LED hijau pada Raspberry Pi Zero 2 W berkedip/menyala konstan tanda booting berhasil.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Checkpoint 2:</b> LED hijau pada Raspberry Pi berkedip/menyala konstan menandakan booting sistem berhasil.</span></label>
                 </div>
             </div>
         </div>
@@ -577,7 +591,7 @@
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop masing-masing.</p>
+                <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop Anda.</p>
                 
                 <p style="font-size: 0.9rem;"><span id="step3-s1">1. Jalankan perintah SSH menggunakan mDNS hostname:</span></p>
                 <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
@@ -585,9 +599,9 @@
                 <p style="font-size: 0.9rem;"><span id="step3-s2">2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.</span></p>
                 <p style="font-size: 0.9rem;"><span id="step3-s3">3. Masukkan password saat diminta:</span></p>
                 <pre><code>123456</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;"><i id="step3-note">Note: Karakter password tidak akan tampil di layar saat diketik (sistem keamanan Linux).</i></p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;"><i id="step3-note">Note: Karakter password tidak akan tampil di layar saat diketik (fitur keamanan Linux).</i></p>
 
-                <p style="font-size: 0.9rem;"><span id="step3-s4">4. Jika koneksi mDNS gagal, cari IP Address Raspberry Pi melalui perintah scan lokal atau tabel klien Hotspot smartphone Anda, lalu ketik:</span></p>
+                <p style="font-size: 0.9rem;"><span id="step3-s4">4. Jika mDNS gagal, cari IP Address Raspberry Pi via scanner jaringan/Hotspot smartphone, lalu jalankan:</span></p>
                 <pre><code>ssh apel@&lt;ALAMAT_IP_RASPBERRY&gt;</code></pre>
                 
                 <div class="checkpoint">
@@ -599,30 +613,34 @@
         <!-- Tahap 4 -->
         <div class="step-section" id="section-4">
             <div class="step-header" onclick="toggleAccordion('section-4')">
-                <span id="step4-header">Tahap 4: Eksplorasi Struktur Direktori & Perintah Dasar Linux <span class="badge">Linux Structure</span></span>
+                <span id="step4-header">Tahap 4: Aktivasi VNC Server & Auto-Boot Desktop via raspi-config <span class="badge">VNC Setup</span></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Setelah berhasil masuk ke sistem, jalankan perintah-perintah dasar Linux berikut untuk memahami struktur hierarki direktori:</p>
+                <p id="step4-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">VNC (Virtual Network Computing) memungkinkan Anda mengakses antarmuka grafis (GUI Desktop) Raspberry Pi secara nirkabel dari laptop tanpa perlu monitor fisik.</p>
 
-                <p style="font-size: 0.9rem;"><strong id="step4-s1">1. Memeriksa lokasi direktori aktif dan identitas sistem:</strong></p>
-                <pre><code>pwd
-whoami
-hostname -I</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.9rem;"><strong id="step4-s1">1. Buka Menu Konfigurasi Raspberry Pi:</strong></p>
+                <pre><code>sudo raspi-config</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
-                <p style="font-size: 0.9rem;"><strong id="step4-s2">2. Eksplorasi Struktur Root Linux (<code>/</code>):</strong></p>
-                <pre><code>cd /
-ls -la</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.9rem;"><strong id="step4-s2">2. Aktifkan VNC Server:</strong></p>
+                <ul>
+                    <li>Pilih menu <strong>3 Interface Options</strong> &rarr; Tekan Enter.</li>
+                    <li>Pilih opsi <strong>I2 VNC</strong> (atau opsi <strong>VNC</strong>).</li>
+                    <li>Ketika diminta mengonfirmasi *"Would you like the VNC server to be enabled?"*, pilih <strong>&lt;Yes&gt;</strong>.</li>
+                    <li>Tekan Enter pada konfirmasi *"The VNC server is enabled"*.</li>
+                </ul>
 
-                <p style="font-size: 0.9rem;"><strong id="step4-s3">3. Pengelolaan Berkas dan Direktori Latihan:</strong></p>
-                <pre><code>cd ~
-mkdir praktikum1
-cd praktikum1
-echo "Sistem Tertanam Untirta 2026" > info.txt
-cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.9rem; margin-top: 10px;"><strong id="step4-s3">3. Konfigurasi Booting ke Desktop Mode:</strong></p>
+                <ul>
+                    <li>Pilih menu <strong>1 System Options</strong> &rarr; Tekan Enter.</li>
+                    <li>Pilih opsi <strong>S5 Boot / Auto Login</strong>.</li>
+                    <li>Pilih opsi <strong>B4 Desktop Auto Login</strong> (atau <strong>B3 Desktop</strong>) agar Desktop GUI dimuat otomatis saat sistem dinyalakan.</li>
+                    <li>Gunakan tombol panah kanan untuk memilih <strong>&lt;Finish&gt;</strong>.</li>
+                    <li>Ketika muncul dialog *"Would you like to reboot now?"*, pilih <strong>&lt;Yes&gt;</strong>. Sesi SSH akan terputus otomatis karena Pi melakukan restart.</li>
+                </ul>
 
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"><b>Checkpoint 4:</b> Mahasiswa berhasil membuat folder <code>praktikum1</code> dan membaca file <code>info.txt</code>.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp4-text"><b>Checkpoint 4:</b> Layanan VNC Server aktif dan konfigurasi Auto-Login Desktop berhasil disimpan.</span></label>
                 </div>
             </div>
         </div>
@@ -630,11 +648,73 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
         <!-- Tahap 5 -->
         <div class="step-section" id="section-5">
             <div class="step-header" onclick="toggleAccordion('section-5')">
-                <span id="step5-header">Tahap 5: Visualisasi Interaktif Pohon Direktori Linux (FHS) <span class="badge">Modul Interaktif</span></span>
+                <span id="step5-header">Tahap 5: Remote Desktop GUI Menggunakan TigerVNC Viewer <span class="badge">TigerVNC Client</span></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main);">Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:</p>
+                <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Gunakan klien VNC ringan seperti <strong>TigerVNC Viewer</strong> di laptop Anda untuk terhubung ke Raspberry Pi.</p>
+
+                <ol id="step5-list">
+                    <li>Unduh dan pasang aplikasi <strong>TigerVNC Viewer</strong> dari situs resmi atau GitHub/SourceForge.</li>
+                    <li>Buka aplikasi <strong>TigerVNC Viewer</strong> di laptop Anda.</li>
+                    <li>Pada kolom <strong>VNC Server</strong>, masukkan IP Address atau hostname Raspberry Pi (contoh: <code>192.168.1.50</code> atau <code>apeldua.local</code>).</li>
+                    <li>Klik <strong>Connect</strong>. Jika muncul peringatan sertifikat keamanan (*Security Warning*), pilih <strong>Yes / Continue</strong>.</li>
+                    <li>Masukkan kredensial login saat diminta:
+                        <ul>
+                            <li><strong>Username:</strong> <code>apel</code></li>
+                            <li><strong>Password:</strong> <code>123456</code></li>
+                        </ul>
+                    </li>
+                    <li>Klik <strong>OK</strong>. Tampilan layar Desktop Raspberry Pi OS akan muncul di jendela laptop Anda.</li>
+                </ol>
+
+                <div class="info-box" id="step5-tip">
+                    <strong><i class="fa-solid fa-lightbulb"></i> Tips Penggunaan TigerVNC:</strong>
+                    Tekan tombol <code>F8</code> pada keyboard saat jendela TigerVNC aktif untuk menampilkan menu kontrol (Full Screen, Options, Disconnect). Anda juga dapat mengatur resolusi dan ukuran ikon melalui menu <i>Preferences &rarr; Appearance Settings</i> di Raspberry Pi OS.
+                </div>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"><b>Checkpoint 5:</b> Mahasiswa berhasil masuk ke tampilan GUI Desktop Raspberry Pi melalui TigerVNC.</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 6 -->
+        <div class="step-section" id="section-6">
+            <div class="step-header" onclick="toggleAccordion('section-6')">
+                <span id="step6-header">Tahap 6: Troubleshooting VNC & Prosedur Shutdown yang Benar <span class="badge">Maintenance & Fix</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step6-t1-title" style="font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 5px;">1. Pemecahan Masalah: Layar Abu-abu (Gray Screen) / Blank pada VNC</p>
+                <p id="step6-t1-desc" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px;">Jika koneksi VNC berhasil tetapi hanya menampilkan layar abu-abu tanpa ikon desktop, lakukan pembaruan paket sistem via SSH terminal:</p>
+                <pre><code>sudo apt update
+sudo apt upgrade -y
+sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;"><i id="step6-t1-note">Proses pembaruan ini akan mengunduh repositori GUI terbaru dan memperbaiki paket driver tampilan yang hilang.</i></p>
+
+                <p id="step6-t2-title" style="font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 5px;">2. Prosedur Matikan (Shutdown) Raspberry Pi yang Benar</p>
+                <p id="step6-t2-desc" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px;">Jangan mencabut kabel daya secara langsung saat sistem beroperasi karena dapat merusak berkas pada kartu MicroSD. Gunakan salah satu metode berikut:</p>
+                <ul>
+                    <li><strong>Melalui GUI VNC:</strong> Klik menu utama (logo Raspberry) &rarr; Pilih <strong>Shutdown</strong> &rarr; Klik <strong>Shutdown</strong>.</li>
+                    <li><strong>Melalui SSH Terminal:</strong> Jalankan perintah berikut sebelum mencabut kabel daya:</li>
+                </ul>
+                <pre><code>sudo shutdown -h now</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp6-text"><b>Checkpoint 6:</b> Mahasiswa memahami langkah pemecahan masalah VNC dan mematikan Raspberry Pi secara aman.</span></label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tahap 7 -->
+        <div class="step-section" id="section-7">
+            <div class="step-header" onclick="toggleAccordion('section-7')">
+                <span id="step7-header">Tahap 7: Visualisasi Interaktif Pohon Direktori Linux (FHS) <span class="badge">Modul Interaktif</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step7-intro" style="font-size: 0.9rem; color: var(--text-main);">Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:</p>
                 
                 <div class="linux-tree-container">
                     <div class="tree-view">
@@ -659,12 +739,9 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
                         <pre style="padding: 8px; font-size:0.85rem;"><code id="dir-cmd">cd / && ls -la</code></pre>
                     </div>
                 </div>
-
-                <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"><b>Checkpoint 5:</b> Mahasiswa telah mempelajari dan memahami seluruh struktur direktori penting pada Linux Embedded.</span></label>
-                </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -675,12 +752,12 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
             courseTag: "Course: Embedded Systems — Meeting 9",
             deptTag: "Program Studi Teknik Elektro, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Panduan Interaktif Pertemuan 9 - Sistem Tertanam (TEL624307)",
-            headerTitle: "Panduan Praktikum Interaktif: Headless Setup Raspberry Pi Zero 2 W",
+            headerTitle: "Panduan Praktikum Interaktif: Headless Setup & VNC Remote Raspberry Pi",
             homeText: "Kembali ke Raspberry Pi",
             progressTitleText: "Kemajuan Praktikum Anda",
-            progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
+            progressText: "{percent}% Selesai ({count}/6 Checkpoint)",
             targetTitle: "Target Pembelajaran",
-            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi, termasuk instalasi OS, struktur Linux, terminal, konfigurasi SSH, dan komunikasi jaringan secara <i>headless</i> (tanpa monitor, keyboard, dan mouse tambahan).",
+            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi secara <i>headless</i>, meliputi instalasi OS, struktur Linux, SSH remote terminal, pengaktifan layanan VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, serta pemecahan masalah (troubleshooting) koneksi tampilan GUI.",
             paramsTitle: "Parameter Akses Sistem (Pra-Konfigurasi)",
             paramsDesc: "Gunakan kredensial berikut selama seluruh alur praktikum:",
             paramHostLabel: "Hostname:",
@@ -691,75 +768,99 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
             paramOrLabel: "atau",
             hwTitle: "Persyaratan Perangkat Keras (Hardware)",
             hwList: `
-                <li><strong>Raspberry Pi Zero 2 W</strong> (Board utama)</li>
+                <li><strong>Raspberry Pi Zero 2 W / Pi 4 / Pi 5</strong> (Board utama)</li>
                 <li><strong>MicroSD Card</strong> (Minimal 16 GB, Class 10) + Card Reader</li>
-                <li><strong>Kabel Micro-USB to USB-A</strong> (Untuk daya/koneksi daya)</li>
+                <li><strong>Kabel Micro-USB / USB-C</strong> (Untuk daya/koneksi daya)</li>
                 <li><strong>Laptop Mahasiswa</strong> (Memiliki koneksi Wi-Fi/Hotspot)</li>
-                <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (Nama SSID & Password diketahui)</li>
+                <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (SSID & Password sama)</li>
             `,
             swTitle: "Persyaratan Perangkat Lunak (Software)",
             swList: `
-                <li><strong>Raspberry Pi Imager</strong> (Aplikasi flasher resmi)</li>
-                <li><strong>Terminal / PowerShell / Command Prompt</strong> (Bawaan OS Laptop)</li>
-                <li><strong>Network Scanner Application</strong> (Fing App di smartphone / Advanced IP Scanner di Windows - <i>Opsional</i>)</li>
+                <li><strong>Raspberry Pi Imager</strong> (Flasher resmi OS)</li>
+                <li><strong>Terminal / PowerShell</strong> (Klien CLI Bawaan OS)</li>
+                <li><strong>TigerVNC Viewer</strong> (Aplikasi Klien VNC Remote Desktop GUI)</li>
+                <li><strong>Network Scanner</strong> (Fing / Advanced IP Scanner - <i>Opsional</i>)</li>
             `,
             step1Header: `Tahap 1: Flashing OS & Pre-Configuration (Raspberry Pi Imager) <span class="badge">Software</span>`,
             step1List: `
                 <li>Masukkan Kartu MicroSD ke Card Reader dan hubungkan ke laptop.</li>
                 <li>Buka aplikasi <strong>Raspberry Pi Imager</strong>.</li>
-                <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit).</li>
+                <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
                 <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
-                <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog untuk menerapkan setelan kustomisasi (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
+                <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog kustomisasi OS (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
                 <li>Atur parameter kustomisasi sebagai berikut:
                     <ul>
                         <li><strong>Hostname:</strong> <code>apeldua</code></li>
                         <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
-                        <li><strong>Configure wireless LAN:</strong> Masukkan SSID (Nama Wi-Fi/Hotspot) dan Password Wi-Fi yang sedang digunakan oleh laptop Anda.</li>
+                        <li><strong>Configure wireless LAN:</strong> Masukkan SSID & Password Wi-Fi/Hotspot yang sedang aktif di laptop Anda.</li>
                         <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
                         <li>Masuk ke tab <strong>SERVICES</strong> &rarr; Centang <strong>Enable SSH</strong> &rarr; Pilih <strong>Use password authentication</strong>.</li>
                     </ul>
                 </li>
-                <li>Klik <strong>SAVE</strong>, lalu pilih <strong>YES</strong> untuk memulai proses pemformatan dan penulisan citra OS. Tunggu hingga selesai dan lakukan <i>eject</i> kartu MicroSD.</li>
+                <li>Klik <strong>SAVE</strong>, pilih <strong>YES</strong> untuk menulis citra OS, lalu tunggu hingga selesai dan <i>eject</i> MicroSD.</li>
             `,
             cp1Text: "<b>Checkpoint 1:</b> MicroSD berhasil di-flash dan berisi file konfigurasi SSH serta Wi-Fi otomatis.",
             step2Header: `Tahap 2: Pengkabelan & Integrasi Jaringan (Hardware Setup) <span class="badge">Hardware & Network</span>`,
             step2ArchTitle: "Arsitektur Koneksi Headless:",
             step2List: `
-                <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang sudah di-flash ke slot MicroSD Raspberry Pi Zero 2 W.</li>
-                <li><strong>Sumber Daya:</strong> Tancapkan kabel Micro-USB ke port berlabel <code>PWR IN</code> pada Raspberry Pi Zero 2 W, lalu hubungkan ujung USB-A ke port USB laptop atau adaptor daya 5V.</li>
-                <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi Zero 2 W dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Saat booting, Raspberry Pi akan otomatis menyambung ke jaringan tersebut secara nirkabel.</li>
+                <li><strong>MicroSD:</strong> Masukkan kartu MicroSD ke slot Raspberry Pi.</li>
+                <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke laptop/adaptor daya 5V.</li>
+                <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Pi akan otomatis terhubung saat selesai booting.</li>
             `,
-            cp2Text: "<b>Checkpoint 2:</b> LED hijau pada Raspberry Pi Zero 2 W berkedip/menyala konstan tanda booting berhasil.",
+            cp2Text: "<b>Checkpoint 2:</b> LED hijau pada Raspberry Pi berkedip/menyala konstan menandakan booting sistem berhasil.",
             step3Header: `Tahap 3: Remote Login via SSH (Terminal Laptop) <span class="badge">Terminal & SSH</span>`,
-            step3Intro: "Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop masing-masing.",
+            step3Intro: "Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop Anda.",
             step3S1: "1. Jalankan perintah SSH menggunakan mDNS hostname:",
             step3S2: "2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.",
             step3S3: "3. Masukkan password saat diminta:",
-            step3Note: "Note: Karakter password tidak akan tampil di layar saat diketik (sistem keamanan Linux).",
-            step3S4: "4. Jika koneksi mDNS gagal, cari IP Address Raspberry Pi melalui perintah scan lokal atau tabel klien Hotspot smartphone Anda, lalu ketik:",
+            step3Note: "Note: Karakter password tidak akan tampil di layar saat diketik (fitur keamanan Linux).",
+            step3S4: "4. Jika mDNS gagal, cari IP Address Raspberry Pi via scanner jaringan/Hotspot smartphone, lalu jalankan:",
             cp3Text: "<b>Checkpoint 3:</b> Tampilan prompt terminal berubah menjadi <code>apel@apeldua:~ $</code>.",
-            step4Header: `Tahap 4: Eksplorasi Struktur Direktori & Perintah Dasar Linux <span class="badge">Linux Structure</span>`,
-            step4Intro: "Setelah berhasil masuk ke sistem, jalankan perintah-perintah dasar Linux berikut untuk memahami struktur hierarki direktori:",
-            step4S1: "1. Memeriksa lokasi direktori aktif dan identitas sistem:",
-            step4S2: "2. Eksplorasi Struktur Root Linux (<code>/</code>):",
-            step4S3: "3. Pengelolaan Berkas dan Direktori Latihan:",
-            cp4Text: "<b>Checkpoint 4:</b> Mahasiswa berhasil membuat folder <code>praktikum1</code> dan membaca file <code>info.txt</code>.",
-            step5Header: `Tahap 5: Visualisasi Interaktif Pohon Direktori Linux (FHS) <span class="badge">Modul Interaktif</span>`,
-            step5Intro: "Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:",
+            step4Header: `Tahap 4: Aktivasi VNC Server & Auto-Boot Desktop via raspi-config <span class="badge">VNC Setup</span>`,
+            step4Intro: "VNC (Virtual Network Computing) memungkinkan Anda mengakses antarmuka grafis (GUI Desktop) Raspberry Pi secara nirkabel dari laptop tanpa perlu monitor fisik.",
+            step4S1: "1. Buka Menu Konfigurasi Raspberry Pi:",
+            step4S2: "2. Aktifkan VNC Server:",
+            step4S3: "3. Konfigurasi Booting ke Desktop Mode:",
+            cp4Text: "<b>Checkpoint 4:</b> Layanan VNC Server aktif dan konfigurasi Auto-Login Desktop berhasil disimpan.",
+            step5Header: `Tahap 5: Remote Desktop GUI Menggunakan TigerVNC Viewer <span class="badge">TigerVNC Client</span>`,
+            step5Intro: "Gunakan klien VNC ringan seperti <strong>TigerVNC Viewer</strong> di laptop Anda untuk terhubung ke Raspberry Pi.",
+            step5List: `
+                <li>Unduh dan pasang aplikasi <strong>TigerVNC Viewer</strong> dari situs resmi atau GitHub/SourceForge.</li>
+                <li>Buka aplikasi <strong>TigerVNC Viewer</strong> di laptop Anda.</li>
+                <li>Pada kolom <strong>VNC Server</strong>, masukkan IP Address atau hostname Raspberry Pi (contoh: <code>192.168.1.50</code> atau <code>apeldua.local</code>).</li>
+                <li>Klik <strong>Connect</strong>. Jika muncul peringatan sertifikat keamanan (*Security Warning*), pilih <strong>Yes / Continue</strong>.</li>
+                <li>Masukkan kredensial login saat diminta:
+                    <ul>
+                        <li><strong>Username:</strong> <code>apel</code></li>
+                        <li><strong>Password:</strong> <code>123456</code></li>
+                    </ul>
+                </li>
+                <li>Klik <strong>OK</strong>. Tampilan layar Desktop Raspberry Pi OS akan muncul di jendela laptop Anda.</li>
+            `,
+            step5Tip: `<strong><i class="fa-solid fa-lightbulb"></i> Tips Penggunaan TigerVNC:</strong> Tekan tombol <code>F8</code> pada keyboard saat jendela TigerVNC aktif untuk menampilkan menu kontrol (Full Screen, Options, Disconnect). Anda juga dapat mengatur resolusi dan ukuran ikon melalui menu <i>Preferences &rarr; Appearance Settings</i> di Raspberry Pi OS.`,
+            cp5Text: "<b>Checkpoint 5:</b> Mahasiswa berhasil masuk ke tampilan GUI Desktop Raspberry Pi melalui TigerVNC.",
+            step6Header: `Tahap 6: Troubleshooting VNC & Prosedur Shutdown yang Benar <span class="badge">Maintenance & Fix</span>`,
+            step6T1Title: "1. Pemecahan Masalah: Layar Abu-abu (Gray Screen) / Blank pada VNC",
+            step6T1Desc: "Jika koneksi VNC berhasil tetapi hanya menampilkan layar abu-abu tanpa ikon desktop, lakukan pembaruan paket sistem via SSH terminal:",
+            step6T1Note: "Proses pembaruan ini akan mengunduh repositori GUI terbaru dan memperbaiki paket driver tampilan yang hilang.",
+            step6T2Title: "2. Prosedur Matikan (Shutdown) Raspberry Pi yang Benar",
+            step6T2Desc: "Jangan mencabut kabel daya secara langsung saat sistem beroperasi karena dapat merusak berkas pada kartu MicroSD. Gunakan salah satu metode berikut:",
+            cp6Text: "<b>Checkpoint 6:</b> Mahasiswa memahami langkah pemecahan masalah VNC dan mematikan Raspberry Pi secara aman.",
+            step7Header: `Tahap 7: Visualisasi Interaktif Pohon Direktori Linux (FHS) <span class="badge">Modul Interaktif</span>`,
+            step7Intro: "Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:",
             dirTypeLabel: "Tipe Isinya:",
-            dirCmdLabel: "Contoh Perintah Terminal:",
-            cp5Text: "<b>Checkpoint 5:</b> Mahasiswa telah mempelajari dan memahami seluruh struktur direktori penting pada Linux Embedded."
+            dirCmdLabel: "Contoh Perintah Terminal:"
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 9",
             deptTag: "Department of Electrical Engineering, Universitas Sultan Ageng Tirtayasa",
             pageTitle: "Interactive Guide Meeting 9 - Embedded Systems (TEL624307)",
-            headerTitle: "Interactive Lab Guide: Headless Setup Raspberry Pi Zero 2 W",
+            headerTitle: "Interactive Lab Guide: Headless Setup & VNC Remote Raspberry Pi",
             homeText: "Back to Raspberry Pi",
             progressTitleText: "Your Lab Progress",
-            progressText: "{percent}% Completed ({count}/5 Checkpoints)",
+            progressText: "{percent}% Completed ({count}/6 Checkpoints)",
             targetTitle: "Learning Objective",
-            targetDesc: "Students are able to configure and develop an embedded system based on Raspberry Pi, including OS installation, Linux structure, terminal usage, SSH configuration, and network communications in a <i>headless</i> manner (without extra monitor, keyboard, and mouse).",
+            targetDesc: "Students are able to configure and develop a Raspberry Pi-based embedded system headlessly, including OS installation, Linux structure, SSH remote terminal, enabling VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, and troubleshooting GUI display connections.",
             paramsTitle: "System Access Parameters (Pre-Configured)",
             paramsDesc: "Use the following credentials throughout the lab procedures:",
             paramHostLabel: "Hostname:",
@@ -770,64 +871,88 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
             paramOrLabel: "or",
             hwTitle: "Hardware Requirements",
             hwList: `
-                <li><strong>Raspberry Pi Zero 2 W</strong> (Main Board)</li>
+                <li><strong>Raspberry Pi Zero 2 W / Pi 4 / Pi 5</strong> (Main Board)</li>
                 <li><strong>MicroSD Card</strong> (Minimum 16 GB, Class 10) + Card Reader</li>
-                <li><strong>Micro-USB to USB-A Cable</strong> (For power connection)</li>
+                <li><strong>Micro-USB / USB-C Cable</strong> (For power connection)</li>
                 <li><strong>Student Laptop</strong> (With Wi-Fi/Hotspot capability)</li>
-                <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (Known SSID Name & Password)</li>
+                <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (Same SSID & Password)</li>
             `,
             swTitle: "Software Requirements",
             swList: `
-                <li><strong>Raspberry Pi Imager</strong> (Official flasher application)</li>
-                <li><strong>Terminal / PowerShell / Command Prompt</strong> (Built-in Laptop OS)</li>
-                <li><strong>Network Scanner Application</strong> (Fing App on smartphone / Advanced IP Scanner on Windows - <i>Optional</i>)</li>
+                <li><strong>Raspberry Pi Imager</strong> (Official OS Flashing Software)</li>
+                <li><strong>Terminal / PowerShell</strong> (Built-in OS CLI Client)</li>
+                <li><strong>TigerVNC Viewer</strong> (Remote Desktop GUI VNC Client)</li>
+                <li><strong>Network Scanner</strong> (Fing / Advanced IP Scanner - <i>Optional</i>)</li>
             `,
             step1Header: `Step 1: OS Flashing & Pre-Configuration (Raspberry Pi Imager) <span class="badge">Software</span>`,
             step1List: `
                 <li>Insert MicroSD Card into Card Reader and connect to laptop.</li>
                 <li>Open <strong>Raspberry Pi Imager</strong> application.</li>
-                <li>Click <strong>CHOOSE OS</strong> &rarr; Select <strong>Raspberry Pi OS (32-bit).</li>
+                <li>Click <strong>CHOOSE OS</strong> &rarr; Select <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
                 <li>Click <strong>CHOOSE STORAGE</strong> &rarr; Select detected MicroSD card.</li>
-                <li>Click <strong>NEXT</strong> button. When prompted to apply customization settings (*Use OS customization settings*), select <strong>EDIT SETTINGS</strong>.</li>
+                <li>Click <strong>NEXT</strong> button. When prompted (*Use OS customization settings*), select <strong>EDIT SETTINGS</strong>.</li>
                 <li>Set customization parameters as follows:
                     <ul>
                         <li><strong>Hostname:</strong> <code>apeldua</code></li>
                         <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
-                        <li><strong>Configure wireless LAN:</strong> Enter SSID (Wi-Fi/Hotspot Name) and Password currently used by your laptop.</li>
+                        <li><strong>Configure wireless LAN:</strong> Enter active SSID & Password currently used by laptop.</li>
                         <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
                         <li>Go to <strong>SERVICES</strong> tab &rarr; Check <strong>Enable SSH</strong> &rarr; Choose <strong>Use password authentication</strong>.</li>
                     </ul>
                 </li>
-                <li>Click <strong>SAVE</strong>, then select <strong>YES</strong> to start formatting and image writing process. Wait until finished and eject MicroSD card.</li>
+                <li>Click <strong>SAVE</strong>, select <strong>YES</strong> to write OS image, wait until finished, and <i>eject</i> MicroSD.</li>
             `,
             cp1Text: "<b>Checkpoint 1:</b> MicroSD successfully flashed with SSH and auto Wi-Fi configuration.",
             step2Header: `Step 2: Cabling & Network Integration (Hardware Setup) <span class="badge">Hardware & Network</span>`,
             step2ArchTitle: "Headless Connection Architecture:",
             step2List: `
-                <li><strong>MicroSD:</strong> Insert flashed MicroSD card into Raspberry Pi Zero 2 W slot.</li>
-                <li><strong>Power Source:</strong> Plug Micro-USB cable into port labeled <code>PWR IN</code> on Raspberry Pi Zero 2 W, then connect USB-A end to laptop USB port or 5V power adapter.</li>
-                <li><strong>Network Connection:</strong> Ensure both Raspberry Pi Zero 2 W and Laptop are connected to the <strong>same Wi-Fi/Hotspot access point</strong>. Upon booting, Raspberry Pi will automatically connect wirelessly.</li>
+                <li><strong>MicroSD:</strong> Insert flashed MicroSD card into Raspberry Pi slot.</li>
+                <li><strong>Power Source:</strong> Plug power cable into port labeled <code>PWR IN</code> (or USB Power on Pi 4/5), connect to laptop/5V adapter.</li>
+                <li><strong>Network Connection:</strong> Ensure both Raspberry Pi and Laptop are connected to the <strong>same Wi-Fi/Hotspot access point</strong>. Pi connects automatically on boot.</li>
             `,
-            cp2Text: "<b>Checkpoint 2:</b> Green LED on Raspberry Pi Zero 2 W blinks/stays solid indicating successful boot.",
+            cp2Text: "<b>Checkpoint 2:</b> Green LED on Raspberry Pi blinks/stays solid indicating successful boot.",
             step3Header: `Step 3: Remote Login via SSH (Laptop Terminal) <span class="badge">Terminal & SSH</span>`,
-            step3Intro: "Open <strong>Terminal</strong> (macOS/Linux) or <strong>PowerShell / Command Prompt</strong> (Windows) on your laptop.",
+            step3Intro: "Open <strong>Terminal</strong> (macOS/Linux) or <strong>PowerShell / Command Prompt</strong> (Windows) on laptop.",
             step3S1: "1. Run SSH command using mDNS hostname:",
             step3S2: "2. If security warning (Fingerprint confirmation) appears, type <code>yes</code> and press Enter.",
             step3S3: "3. Enter password when prompted:",
             step3Note: "Note: Password characters will not appear on screen while typing (Linux security feature).",
-            step3S4: "4. If mDNS connection fails, find Raspberry Pi's IP address via local network scanner or smartphone Hotspot client list, then type:",
+            step3S4: "4. If mDNS connection fails, find Raspberry Pi IP address via local network scanner/Hotspot client list, then run:",
             cp3Text: "<b>Checkpoint 3:</b> Terminal prompt successfully changes to <code>apel@apeldua:~ $</code>.",
-            step4Header: `Step 4: Linux Directory Structure Exploration & Basic Commands <span class="badge">Linux Structure</span>`,
-            step4Intro: "After successfully logging in, run the following basic Linux commands to understand hierarchy structure:",
-            step4S1: "1. Check current directory location and system identity:",
-            step4S2: "2. Explore Linux Root Structure (<code>/</code>):",
-            step4S3: "3. File Management & Practice Directory:",
-            cp4Text: "<b>Checkpoint 4:</b> Student successfully created <code>praktikum1</code> folder and read <code>info.txt</code> file.",
-            step5Header: `Step 5: Interactive Linux Directory Tree Visualization (FHS) <span class="badge">Interactive Module</span>`,
-            step5Intro: "Click any directory in the tree diagram on the left to learn about Linux directory functions in detail:",
+            step4Header: `Step 4: VNC Server Activation & Auto-Boot Desktop via raspi-config <span class="badge">VNC Setup</span>`,
+            step4Intro: "VNC (Virtual Network Computing) allows you to remotely access the Graphical User Interface (GUI Desktop) of the Raspberry Pi wirelessly without physical monitor.",
+            step4S1: "1. Open Raspberry Pi Configuration Menu:",
+            step4S2: "2. Enable VNC Server:",
+            step4S3: "3. Configure Boot Mode to Desktop:",
+            cp4Text: "<b>Checkpoint 4:</b> VNC Server service enabled and Desktop Auto-Login settings saved.",
+            step5Header: `Step 5: Remote Desktop GUI Using TigerVNC Viewer <span class="badge">TigerVNC Client</span>`,
+            step5Intro: "Use lightweight VNC client like <strong>TigerVNC Viewer</strong> on your laptop to connect to Raspberry Pi.",
+            step5List: `
+                <li>Download and install <strong>TigerVNC Viewer</strong> from official website or GitHub/SourceForge.</li>
+                <li>Launch <strong>TigerVNC Viewer</strong> on your laptop.</li>
+                <li>In the <strong>VNC Server</strong> input box, enter Raspberry Pi's IP address or hostname (e.g., <code>192.168.1.50</code> or <code>apeldua.local</code>).</li>
+                <li>Click <strong>Connect</strong>. If security certificate warning appears, select <strong>Yes / Continue</strong>.</li>
+                <li>Enter login credentials when prompted:
+                    <ul>
+                        <li><strong>Username:</strong> <code>apel</code></li>
+                        <li><strong>Password:</strong> <code>123456</code></li>
+                    </ul>
+                </li>
+                <li>Click <strong>OK</strong>. Raspberry Pi OS Desktop window will appear on your laptop screen.</li>
+            `,
+            step5Tip: `<strong><i class="fa-solid fa-lightbulb"></i> TigerVNC Usage Tip:</strong> Press <code>F8</code> on your keyboard while TigerVNC window is active to access control options (Full Screen, Options, Disconnect). You can also adjust resolution in <i>Preferences &rarr; Appearance Settings</i> within Raspberry Pi OS.`,
+            cp5Text: "<b>Checkpoint 5:</b> Student successfully logged into Raspberry Pi Desktop GUI via TigerVNC.",
+            step6Header: `Step 6: VNC Troubleshooting & Proper Shutdown Procedure <span class="badge">Maintenance & Fix</span>`,
+            step6T1Title: "1. Troubleshooting: Gray Screen / Blank Screen in VNC",
+            step6T1Desc: "If VNC connects but only displays a plain gray screen without desktop icons, run system package updates via SSH terminal:",
+            step6T1Note: "This update process fetches the latest GUI repositories and fixes missing display driver packages.",
+            step6T2Title: "2. Safe Raspberry Pi Shutdown Procedure",
+            step6T2Desc: "Never unplug the power cable directly while system is running as it may corrupt MicroSD card files. Use one of these methods:",
+            cp6Text: "<b>Checkpoint 6:</b> Student understands VNC troubleshooting steps and safe Raspberry Pi shutdown.",
+            step7Header: `Step 7: Interactive Linux Directory Tree Visualization (FHS) <span class="badge">Interactive Module</span>`,
+            step7Intro: "Click any directory in the tree diagram on the left to learn about Linux directory functions in detail:",
             dirTypeLabel: "Content Type:",
-            dirCmdLabel: "Example Terminal Command:",
-            cp5Text: "<b>Checkpoint 5:</b> Student has studied and understood all key directories in Embedded Linux."
+            dirCmdLabel: "Example Terminal Command:"
         }
     };
 
@@ -1057,9 +1182,22 @@ cat info.txt</code><button class="copy-btn" onclick="copyCode(this)">Copy</butto
 
         document.getElementById('step5-header').innerHTML = t.step5Header;
         document.getElementById('step5-intro').innerText = t.step5Intro;
+        document.getElementById('step5-list').innerHTML = t.step5List;
+        document.getElementById('step5-tip').innerHTML = t.step5Tip;
+        document.getElementById('cp5-text').innerHTML = t.cp5Text;
+
+        document.getElementById('step6-header').innerHTML = t.step6Header;
+        document.getElementById('step6-t1-title').innerText = t.step6T1Title;
+        document.getElementById('step6-t1-desc').innerText = t.step6T1Desc;
+        document.getElementById('step6-t1-note').innerText = t.step6T1Note;
+        document.getElementById('step6-t2-title').innerText = t.step6T2Title;
+        document.getElementById('step6-t2-desc').innerText = t.step6T2Desc;
+        document.getElementById('cp6-text').innerHTML = t.cp6Text;
+
+        document.getElementById('step7-header').innerHTML = t.step7Header;
+        document.getElementById('step7-intro').innerText = t.step7Intro;
         document.getElementById('dir-type-label').innerText = t.dirTypeLabel;
         document.getElementById('dir-cmd-label').innerText = t.dirCmdLabel;
-        document.getElementById('cp5-text').innerHTML = t.cp5Text;
 
         // Refresh Active Linux Directory Detail Display
         const activeNode = document.querySelector('.tree-node.active');

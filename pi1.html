@@ -459,6 +459,37 @@
             border-bottom: 1px solid var(--card-border);
             font-size: 0.88rem;
         }
+
+        /* Styling Tambahan untuk Tugas Mandiri */
+        .upload-area {
+            background: var(--card-bg);
+            border: 2px dashed var(--input-border);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: var(--bg);
+        }
+
+        .preview-img-container {
+            margin-top: 15px;
+            display: none;
+            text-align: center;
+        }
+
+        .preview-img-container img {
+            max-width: 100%;
+            max-height: 380px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -487,7 +518,7 @@
         <div class="progress-card">
             <div class="progress-title">
                 <span id="progress-title-text">Kemajuan Praktikum Anda</span>
-                <span id="progress-text">0% Selesai (0/6 Checkpoint)</span>
+                <span id="progress-text">0% Selesai (0/7 Checkpoint)</span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="progress-bar"></div>
@@ -742,6 +773,51 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             </div>
         </div>
 
+        <!-- Tahap 8 (TUGAS MANDIRI - Screenshot SSH Host Nama Sendiri) -->
+        <div class="step-section" id="section-8">
+            <div class="step-header" onclick="toggleAccordion('section-8')">
+                <span id="step8-header">Tahap 8: Tugas Mandiri — Bukti SSH dengan Host Name Nama Sendiri <span class="badge">Tugas Mandiri</span></span>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="step-content">
+                <p id="step8-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 12px;"> Setia mahasiswa diwajibkan mengubah Hostname Raspberry Pi menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong>, melakukan login via SSH, dan mengunggah/menampilkan bukti screenshot terminal SSH yang menampilkan prompt terminal berisikan nama sendiri.</p>
+
+                <p style="font-size: 0.9rem;"><strong id="step8-instructions-title">Langkah-langkah Tugas Mandiri:</strong></p>
+                <ol id="step8-list">
+                    <li>Buka SSH Terminal laptop yang terhubung ke Raspberry Pi.</li>
+                    <li>Ubah Hostname Raspberry Pi menjadi nama Anda (contoh: <code>budi-pi</code> atau <code>nim3331001</code>) dengan menjalankan perintah:
+                        <pre><code>sudo hostnamectl set-hostname NAMA_ANDA</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                        Atau ubah melalui menu <code>sudo raspi-config</code> &rarr; <i>1 System Options</i> &rarr; <i>S4 Hostname</i>.
+                    </li>
+                    <li>Lakukan reboot sistem agar nama host baru diterapkan:
+                        <pre><code>sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                    </li>
+                    <li>Hubungkan kembali SSH dari laptop menggunakan hostname baru:
+                        <pre><code>ssh apel@NAMA_ANDA.local</code></pre>
+                    </li>
+                    <li>Ambil tangkapan layar (screenshot) layar Terminal yang menampilkan prompt terminal dengan nama baru Anda (contoh: <code>apel@budi-pi:~ $</code>).</li>
+                    <li>Unggah file gambar bukti screenshot Anda pada area di bawah ini untuk verifikasi:</li>
+                </ol>
+
+                <!-- Area Unggah / Preview Gambar Screenshot -->
+                <div class="upload-area" onclick="document.getElementById('ssh-screenshot-input').click()">
+                    <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--primary); margin-bottom: 8px;"></i>
+                    <p id="upload-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main);">Klik untuk Unggah Screenshot SSH Host Nama Sendiri</p>
+                    <p id="upload-sub" style="font-size: 0.8rem; color: var(--text-muted);">Format yang didukung: PNG, JPG, JPEG, WEBP</p>
+                    <input type="file" id="ssh-screenshot-input" accept="image/*" style="display: none;" onchange="previewScreenshot(event)">
+                </div>
+
+                <div class="preview-img-container" id="preview-container">
+                    <p style="font-size: 0.85rem; font-weight: 700; color: var(--success-color); margin-bottom: 8px;"><i class="fa-solid fa-circle-check"></i> <span id="preview-text">Bukti Screenshot Berhasil Dimuat:</span></p>
+                    <img id="ssh-preview-img" src="" alt="Screenshot SSH Nama Sendiri">
+                </div>
+
+                <div class="checkpoint">
+                    <label><input type="checkbox" id="cp7-checkbox" onchange="updateProgress()"> <span id="cp7-text"><b>Checkpoint 7:</b> Bukti screenshot terhubung SSH dengan host nama sendiri berhasil diunggah dan diverifikasi.</span></label>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
@@ -755,7 +831,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             headerTitle: "Panduan Praktikum Interaktif: Headless Setup & VNC Remote Raspberry Pi",
             homeText: "Kembali ke Raspberry Pi",
             progressTitleText: "Kemajuan Praktikum Anda",
-            progressText: "{percent}% Selesai ({count}/6 Checkpoint)",
+            progressText: "{percent}% Selesai ({count}/7 Checkpoint)",
             targetTitle: "Target Pembelajaran",
             targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi secara <i>headless</i>, meliputi instalasi OS, struktur Linux, SSH remote terminal, pengaktifan layanan VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, serta pemecahan masalah (troubleshooting) koneksi tampilan GUI.",
             paramsTitle: "Parameter Akses Sistem (Pra-Konfigurasi)",
@@ -849,7 +925,29 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step7Header: `Tahap 7: Visualisasi Interaktif Pohon Direktori Linux (FHS) <span class="badge">Modul Interaktif</span>`,
             step7Intro: "Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:",
             dirTypeLabel: "Tipe Isinya:",
-            dirCmdLabel: "Contoh Perintah Terminal:"
+            dirCmdLabel: "Contoh Perintah Terminal:",
+            step8Header: `Tahap 8: Tugas Mandiri — Bukti SSH dengan Host Name Nama Sendiri <span class="badge">Tugas Mandiri</span>`,
+            step8Intro: "Setiap mahasiswa diwajibkan mengubah Hostname Raspberry Pi menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong>, melakukan login via SSH, dan mengunggah/menampilkan bukti screenshot terminal SSH yang menampilkan prompt terminal berisikan nama sendiri.",
+            step8InstructionsTitle: "Langkah-langkah Tugas Mandiri:",
+            step8List: `
+                <li>Buka SSH Terminal laptop yang terhubung ke Raspberry Pi.</li>
+                <li>Ubah Hostname Raspberry Pi menjadi nama Anda (contoh: <code>budi-pi</code> atau <code>nim3331001</code>) dengan menjalankan perintah:
+                    <pre><code>sudo hostnamectl set-hostname NAMA_ANDA</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                    Atau ubah melalui menu <code>sudo raspi-config</code> &rarr; <i>1 System Options</i> &rarr; <i>S4 Hostname</i>.
+                </li>
+                <li>Lakukan reboot sistem agar nama host baru diterapkan:
+                    <pre><code>sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                </li>
+                <li>Hubungkan kembali SSH dari laptop menggunakan hostname baru:
+                    <pre><code>ssh apel@NAMA_ANDA.local</code></pre>
+                </li>
+                <li>Ambil tangkapan layar (screenshot) layar Terminal yang menampilkan prompt terminal dengan nama baru Anda (contoh: <code>apel@budi-pi:~ $</code>).</li>
+                <li>Unggah file gambar bukti screenshot Anda pada area di bawah ini untuk verifikasi:</li>
+            `,
+            uploadTitle: "Klik untuk Unggah Screenshot SSH Host Nama Sendiri",
+            uploadSub: "Format yang didukung: PNG, JPG, JPEG, WEBP",
+            previewText: "Bukti Screenshot Berhasil Dimuat:",
+            cp7Text: "<b>Checkpoint 7:</b> Bukti screenshot terhubung SSH dengan host nama sendiri berhasil diunggah dan diverifikasi."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 9",
@@ -858,7 +956,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             headerTitle: "Interactive Lab Guide: Headless Setup & VNC Remote Raspberry Pi",
             homeText: "Back to Raspberry Pi",
             progressTitleText: "Your Lab Progress",
-            progressText: "{percent}% Completed ({count}/6 Checkpoints)",
+            progressText: "{percent}% Completed ({count}/7 Checkpoints)",
             targetTitle: "Learning Objective",
             targetDesc: "Students are able to configure and develop a Raspberry Pi-based embedded system headlessly, including OS installation, Linux structure, SSH remote terminal, enabling VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, and troubleshooting GUI display connections.",
             paramsTitle: "System Access Parameters (Pre-Configured)",
@@ -952,7 +1050,29 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step7Header: `Step 7: Interactive Linux Directory Tree Visualization (FHS) <span class="badge">Interactive Module</span>`,
             step7Intro: "Click any directory in the tree diagram on the left to learn about Linux directory functions in detail:",
             dirTypeLabel: "Content Type:",
-            dirCmdLabel: "Example Terminal Command:"
+            dirCmdLabel: "Example Terminal Command:",
+            step8Header: `Step 8: Independent Task — Screenshot Proof of SSH Connection with Own Host Name <span class="badge">Independent Task</span>`,
+            step8Intro: "Each student is required to change the Raspberry Pi Hostname to <strong>Student's Own Name / Student ID (NIM)</strong>, perform SSH login, and upload/display screenshot proof of the SSH terminal showing the prompt with their own name.",
+            step8InstructionsTitle: "Independent Task Steps:",
+            step8List: `
+                <li>Open laptop terminal connected to Raspberry Pi via SSH.</li>
+                <li>Change Raspberry Pi Hostname to your name (e.g. <code>budi-pi</code> or <code>id3331001</code>) by running command:
+                    <pre><code>sudo hostnamectl set-hostname YOUR_NAME</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                    Or change via <code>sudo raspi-config</code> &rarr; <i>1 System Options</i> &rarr; <i>S4 Hostname</i>.
+                </li>
+                <li>Reboot system to apply new hostname:
+                    <pre><code>sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                </li>
+                <li>Reconnect SSH from laptop using new hostname:
+                    <pre><code>ssh apel@YOUR_NAME.local</code></pre>
+                </li>
+                <li>Take screenshot of Terminal window displaying terminal prompt with your new hostname (e.g. <code>apel@budi-pi:~ $</code>).</li>
+                <li>Upload your screenshot image file below for verification:</li>
+            `,
+            uploadTitle: "Click to Upload SSH Screenshot with Own Host Name",
+            uploadSub: "Supported formats: PNG, JPG, JPEG, WEBP",
+            previewText: "Screenshot Proof Successfully Loaded:",
+            cp7Text: "<b>Checkpoint 7:</b> Screenshot proof of SSH connection with own hostname uploaded and verified."
         }
     };
 
@@ -1199,6 +1319,15 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         document.getElementById('dir-type-label').innerText = t.dirTypeLabel;
         document.getElementById('dir-cmd-label').innerText = t.dirCmdLabel;
 
+        document.getElementById('step8-header').innerHTML = t.step8Header;
+        document.getElementById('step8-intro').innerHTML = t.step8Intro;
+        document.getElementById('step8-instructions-title').innerText = t.step8InstructionsTitle;
+        document.getElementById('step8-list').innerHTML = t.step8List;
+        document.getElementById('upload-title').innerText = t.uploadTitle;
+        document.getElementById('upload-sub').innerText = t.uploadSub;
+        document.getElementById('preview-text').innerText = t.previewText;
+        document.getElementById('cp7-text').innerHTML = t.cp7Text;
+
         // Refresh Active Linux Directory Detail Display
         const activeNode = document.querySelector('.tree-node.active');
         showDirInfo(activeDirKey, activeNode);
@@ -1257,6 +1386,25 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 nodes.forEach(node => node.classList.remove('active'));
                 element.classList.add('active');
             }
+        }
+    }
+
+    // Handlers untuk Gambar Screenshot Tugas Mandiri
+    function previewScreenshot(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('ssh-preview-img').src = e.target.result;
+                document.getElementById('preview-container').style.display = 'block';
+                // Centang checkbox checkpoint 7 secara otomatis saat file berhasil dimuat
+                const cp7 = document.getElementById('cp7-checkbox');
+                if (cp7) {
+                    cp7.checked = true;
+                    updateProgress();
+                }
+            };
+            reader.readAsDataURL(file);
         }
     }
 </script>

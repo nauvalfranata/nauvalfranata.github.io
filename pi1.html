@@ -460,7 +460,7 @@
             font-size: 0.88rem;
         }
 
-        /* Styling Tambahan untuk Tugas Mandiri */
+        /* Area Unggah Bukti Screenshot Tugas Mandiri */
         .upload-area {
             background: var(--card-bg);
             border: 2px dashed var(--input-border);
@@ -528,18 +528,18 @@
         <!-- Info Target Pembelajaran -->
         <div class="task-card">
             <h3 id="target-title">Target Pembelajaran</h3>
-            <p id="target-desc">Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi secara <i>headless</i>, meliputi instalasi OS, struktur Linux, SSH remote terminal, pengaktifan layanan VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, serta pemecahan masalah (troubleshooting) koneksi tampilan GUI.</p>
+            <p id="target-desc">Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi secara <i>headless</i>, meliputi instalasi OS dengan kustomisasi hostname nama sendiri di Raspberry Pi Imager, struktur Linux, SSH remote terminal, pengaktifan VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, serta verifikasi otentisitas pengerjaan mandiri.</p>
         </div>
 
         <!-- Parameter Akses Sistem -->
         <div class="card" style="margin-bottom: 20px;">
-            <h3 id="params-title">Parameter Akses Sistem (Pra-Konfigurasi)</h3>
-            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc">Gunakan kredensial berikut selama seluruh alur praktikum:</p>
+            <h3 id="params-title">Parameter Akses Sistem (Kustomisasi Mandiri)</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc">Gunakan nama/NIM Anda sebagai Hostname sejak tahap flashing di Raspberry Pi Imager:</p>
             <ul>
-                <li><strong id="param-host-label">Hostname:</strong> <code>apeldua</code> (<span id="param-domain-label">Domain lokal:</span> <code>apeldua.local</code>)</li>
+                <li><strong id="param-host-label">Hostname:</strong> <code>NAMA_MAHASISWA</code> (<span id="param-domain-label">Domain lokal:</span> <code>NAMA_MAHASISWA.local</code>)</li>
                 <li><strong id="param-user-label">Username:</strong> <code>apel</code></li>
                 <li><strong id="param-pass-label">Password:</strong> <code>123456</code></li>
-                <li><strong id="param-ssh-label">Perintah SSH Terminal:</strong> <code>ssh apel@apeldua.local</code> <span id="param-or-label">atau</span> <code>ssh apel@apeldua</code></li>
+                <li><strong id="param-ssh-label">Perintah SSH Terminal:</strong> <code>ssh apel@NAMA_MAHASISWA.local</code></li>
             </ul>
         </div>
 
@@ -569,7 +569,7 @@
         <!-- Tahap 1 -->
         <div class="step-section active" id="section-1">
             <div class="step-header" onclick="toggleAccordion('section-1')">
-                <span id="step1-header">Tahap 1: Flashing OS & Pre-Configuration (Raspberry Pi Imager) <span class="badge">Software</span></span>
+                <span id="step1-header">Tahap 1: Flashing OS & Pre-Configuration Hostname Nama Sendiri (Raspberry Pi Imager) <span class="badge">Software</span></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
@@ -579,9 +579,9 @@
                     <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
                     <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
                     <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog kustomisasi OS (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
-                    <li>Atur parameter kustomisasi sebagai berikut:
+                    <li><strong>PENTING (Verifikasi Mandiri):</strong> Atur parameter kustomisasi sebagai berikut:
                         <ul>
-                            <li><strong>Hostname:</strong> <code>apeldua</code></li>
+                            <li><strong>Hostname:</strong> Masukkan <strong>NAMA_MAHASISWA / NIM Anda</strong> (Contoh: <code>budi-pi</code> atau <code>nim3331001</code>). <i>Jangan gunakan nama default untuk membuktikan Anda flashing sendiri dari awal!</i></li>
                             <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
                             <li><strong>Configure wireless LAN:</strong> Masukkan SSID & Password Wi-Fi/Hotspot yang sedang aktif di laptop Anda.</li>
                             <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
@@ -591,7 +591,7 @@
                     <li>Klik <strong>SAVE</strong>, pilih <strong>YES</strong> untuk menulis citra OS, lalu tunggu hingga selesai dan <i>eject</i> MicroSD.</li>
                 </ol>
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Checkpoint 1:</b> MicroSD berhasil di-flash dan berisi file konfigurasi SSH serta Wi-Fi otomatis.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp1-text"><b>Checkpoint 1:</b> MicroSD berhasil di-flash dengan kustomisasi Hostname menggunakan nama/NIM sendiri.</span></label>
                 </div>
             </div>
         </div>
@@ -605,7 +605,7 @@
             <div class="step-content">
                 <p style="margin-bottom: 8px;"><strong id="step2-arch-title">Arsitektur Koneksi Headless:</strong></p>
                 <ul id="step2-list">
-                    <li><strong>MicroSD:</strong> Masukkan kartu MicroSD ke slot Raspberry Pi.</li>
+                    <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang telah di-flash ke slot Raspberry Pi.</li>
                     <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke laptop/adaptor daya 5V.</li>
                     <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Pi akan otomatis terhubung saat selesai booting.</li>
                 </ul>
@@ -618,14 +618,14 @@
         <!-- Tahap 3 -->
         <div class="step-section" id="section-3">
             <div class="step-header" onclick="toggleAccordion('section-3')">
-                <span id="step3-header">Tahap 3: Remote Login via SSH (Terminal Laptop) <span class="badge">Terminal & SSH</span></span>
+                <span id="step3-header">Tahap 3: Remote Login via SSH Hostname Nama Sendiri <span class="badge">Terminal & SSH</span></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
                 <p id="step3-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;">Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop Anda.</p>
                 
-                <p style="font-size: 0.9rem;"><span id="step3-s1">1. Jalankan perintah SSH menggunakan mDNS hostname:</span></p>
-                <pre><code>ssh apel@apeldua.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.9rem;"><span id="step3-s1">1. Jalankan perintah SSH menggunakan Hostname Nama Sendiri yang dikonfigurasi pada Pi Imager:</span></p>
+                <pre><code>ssh apel@NAMA_MAHASISWA.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                 
                 <p style="font-size: 0.9rem;"><span id="step3-s2">2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.</span></p>
                 <p style="font-size: 0.9rem;"><span id="step3-s3">3. Masukkan password saat diminta:</span></p>
@@ -636,7 +636,7 @@
                 <pre><code>ssh apel@&lt;ALAMAT_IP_RASPBERRY&gt;</code></pre>
                 
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"><b>Checkpoint 3:</b> Tampilan prompt terminal berubah menjadi <code>apel@apeldua:~ $</code>.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp3-text"><b>Checkpoint 3:</b> Tampilan prompt terminal berhasil berubah menjadi <code>apel@NAMA_MAHASISWA:~ $</code>.</span></label>
                 </div>
             </div>
         </div>
@@ -688,7 +688,7 @@
                 <ol id="step5-list">
                     <li>Unduh dan pasang aplikasi <strong>TigerVNC Viewer</strong> dari situs resmi atau GitHub/SourceForge.</li>
                     <li>Buka aplikasi <strong>TigerVNC Viewer</strong> di laptop Anda.</li>
-                    <li>Pada kolom <strong>VNC Server</strong>, masukkan IP Address atau hostname Raspberry Pi (contoh: <code>192.168.1.50</code> atau <code>apeldua.local</code>).</li>
+                    <li>Pada kolom <strong>VNC Server</strong>, masukkan IP Address atau Hostname Nama Anda (contoh: <code>192.168.1.50</code> atau <code>NAMA_MAHASISWA.local</code>).</li>
                     <li>Klik <strong>Connect</strong>. Jika muncul peringatan sertifikat keamanan (*Security Warning*), pilih <strong>Yes / Continue</strong>.</li>
                     <li>Masukkan kredensial login saat diminta:
                         <ul>
@@ -773,36 +773,30 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             </div>
         </div>
 
-        <!-- Tahap 8 (TUGAS MANDIRI - Screenshot SSH Host Nama Sendiri) -->
+        <!-- Tahap 8 (TUGAS MANDIRI - Screenshot SSH Imager Hostname Nama Sendiri) -->
         <div class="step-section" id="section-8">
             <div class="step-header" onclick="toggleAccordion('section-8')">
-                <span id="step8-header">Tahap 8: Tugas Mandiri — Bukti SSH dengan Host Name Nama Sendiri <span class="badge">Tugas Mandiri</span></span>
+                <span id="step8-header">Tahap 8: Tugas Mandiri — Bukti SSH Hostname Nama Sendiri Dari Imager <span class="badge">Tugas Mandiri</span></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step8-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 12px;"> Setia mahasiswa diwajibkan mengubah Hostname Raspberry Pi menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong>, melakukan login via SSH, dan mengunggah/menampilkan bukti screenshot terminal SSH yang menampilkan prompt terminal berisikan nama sendiri.</p>
+                <p id="step8-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 12px;">Untuk memastikan otentisitas pengerjaan mandiri, setiap mahasiswa diwajibkan mengonfigurasi Hostname menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong> langsung dari aplikasi <strong>Raspberry Pi Imager</strong> saat proses <i>flashing</i>. Penggunaan nama host buatan orang lain atau penggantian manual setelah boot tidak diperkenankan.</p>
 
-                <p style="font-size: 0.9rem;"><strong id="step8-instructions-title">Langkah-langkah Tugas Mandiri:</strong></p>
+                <p style="font-size: 0.9rem;"><strong id="step8-instructions-title">Instruksi Tugas Mandiri & Pembuktian:</strong></p>
                 <ol id="step8-list">
-                    <li>Buka SSH Terminal laptop yang terhubung ke Raspberry Pi.</li>
-                    <li>Ubah Hostname Raspberry Pi menjadi nama Anda (contoh: <code>budi-pi</code> atau <code>nim3331001</code>) dengan menjalankan perintah:
-                        <pre><code>sudo hostnamectl set-hostname NAMA_ANDA</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                        Atau ubah melalui menu <code>sudo raspi-config</code> &rarr; <i>1 System Options</i> &rarr; <i>S4 Hostname</i>.
+                    <li>Pastikan Anda telah mengisi <strong>Hostname = NAMA_MAHASISWA / NIM</strong> di Raspberry Pi Imager saat flashing MicroSD (Tahap 1).</li>
+                    <li>Nyalakan Raspberry Pi dan buka Terminal/PowerShell di laptop Anda.</li>
+                    <li>Lakukan login SSH menggunakan hostname nama sendiri:
+                        <pre><code>ssh apel@NAMA_MAHASISWA.local</code></pre>
                     </li>
-                    <li>Lakukan reboot sistem agar nama host baru diterapkan:
-                        <pre><code>sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                    </li>
-                    <li>Hubungkan kembali SSH dari laptop menggunakan hostname baru:
-                        <pre><code>ssh apel@NAMA_ANDA.local</code></pre>
-                    </li>
-                    <li>Ambil tangkapan layar (screenshot) layar Terminal yang menampilkan prompt terminal dengan nama baru Anda (contoh: <code>apel@budi-pi:~ $</code>).</li>
-                    <li>Unggah file gambar bukti screenshot Anda pada area di bawah ini untuk verifikasi:</li>
+                    <li>Ambil tangkapan layar (screenshot) jendela Terminal yang secara jelas menampilkan prompt login pertama Anda (contoh: <code>apel@budi-prasetyo:~ $</code>).</li>
+                    <li>Unggah berkas screenshot tersebut pada area di bawah ini sebagai bukti validasi pengerjaan mandiri:</li>
                 </ol>
 
                 <!-- Area Unggah / Preview Gambar Screenshot -->
                 <div class="upload-area" onclick="document.getElementById('ssh-screenshot-input').click()">
                     <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--primary); margin-bottom: 8px;"></i>
-                    <p id="upload-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main);">Klik untuk Unggah Screenshot SSH Host Nama Sendiri</p>
+                    <p id="upload-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main);">Klik untuk Unggah Screenshot SSH Hostname Nama Sendiri</p>
                     <p id="upload-sub" style="font-size: 0.8rem; color: var(--text-muted);">Format yang didukung: PNG, JPG, JPEG, WEBP</p>
                     <input type="file" id="ssh-screenshot-input" accept="image/*" style="display: none;" onchange="previewScreenshot(event)">
                 </div>
@@ -813,7 +807,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 </div>
 
                 <div class="checkpoint">
-                    <label><input type="checkbox" id="cp7-checkbox" onchange="updateProgress()"> <span id="cp7-text"><b>Checkpoint 7:</b> Bukti screenshot terhubung SSH dengan host nama sendiri berhasil diunggah dan diverifikasi.</span></label>
+                    <label><input type="checkbox" id="cp7-checkbox" onchange="updateProgress()"> <span id="cp7-text"><b>Checkpoint 7:</b> Bukti screenshot SSH dengan hostname nama sendiri dari Raspberry Pi Imager berhasil diunggah.</span></label>
                 </div>
             </div>
         </div>
@@ -833,9 +827,9 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             progressTitleText: "Kemajuan Praktikum Anda",
             progressText: "{percent}% Selesai ({count}/7 Checkpoint)",
             targetTitle: "Target Pembelajaran",
-            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi secara <i>headless</i>, meliputi instalasi OS, struktur Linux, SSH remote terminal, pengaktifan layanan VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, serta pemecahan masalah (troubleshooting) koneksi tampilan GUI.",
-            paramsTitle: "Parameter Akses Sistem (Pra-Konfigurasi)",
-            paramsDesc: "Gunakan kredensial berikut selama seluruh alur praktikum:",
+            targetDesc: "Mahasiswa mampu mengonfigurasi dan mengembangkan sistem embedded berbasis Raspberry Pi secara <i>headless</i>, meliputi instalasi OS dengan kustomisasi hostname nama sendiri di Raspberry Pi Imager, struktur Linux, SSH remote terminal, pengaktifan VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, serta verifikasi otentisitas pengerjaan mandiri.",
+            paramsTitle: "Parameter Akses Sistem (Kustomisasi Mandiri)",
+            paramsDesc: "Gunakan nama/NIM Anda sebagai Hostname sejak tahap flashing di Raspberry Pi Imager:",
             paramHostLabel: "Hostname:",
             paramDomainLabel: "Domain lokal:",
             paramUserLabel: "Username:",
@@ -857,16 +851,16 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 <li><strong>TigerVNC Viewer</strong> (Aplikasi Klien VNC Remote Desktop GUI)</li>
                 <li><strong>Network Scanner</strong> (Fing / Advanced IP Scanner - <i>Opsional</i>)</li>
             `,
-            step1Header: `Tahap 1: Flashing OS & Pre-Configuration (Raspberry Pi Imager) <span class="badge">Software</span>`,
+            step1Header: `Tahap 1: Flashing OS & Pre-Configuration Hostname Nama Sendiri (Raspberry Pi Imager) <span class="badge">Software</span>`,
             step1List: `
                 <li>Masukkan Kartu MicroSD ke Card Reader dan hubungkan ke laptop.</li>
                 <li>Buka aplikasi <strong>Raspberry Pi Imager</strong>.</li>
                 <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
                 <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
                 <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog kustomisasi OS (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
-                <li>Atur parameter kustomisasi sebagai berikut:
+                <li><strong>PENTING (Verifikasi Mandiri):</strong> Atur parameter kustomisasi sebagai berikut:
                     <ul>
-                        <li><strong>Hostname:</strong> <code>apeldua</code></li>
+                        <li><strong>Hostname:</strong> Masukkan <strong>NAMA_MAHASISWA / NIM Anda</strong> (Contoh: <code>budi-pi</code> atau <code>nim3331001</code>). <i>Jangan gunakan nama default untuk membuktikan Anda flashing sendiri dari awal!</i></li>
                         <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
                         <li><strong>Configure wireless LAN:</strong> Masukkan SSID & Password Wi-Fi/Hotspot yang sedang aktif di laptop Anda.</li>
                         <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
@@ -875,23 +869,23 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 </li>
                 <li>Klik <strong>SAVE</strong>, pilih <strong>YES</strong> untuk menulis citra OS, lalu tunggu hingga selesai dan <i>eject</i> MicroSD.</li>
             `,
-            cp1Text: "<b>Checkpoint 1:</b> MicroSD berhasil di-flash dan berisi file konfigurasi SSH serta Wi-Fi otomatis.",
+            cp1Text: "<b>Checkpoint 1:</b> MicroSD berhasil di-flash dengan kustomisasi Hostname menggunakan nama/NIM sendiri.",
             step2Header: `Tahap 2: Pengkabelan & Integrasi Jaringan (Hardware Setup) <span class="badge">Hardware & Network</span>`,
             step2ArchTitle: "Arsitektur Koneksi Headless:",
             step2List: `
-                <li><strong>MicroSD:</strong> Masukkan kartu MicroSD ke slot Raspberry Pi.</li>
+                <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang telah di-flash ke slot Raspberry Pi.</li>
                 <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke laptop/adaptor daya 5V.</li>
                 <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Pi akan otomatis terhubung saat selesai booting.</li>
             `,
             cp2Text: "<b>Checkpoint 2:</b> LED hijau pada Raspberry Pi berkedip/menyala konstan menandakan booting sistem berhasil.",
-            step3Header: `Tahap 3: Remote Login via SSH (Terminal Laptop) <span class="badge">Terminal & SSH</span>`,
+            step3Header: `Tahap 3: Remote Login via SSH Hostname Nama Sendiri <span class="badge">Terminal & SSH</span>`,
             step3Intro: "Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop Anda.",
-            step3S1: "1. Jalankan perintah SSH menggunakan mDNS hostname:",
+            step3S1: "1. Jalankan perintah SSH menggunakan Hostname Nama Sendiri yang dikonfigurasi pada Pi Imager:",
             step3S2: "2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.",
             step3S3: "3. Masukkan password saat diminta:",
             step3Note: "Note: Karakter password tidak akan tampil di layar saat diketik (fitur keamanan Linux).",
             step3S4: "4. Jika mDNS gagal, cari IP Address Raspberry Pi via scanner jaringan/Hotspot smartphone, lalu jalankan:",
-            cp3Text: "<b>Checkpoint 3:</b> Tampilan prompt terminal berubah menjadi <code>apel@apeldua:~ $</code>.",
+            cp3Text: "<b>Checkpoint 3:</b> Tampilan prompt terminal berhasil berubah menjadi <code>apel@NAMA_MAHASISWA:~ $</code>.",
             step4Header: `Tahap 4: Aktivasi VNC Server & Auto-Boot Desktop via raspi-config <span class="badge">VNC Setup</span>`,
             step4Intro: "VNC (Virtual Network Computing) memungkinkan Anda mengakses antarmuka grafis (GUI Desktop) Raspberry Pi secara nirkabel dari laptop tanpa perlu monitor fisik.",
             step4S1: "1. Buka Menu Konfigurasi Raspberry Pi:",
@@ -903,7 +897,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step5List: `
                 <li>Unduh dan pasang aplikasi <strong>TigerVNC Viewer</strong> dari situs resmi atau GitHub/SourceForge.</li>
                 <li>Buka aplikasi <strong>TigerVNC Viewer</strong> di laptop Anda.</li>
-                <li>Pada kolom <strong>VNC Server</strong>, masukkan IP Address atau hostname Raspberry Pi (contoh: <code>192.168.1.50</code> atau <code>apeldua.local</code>).</li>
+                <li>Pada kolom <strong>VNC Server</strong>, masukkan IP Address atau Hostname Nama Anda (contoh: <code>192.168.1.50</code> atau <code>NAMA_MAHASISWA.local</code>).</li>
                 <li>Klik <strong>Connect</strong>. Jika muncul peringatan sertifikat keamanan (*Security Warning*), pilih <strong>Yes / Continue</strong>.</li>
                 <li>Masukkan kredensial login saat diminta:
                     <ul>
@@ -926,28 +920,22 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step7Intro: "Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:",
             dirTypeLabel: "Tipe Isinya:",
             dirCmdLabel: "Contoh Perintah Terminal:",
-            step8Header: `Tahap 8: Tugas Mandiri — Bukti SSH dengan Host Name Nama Sendiri <span class="badge">Tugas Mandiri</span>`,
-            step8Intro: "Setiap mahasiswa diwajibkan mengubah Hostname Raspberry Pi menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong>, melakukan login via SSH, dan mengunggah/menampilkan bukti screenshot terminal SSH yang menampilkan prompt terminal berisikan nama sendiri.",
-            step8InstructionsTitle: "Langkah-langkah Tugas Mandiri:",
+            step8Header: `Tahap 8: Tugas Mandiri — Bukti SSH Hostname Nama Sendiri Dari Imager <span class="badge">Tugas Mandiri</span>`,
+            step8Intro: "Untuk memastikan otentisitas pengerjaan mandiri, setiap mahasiswa diwajibkan mengonfigurasi Hostname menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong> langsung dari aplikasi <strong>Raspberry Pi Imager</strong> saat proses <i>flashing</i>. Penggunaan nama host buatan orang lain atau penggantian manual setelah boot tidak diperkenankan.",
+            step8InstructionsTitle: "Instruksi Tugas Mandiri & Pembuktian:",
             step8List: `
-                <li>Buka SSH Terminal laptop yang terhubung ke Raspberry Pi.</li>
-                <li>Ubah Hostname Raspberry Pi menjadi nama Anda (contoh: <code>budi-pi</code> atau <code>nim3331001</code>) dengan menjalankan perintah:
-                    <pre><code>sudo hostnamectl set-hostname NAMA_ANDA</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                    Atau ubah melalui menu <code>sudo raspi-config</code> &rarr; <i>1 System Options</i> &rarr; <i>S4 Hostname</i>.
+                <li>Pastikan Anda telah mengisi <strong>Hostname = NAMA_MAHASISWA / NIM</strong> di Raspberry Pi Imager saat flashing MicroSD (Tahap 1).</li>
+                <li>Nyalakan Raspberry Pi dan buka Terminal/PowerShell di laptop Anda.</li>
+                <li>Lakukan login SSH menggunakan hostname nama sendiri:
+                    <pre><code>ssh apel@NAMA_MAHASISWA.local</code></pre>
                 </li>
-                <li>Lakukan reboot sistem agar nama host baru diterapkan:
-                    <pre><code>sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-                <li>Hubungkan kembali SSH dari laptop menggunakan hostname baru:
-                    <pre><code>ssh apel@NAMA_ANDA.local</code></pre>
-                </li>
-                <li>Ambil tangkapan layar (screenshot) layar Terminal yang menampilkan prompt terminal dengan nama baru Anda (contoh: <code>apel@budi-pi:~ $</code>).</li>
-                <li>Unggah file gambar bukti screenshot Anda pada area di bawah ini untuk verifikasi:</li>
+                <li>Ambil tangkapan layar (screenshot) jendela Terminal yang secara jelas menampilkan prompt login pertama Anda (contoh: <code>apel@budi-prasetyo:~ $</code>).</li>
+                <li>Unggah berkas screenshot tersebut pada area di bawah ini sebagai bukti validasi pengerjaan mandiri:</li>
             `,
-            uploadTitle: "Klik untuk Unggah Screenshot SSH Host Nama Sendiri",
+            uploadTitle: "Klik untuk Unggah Screenshot SSH Hostname Nama Sendiri",
             uploadSub: "Format yang didukung: PNG, JPG, JPEG, WEBP",
             previewText: "Bukti Screenshot Berhasil Dimuat:",
-            cp7Text: "<b>Checkpoint 7:</b> Bukti screenshot terhubung SSH dengan host nama sendiri berhasil diunggah dan diverifikasi."
+            cp7Text: "<b>Checkpoint 7:</b> Bukti screenshot SSH dengan hostname nama sendiri dari Raspberry Pi Imager berhasil diunggah."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 9",
@@ -958,9 +946,9 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             progressTitleText: "Your Lab Progress",
             progressText: "{percent}% Completed ({count}/7 Checkpoints)",
             targetTitle: "Learning Objective",
-            targetDesc: "Students are able to configure and develop a Raspberry Pi-based embedded system headlessly, including OS installation, Linux structure, SSH remote terminal, enabling VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, and troubleshooting GUI display connections.",
-            paramsTitle: "System Access Parameters (Pre-Configured)",
-            paramsDesc: "Use the following credentials throughout the lab procedures:",
+            targetDesc: "Students are able to configure and develop a Raspberry Pi-based embedded system headlessly, including OS installation with custom student hostname in Raspberry Pi Imager, Linux structure, SSH remote terminal, enabling VNC Server via <code>raspi-config</code>, remote Desktop via TigerVNC Viewer, and independent work authenticity verification.",
+            paramsTitle: "System Access Parameters (Custom Configuration)",
+            paramsDesc: "Use your Name/NIM as Hostname during flashing in Raspberry Pi Imager:",
             paramHostLabel: "Hostname:",
             paramDomainLabel: "Local domain:",
             paramUserLabel: "Username:",
@@ -982,16 +970,16 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 <li><strong>TigerVNC Viewer</strong> (Remote Desktop GUI VNC Client)</li>
                 <li><strong>Network Scanner</strong> (Fing / Advanced IP Scanner - <i>Optional</i>)</li>
             `,
-            step1Header: `Step 1: OS Flashing & Pre-Configuration (Raspberry Pi Imager) <span class="badge">Software</span>`,
+            step1Header: `Step 1: OS Flashing & Pre-Configuration with Own Hostname (Raspberry Pi Imager) <span class="badge">Software</span>`,
             step1List: `
                 <li>Insert MicroSD Card into Card Reader and connect to laptop.</li>
                 <li>Open <strong>Raspberry Pi Imager</strong> application.</li>
                 <li>Click <strong>CHOOSE OS</strong> &rarr; Select <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
                 <li>Click <strong>CHOOSE STORAGE</strong> &rarr; Select detected MicroSD card.</li>
                 <li>Click <strong>NEXT</strong> button. When prompted (*Use OS customization settings*), select <strong>EDIT SETTINGS</strong>.</li>
-                <li>Set customization parameters as follows:
+                <li><strong>IMPORTANT (Independent Verification):</strong> Set customization parameters as follows:
                     <ul>
-                        <li><strong>Hostname:</strong> <code>apeldua</code></li>
+                        <li><strong>Hostname:</strong> Enter <strong>YOUR_NAME / STUDENT_ID</strong> (e.g. <code>budi-pi</code> or <code>id3331001</code>). <i>Do not use default hostnames to prove you flashed it yourself from scratch!</i></li>
                         <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
                         <li><strong>Configure wireless LAN:</strong> Enter active SSID & Password currently used by laptop.</li>
                         <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
@@ -1000,7 +988,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 </li>
                 <li>Click <strong>SAVE</strong>, select <strong>YES</strong> to write OS image, wait until finished, and <i>eject</i> MicroSD.</li>
             `,
-            cp1Text: "<b>Checkpoint 1:</b> MicroSD successfully flashed with SSH and auto Wi-Fi configuration.",
+            cp1Text: "<b>Checkpoint 1:</b> MicroSD successfully flashed with custom Hostname using student's own name/ID.",
             step2Header: `Step 2: Cabling & Network Integration (Hardware Setup) <span class="badge">Hardware & Network</span>`,
             step2ArchTitle: "Headless Connection Architecture:",
             step2List: `
@@ -1009,14 +997,14 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 <li><strong>Network Connection:</strong> Ensure both Raspberry Pi and Laptop are connected to the <strong>same Wi-Fi/Hotspot access point</strong>. Pi connects automatically on boot.</li>
             `,
             cp2Text: "<b>Checkpoint 2:</b> Green LED on Raspberry Pi blinks/stays solid indicating successful boot.",
-            step3Header: `Step 3: Remote Login via SSH (Laptop Terminal) <span class="badge">Terminal & SSH</span>`,
+            step3Header: `Step 3: Remote Login via SSH with Own Hostname <span class="badge">Terminal & SSH</span>`,
             step3Intro: "Open <strong>Terminal</strong> (macOS/Linux) or <strong>PowerShell / Command Prompt</strong> (Windows) on laptop.",
-            step3S1: "1. Run SSH command using mDNS hostname:",
+            step3S1: "1. Run SSH command using your own Hostname configured in Pi Imager:",
             step3S2: "2. If security warning (Fingerprint confirmation) appears, type <code>yes</code> and press Enter.",
             step3S3: "3. Enter password when prompted:",
             step3Note: "Note: Password characters will not appear on screen while typing (Linux security feature).",
             step3S4: "4. If mDNS connection fails, find Raspberry Pi IP address via local network scanner/Hotspot client list, then run:",
-            cp3Text: "<b>Checkpoint 3:</b> Terminal prompt successfully changes to <code>apel@apeldua:~ $</code>.",
+            cp3Text: "<b>Checkpoint 3:</b> Terminal prompt successfully changes to <code>apel@YOUR_NAME:~ $</code>.",
             step4Header: `Step 4: VNC Server Activation & Auto-Boot Desktop via raspi-config <span class="badge">VNC Setup</span>`,
             step4Intro: "VNC (Virtual Network Computing) allows you to remotely access the Graphical User Interface (GUI Desktop) of the Raspberry Pi wirelessly without physical monitor.",
             step4S1: "1. Open Raspberry Pi Configuration Menu:",
@@ -1028,7 +1016,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step5List: `
                 <li>Download and install <strong>TigerVNC Viewer</strong> from official website or GitHub/SourceForge.</li>
                 <li>Launch <strong>TigerVNC Viewer</strong> on your laptop.</li>
-                <li>In the <strong>VNC Server</strong> input box, enter Raspberry Pi's IP address or hostname (e.g., <code>192.168.1.50</code> or <code>apeldua.local</code>).</li>
+                <li>In the <strong>VNC Server</strong> input box, enter Raspberry Pi's IP address or Hostname (e.g., <code>192.168.1.50</code> or <code>YOUR_NAME.local</code>).</li>
                 <li>Click <strong>Connect</strong>. If security certificate warning appears, select <strong>Yes / Continue</strong>.</li>
                 <li>Enter login credentials when prompted:
                     <ul>
@@ -1051,28 +1039,22 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step7Intro: "Click any directory in the tree diagram on the left to learn about Linux directory functions in detail:",
             dirTypeLabel: "Content Type:",
             dirCmdLabel: "Example Terminal Command:",
-            step8Header: `Step 8: Independent Task — Screenshot Proof of SSH Connection with Own Host Name <span class="badge">Independent Task</span>`,
-            step8Intro: "Each student is required to change the Raspberry Pi Hostname to <strong>Student's Own Name / Student ID (NIM)</strong>, perform SSH login, and upload/display screenshot proof of the SSH terminal showing the prompt with their own name.",
-            step8InstructionsTitle: "Independent Task Steps:",
+            step8Header: `Step 8: Independent Task — Screenshot Proof of SSH Hostname from Imager <span class="badge">Independent Task</span>`,
+            step8Intro: "To ensure independent work authenticity, each student is required to configure Hostname using <strong>Student's Own Name / Student ID (NIM)</strong> directly inside <strong>Raspberry Pi Imager</strong> during initial flashing. Borrowing another student's Pi or manually renaming after boot is not allowed.",
+            step8InstructionsTitle: "Independent Task Instructions & Proof:",
             step8List: `
-                <li>Open laptop terminal connected to Raspberry Pi via SSH.</li>
-                <li>Change Raspberry Pi Hostname to your name (e.g. <code>budi-pi</code> or <code>id3331001</code>) by running command:
-                    <pre><code>sudo hostnamectl set-hostname YOUR_NAME</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                    Or change via <code>sudo raspi-config</code> &rarr; <i>1 System Options</i> &rarr; <i>S4 Hostname</i>.
-                </li>
-                <li>Reboot system to apply new hostname:
-                    <pre><code>sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                </li>
-                <li>Reconnect SSH from laptop using new hostname:
+                <li>Ensure you set <strong>Hostname = YOUR_NAME / STUDENT_ID</strong> in Raspberry Pi Imager during MicroSD flashing (Step 1).</li>
+                <li>Power on Raspberry Pi and open Terminal/PowerShell on laptop.</li>
+                <li>Connect via SSH using your own hostname:
                     <pre><code>ssh apel@YOUR_NAME.local</code></pre>
                 </li>
-                <li>Take screenshot of Terminal window displaying terminal prompt with your new hostname (e.g. <code>apel@budi-pi:~ $</code>).</li>
-                <li>Upload your screenshot image file below for verification:</li>
+                <li>Take a screenshot of Terminal window showing your first login prompt (e.g., <code>apel@budi-prasetyo:~ $</code>).</li>
+                <li>Upload the screenshot file below as proof of independent work:</li>
             `,
-            uploadTitle: "Click to Upload SSH Screenshot with Own Host Name",
+            uploadTitle: "Click to Upload SSH Screenshot with Own Hostname",
             uploadSub: "Supported formats: PNG, JPG, JPEG, WEBP",
             previewText: "Screenshot Proof Successfully Loaded:",
-            cp7Text: "<b>Checkpoint 7:</b> Screenshot proof of SSH connection with own hostname uploaded and verified."
+            cp7Text: "<b>Checkpoint 7:</b> Screenshot proof of SSH connection with own hostname from Raspberry Pi Imager uploaded."
         }
     };
 

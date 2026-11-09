@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Virtual Lab: Fluida Hidrostatika</title>
+    <!-- Google Fonts & Font Awesome Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // Redirect jika dibuka langsung di luar iframe
+        if (window.self === window.top) {
+            window.location.href = "index.html?page=phys7";
+        }
+    </script>
+
+    <style>
+        /* CSS Variables - Light Theme (Default) */
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --secondary: #0f172a;
+            --accent: #38bdf8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --card-border: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --sensor-bg: #0f172a;
+            --sensor-text: #38bdf8;
+            --sensor-border: #1e293b;
+            --input-bg: #ffffff;
+            --input-border: #cbd5e1;
+            --success-bg: #dcfce7;
+            --success-color: #16a34a;
+            --success-border: #86efac;
+            --warning-bg: #fef3c7;
+            --warning-color: #d97706;
+            --warning-border: #fcd34d;
+            --error-bg: #fee2e2;
+            --error-color: #dc2626;
+            --error-border: #fca5a5;
+        }
+
+        /* CSS Variables - Dark Theme */
+        [data-theme="dark"] {
+            --primary: #38bdf8;
+            --primary-dark: #0284c7;
+            --secondary: #f8fafc;
+            --accent: #0ea5e9;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --sensor-bg: #032b45;
+            --sensor-text: #38bdf8;
+            --sensor-border: #075985;
+            --input-bg: #0f172a;
+            --input-border: #475569;
+            --success-bg: rgba(34, 197, 94, 0.15);
+            --success-color: #4ade80;
+            --success-border: #22c55e;
+            --warning-bg: rgba(245, 158, 11, 0.15);
+            --warning-color: #fbbf24;
+            --warning-border: #f59e0b;
+            --error-bg: rgba(239, 68, 68, 0.15);
+            --error-color: #f87171;
+            --error-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 950px;
+            width: 100%;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--card-border);
+        }
+
+        header {
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        h1 { margin: 0; font-size: 1.5rem; color: var(--primary); font-weight: 800; }
+
+        /* Navigation Modules */
+        .module-selector-container {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .module-selector-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+        }
+
+        .mod-card {
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .mod-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.12);
+        }
+
+        .mod-card.active {
+            background: rgba(2, 132, 199, 0.08);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .mod-card-icon {
+            font-size: 1.3rem;
+            background: var(--card-bg);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--card-border);
+            flex-shrink: 0;
+        }
+
+        .mod-card.active .mod-card-icon {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .mod-card-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.25;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .lab-grid { grid-template-columns: 1fr; }
+            .module-grid { grid-template-columns: 1fr; }
+        }
+
+        .instrument-panel {
+            background: var(--bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 260px;
+        }
+
+        .sensor-display {
+            background: var(--sensor-bg);
+            color: var(--sensor-text);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.4rem;
+            line-height: 1.4;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid var(--sensor-border);
+            margin: 15px 0;
+            text-align: center;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+            word-break: break-word;
+            width: 100%;
+        }
+
+        .instrument-icon {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+        }
+
+        .task-card {
+            background: var(--bg);
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-top: 1px solid var(--card-border);
+            border-right: 1px solid var(--card-border);
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .task-card h4 { margin: 0 0 8px 0; color: var(--secondary); font-weight: 700; font-size: 1.05rem; }
+        .task-card p { margin: 0; color: var(--text-muted); font-size: 0.88rem; line-height: 1.5; }
+
+        .symbol-legend {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--primary);
+            font-size: 0.82rem;
+            color: var(--text-main);
+        }
+
+        .symbol-legend ul {
+            margin: 5px 0 0 0;
+            padding-left: 18px;
+        }
+
+        .control-group {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+
+        label { display: block; font-size: 0.85rem; margin-bottom: 5px; color: var(--text-muted); font-weight: 600; }
+        
+        input, select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            box-sizing: border-box;
+            font-size: 0.9rem;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .btn-action {
+            width: 100%;
+            background: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .btn-action:hover { background-color: var(--primary-dark); }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback.success { background: var(--success-bg); color: var(--success-color); border: 1px solid var(--success-border); }
+        .feedback.warning { background: var(--warning-bg); color: var(--warning-color); border: 1px solid var(--warning-border); }
+        .feedback.error { background: var(--error-bg); color: var(--error-color); border: 1px solid var(--error-border); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div>
+            <h1 id="header-title">Virtual Lab: Fluida Hidrostatika</h1>
+        </div>
+        <div class="header-actions">
+            <a href="physica.html" class="btn-back" id="home-link">
+                <i class="fa-solid fa-arrow-left"></i> <span id="home-text">Kembali ke Beranda</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Module Selector -->
+    <div class="module-selector-container">
+        <div class="module-selector-label" id="select-mod-label">
+            <i class="fa-solid fa-compass"></i> Pilih Topik Pembelajaran
+        </div>
+        <div class="module-grid" id="module-nav"></div>
+    </div>
+
+    <div class="lab-grid">
+        <!-- Instrument / Virtual Sensor Panel -->
+        <div class="instrument-panel">
+            <div class="instrument-icon" id="inst-icon">🌊</div>
+            <div style="color: var(--text-muted); font-size: 0.9rem; font-weight: 600;" id="inst-name">Panel Sensor Fluida</div>
+            <div class="sensor-display" id="sensor-display">--</div>
+            <button class="btn-action" style="background: var(--bg); color: var(--text-main); border: 1px solid var(--card-border); padding: 8px;" onclick="generateNewData()" id="btn-new-sample">
+                🔄 Dapatkan Sampel / Soal Baru
+            </button>
+        </div>
+
+        <!-- Student Analysis Input Panel -->
+        <div>
+            <div class="task-card">
+                <h4 id="task-title">Judul Modul</h4>
+                <p id="task-desc">Deskripsi tugas akan muncul di sini.</p>
+                <div id="symbol-legend-box" class="symbol-legend" style="display: none;"></div>
+            </div>
+
+            <!-- Dynamic Input Container -->
+            <div id="dynamic-inputs"></div>
+
+            <button class="btn-action" onclick="submitAnalysis()" id="btn-submit">Kirim Data Analisis</button>
+            <div id="feedback" class="feedback"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // System Translations
+    const translations = {
+        id: {
+            pageTitle: "Virtual Lab: Fluida Hidrostatika",
+            headerTitle: "Virtual Lab: Fluida Hidrostatika (Fluida Diam)",
+            homeText: "Kembali ke Beranda",
+            selectModLabel: "Pilih Topik Pembelajaran",
+            btnNewSample: "🔄 Dapatkan Sampel / Soal Baru",
+            btnSubmit: "Kirim Data Analisis",
+            modules: [
+                { name: "Tekanan Hidrostatik & Gaya Tekan", icon: "🌊" },
+                { name: "Bejana Berhubungan (U-Tube)", icon: "🧪" },
+                { name: "Hukum Pascal & Dongkrak", icon: "⚙️" },
+                { name: "Hukum Archimedes & Apung", icon: "⚓" },
+                { name: "Kapilaritas & Viskositas", icon: "💧" }
+            ],
+            mod1Title: "Tekanan Hidrostatik & Gaya Tekan",
+            mod1Desc: "Hitung Tekanan Hidrostatik (Ph = ρ·g·h), Tekanan Total (Ptot = P0 + Ph), dan Gaya Tekan pada alas (F = Ptot·A). [g = 9.8 m/s², P0 = 101,325 Pa]",
+            mod1Ph: "1. Tekanan Hidrostatik Ph (Pa):",
+            mod1Ptot: "2. Tekanan Mutlak / Total Ptot (Pa):",
+            mod1F: "3. Gaya Tekan pada Alas F (N):",
+            
+            mod2Title: "Bejana Berhubungan & Massa Jenis",
+            mod2Desc: "Menggunakan Hukum Utama Hidrostatika (P_A = P_B -> ρ₁·h₁ = ρ₂·h₂). Hitung tinggi kolom zat cair yang tidak diketahui atau massa jenisnya.",
+            mod2Val: "Ketinggian/Massa Jenis Ditanyakan (h₂ atau ρ₂):",
+            
+            mod3Title: "Hukum Pascal (Dongkrak Hidrolik)",
+            mod3Desc: "Berdasarkan Hukum Pascal (F₁ / A₁ = F₂ / A₂), hitung Gaya Output (F₂) atau Luas Penampang yang dibutuhkan.",
+            mod3F2: "1. Gaya Output F₂ (N):",
+            mod3Ratio: "2. Rasio Keuntungan Mekanik (F₂ / F₁):",
+
+            mod4Title: "Hukum Archimedes & Gaya Apung",
+            mod4Desc: "Hitung Gaya Apung (Fa = ρ_fluida · V_tercelup · g), Berat Semu di dalam air (W_smp = W_sebenarnya - Fa), serta tentukan Kondisi Benda.",
+            mod4Fa: "1. Gaya Apung Fa (N):",
+            mod4WApp: "2. Berat Semu Benda W_semu (N):",
+            mod4State: "3. Keadaan Benda (Terapung / Melayang / Tenggelam):",
+            mod4StateSelect: "-- Pilih Kondisi Benda --",
+            mod4Float: "TERAPUNG (Floating)",
+            mod4Suspend: "MELAYANG (Suspended)",
+            mod4Sink: "TENGGELAM (Sinking)",
+
+            mod5Title: "Kapilaritas & Viskositas Fluida",
+            mod5Desc: "Hitung Kenaikan/Penurunan Cairan pada Pipa Kapiler (h = 2γ cosθ / (ρ g r)) dan Gaya Gesek Viskos Stokes (Ff = 6π η r v).",
+            mod5Cap: "1. Ketinggian Kapiler h (mm) [catatan: (+) naik, (-) turun]:",
+            mod5Visc: "2. Gaya Hambat Viskos Stokes Ff (N):",
+
+            symbolTitle: "Parameter & Simbol Fisika:",
+            errFillAll: "⚠️ Silakan isi semua kolom analisis jawaban.",
+            successMod: "🎉 <b>Jawaban Tepat Sekali!</b> Perhitungan fisika dan analisis Anda sesuai dengan prinsip Fluida Hidrostatika.",
+            warnModTitle: "<b>Analisis Belum Tepat:</b><br><ul>",
+        },
+        en: {
+            pageTitle: "Virtual Lab: Hydrostatic Fluids",
+            headerTitle: "Virtual Lab: Hydrostatic Fluids (Fluids at Rest)",
+            homeText: "Back to Home",
+            selectModLabel: "Select Learning Topic",
+            btnNewSample: "🔄 Get New Sample / Problem",
+            btnSubmit: "Submit Analysis Data",
+            modules: [
+                { name: "Hydrostatic Pressure & Force", icon: "🌊" },
+                { name: "U-Tube & Density Differences", icon: "🧪" },
+                { name: "Pascal's Law & Hydraulic Press", icon: "⚙️" },
+                { name: "Archimedes' Principle & Buoyancy", icon: "⚓" },
+                { name: "Capillarity & Viscosity", icon: "💧" }
+            ],
+            mod1Title: "Hydrostatic Pressure & Thrust Force",
+            mod1Desc: "Calculate Hydrostatic Pressure (Ph = ρ·g·h), Total Absolute Pressure (Ptot = P0 + Ph), and Bottom Thrust Force (F = Ptot·A). [g = 9.8 m/s², P0 = 101,325 Pa]",
+            mod1Ph: "1. Hydrostatic Pressure Ph (Pa):",
+            mod1Ptot: "2. Total Absolute Pressure Ptot (Pa):",
+            mod1F: "3. Bottom Thrust Force F (N):",
+
+            mod2Title: "U-Tube Manometer & Density Ratio",
+            mod2Desc: "Using the Fundamental Principle of Hydrostatics (P_A = P_B -> ρ₁·h₁ = ρ₂·h₂), determine the unknown liquid height or fluid density.",
+            mod2Val: "Unknown Liquid Height/Density (h₂ or ρ₂):",
+
+            mod3Title: "Pascal's Law (Hydraulic Lift)",
+            mod3Desc: "Based on Pascal's Principle (F₁ / A₁ = F₂ / A₂), calculate the Output Force (F₂) or Mechanical Advantage.",
+            mod3F2: "1. Output Force F₂ (N):",
+            mod3Ratio: "2. Mechanical Advantage Ratio (F₂ / F₁):",
+
+            mod4Title: "Archimedes' Principle & Buoyancy",
+            mod4Desc: "Calculate Buoyant Force (Fa = ρ_fluid · V_submerged · g), Apparent Weight in liquid, and identify the object's State.",
+            mod4Fa: "1. Buoyant Force Fa (N):",
+            mod4WApp: "2. Apparent Weight W_app (N):",
+            mod4State: "3. Object State (Floating / Suspended / Sinking):",
+            mod4StateSelect: "-- Select Object State --",
+            mod4Float: "FLOATING",
+            mod4Suspend: "SUSPENDED",
+            mod4Sink: "SINKING",
+
+            mod5Title: "Capillarity & Viscosity",
+            mod5Desc: "Calculate Capillary Tube Rise/Fall (h = 2γ cosθ / (ρ g r)) and Stokes' Viscous Drag Force (Ff = 6π η r v).",
+            mod5Cap: "1. Capillary Height h (mm) [note: (+) rise, (-) fall]:",
+            mod5Visc: "2. Stokes' Viscous Drag Ff (N):",
+
+            symbolTitle: "Physics Parameters & Symbols:",
+            errFillAll: "⚠️ Please fill in all analysis fields first.",
+            successMod: "🎉 <b>Spot on!</b> Your calculation and analysis align perfectly with Hydrostatic Fluid laws.",
+            warnModTitle: "<b>Analysis Not Quite Correct:</b><br><ul>",
+        }
+    };
+
+    let currentLang = 'id';
+    let currentTheme = 'light';
+    let currentModIndex = 0;
+    let currentRawData = {};
+
+    const g = 9.8; // m/s2
+    const P0 = 101325; // Pa
+
+    function applySettings(isInitial = false) {
+        currentLang = localStorage.getItem('user_lang') || 'id';
+        currentTheme = localStorage.getItem('user_theme');
+
+        document.documentElement.lang = currentLang;
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        }
+
+        updateUIStaticText();
+        initNav();
+        
+        if (isInitial) {
+            generateNewData();
+        } else {
+            renderCurrentQuestionUI();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applySettings(true);
+    });
+
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'user_theme' || e.key === 'user_lang') {
+            applySettings(false);
+        }
+    });
+
+    function updateUIStaticText() {
+        const t = translations[currentLang];
+        document.getElementById('page-title').innerText = t.pageTitle;
+        document.getElementById('header-title').innerText = t.headerTitle;
+        document.getElementById('home-text').innerText = t.homeText;
+        document.getElementById('select-mod-label').innerHTML = `<i class="fa-solid fa-compass"></i> ${t.selectModLabel}`;
+        document.getElementById('btn-new-sample').innerText = t.btnNewSample;
+        document.getElementById('btn-submit').innerText = t.btnSubmit;
+    }
+
+    const modules = [
+        {
+            id: 'hydro-press',
+            icon: '🌊',
+            nameKey: 0,
+            generate: () => {
+                const fluids = [
+                    { name: 'Air / Water', rho: 1000 },
+                    { name: 'Minyak / Oil', rho: 800 },
+                    { name: 'Raksa / Mercury', rho: 13600 },
+                    { name: 'Glisering / Glycerin', rho: 1260 }
+                ];
+                const fluid = fluids[Math.floor(Math.random() * fluids.length)];
+                const h = parseFloat((Math.random() * 8 + 0.5).toFixed(2)); // m
+                const area = parseFloat((Math.random() * 3 + 0.2).toFixed(2)); // m2
+
+                const Ph = fluid.rho * g * h;
+                const Ptot = P0 + Ph;
+                const F = Ptot * area;
+
+                return {
+                    fluid: fluid.name,
+                    rho: fluid.rho,
+                    h: h,
+                    area: area,
+                    Ph: Ph,
+                    Ptot: Ptot,
+                    F: F
+                };
+            }
+        },
+        {
+            id: 'u-tube',
+            icon: '🧪',
+            nameKey: 1,
+            generate: () => {
+                // Fluid 1 = Water (1000 kg/m3)
+                const rho1 = 1000;
+                const h1 = parseFloat((Math.random() * 15 + 5).toFixed(1)); // cm
+                const unknownType = Math.random() > 0.5 ? 'h2' : 'rho2';
+                
+                const rho2Options = [800, 13600, 750, 900];
+                const rho2 = rho2Options[Math.floor(Math.random() * rho2Options.length)];
+                
+                // rho1 * h1 = rho2 * h2
+                const h2 = parseFloat(((rho1 * h1) / rho2).toFixed(2));
+
+                return {
+                    rho1: rho1,
+                    h1: h1,
+                    rho2: rho2,
+                    h2: h2,
+                    target: unknownType
+                };
+            }
+        },
+        {
+            id: 'pascal',
+            icon: '⚙️',
+            nameKey: 2,
+            generate: () => {
+                const F1 = Math.floor(Math.random() * 400 + 50); // N
+                const r1 = parseFloat((Math.random() * 4 + 1).toFixed(1)); // cm
+                const r2 = parseFloat((Math.random() * 20 + 8).toFixed(1)); // cm
+                
+                const A1 = Math.PI * Math.pow(r1 / 100, 2);
+                const A2 = Math.PI * Math.pow(r2 / 100, 2);
+                
+                const F2 = F1 * (A2 / A1);
+                const ratio = A2 / A1;
+
+                return {
+                    F1: F1,
+                    r1: r1,
+                    r2: r2,
+                    A1: A1,
+                    A2: A2,
+                    F2: F2,
+                    ratio: ratio
+                };
+            }
+        },
+        {
+            id: 'archimedes',
+            icon: '⚓',
+            nameKey: 3,
+            generate: () => {
+                const states = ['TERAPUNG', 'MELAYANG', 'TENGGELAM'];
+                const selectedState = states[Math.floor(Math.random() * states.length)];
+                
+                const rho_f = 1000; // Water
+                const V_buka = parseFloat((Math.random() * 0.05 + 0.01).toFixed(4)); // m3
+                let rho_b, V_tercelup, stateStr;
+
+                if (selectedState === 'TERAPUNG') {
+                    rho_b = Math.floor(Math.random() * 400 + 400); // < 1000
+                    V_tercelup = (rho_b / rho_f) * V_buka;
+                    stateStr = 'TERAPUNG';
+                } else if (selectedState === 'MELAYANG') {
+                    rho_b = 1000;
+                    V_tercelup = V_buka;
+                    stateStr = 'MELAYANG';
+                } else {
+                    rho_b = Math.floor(Math.random() * 3000 + 2000); // > 1000
+                    V_tercelup = V_buka;
+                    stateStr = 'TENGGELAM';
+                }
+
+                const W_asli = rho_b * V_buka * g;
+                const Fa = rho_f * V_tercelup * g;
+                const W_semu = Math.max(0, W_asli - Fa);
+
+                return {
+                    rho_f: rho_f,
+                    rho_b: rho_b,
+                    V_buka: V_buka,
+                    V_tercelup: V_tercelup,
+                    W_asli: W_asli,
+                    Fa: Fa,
+                    W_semu: W_semu,
+                    state: stateStr
+                };
+            }
+        },
+        {
+            id: 'visc-cap',
+            icon: '💧',
+            nameKey: 4,
+            generate: () => {
+                // Capillarity: Water (gamma=0.072 N/m, theta=0) or Mercury (gamma=0.48 N/m, theta=140 deg)
+                const isWater = Math.random() > 0.4;
+                const gamma = isWater ? 0.0728 : 0.465;
+                const thetaDeg = isWater ? 0 : 140;
+                const thetaRad = (thetaDeg * Math.PI) / 180;
+                const rho = isWater ? 1000 : 13600;
+                const r_mm = parseFloat((Math.random() * 0.8 + 0.2).toFixed(2)); // mm
+                const r = r_mm / 1000; // m
+
+                // h in meters: h = 2 gamma cos(theta) / (rho g r)
+                const h_m = (2 * gamma * Math.cos(thetaRad)) / (rho * g * r);
+                const h_mm = h_m * 1000;
+
+                // Viscosity Stokes
+                const eta = parseFloat((Math.random() * 0.8 + 0.1).toFixed(2)); // Pa·s
+                const r_sphere = parseFloat((Math.random() * 3 + 1).toFixed(1)); // mm -> /1000
+                const v = parseFloat((Math.random() * 2 + 0.2).toFixed(2)); // m/s
+                
+                const Ff = 6 * Math.PI * eta * (r_sphere / 1000) * v;
+
+                return {
+                    isWater: isWater,
+                    gamma: gamma,
+                    thetaDeg: thetaDeg,
+                    rho: rho,
+                    r_mm: r_mm,
+                    h_mm: h_mm,
+                    eta: eta,
+                    r_sphere: r_sphere,
+                    v: v,
+                    Ff: Ff
+                };
+            }
+        }
+    ];
+
+    function initNav() {
+        const nav = document.getElementById('module-nav');
+        nav.innerHTML = '';
+        const t = translations[currentLang];
+        modules.forEach((mod, idx) => {
+            const card = document.createElement('div');
+            card.className = `mod-card ${idx === currentModIndex ? 'active' : ''}`;
+            card.onclick = () => switchModule(idx);
+            
+            const modMeta = t.modules[idx];
+            card.innerHTML = `
+                <div class="mod-card-icon">${modMeta.icon}</div>
+                <div class="mod-card-title">${modMeta.name}</div>
+            `;
+            nav.appendChild(card);
+        });
+    }
+
+    function switchModule(index) {
+        currentModIndex = index;
+        initNav();
+        generateNewData();
+    }
+
+    function generateNewData() {
+        const mod = modules[currentModIndex];
+        currentRawData = mod.generate();
+        renderCurrentQuestionUI();
+    }
+
+    function renderCurrentQuestionUI() {
+        const mod = modules[currentModIndex];
+        const t = translations[currentLang];
+
+        document.getElementById('feedback').style.display = 'none';
+
+        const legendBox = document.getElementById('symbol-legend-box');
+        legendBox.style.display = 'none';
+
+        const dynamicInputs = document.getElementById('dynamic-inputs');
+        dynamicInputs.innerHTML = '';
+
+        document.getElementById('inst-icon').innerText = mod.icon;
+        document.getElementById('task-title').innerText = t[`mod${currentModIndex + 1}Title`];
+        document.getElementById('task-desc').innerText = t[`mod${currentModIndex + 1}Desc`];
+
+        if (currentModIndex === 0) {
+            // Hydrostatic Pressure
+            const d = currentRawData;
+            document.getElementById('sensor-display').innerHTML = `
+                Fluida: <b>${d.fluid}</b> (ρ = ${d.rho} kg/m³)<br>
+                Kedalaman (h): <b>${d.h} m</b> | Luas Alas (A): <b>${d.area} m²</b>
+            `;
+
+            dynamicInputs.innerHTML = `
+                <div class="control-group">
+                    <label for="input-ph">${t.mod1Ph}</label>
+                    <input type="number" id="input-ph" step="any" placeholder="Ph (Pa)">
+                </div>
+                <div class="control-group">
+                    <label for="input-ptot">${t.mod1Ptot}</label>
+                    <input type="number" id="input-ptot" step="any" placeholder="Ptot (Pa)">
+                </div>
+                <div class="control-group">
+                    <label for="input-f">${t.mod1F}</label>
+                    <input type="number" id="input-f" step="any" placeholder="F (N)">
+                </div>
+            `;
+        } else if (currentModIndex === 1) {
+            // U-Tube
+            const d = currentRawData;
+            if (d.target === 'h2') {
+                document.getElementById('sensor-display').innerHTML = `
+                    Fluida 1: Air (ρ₁ = ${d.rho1} kg/m³, h₁ = ${d.h1} cm)<br>
+                    Fluida 2: ρ₂ = <b>${d.rho2} kg/m³</b> | Hitung <b>h₂ (cm)</b>
+                `;
+            } else {
+                document.getElementById('sensor-display').innerHTML = `
+                    Fluida 1: Air (ρ₁ = ${d.rho1} kg/m³, h₁ = ${d.h1} cm)<br>
+                    Fluida 2: h₂ = <b>${d.h2} cm</b> | Hitung <b>ρ₂ (kg/m³)</b>
+                `;
+            }
+
+            dynamicInputs.innerHTML = `
+                <div class="control-group">
+                    <label for="input-utube">${t.mod2Val}</label>
+                    <input type="number" id="input-utube" step="any" placeholder="${d.target === 'h2' ? 'h₂ (cm)' : 'ρ₂ (kg/m³)'}">
+                </div>
+            `;
+        } else if (currentModIndex === 2) {
+            // Pascal
+            const d = currentRawData;
+            document.getElementById('sensor-display').innerHTML = `
+                Gaya Input (F₁): <b>${d.F1} N</b><br>
+                Jari-jari Piston 1 (r₁): <b>${d.r1} cm</b> | Piston 2 (r₂): <b>${d.r2} cm</b>
+            `;
+
+            dynamicInputs.innerHTML = `
+                <div class="control-group">
+                    <label for="input-f2">${t.mod3F2}</label>
+                    <input type="number" id="input-f2" step="any" placeholder="F₂ (N)">
+                </div>
+                <div class="control-group">
+                    <label for="input-ratio">${t.mod3Ratio}</label>
+                    <input type="number" id="input-ratio" step="any" placeholder="F₂ / F₁">
+                </div>
+            `;
+        } else if (currentModIndex === 3) {
+            // Archimedes
+            const d = currentRawData;
+            document.getElementById('sensor-display').innerHTML = `
+                Fluida: Air (ρf = ${d.rho_f} kg/m³)<br>
+                Massa Jenis Benda (ρb): <b>${d.rho_b} kg/m³</b> | Volume (Vb): <b>${d.V_buka} m³</b>
+            `;
+
+            dynamicInputs.innerHTML = `
+                <div class="control-group">
+                    <label for="input-fa">${t.mod4Fa}</label>
+                    <input type="number" id="input-fa" step="any" placeholder="Fa (N)">
+                </div>
+                <div class="control-group">
+                    <label for="input-wapp">${t.mod4WApp}</label>
+                    <input type="number" id="input-wapp" step="any" placeholder="W_semu (N)">
+                </div>
+                <div class="control-group">
+                    <label for="input-state">${t.mod4State}</label>
+                    <select id="input-state">
+                        <option value="">${t.mod4StateSelect}</option>
+                        <option value="TERAPUNG">${t.mod4Float}</option>
+                        <option value="MELAYANG">${t.mod4Suspend}</option>
+                        <option value="TENGGELAM">${t.mod4Sink}</option>
+                    </select>
+                </div>
+            `;
+        } else if (currentModIndex === 4) {
+            // Viscosity & Capillarity
+            const d = currentRawData;
+            const liquidName = d.isWater ? 'Air' : 'Raksa / Mercury';
+            document.getElementById('sensor-display').innerHTML = `
+                <b>[Kapilaritas]</b> ${liquidName}: γ=${d.gamma} N/m, θ=${d.thetaDeg}°, r_pipa=${d.r_mm} mm<br>
+                <b>[Viskositas]</b> η=${d.eta} Pa·s, r_bola=${d.r_sphere} mm, v=${d.v} m/s
+            `;
+
+            dynamicInputs.innerHTML = `
+                <div class="control-group">
+                    <label for="input-cap">${t.mod5Cap}</label>
+                    <input type="number" id="input-cap" step="any" placeholder="h (mm)">
+                </div>
+                <div class="control-group">
+                    <label for="input-visc">${t.mod5Visc}</label>
+                    <input type="number" id="input-visc" step="any" placeholder="Ff (N)">
+                </div>
+            `;
+        }
+    }
+
+    function showFeedback(type, message) {
+        const fb = document.getElementById('feedback');
+        fb.className = `feedback ${type}`;
+        fb.innerHTML = message;
+        fb.style.display = 'block';
+    }
+
+    function checkTolerance(userVal, correctVal, tolPercent = 2.5) {
+        if (isNaN(userVal)) return false;
+        if (correctVal === 0) return Math.abs(userVal) < 0.001;
+        const diff = Math.abs((userVal - correctVal) / correctVal) * 100;
+        return diff <= tolPercent;
+    }
+
+    function submitAnalysis() {
+        const t = translations[currentLang];
+        const d = currentRawData;
+        let isCorrect = true;
+        let warnMsgs = [];
+
+        if (currentModIndex === 0) {
+            const userPh = parseFloat(document.getElementById('input-ph').value);
+            const userPtot = parseFloat(document.getElementById('input-ptot').value);
+            const userF = parseFloat(document.getElementById('input-f').value);
+
+            if (isNaN(userPh) || isNaN(userPtot) || isNaN(userF)) {
+                showFeedback('error', t.errFillAll);
+                return;
+            }
+
+            if (!checkTolerance(userPh, d.Ph)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Ph seharusnya: <b>${d.Ph.toFixed(1)} Pa</b></li>`);
+            }
+            if (!checkTolerance(userPtot, d.Ptot)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Ptot seharusnya: <b>${d.Ptot.toFixed(1)} Pa</b></li>`);
+            }
+            if (!checkTolerance(userF, d.F)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Gaya Tekan F seharusnya: <b>${d.F.toFixed(1)} N</b></li>`);
+            }
+        } else if (currentModIndex === 1) {
+            const userVal = parseFloat(document.getElementById('input-utube').value);
+
+            if (isNaN(userVal)) {
+                showFeedback('error', t.errFillAll);
+                return;
+            }
+
+            const expected = d.target === 'h2' ? d.h2 : d.rho2;
+            const unit = d.target === 'h2' ? 'cm' : 'kg/m³';
+
+            if (!checkTolerance(userVal, expected)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Nilai ${d.target === 'h2' ? 'h₂' : 'ρ₂'} seharusnya: <b>${expected} ${unit}</b></li>`);
+            }
+        } else if (currentModIndex === 2) {
+            const userF2 = parseFloat(document.getElementById('input-f2').value);
+            const userRatio = parseFloat(document.getElementById('input-ratio').value);
+
+            if (isNaN(userF2) || isNaN(userRatio)) {
+                showFeedback('error', t.errFillAll);
+                return;
+            }
+
+            if (!checkTolerance(userF2, d.F2)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Gaya Output F₂ seharusnya: <b>${d.F2.toFixed(1)} N</b></li>`);
+            }
+            if (!checkTolerance(userRatio, d.ratio)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Keuntungan Mekanik (F₂/F₁) seharusnya: <b>${d.ratio.toFixed(2)}</b></li>`);
+            }
+        } else if (currentModIndex === 3) {
+            const userFa = parseFloat(document.getElementById('input-fa').value);
+            const userWapp = parseFloat(document.getElementById('input-wapp').value);
+            const userState = document.getElementById('input-state').value;
+
+            if (isNaN(userFa) || isNaN(userWapp) || !userState) {
+                showFeedback('error', t.errFillAll);
+                return;
+            }
+
+            if (!checkTolerance(userFa, d.Fa)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Gaya Apung Fa seharusnya: <b>${d.Fa.toFixed(2)} N</b></li>`);
+            }
+            if (!checkTolerance(userWapp, d.W_semu)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Berat Semu W_semu seharusnya: <b>${d.W_semu.toFixed(2)} N</b></li>`);
+            }
+            if (userState !== d.state) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Kondisi benda seharusnya: <b>${d.state}</b></li>`);
+            }
+        } else if (currentModIndex === 4) {
+            const userCap = parseFloat(document.getElementById('input-cap').value);
+            const userVisc = parseFloat(document.getElementById('input-visc').value);
+
+            if (isNaN(userCap) || isNaN(userVisc)) {
+                showFeedback('error', t.errFillAll);
+                return;
+            }
+
+            if (!checkTolerance(userCap, d.h_mm)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Tinggi Kapiler h seharusnya: <b>${d.h_mm.toFixed(2)} mm</b></li>`);
+            }
+            if (!checkTolerance(userVisc, d.Ff)) {
+                isCorrect = false;
+                warnMsgs.push(`<li>Gaya Stokes Ff seharusnya: <b>${d.Ff.toFixed(4)} N</b></li>`);
+            }
+        }
+
+        if (isCorrect) {
+            showFeedback('success', t.successMod);
+        } else {
+            showFeedback('warning', t.warnModTitle + warnMsgs.join('') + '</ul>');
+        }
+    }
+</script>
+</body>
+</html>

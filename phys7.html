@@ -242,9 +242,9 @@
             background: var(--sensor-bg);
             color: var(--sensor-text);
             font-family: 'Courier New', Courier, monospace;
-            font-size: 1.4rem;
-            line-height: 1.4;
-            padding: 15px;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            padding: 16px;
             border-radius: 8px;
             border: 2px solid var(--sensor-border);
             margin: 15px 0;
@@ -252,6 +252,20 @@
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
             word-break: break-word;
             width: 100%;
+        }
+
+        .sensor-section {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .sensor-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .sensor-tag {
+            color: #7dd3fc;
+            font-weight: bold;
         }
 
         .instrument-icon {
@@ -408,24 +422,24 @@
                 { name: "Kapilaritas & Viskositas", icon: "💧" }
             ],
             mod1Title: "Tekanan Hidrostatik & Gaya Tekan",
-            mod1Desc: "Hitung Tekanan Hidrostatik (Ph = ρ·g·h), Tekanan Total (Ptot = P0 + Ph), dan Gaya Tekan pada alas (F = Ptot·A). [g = 9.8 m/s², P0 = 101,325 Pa]",
-            mod1Ph: "1. Tekanan Hidrostatik Ph (Pa):",
-            mod1Ptot: "2. Tekanan Mutlak / Total Ptot (Pa):",
+            mod1Desc: "Hitung Tekanan Hidrostatik (P<sub>h</sub> = ρ · g · h), Tekanan Total (P<sub>tot</sub> = P<sub>0</sub> + P<sub>h</sub>), dan Gaya Tekan alas (F = P<sub>tot</sub> · A). [g = 9,8 m/s², P<sub>0</sub> = 101.325 Pa]",
+            mod1Ph: "1. Tekanan Hidrostatik P<sub>h</sub> (Pa):",
+            mod1Ptot: "2. Tekanan Mutlak / Total P<sub>tot</sub> (Pa):",
             mod1F: "3. Gaya Tekan pada Alas F (N):",
             
             mod2Title: "Bejana Berhubungan & Massa Jenis",
-            mod2Desc: "Menggunakan Hukum Utama Hidrostatika (P_A = P_B -> ρ₁·h₁ = ρ₂·h₂). Hitung tinggi kolom zat cair yang tidak diketahui atau massa jenisnya.",
-            mod2Val: "Ketinggian/Massa Jenis Ditanyakan (h₂ atau ρ₂):",
+            mod2Desc: "Menggunakan Hukum Utama Hidrostatika (P<sub>A</sub> = P<sub>B</sub> ⇒ ρ₁ · h₁ = ρ₂ · h₂). Hitung tinggi kolom zat cair atau massa jenis yang tidak diketahui.",
+            mod2Val: "Nilai Ditanyakan (h₂ [cm] atau ρ₂ [kg/m³]):",
             
             mod3Title: "Hukum Pascal (Dongkrak Hidrolik)",
-            mod3Desc: "Berdasarkan Hukum Pascal (F₁ / A₁ = F₂ / A₂), hitung Gaya Output (F₂) atau Luas Penampang yang dibutuhkan.",
+            mod3Desc: "Berdasarkan Hukum Pascal (F₁ / A₁ = F₂ / A₂), hitung Gaya Output (F₂) dan Keuntungan Mekanik (F₂ / F₁).",
             mod3F2: "1. Gaya Output F₂ (N):",
             mod3Ratio: "2. Rasio Keuntungan Mekanik (F₂ / F₁):",
 
             mod4Title: "Hukum Archimedes & Gaya Apung",
-            mod4Desc: "Hitung Gaya Apung (Fa = ρ_fluida · V_tercelup · g), Berat Semu di dalam air (W_smp = W_sebenarnya - Fa), serta tentukan Kondisi Benda.",
-            mod4Fa: "1. Gaya Apung Fa (N):",
-            mod4WApp: "2. Berat Semu Benda W_semu (N):",
+            mod4Desc: "Hitung Gaya Apung (F<sub>A</sub> = ρ<sub>f</sub> · V<sub>tercelup</sub> · g), Berat Semu (W<sub>semu</sub> = W<sub>sebenarnya</sub> - F<sub>A</sub>), serta tentukan Kondisi Benda.",
+            mod4Fa: "1. Gaya Apung F<sub>A</sub> (N):",
+            mod4WApp: "2. Berat Semu Benda W<sub>semu</sub> (N):",
             mod4State: "3. Keadaan Benda (Terapung / Melayang / Tenggelam):",
             mod4StateSelect: "-- Pilih Kondisi Benda --",
             mod4Float: "TERAPUNG (Floating)",
@@ -433,9 +447,9 @@
             mod4Sink: "TENGGELAM (Sinking)",
 
             mod5Title: "Kapilaritas & Viskositas Fluida",
-            mod5Desc: "Hitung Kenaikan/Penurunan Cairan pada Pipa Kapiler (h = 2γ cosθ / (ρ g r)) dan Gaya Gesek Viskos Stokes (Ff = 6π η r v).",
-            mod5Cap: "1. Ketinggian Kapiler h (mm) [catatan: (+) naik, (-) turun]:",
-            mod5Visc: "2. Gaya Hambat Viskos Stokes Ff (N):",
+            mod5Desc: "Hitung Kenaikan/Penurunan Pipa Kapiler (h = 2γ cosθ / (ρ g r)) dan Gaya Gesek Viskos Stokes (F<sub>f</sub> = 6π η r v).",
+            mod5Cap: "1. Ketinggian Kapiler h (mm) [(+) naik, (-) turun]:",
+            mod5Visc: "2. Gaya Hambat Viskos Stokes F<sub>f</sub> (N):",
 
             symbolTitle: "Parameter & Simbol Fisika:",
             errFillAll: "⚠️ Silakan isi semua kolom analisis jawaban.",
@@ -457,24 +471,24 @@
                 { name: "Capillarity & Viscosity", icon: "💧" }
             ],
             mod1Title: "Hydrostatic Pressure & Thrust Force",
-            mod1Desc: "Calculate Hydrostatic Pressure (Ph = ρ·g·h), Total Absolute Pressure (Ptot = P0 + Ph), and Bottom Thrust Force (F = Ptot·A). [g = 9.8 m/s², P0 = 101,325 Pa]",
-            mod1Ph: "1. Hydrostatic Pressure Ph (Pa):",
-            mod1Ptot: "2. Total Absolute Pressure Ptot (Pa):",
+            mod1Desc: "Calculate Hydrostatic Pressure (P<sub>h</sub> = ρ · g · h), Total Absolute Pressure (P<sub>tot</sub> = P<sub>0</sub> + P<sub>h</sub>), and Bottom Thrust Force (F = P<sub>tot</sub> · A). [g = 9.8 m/s², P<sub>0</sub> = 101,325 Pa]",
+            mod1Ph: "1. Hydrostatic Pressure P<sub>h</sub> (Pa):",
+            mod1Ptot: "2. Total Absolute Pressure P<sub>tot</sub> (Pa):",
             mod1F: "3. Bottom Thrust Force F (N):",
 
             mod2Title: "U-Tube Manometer & Density Ratio",
-            mod2Desc: "Using the Fundamental Principle of Hydrostatics (P_A = P_B -> ρ₁·h₁ = ρ₂·h₂), determine the unknown liquid height or fluid density.",
-            mod2Val: "Unknown Liquid Height/Density (h₂ or ρ₂):",
+            mod2Desc: "Using the Fundamental Principle of Hydrostatics (P<sub>A</sub> = P<sub>B</sub> ⇒ ρ₁ · h₁ = ρ₂ · h₂), determine the unknown liquid height or fluid density.",
+            mod2Val: "Unknown Liquid Height or Density (h₂ [cm] or ρ₂ [kg/m³]):",
 
             mod3Title: "Pascal's Law (Hydraulic Lift)",
-            mod3Desc: "Based on Pascal's Principle (F₁ / A₁ = F₂ / A₂), calculate the Output Force (F₂) or Mechanical Advantage.",
+            mod3Desc: "Based on Pascal's Principle (F₁ / A₁ = F₂ / A₂), calculate Output Force (F₂) and Mechanical Advantage ratio (F₂ / F₁).",
             mod3F2: "1. Output Force F₂ (N):",
             mod3Ratio: "2. Mechanical Advantage Ratio (F₂ / F₁):",
 
             mod4Title: "Archimedes' Principle & Buoyancy",
-            mod4Desc: "Calculate Buoyant Force (Fa = ρ_fluid · V_submerged · g), Apparent Weight in liquid, and identify the object's State.",
-            mod4Fa: "1. Buoyant Force Fa (N):",
-            mod4WApp: "2. Apparent Weight W_app (N):",
+            mod4Desc: "Calculate Buoyant Force (F<sub>A</sub> = ρ<sub>f</sub> · V<sub>submerged</sub> · g), Apparent Weight (W<sub>app</sub> = W<sub>actual</sub> - F<sub>A</sub>), and identify the object's State.",
+            mod4Fa: "1. Buoyant Force F<sub>A</sub> (N):",
+            mod4WApp: "2. Apparent Weight W<sub>app</sub> (N):",
             mod4State: "3. Object State (Floating / Suspended / Sinking):",
             mod4StateSelect: "-- Select Object State --",
             mod4Float: "FLOATING",
@@ -482,9 +496,9 @@
             mod4Sink: "SINKING",
 
             mod5Title: "Capillarity & Viscosity",
-            mod5Desc: "Calculate Capillary Tube Rise/Fall (h = 2γ cosθ / (ρ g r)) and Stokes' Viscous Drag Force (Ff = 6π η r v).",
-            mod5Cap: "1. Capillary Height h (mm) [note: (+) rise, (-) fall]:",
-            mod5Visc: "2. Stokes' Viscous Drag Ff (N):",
+            mod5Desc: "Calculate Capillary Rise/Fall (h = 2γ cosθ / (ρ g r)) and Stokes' Viscous Drag Force (F<sub>f</sub> = 6π η r v).",
+            mod5Cap: "1. Capillary Height h (mm) [(+) rise, (-) fall]:",
+            mod5Visc: "2. Stokes' Viscous Drag F<sub>f</sub> (N):",
 
             symbolTitle: "Physics Parameters & Symbols:",
             errFillAll: "⚠️ Please fill in all analysis fields first.",
@@ -580,7 +594,6 @@
             icon: '🧪',
             nameKey: 1,
             generate: () => {
-                // Fluid 1 = Water (1000 kg/m3)
                 const rho1 = 1000;
                 const h1 = parseFloat((Math.random() * 15 + 5).toFixed(1)); // cm
                 const unknownType = Math.random() > 0.5 ? 'h2' : 'rho2';
@@ -588,7 +601,6 @@
                 const rho2Options = [800, 13600, 750, 900];
                 const rho2 = rho2Options[Math.floor(Math.random() * rho2Options.length)];
                 
-                // rho1 * h1 = rho2 * h2
                 const h2 = parseFloat(((rho1 * h1) / rho2).toFixed(2));
 
                 return {
@@ -673,7 +685,6 @@
             icon: '💧',
             nameKey: 4,
             generate: () => {
-                // Capillarity: Water (gamma=0.072 N/m, theta=0) or Mercury (gamma=0.48 N/m, theta=140 deg)
                 const isWater = Math.random() > 0.4;
                 const gamma = isWater ? 0.0728 : 0.465;
                 const thetaDeg = isWater ? 0 : 140;
@@ -682,13 +693,11 @@
                 const r_mm = parseFloat((Math.random() * 0.8 + 0.2).toFixed(2)); // mm
                 const r = r_mm / 1000; // m
 
-                // h in meters: h = 2 gamma cos(theta) / (rho g r)
                 const h_m = (2 * gamma * Math.cos(thetaRad)) / (rho * g * r);
                 const h_mm = h_m * 1000;
 
-                // Viscosity Stokes
                 const eta = parseFloat((Math.random() * 0.8 + 0.1).toFixed(2)); // Pa·s
-                const r_sphere = parseFloat((Math.random() * 3 + 1).toFixed(1)); // mm -> /1000
+                const r_sphere = parseFloat((Math.random() * 3 + 1).toFixed(1)); // mm
                 const v = parseFloat((Math.random() * 2 + 0.2).toFixed(2)); // m/s
                 
                 const Ff = 6 * Math.PI * eta * (r_sphere / 1000) * v;
@@ -753,24 +762,25 @@
 
         document.getElementById('inst-icon').innerText = mod.icon;
         document.getElementById('task-title').innerText = t[`mod${currentModIndex + 1}Title`];
-        document.getElementById('task-desc').innerText = t[`mod${currentModIndex + 1}Desc`];
+        document.getElementById('task-desc').innerHTML = t[`mod${currentModIndex + 1}Desc`];
 
         if (currentModIndex === 0) {
             // Hydrostatic Pressure
             const d = currentRawData;
             document.getElementById('sensor-display').innerHTML = `
-                Fluida: <b>${d.fluid}</b> (ρ = ${d.rho} kg/m³)<br>
-                Kedalaman (h): <b>${d.h} m</b> | Luas Alas (A): <b>${d.area} m²</b>
+                <span class="sensor-section">Fluida: <b>${d.fluid}</b> (ρ = ${d.rho} kg/m³)</span>
+                <span class="sensor-section">Kedalaman (h) = <b>${d.h} m</b></span>
+                <span class="sensor-section">Luas Alas (A) = <b>${d.area} m²</b></span>
             `;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
                     <label for="input-ph">${t.mod1Ph}</label>
-                    <input type="number" id="input-ph" step="any" placeholder="Ph (Pa)">
+                    <input type="number" id="input-ph" step="any" placeholder="P_h (Pa)">
                 </div>
                 <div class="control-group">
                     <label for="input-ptot">${t.mod1Ptot}</label>
-                    <input type="number" id="input-ptot" step="any" placeholder="Ptot (Pa)">
+                    <input type="number" id="input-ptot" step="any" placeholder="P_tot (Pa)">
                 </div>
                 <div class="control-group">
                     <label for="input-f">${t.mod1F}</label>
@@ -782,13 +792,15 @@
             const d = currentRawData;
             if (d.target === 'h2') {
                 document.getElementById('sensor-display').innerHTML = `
-                    Fluida 1: Air (ρ₁ = ${d.rho1} kg/m³, h₁ = ${d.h1} cm)<br>
-                    Fluida 2: ρ₂ = <b>${d.rho2} kg/m³</b> | Hitung <b>h₂ (cm)</b>
+                    <span class="sensor-section">Fluida 1 (Air): ρ₁ = ${d.rho1} kg/m³, h₁ = ${d.h1} cm</span>
+                    <span class="sensor-section">Fluida 2: ρ₂ = <b>${d.rho2} kg/m³</b></span>
+                    <span class="sensor-section">Hitung ketinggian <b>h₂ (cm)</b></span>
                 `;
             } else {
                 document.getElementById('sensor-display').innerHTML = `
-                    Fluida 1: Air (ρ₁ = ${d.rho1} kg/m³, h₁ = ${d.h1} cm)<br>
-                    Fluida 2: h₂ = <b>${d.h2} cm</b> | Hitung <b>ρ₂ (kg/m³)</b>
+                    <span class="sensor-section">Fluida 1 (Air): ρ₁ = ${d.rho1} kg/m³, h₁ = ${d.h1} cm</span>
+                    <span class="sensor-section">Fluida 2: h₂ = <b>${d.h2} cm</b></span>
+                    <span class="sensor-section">Hitung massa jenis <b>ρ₂ (kg/m³)</b></span>
                 `;
             }
 
@@ -802,8 +814,9 @@
             // Pascal
             const d = currentRawData;
             document.getElementById('sensor-display').innerHTML = `
-                Gaya Input (F₁): <b>${d.F1} N</b><br>
-                Jari-jari Piston 1 (r₁): <b>${d.r1} cm</b> | Piston 2 (r₂): <b>${d.r2} cm</b>
+                <span class="sensor-section">Gaya Input (F₁) = <b>${d.F1} N</b></span>
+                <span class="sensor-section">Jari-jari Piston 1 (r₁) = <b>${d.r1} cm</b></span>
+                <span class="sensor-section">Jari-jari Piston 2 (r₂) = <b>${d.r2} cm</b></span>
             `;
 
             dynamicInputs.innerHTML = `
@@ -820,14 +833,15 @@
             // Archimedes
             const d = currentRawData;
             document.getElementById('sensor-display').innerHTML = `
-                Fluida: Air (ρf = ${d.rho_f} kg/m³)<br>
-                Massa Jenis Benda (ρb): <b>${d.rho_b} kg/m³</b> | Volume (Vb): <b>${d.V_buka} m³</b>
+                <span class="sensor-section">Fluida: Air (ρ<sub>f</sub> = ${d.rho_f} kg/m³)</span>
+                <span class="sensor-section">Benda: ρ<sub>benda</sub> = <b>${d.rho_b} kg/m³</b></span>
+                <span class="sensor-section">Volume Total (V<sub>benda</sub>) = <b>${d.V_buka} m³</b></span>
             `;
 
             dynamicInputs.innerHTML = `
                 <div class="control-group">
                     <label for="input-fa">${t.mod4Fa}</label>
-                    <input type="number" id="input-fa" step="any" placeholder="Fa (N)">
+                    <input type="number" id="input-fa" step="any" placeholder="F_A (N)">
                 </div>
                 <div class="control-group">
                     <label for="input-wapp">${t.mod4WApp}</label>
@@ -848,8 +862,10 @@
             const d = currentRawData;
             const liquidName = d.isWater ? 'Air' : 'Raksa / Mercury';
             document.getElementById('sensor-display').innerHTML = `
-                <b>[Kapilaritas]</b> ${liquidName}: γ=${d.gamma} N/m, θ=${d.thetaDeg}°, r_pipa=${d.r_mm} mm<br>
-                <b>[Viskositas]</b> η=${d.eta} Pa·s, r_bola=${d.r_sphere} mm, v=${d.v} m/s
+                <span class="sensor-section"><span class="sensor-tag">[Kapilaritas]</span> ${liquidName}</span>
+                <span class="sensor-section">γ = ${d.gamma} N/m &nbsp;|&nbsp; θ = ${d.thetaDeg}° &nbsp;|&nbsp; r<sub>pipa</sub> = ${d.r_mm} mm</span>
+                <span class="sensor-section" style="margin-top: 6px;"><span class="sensor-tag">[Viskositas]</span> Bola dalam Cairan</span>
+                <span class="sensor-section">η = ${d.eta} Pa·s &nbsp;|&nbsp; r<sub>bola</sub> = ${d.r_sphere} mm &nbsp;|&nbsp; v = ${d.v} m/s</span>
             `;
 
             dynamicInputs.innerHTML = `
@@ -859,7 +875,7 @@
                 </div>
                 <div class="control-group">
                     <label for="input-visc">${t.mod5Visc}</label>
-                    <input type="number" id="input-visc" step="any" placeholder="Ff (N)">
+                    <input type="number" id="input-visc" step="any" placeholder="F_f (N)">
                 </div>
             `;
         }
@@ -897,11 +913,11 @@
 
             if (!checkTolerance(userPh, d.Ph)) {
                 isCorrect = false;
-                warnMsgs.push(`<li>Ph seharusnya: <b>${d.Ph.toFixed(1)} Pa</b></li>`);
+                warnMsgs.push(`<li>P<sub>h</sub> seharusnya: <b>${d.Ph.toFixed(1)} Pa</b></li>`);
             }
             if (!checkTolerance(userPtot, d.Ptot)) {
                 isCorrect = false;
-                warnMsgs.push(`<li>Ptot seharusnya: <b>${d.Ptot.toFixed(1)} Pa</b></li>`);
+                warnMsgs.push(`<li>P<sub>tot</sub> seharusnya: <b>${d.Ptot.toFixed(1)} Pa</b></li>`);
             }
             if (!checkTolerance(userF, d.F)) {
                 isCorrect = false;
@@ -951,11 +967,11 @@
 
             if (!checkTolerance(userFa, d.Fa)) {
                 isCorrect = false;
-                warnMsgs.push(`<li>Gaya Apung Fa seharusnya: <b>${d.Fa.toFixed(2)} N</b></li>`);
+                warnMsgs.push(`<li>Gaya Apung F<sub>A</sub> seharusnya: <b>${d.Fa.toFixed(2)} N</b></li>`);
             }
             if (!checkTolerance(userWapp, d.W_semu)) {
                 isCorrect = false;
-                warnMsgs.push(`<li>Berat Semu W_semu seharusnya: <b>${d.W_semu.toFixed(2)} N</b></li>`);
+                warnMsgs.push(`<li>Berat Semu W<sub>semu</sub> seharusnya: <b>${d.W_semu.toFixed(2)} N</b></li>`);
             }
             if (userState !== d.state) {
                 isCorrect = false;
@@ -976,7 +992,7 @@
             }
             if (!checkTolerance(userVisc, d.Ff)) {
                 isCorrect = false;
-                warnMsgs.push(`<li>Gaya Stokes Ff seharusnya: <b>${d.Ff.toFixed(4)} N</b></li>`);
+                warnMsgs.push(`<li>Gaya Stokes F<sub>f</sub> seharusnya: <b>${d.Ff.toFixed(4)} N</b></li>`);
             }
         }
 

@@ -9,15 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        // Redirect jika dibuka langsung di luar iframe (Pencegahan Akses Langsung)
-        if (window.self === window.top) {
-            window.location.href = "index.html?page=physicode";
-        }
-    </script>
-
-    <style>
+<style>
         /* CSS Variables - Light Theme (Default) */
         :root {
             --primary: #2563eb;
@@ -629,14 +621,21 @@ except KeyboardInterrupt:
 from signal import pause
 
 led = LED(17)
-button = Button(2, pull_up=False) # GPIO 2 terhubung ke Push Button
+# Tombol dihubungkan antara GPIO 22 dan GND.
+# Pull-up internal membuat kondisi normal HIGH, ditekan menjadi LOW.
+button = Button(22)
 
-# Registrasi Callback Event Interupsi Input
 button.when_pressed = led.on
 button.when_released = led.off
 
-print("Sistem Siap! Tekan Push Button pada GPIO 2...")
-pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+print("Sistem siap. Tekan tombol pada GPIO 22...")
+try:
+    pause()
+except KeyboardInterrupt:
+    print("\\nProgram dihentikan.")
+finally:
+    button.close()
+    led.close()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step3-s2"></span></p>
 
@@ -668,8 +667,8 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
 
                     <div class="sim-display">
                         <div class="led-indicator" id="sim-led"></div>
-                        <div id="sim-text" style="font-weight:bold; color:var(--sensor-text);">Status: LOW (0)</div>
-                        <div id="sim-detail" style="font-size:0.8rem; margin-top:8px; color:var(--text-muted);">GPIO 2: Open | GPIO 17: 0V</div>
+                        <div id="sim-text" style="font-weight:bold; color:var(--sensor-text);">Status: INPUT HIGH / LED OFF</div>
+                        <div id="sim-detail" style="font-size:0.8rem; margin-top:8px; color:var(--text-muted);">GPIO 22: HIGH (lepas) | GPIO 17: 0V</div>
                     </div>
                 </div>
 
@@ -688,6 +687,44 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             <div class="step-content">
                 <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
                 <ol id="step5-list"></ol>
+                <p style="font-size:0.9rem; margin-top:12px;">Contoh solusi Python (dapat langsung dicoba di Thonny):</p>
+                <pre><code>from gpiozero import LED, Button
+from time import monotonic, sleep
+
+led1 = LED(17)
+led2 = LED(27)
+button1 = Button(22)  # Tombol antara GPIO 22 dan GND
+button2 = Button(23)  # Tombol antara GPIO 23 dan GND
+
+try:
+    last_toggle = monotonic()
+    led1_state = False
+
+    while True:
+        now = monotonic()
+
+        # LED 1 berkedip: toggle setiap 0,2 detik selama Button 1 ditahan.
+        if button1.is_pressed:
+            if now - last_toggle >= 0.2:
+                led1_state = not led1_state
+                led1.value = led1_state
+                last_toggle = now
+        else:
+            led1_state = False
+            led1.off()
+            last_toggle = now
+
+        # LED 2 menyala selama Button 2 ditahan.
+        led2.value = button2.is_pressed
+        sleep(0.01)
+
+except KeyboardInterrupt:
+    print("\\nProgram dihentikan.")
+finally:
+    led1.close()
+    led2.close()
+    button1.close()
+    button2.close()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"></span></label>
                 </div>
@@ -714,7 +751,8 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             paramsList: `
                 <li><strong>Logic Level Voltase:</strong> <code>3.3V Logika High</code> (TIDAK toleran terhadap masukan 5V langsung).</li>
                 <li><strong>Pin Output Digital (LED):</strong> GPIO 17 (Pin Fisik 11) &mdash; Gunakan Resistor Serial (220Ω &ndash; 330Ω).</li>
-                <li><strong>Pin Input Digital (Push Button):</strong> GPIO 2 (Pin Fisik 3) &mdash; Menggunakan Pull-Up Internal bawaan library.</li>
+                <li><strong>Pin Input Digital (Push Button):</strong> GPIO 22 (Pin Fisik 15) &mdash; Tombol dihubungkan antara GPIO dan GND; gunakan pull-up internal.</li>
+                <li><strong>Input tombol:</strong> GPIO 22 (Pin Fisik 15) dan GPIO 23 (Pin Fisik 16); tombol menghubungkan GPIO ke GND.</li>
                 <li><strong>Ground (GND):</strong> Pin Fisik 6, 9, 14, 20, atau 34.</li>
             `,
             warnTitle: "Peringatan Penting Keselamatan Perangkat Keras (GPIO Warning)",
@@ -724,6 +762,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Periksa ulang 2-3 kali:</strong> Cek kembali seluruh perkabelan sebelum menghubungkan kabel daya.</li>
                 <li><strong>Mulai dengan GND:</strong> Awali pembuatan rangkaian dengan menyambungkan Ground (GND) untuk semua komponen.</li>
                 <li><strong>Batas Tegangan:</strong> Jangan pernah memberikan sinyal 5V langsung ke pin GPIO (maksimal 3.3V).</li>
+                <li><strong>Hindari GPIO 2 dan GPIO 3</strong> untuk tombol pada praktikum ini karena keduanya merupakan jalur I²C (SDA/SCL) dan memiliki fungsi khusus.</li>
             `,
             hwTitle: "Persyaratan Perangkat Keras (Hardware)",
             hwList: `
@@ -731,7 +770,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Breadboard / Papan Uji</strong> + Kabel Jumper Male-to-Female</li>
                 <li><strong>2x LED</strong> (Merah / Hijau)</li>
                 <li><strong>2x Resistor 220Ω / 330Ω</strong> (Pembatas Arus LED)</li>
-                <li><strong>2x Push Button</strong> (Sakelar Tekan)</li>
+                <li><strong>2x Push Button</strong> (Sakelar Tekan; masing-masing menghubungkan GPIO input ke GND)</li>
             `,
             swTitle: "Persyaratan Perangkat Lunak (Software)",
             swList: `
@@ -743,7 +782,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             step1List: `
                 <li>Buka aplikasi <strong>TigerVNC Viewer</strong> di laptop Anda dan hubungkan ke Raspberry Pi (misal: <code>NAMA_MAHASISWA.local</code>).</li>
                 <li>Di dalam layar Desktop Raspberry Pi, klik <strong>Menu Raspberry Pi (ujung kiri atas)</strong> &rarr; pilih <strong>Programming</strong> &rarr; klik <strong>Thonny Python IDE</strong>.</li>
-                <li>Di Thonny IDE, klik menu <strong>File</strong> &rarr; <strong>Save As...</strong> &rarr; buat folder baru bernama <code>praktikum_gpio</code> di direktori Home (<code>/home/apel/praktikum_gpio</code>).</li>
+                <li>Di Thonny IDE, klik menu <strong>File</strong> &rarr; <strong>Save As...</strong> &rarr; buat folder baru bernama <code>praktikum_gpio</code> di direktori Home (folder <code>praktikum_gpio</code> di dalam Home).</li>
             `,
             cp1Text: "<b>Checkpoint 1:</b> Berhasil membuka Thonny Python IDE di VNC Desktop dan menyiapkan folder kerja <code>praktikum_gpio</code>.",
             
@@ -753,18 +792,18 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             cp2Text: "<b>Checkpoint 2:</b> Program berhasil dijalankan langsung dari Thonny IDE dan LED pada GPIO 17 berkedip secara periodik.",
             
             step3Header: `Tahap 3: Implementasi Digital Input (Pembacaan Push Button via Thonny) <span class="badge">Digital Input</span>`,
-            step3Intro: "Pada tahap ini, skrip Python akan membaca kondisi masukan sakelar (<i>digital input</i>) pada GPIO 2 untuk mengendalikan keluaran LED pada GPIO 17 secara interaktif (<i>Event-Driven</i>).",
+            step3Intro: "Pada tahap ini, skrip Python akan membaca kondisi masukan sakelar (<i>digital input</i>) pada GPIO 22 untuk mengendalikan keluaran LED pada GPIO 17 secara interaktif (<i>Event-Driven</i>).",
             step3S1: "1. Buat berkas baru di Thonny (<strong>File → New</strong>), lalu ketikkan skrip berikut:",
-            step3S2: "2. Simpan dengan nama <code>button_control.py</code>, lalu klik tombol <strong>RUN</strong> di Thonny IDE. Tekan push button fisik pada breadboard untuk menyalakan LED.",
+            step3S2: "2. Simpan dengan nama <code>button_control.py</code>, lalu klik tombol <strong>RUN</strong> di Thonny IDE. Tekan tombol yang terhubung antara GPIO 22 (pin fisik 15) dan GND untuk menyalakan LED.",
             cp3Text: "<b>Checkpoint 3:</b> Program input berjalan sukses via Thonny; LED menyala instan saat tombol ditekan dan mati saat tombol dilepas.",
             
             step4Header: `Tahap 4: Simulasi Logika Digital Input/Output Interaktif <span class="badge">Modul Interaktif</span>`,
             step4Intro: "Uji pemahaman alur kerja pembacaan input dan kontrol output secara virtual melalui modul simulator di bawah ini:",
             simPanelTitle: "Panel Sakelar & Parameter",
-            simModelText: "Model Logika: <strong>Active High Input & Push Button</strong>",
+            simModelText: "Model Logika: <strong>Pull-up internal (active-low) pada input; LED active-high</strong>",
             simPinsLabel: "Pin Terhubung:",
             simPinsList: `
-                <li><strong>Input:</strong> GPIO 2 (Button)</li>
+                <li><strong>Input:</strong> GPIO 22 (Button)</li>
                 <li><strong>Output:</strong> GPIO 17 (LED)</li>
             `,
             simBtn: "Tekan Push Button (Hold)",
@@ -773,7 +812,8 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Studi Kasus 2-Button & 2-LED) <span class="badge">Penugasan</span>`,
             step5Intro: "Selesaikan penugasan praktikum mandiri berikut menggunakan Thonny IDE di VNC Desktop untuk melengkapi nilai responsi Pertemuan 10:",
             step5List: `
-                <li>Hubungkan <strong>2 Push Button</strong> (pada GPIO 2 & GPIO 3) dan <strong>2 LED</strong> (pada GPIO 17 & GPIO 27) di breadboard.</li>
+                <li>Hubungkan <strong>Button 1 ke GPIO 22 (pin fisik 15)</strong> dan <strong>Button 2 ke GPIO 23 (pin fisik 16)</strong>. Setiap tombol dipasang antara pin GPIO dan GND (gunakan pull-up internal; tidak perlu resistor pull-down).</li>
+                 <li>Hubungkan <strong>LED 1 ke GPIO 17 (pin fisik 11)</strong> dan <strong>LED 2 ke GPIO 27 (pin fisik 13)</strong>. Rangkaian tiap LED: GPIO output → resistor 220–330 Ω → anoda LED; katoda LED → GND. Perhatikan polaritas LED.</li>
                 <li>Buat file skrip Python baru di Thonny IDE bernama <code>tugas_gpio.py</code> dengan aturan logika berikut:
                     <ul>
                         <li><strong>Button 1 Ditekan:</strong> LED 1 berkedip (<i>blink</i>) cepat dengan interval 0.2 detik.</li>
@@ -799,7 +839,8 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             paramsList: `
                 <li><strong>Logic Level Voltage:</strong> <code>3.3V High Logic</code> (NOT tolerant to direct 5V input).</li>
                 <li><strong>Digital Output Pin (LED):</strong> GPIO 17 (Physical Pin 11) &mdash; Use Serial Resistor (220Ω &ndash; 330Ω).</li>
-                <li><strong>Digital Input Pin (Push Button):</strong> GPIO 2 (Physical Pin 3) &mdash; Uses library built-in Internal Pull-Up.</li>
+                <li><strong>Digital Input Pin (Push Button):</strong> GPIO 22 (Physical Pin 15) &mdash; Connect the button between GPIO and GND; use the internal pull-up.</li>
+                <li><strong>Button inputs:</strong> GPIO 22 (Physical Pin 15) and GPIO 23 (Physical Pin 16); each button connects its GPIO to GND.</li>
                 <li><strong>Ground (GND):</strong> Physical Pin 6, 9, 14, 20, or 34.</li>
             `,
             warnTitle: "Important Hardware Safety Warnings (GPIO Warning)",
@@ -809,6 +850,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Double/Triple check:</strong> Verify all wiring before plugging in the power cable.</li>
                 <li><strong>Start with GND:</strong> Begin building the circuit by connecting Ground (GND) for all components.</li>
                 <li><strong>Voltage Limits:</strong> Never put a 5V signal on a GPIO pin (3.3V max).</li>
+                <li><strong>Avoid GPIO 2 and GPIO 3</strong> for these buttons because they are the I²C SDA/SCL pins with dedicated functions.</li>
             `,
             hwTitle: "Hardware Requirements",
             hwList: `
@@ -816,7 +858,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
                 <li><strong>Breadboard</strong> + Male-to-Female Jumper Wires</li>
                 <li><strong>2x LEDs</strong> (Red / Green)</li>
                 <li><strong>2x Resistors 220Ω / 330Ω</strong> (LED Current Limiters)</li>
-                <li><strong>2x Push Buttons</strong> (Tactile Switches)</li>
+                <li><strong>2x Push Buttons</strong> (each connects an input GPIO to GND)</li>
             `,
             swTitle: "Software Requirements",
             swList: `
@@ -828,7 +870,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             step1List: `
                 <li>Open <strong>TigerVNC Viewer</strong> on your laptop and connect to Raspberry Pi (e.g., <code>NAMA_MAHASISWA.local</code>).</li>
                 <li>On the Raspberry Pi Desktop, click <strong>Raspberry Pi Menu (top-left)</strong> &rarr; select <strong>Programming</strong> &rarr; click <strong>Thonny Python IDE</strong>.</li>
-                <li>In Thonny IDE, click <strong>File</strong> &rarr; <strong>Save As...</strong> &rarr; create a new folder named <code>praktikum_gpio</code> in the Home directory (<code>/home/apel/praktikum_gpio</code>).</li>
+                <li>In Thonny IDE, click <strong>File</strong> &rarr; <strong>Save As...</strong> &rarr; create a new folder named <code>praktikum_gpio</code> in the Home directory (folder <code>praktikum_gpio</code> di dalam Home).</li>
             `,
             cp1Text: "<b>Checkpoint 1:</b> Successfully launched Thonny Python IDE on VNC Desktop and created <code>praktikum_gpio</code> working folder.",
             
@@ -838,7 +880,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             cp2Text: "<b>Checkpoint 2:</b> Program executed directly from Thonny IDE and LED on GPIO 17 blinks periodically.",
             
             step3Header: `Step 3: Digital Input Implementation (Push Button Reading via Thonny) <span class="badge">Digital Input</span>`,
-            step3Intro: "In this step, Python script reads switch input state (<i>digital input</i>) on GPIO 2 to interactively control LED output on GPIO 17 (<i>Event-Driven</i>).",
+            step3Intro: "In this step, Python script reads switch input state (<i>digital input</i>) on GPIO 22 to interactively control LED output on GPIO 17 (<i>Event-Driven</i>).",
             step3S1: "1. Create a new file in Thonny (<strong>File → New</strong>), then enter the following script:",
             step3S2: "2. Save as <code>button_control.py</code>, then click <strong>RUN</strong> in Thonny IDE. Press the physical push button on the breadboard to turn ON the LED.",
             cp3Text: "<b>Checkpoint 3:</b> Input program runs successfully via Thonny; LED turns ON instantly when button is pressed and OFF when released.",
@@ -846,10 +888,10 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             step4Header: `Step 4: Interactive Digital I/O Logic Simulation <span class="badge">Interactive Module</span>`,
             step4Intro: "Test your understanding of input reading and output control virtually using the simulator below:",
             simPanelTitle: "Switch Panel & Parameters",
-            simModelText: "Logic Model: <strong>Active High Input & Push Button</strong>",
+            simModelText: "Logic Model: <strong>Internal pull-up (active-low) input; active-high LED</strong>",
             simPinsLabel: "Connected Pins:",
             simPinsList: `
-                <li><strong>Input:</strong> GPIO 2 (Button)</li>
+                <li><strong>Input:</strong> GPIO 22 (Button)</li>
                 <li><strong>Output:</strong> GPIO 17 (LED)</li>
             `,
             simBtn: "Press Push Button (Hold)",
@@ -858,7 +900,8 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
             step5Header: `Step 5: Independent / Group Assignment (2-Button & 2-LED Case Study) <span class="badge">Assignment</span>`,
             step5Intro: "Complete the following independent practical assignment using Thonny IDE on VNC Desktop to fulfill Meeting 10 task evaluation:",
             step5List: `
-                <li>Connect <strong>2 Push Buttons</strong> (on GPIO 2 & GPIO 3) and <strong>2 LEDs</strong> (on GPIO 17 & GPIO 27) on the breadboard.</li>
+                <li>Connect <strong>Button 1 to GPIO 22 (physical pin 15)</strong> and <strong>Button 2 to GPIO 23 (physical pin 16)</strong>. Each button must connect its GPIO pin to GND (use the internal pull-up; no external pull-down resistor is needed).</li>
+                 <li>Connect <strong>LED 1 to GPIO 17 (physical pin 11)</strong> and <strong>LED 2 to GPIO 27 (physical pin 13)</strong>. For each LED wire: GPIO output → 220–330 Ω resistor → LED anode; LED cathode → GND. Observe LED polarity.</li>
                 <li>Create a new Python script file in Thonny IDE named <code>tugas_gpio.py</code> according to these logic rules:
                     <ul>
                         <li><strong>Button 1 Pressed:</strong> LED 1 blinks rapidly with an interval of 0.2 seconds.</li>
@@ -877,7 +920,8 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
 
     // Mendengarkan pesan sinkronisasi Real-Time dari Parent Window (index.html)
     window.addEventListener('message', (event) => {
-        if (!event.data) return;
+        if (event.source !== window.parent || event.origin !== window.location.origin) return;
+        if (!event.data || typeof event.data !== 'object') return;
         if (event.data.type === 'CHANGE_LANG') {
             setLanguage(event.data.lang);
         } else if (event.data.type === 'CHANGE_THEME') {
@@ -923,6 +967,7 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
     }
 
     function setTheme(theme) {
+        if (theme !== 'light' && theme !== 'dark') return;
         currentTheme = theme;
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('user_theme', theme);
@@ -995,12 +1040,28 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
     function copyCode(button) {
         const pre = button.parentElement;
         const code = pre.querySelector('code').innerText;
-        navigator.clipboard.writeText(code).then(() => {
+        const showCopied = () => {
+            const oldText = button.innerText;
             button.innerText = 'Copied!';
-            setTimeout(() => {
-                button.innerText = 'Copy';
-            }, 2000);
-        });
+            setTimeout(() => { button.innerText = oldText; }, 2000);
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(code).then(showCopied).catch(() => {
+                const area = document.createElement('textarea');
+                area.value = code;
+                document.body.appendChild(area);
+                area.select();
+                try { document.execCommand('copy'); showCopied(); }
+                finally { area.remove(); }
+            });
+        } else {
+            const area = document.createElement('textarea');
+            area.value = code;
+            document.body.appendChild(area);
+            area.select();
+            try { document.execCommand('copy'); showCopied(); }
+            finally { area.remove(); }
+        }
     }
 
     function updateProgress() {
@@ -1034,14 +1095,14 @@ pause() # Menjaga proses Python tetap aktif menantikan interupsi</code><button c
 
         if (isPressed) {
             led.classList.add('active-led');
-            text.innerText = "Status: HIGH (1)";
+            text.innerText = "Status: INPUT LOW / LED ON";
             text.style.color = "#4ade80";
-            detail.innerText = "GPIO 2: Closed (3.3V) | GPIO 17: 3.3V (ON)";
+            detail.innerText = "GPIO 22: LOW (ditekan) | GPIO 17: 3.3V (ON)";
         } else {
             led.classList.remove('active-led');
-            text.innerText = "Status: LOW (0)";
+            text.innerText = "Status: INPUT HIGH / LED OFF";
             text.style.color = "var(--sensor-text)";
-            detail.innerText = "GPIO 2: Open (0V) | GPIO 17: 0V (OFF)";
+            detail.innerText = "GPIO 22: HIGH (lepas) | GPIO 17: 0V (OFF)";
         }
     }
 </script>

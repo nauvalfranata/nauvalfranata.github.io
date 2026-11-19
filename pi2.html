@@ -687,44 +687,6 @@ finally:
             <div class="step-content">
                 <p id="step5-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 10px;"></p>
                 <ol id="step5-list"></ol>
-                <p style="font-size:0.9rem; margin-top:12px;">Contoh solusi Python (dapat langsung dicoba di Thonny):</p>
-                <pre><code>from gpiozero import LED, Button
-from time import monotonic, sleep
-
-led1 = LED(17)
-led2 = LED(27)
-button1 = Button(22)  # Tombol antara GPIO 22 dan GND
-button2 = Button(23)  # Tombol antara GPIO 23 dan GND
-
-try:
-    last_toggle = monotonic()
-    led1_state = False
-
-    while True:
-        now = monotonic()
-
-        # LED 1 berkedip: toggle setiap 0,2 detik selama Button 1 ditahan.
-        if button1.is_pressed:
-            if now - last_toggle >= 0.2:
-                led1_state = not led1_state
-                led1.value = led1_state
-                last_toggle = now
-        else:
-            led1_state = False
-            led1.off()
-            last_toggle = now
-
-        # LED 2 menyala selama Button 2 ditahan.
-        led2.value = button2.is_pressed
-        sleep(0.01)
-
-except KeyboardInterrupt:
-    print("\\nProgram dihentikan.")
-finally:
-    led1.close()
-    led2.close()
-    button1.close()
-    button2.close()</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                 <div class="checkpoint">
                     <label><input type="checkbox" onchange="updateProgress()"> <span id="cp5-text"></span></label>
                 </div>
@@ -809,20 +771,22 @@ finally:
             simBtn: "Tekan Push Button (Hold)",
             cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami hubungan transisi logika HIGH/LOW antara Pin Input dan Pin Output.",
             
-            step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Studi Kasus 2-Button & 2-LED) <span class="badge">Penugasan</span>`,
-            step5Intro: "Selesaikan penugasan praktikum mandiri berikut menggunakan Thonny IDE di VNC Desktop untuk melengkapi nilai responsi Pertemuan 10:",
+            step5Header: `Tahap 5: Tugas Kelompok (Studi Kasus 2-Button & 2-LED) <span class="badge">Penugasan</span>`,
+            step5Intro: "Kerjakan tugas praktikum ini secara berkelompok menggunakan Thonny IDE pada VNC Desktop. Setiap kelompok merancang, menulis, menguji, dan menjelaskan program secara mandiri berdasarkan ketentuan berikut:",
             step5List: `
                 <li>Hubungkan <strong>Button 1 ke GPIO 22 (pin fisik 15)</strong> dan <strong>Button 2 ke GPIO 23 (pin fisik 16)</strong>. Setiap tombol dipasang antara pin GPIO dan GND (gunakan pull-up internal; tidak perlu resistor pull-down).</li>
                  <li>Hubungkan <strong>LED 1 ke GPIO 17 (pin fisik 11)</strong> dan <strong>LED 2 ke GPIO 27 (pin fisik 13)</strong>. Rangkaian tiap LED: GPIO output → resistor 220–330 Ω → anoda LED; katoda LED → GND. Perhatikan polaritas LED.</li>
-                <li>Buat file skrip Python baru di Thonny IDE bernama <code>tugas_gpio.py</code> dengan aturan logika berikut:
+                <li>Buat program Python baru di Thonny IDE. Tulis sendiri program tersebut tanpa menyalin contoh kode. Program harus memenuhi aturan logika berikut:
                     <ul>
                         <li><strong>Button 1 Ditekan:</strong> LED 1 berkedip (<i>blink</i>) cepat dengan interval 0.2 detik.</li>
                         <li><strong>Button 2 Ditekan:</strong> LED 2 menyala kontinu (ON).</li>
                         <li><strong>Kedua Button Dilepas:</strong> Seluruh LED mati (OFF).</li>
                     </ul>
                 </li>
+                <li><strong>Kerja kelompok:</strong> Seluruh anggota harus berkontribusi dalam perancangan rangkaian, penulisan program, dan pengujian. Setiap anggota harus memahami alur kerja program.</li>
+                <li><strong>Hasil tugas:</strong> Tunjukkan rangkaian dan program yang berfungsi, lalu presentasikan atau demonstrasikan hasilnya serta jelaskan logika kerja kedua tombol dan kedua LED.</li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Penugasan skrip <code>tugas_gpio.py</code> berhasil diuji dari Thonny IDE pada hardware Raspberry Pi."
+            cp5Text: "<b>Checkpoint 5:</b> Kelompok berhasil membuat dan menguji program pada Raspberry Pi serta dapat menjelaskan cara kerja rangkaian dan program."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 10",
@@ -897,20 +861,22 @@ finally:
             simBtn: "Press Push Button (Hold)",
             cp4Text: "<b>Checkpoint 4:</b> Student understands the HIGH/LOW logic transition relationship between Input and Output Pins.",
 
-            step5Header: `Step 5: Independent / Group Assignment (2-Button & 2-LED Case Study) <span class="badge">Assignment</span>`,
-            step5Intro: "Complete the following independent practical assignment using Thonny IDE on VNC Desktop to fulfill Meeting 10 task evaluation:",
+            step5Header: `Step 5: Group Assignment (2-Button & 2-LED Case Study) <span class="badge">Assignment</span>`,
+            step5Intro: "Complete this practical assignment in groups using Thonny IDE on the VNC Desktop. Each group must independently design, write, test, and explain its program according to the following requirements:",
             step5List: `
                 <li>Connect <strong>Button 1 to GPIO 22 (physical pin 15)</strong> and <strong>Button 2 to GPIO 23 (physical pin 16)</strong>. Each button must connect its GPIO pin to GND (use the internal pull-up; no external pull-down resistor is needed).</li>
                  <li>Connect <strong>LED 1 to GPIO 17 (physical pin 11)</strong> and <strong>LED 2 to GPIO 27 (physical pin 13)</strong>. For each LED wire: GPIO output → 220–330 Ω resistor → LED anode; LED cathode → GND. Observe LED polarity.</li>
-                <li>Create a new Python script file in Thonny IDE named <code>tugas_gpio.py</code> according to these logic rules:
+                <li>Create a new Python program in Thonny IDE. Write the program yourselves without copying a sample code. The program must meet these logic requirements:
                     <ul>
                         <li><strong>Button 1 Pressed:</strong> LED 1 blinks rapidly with an interval of 0.2 seconds.</li>
                         <li><strong>Button 2 Pressed:</strong> LED 2 turns ON continuously.</li>
                         <li><strong>Both Buttons Released:</strong> All LEDs turn OFF.</li>
                     </ul>
                 </li>
+                <li><strong>Group participation:</strong> All members must contribute to circuit design, program writing, and testing. Every member must understand how the program works.</li>
+                <li><strong>Assignment output:</strong> Demonstrate the working circuit and program, then explain the logic of both buttons and both LEDs.</li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Script assignment <code>tugas_gpio.py</code> successfully tested from Thonny IDE on Raspberry Pi hardware."
+            cp5Text: "<b>Checkpoint 5:</b> The group successfully creates and tests the program on Raspberry Pi and can explain how the circuit and program work."
         }
     };
 

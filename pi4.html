@@ -517,11 +517,6 @@
             <h3 id="params-title"></h3>
             <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 10px;" id="params-desc"></p>
             
-            <!-- Elemen Gambar Pinout Raspberry Pi -->
-            <div class="pinout-container">
-                <img src="pi_pinout.png" alt="Raspberry Pi GPIO Pinout Diagram" class="pinout-img">
-            </div>
-
             <ul id="params-list"></ul>
         </div>
 
@@ -549,11 +544,10 @@
                         <pre><code>hostname -I</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                     <li><span id="step1-i2"></span>
-                        <pre><code>sudo systemctl enable --now ssh
-sudo systemctl enable --now vncserver-x11-serviced</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                        <pre><code>sudo raspi-config</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                     <li><span id="step1-i3"></span>
-                        <pre><code>ssh pi@&lt;IP_RASPBERRY_PI&gt;</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                        <pre><code>ssh &lt;username&gt;@&lt;IP_RASPBERRY_PI&gt;</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                     </li>
                 </ol>
                 <div class="checkpoint">
@@ -570,7 +564,7 @@ sudo systemctl enable --now vncserver-x11-serviced</code><button class="copy-btn
             </div>
             <div class="step-content">
                 <p style="font-size: 0.9rem;"><span id="step2-s1"></span></p>
-                <pre><code>sudo apt update && sudo apt install -y python3-flask python3-paho-mqtt mosquitto mosquitto-clients</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <pre><code>sudo apt update && sudo apt install -y python3-flask python3-paho-mqtt</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step2-s2"></span></p>
                 <pre><code>nano app_flask.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
@@ -596,7 +590,7 @@ def get_sensor_data():
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+    app.run(host='0.0.0.0', port=5000, debug=False)</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
                 <p style="font-size: 0.9rem;"><span id="step2-s4"></span></p>
                 <pre><code>python3 app_flask.py</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
@@ -627,10 +621,11 @@ import random
 
 BROKER = "broker.hivemq.com"
 PORT = 1883
-TOPIC = "untirta/elektro/iot/sensor"
+TOPIC = "untirta/kelompok01/iot/sensor"
 
 client = mqtt.Client()
 client.connect(BROKER, PORT, 60)
+client.loop_start()
 
 print(f"Mulai mempublikasikan data MQTT ke Broker: {BROKER}...")
 
@@ -646,6 +641,7 @@ try:
         print(f"[PUBLISH] Topic: {TOPIC} | Data: {json_data}")
         time.sleep(2)
 except KeyboardInterrupt:
+    client.loop_stop()
     client.disconnect()
     print("\nPengiriman data MQTT dihentikan.")</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
 
@@ -675,7 +671,7 @@ except KeyboardInterrupt:
                         <label for="temp-slider" id="sim-slider-label" style="display:block; margin-top:10px; font-weight:bold; font-size:0.85rem;"></label>
                         <input type="range" id="temp-slider" class="sim-slider" min="15" max="50" value="28" oninput="updateSimulator()">
 
-                        <button class="sim-btn" onclick="publishSimData()"><i class="fa-solid fa-paper-plane"></i> Publish Payload</button>
+                        <button class="sim-btn" onclick="publishSimData()"><i class="fa-solid fa-paper-plane"></i> Simulasikan Publish</button>
 
                         <label id="sim-pins-label" style="display:block; margin-top:15px; margin-bottom:5px; font-weight:bold; font-size:0.9rem;"></label>
                         <ul id="sim-pins-list" style="font-size:0.85rem; padding-left:15px; margin-bottom:15px;"></ul>
@@ -684,7 +680,7 @@ except KeyboardInterrupt:
                     <div class="sim-display">
                         <div class="lcd-screen">
                             <div class="lcd-line" id="lcd-line-1">[MQTT BROKER LOG]: broker.hivemq.com</div>
-                            <div class="lcd-line" id="lcd-line-2">[TOPIC]: untirta/elektro/iot/sensor</div>
+                            <div class="lcd-line" id="lcd-line-2">[TOPIC]: untirta/&lt;kode_kelompok&gt;/iot/sensor</div>
                             <div class="lcd-line" id="lcd-line-3">[PAYLOAD]: {"suhu": 28, "status": "OK"}</div>
                         </div>
                         <div id="sim-detail" style="font-size:0.8rem; color:var(--sensor-text); text-align:center;">Prototipe HTTP REST API & Telemetri MQTT</div>
@@ -727,13 +723,15 @@ except KeyboardInterrupt:
             progressText: "{percent}% Selesai ({count}/5 Checkpoint)",
             targetTitle: "Target Pembelajaran",
             targetDesc: "Mahasiswa mampu mengonfigurasi akses jarak jauh Raspberry Pi (SSH/VNC), membangun Web Service HTTP menggunakan Python Flask, serta mengimplementasikan protokol komunikasi MQTT untuk telemetri IoT secara real-time.",
-            paramsTitle: "Arsitektur Jaringan & Protokol Komunikasi (Network Standards)",
-            paramsDesc: "Perhatikan parameter alamat jaringan dan alokasi port layanan saat membangun jaringan IoT:",
+            paramsTitle: "Parameter Jaringan & Komunikasi",
+            paramsDesc: "Perhatikan persyaratan akses jaringan dan port layanan yang digunakan pada praktikum ini:",
             paramsList: `
-                <li><strong>Remote Access SSH / VNC:</strong> SSH berjalan pada Port 22, VNC Server pada Port 5900.</li>
+                <li><strong>SSH:</strong> akses terminal jarak jauh melalui Port 22.</li>
+                <li><strong>VNC:</strong> akses desktop grafis jarak jauh (umumnya Port 5900). VNC memerlukan Raspberry Pi OS versi Desktop; Raspberry Pi OS Lite tidak menyediakan desktop VNC bawaan.</li>
                 <li><strong>HTTP Server (Flask):</strong> Berjalan pada Port 5000 (Default Host: <code>0.0.0.0</code> agar dapat diakses jaringan lokal).</li>
                 <li><strong>MQTT Protocol:</strong> Port standar MQTT Unencrypted = 1883, MQTT over WebSockets = 8000/8083.</li>
-                <li><strong>PERINGATAN KEAMANAN JARINGAN:</strong> Pastikan Raspberry Pi dan komputer klien berada dalam satu subnet WiFi/LAN yang sama. Jangan gunakan kata sandi default untuk akses remote!</li>
+                <li><strong>Catatan akses:</strong> Untuk VNC, Raspberry Pi harus menjalankan Raspberry Pi OS Desktop dan VNC diaktifkan. Pada pemasangan headless pertama, siapkan akses awal melalui SSH atau Raspberry Pi Connect, lalu aktifkan VNC.</li>
+                <li><strong>Keamanan jaringan:</strong> Pastikan Raspberry Pi dan komputer klien berada pada jaringan Wi-Fi/LAN yang sama. Gunakan kata sandi yang kuat dan jangan membuka layanan ke internet publik.</li>
             `,
             hwTitle: "Persyaratan Perangkat Keras (Hardware)",
             hwList: `
@@ -743,59 +741,63 @@ except KeyboardInterrupt:
             `,
             swTitle: "Persyaratan Perangkat Lunak (Software)",
             swList: `
-                <li><strong>Client SSH / VNC:</strong> PuTTY, OpenSSH, atau RealVNC Viewer</li>
-                <li><strong>Python Web Framework:</strong> <code>python3-flask</code></li>
-                <li><strong>Pustaka & Broker MQTT:</strong> <code>python3-paho-mqtt</code> & <code>mosquitto</code></li>
+                <li><strong>Akses jarak jauh:</strong> aplikasi VNC Viewer yang kompatibel; SSH client (OpenSSH atau PuTTY) bersifat alternatif.</li>
+                <li><strong>Browser:</strong> untuk menguji HTTP REST API dan MQTT Web Client untuk memantau topic.</li>
+                <li><strong>Python:</strong> <code>python3-flask</code> dan <code>python3-paho-mqtt</code>.</li>
+                <li><strong>Broker MQTT:</strong> menggunakan broker publik HiveMQ pada contoh praktikum; instalasi broker lokal Mosquitto tidak diperlukan.</li>
             `,
-            step1Header: `Tahap 1: Akses Jarak Jauh (SSH/VNC) & Konfigurasi IP <span class="badge">Remote Access</span>`,
-            step1I1: "Periksa alamat IP lokal Raspberry Pi pada jaringan terhubung:",
-            step1I2: "Aktifkan layanan SSH dan VNC Server melalui terminal Linux:",
-            step1I3: "Lakukan pengujian koneksi remote SSH dari komputer/laptop klien:",
-            cp1Text: "<b>Checkpoint 1:</b> Alamat IP teridentifikasi dan terminal Raspberry Pi berhasil diakses via SSH secara headless.",
+            step1Header: `Tahap 1: Akses Raspberry Pi melalui VNC atau SSH & Konfigurasi IP <span class="badge">Remote Access</span>`,
+            step1I1: "Periksa alamat IP Raspberry Pi. Jalankan perintah berikut pada terminal Raspberry Pi:",
+            step1I2: "Aktifkan VNC melalui desktop: Preferences > Control Centre > Interfaces > VNC. Alternatifnya, buka sudo raspi-config lalu pilih 3 Interface Options > I3 VNC. Aktifkan I1 SSH pada menu yang sama jika SSH juga akan digunakan:",
+            step1I3: "Pilih salah satu cara akses: hubungkan VNC Viewer ke alamat IP Raspberry Pi untuk membuka desktop; atau gunakan SSH dengan perintah berikut (opsional):",
+            cp1Text: "<b>Checkpoint 1:</b> IP Raspberry Pi diketahui dan komputer klien berhasil terhubung melalui VNC atau SSH.",
 
             step2Header: `Tahap 2: Merekayasa Web Server & HTTP REST API (Flask) <span class="badge">HTTP Service</span>`,
-            step2S1: "1. Install pustaka Python Flask dan dependensi komunikasi jaringan:",
+            step2S1: "1. Instal Flask dan pustaka MQTT. Perintah ini dapat dijalankan pada Terminal di VNC atau melalui SSH:",
             step2S2: "2. Buat skrip Python Web Server Flask baru:",
-            step2S3: "3. Salin kode program REST API server berikut:",
+            step2S3: "3. Salin contoh program REST API berikut. Mode debug dinonaktifkan agar server tidak berjalan dalam mode pengembangan:",
             step2S4: "4. Jalankan aplikasi web server Python di Raspberry Pi:",
             cp2Text: "<b>Checkpoint 2:</b> Endpoint <code>http://&lt;IP_PI&gt;:5000/api/sensor</code> berhasil diakses dari browser komputer klien.",
 
             step3Header: `Tahap 3: Implementasi Publisher Telemetri IoT Berbasis MQTT <span class="badge">MQTT Protocol</span>`,
-            step3Intro: "Pada tahap ini, Raspberry Pi bertindak sebagai Publisher MQTT yang mengirimkan payload JSON data sensor ke Broker MQTT.",
+            step3Intro: "Pada tahap ini, Raspberry Pi bertindak sebagai Publisher MQTT. Data suhu dan status dibuat secara simulasi oleh program (tanpa sensor tambahan), lalu dikirim sebagai payload JSON ke broker publik HiveMQ. Gunakan kode kelompok yang unik pada nama topic agar tidak bercampur dengan kelompok lain. Jangan mengirim data pribadi.",
             step3S1: "1. Buat berkas Python baru bernama mqtt_pub.py:",
-            step3S2: "2. Salin kode program MQTT Publisher berikut:",
+            step3S2: "2. Salin contoh program MQTT Publisher berikut. Ganti teks kelompok01 dengan kode kelompok Anda. Perhatikan topic unik dan loop jaringan MQTT:",
             step3S3: "3. Jalankan skrip Python Publisher telemetri MQTT:",
             cp3Text: "<b>Checkpoint 3:</b> Payload MQTT dikirim secara periodik ke Public Broker HiveMQ tanpa error.",
 
-            step4Header: `Tahap 4: Simulasi Telemetri Telekontrol IoT & Broker Data <span class="badge">Modul Interaktif</span>`,
-            step4Intro: "Simulasikan variasi data sensor pada node Raspberry Pi dan amatilah transmisi pesan MQTT yang dikirim ke Broker:",
+            step4Header: `Tahap 4: Simulasi Payload Telemetri IoT <span class="badge">Modul Interaktif</span>`,
+            step4Intro: "Gunakan simulator pada halaman ini untuk mengubah nilai suhu dan melihat contoh payload JSON. Simulator ini hanya berjalan di browser dan TIDAK mengirim pesan ke broker MQTT sungguhan. Pengiriman MQTT nyata dilakukan dengan program Python pada Tahap 3:",
             simPanelTitle: "Simulasi Telemetri MQTT Node Sensor",
-            simModelText: "Model Sistem: <strong>Node Raspberry Pi -> Paho MQTT Client -> HiveMQ Broker</strong>",
+            simModelText: "Model: <strong>Simulasi browser untuk melihat payload JSON (bukan koneksi MQTT nyata)</strong>",
             simSliderLabel: "Atur Nilai Telemetri Suhu (°C):",
             simPinsLabel: "Parameter Koneksi MQTT:",
             simPinsList: `
                 <li><strong>Broker:</strong> broker.hivemq.com (Port 1883)</li>
-                <li><strong>Topic:</strong> untirta/elektro/iot/sensor</li>
+                <li><strong>Topic contoh:</strong> untirta/kelompok01/iot/sensor (ganti dengan kode kelompok)</li>
             `,
             cp4Text: "<b>Checkpoint 4:</b> Mahasiswa memahami arsitektur publish/subscribe MQTT dan pembentukan payload format JSON.",
 
-            step5Header: `Tahap 5: Tugas Mandiri / Kelompok (Sistem IoT Smart Gateway) <span class="badge">Penugasan</span>`,
-            step5Intro: "Selesaikan tugas praktikum pembuatan Smart IoT Gateway terintegrasi berikut untuk melengkapi evaluasi Pertemuan 12:",
+            step5Header: `Tahap 5: Tugas Kelompok (Smart IoT Gateway Berbasis Simulasi) <span class="badge">Penugasan</span>`,
+            step5Intro: "Kerjakan tugas ini secara berkelompok. Seluruh implementasi menggunakan Raspberry Pi dan simulasi data melalui perangkat lunak; tidak menggunakan sensor, relay, aktuator, atau hardware tambahan.",
             step5List: `
-                <li>Buatlah skrip Python terpadu bernama <code>tugas_iot_gateway.py</code>.</li>
-                <li>Ketentuan Fungsional Program:
+                <li>Buat satu program Python terpadu bernama <code>tugas_iot_gateway.py</code>.</li>
+                <li><strong>Ketentuan program:</strong>
                     <ul>
-                        <li><strong>Publikasi MQTT:</strong> Kirim data telemetri (Suhu, Kelembaban, dan Status Alarm) setiap 3 detik ke topik <code>untirta/nim_anda/iot</code>.</li>
-                        <li><strong>Server HTTP REST API:</strong> Sediakan dua endpoint Flask:
+                        <li><strong>Simulasi data:</strong> Buat data suhu, kelembapan, dan status alarm menggunakan nilai buatan/program (misalnya nilai acak atau nilai yang ditentukan sendiri). Tidak perlu membaca sensor fisik.</li>
+                        <li><strong>Publikasi MQTT:</strong> Kirim payload JSON berisi data simulasi setiap 3 detik ke broker <code>broker.hivemq.com</code> pada port <code>1883</code>. Gunakan topic unik <code>untirta/&lt;kode_kelompok&gt;/iot</code>. Jalankan proses publikasi pada thread terpisah agar Flask tetap dapat melayani permintaan HTTP.</li>
+                        <li><strong>HTTP REST API:</strong> Sediakan endpoint Flask berikut:
                             <ul>
-                                <li><code>/status</code>: Mengembalikan JSON status perangkat dan uptime sistem.</li>
-                                <li><code>/control?relay=on|off</code>: Mengendalikan status pin GPIO (misal GPIO 17) untuk mengaktifkan aktuator/relay dari jarak jauh.</li>
+                                <li><code>/status</code>: Mengembalikan JSON berisi status aplikasi dan uptime sejak program dijalankan.</li>
+                                <li><code>/api/sensor</code>: Mengembalikan JSON berisi data suhu, kelembapan, dan status alarm simulasi terbaru.</li>
                             </ul>
                         </li>
+                        <li><strong>Pengujian:</strong> Buktikan endpoint dapat diakses melalui browser komputer klien dan pesan MQTT dapat diamati menggunakan MQTT client/subscriber. Tidak ada pengendalian GPIO atau relay.</li>
                     </ul>
                 </li>
+                <li><strong>Luaran kelompok:</strong> Berkas program, tangkapan layar hasil pengujian HTTP dan MQTT, serta penjelasan singkat alur kerja program. Setiap anggota harus memahami dan mampu menjelaskan bagian program.</li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Skrip <code>tugas_iot_gateway.py</code> berhasil diuji; pesan MQTT terkirim dan kontrol relay HTTP merespon dengan baik."
+            cp5Text: "<b>Checkpoint 5:</b> Program kelompok berjalan; endpoint <code>/status</code> dan <code>/api/sensor</code> merespons, serta payload MQTT terkirim dengan topic kelompok yang benar."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 12",
@@ -807,13 +809,15 @@ except KeyboardInterrupt:
             progressText: "{percent}% Completed ({count}/5 Checkpoints)",
             targetTitle: "Learning Objective",
             targetDesc: "Students are able to configure Raspberry Pi remote access (SSH/VNC), build HTTP Web Services using Python Flask, and implement MQTT communication protocols for real-time IoT telemetry.",
-            paramsTitle: "Network Architecture & Communication Standards (Network Standards)",
-            paramsDesc: "Observe network IP address parameters and service port allocations when deploying IoT networks:",
+            paramsTitle: "Network & Communication Parameters",
+            paramsDesc: "Review the network access requirements and service ports used in this practical:",
             paramsList: `
-                <li><strong>Remote Access SSH / VNC:</strong> SSH runs on Port 22, VNC Server on Port 5900.</li>
+                <li><strong>SSH:</strong> remote terminal access through Port 22.</li>
+                <li><strong>VNC:</strong> remote graphical desktop access (typically Port 5900). VNC requires Raspberry Pi OS Desktop; Raspberry Pi OS Lite does not include the VNC desktop environment.</li>
                 <li><strong>HTTP Server (Flask):</strong> Runs on Port 5000 (Default Host: <code>0.0.0.0</code> for local network access).</li>
                 <li><strong>MQTT Protocol:</strong> Standard Unencrypted MQTT Port = 1883, MQTT over WebSockets = 8000/8083.</li>
-                <li><strong>NETWORK SECURITY WARNING:</strong> Ensure Raspberry Pi and client PC reside in the same WiFi/LAN subnet. Never use default passwords for remote access!</li>
+                <li><strong>Access note:</strong> VNC requires Raspberry Pi OS Desktop with VNC enabled. For the first headless setup, prepare initial access through SSH or Raspberry Pi Connect, then enable VNC.</li>
+                <li><strong>Network security:</strong> Keep the Raspberry Pi and client computer on the same Wi-Fi/LAN network. Use a strong password and do not expose services directly to the public internet.</li>
             `,
             hwTitle: "Hardware Requirements",
             hwList: `
@@ -823,59 +827,63 @@ except KeyboardInterrupt:
             `,
             swTitle: "Software Requirements",
             swList: `
-                <li><strong>SSH / VNC Client:</strong> PuTTY, OpenSSH, or RealVNC Viewer</li>
-                <li><strong>Python Web Framework:</strong> <code>python3-flask</code></li>
-                <li><strong>MQTT Libraries & Broker:</strong> <code>python3-paho-mqtt</code> & <code>mosquitto</code></li>
+                <li><strong>Remote access:</strong> a compatible VNC Viewer; an SSH client (OpenSSH or PuTTY) is an alternative.</li>
+                <li><strong>Browser:</strong> to test the HTTP REST API and access an MQTT Web Client to monitor the topic.</li>
+                <li><strong>Python:</strong> <code>python3-flask</code> and <code>python3-paho-mqtt</code>.</li>
+                <li><strong>MQTT broker:</strong> the practical uses the public HiveMQ broker; installing a local Mosquitto broker is not required.</li>
             `,
-            step1Header: `Step 1: Remote Access (SSH/VNC) & Network IP Setup <span class="badge">Remote Access</span>`,
-            step1I1: "Check Raspberry Pi local IP address on the connected network:",
-            step1I2: "Enable SSH and VNC Server services via Linux terminal:",
-            step1I3: "Test remote SSH connection from client PC/laptop:",
-            cp1Text: "<b>Checkpoint 1:</b> IP address identified and Raspberry Pi terminal successfully accessed via SSH headless mode.",
+            step1Header: `Step 1: Raspberry Pi Access through VNC or SSH & Network IP Setup <span class="badge">Remote Access</span>`,
+            step1I1: "Check the Raspberry Pi IP address. Run the following command in its terminal:",
+            step1I2: "Enable VNC from the desktop: Preferences > Control Centre > Interfaces > VNC. Alternatively, run sudo raspi-config and select 3 Interface Options > I3 VNC. Enable I1 SSH from the same menu if you also want to use SSH:",
+            step1I3: "Choose one access method: connect VNC Viewer to the Raspberry Pi IP address to open its desktop, or optionally use SSH with the following command:",
+            cp1Text: "<b>Checkpoint 1:</b> The Raspberry Pi IP address is known and the client computer connects successfully through VNC or SSH.",
 
             step2Header: `Step 2: Building Web Server & HTTP REST API (Flask) <span class="badge">HTTP Service</span>`,
-            step2S1: "1. Install Python Flask library and network communication dependencies:",
+            step2S1: "1. Install Flask and the MQTT library. Run this command in the VNC Terminal or through SSH:",
             step2S2: "2. Create a new Flask Web Server Python script:",
-            step2S3: "3. Copy the following REST API server code:",
+            step2S3: "3. Copy the following REST API example. Debug mode is disabled so the server does not run in development mode:",
             step2S4: "4. Run Python web server application on Raspberry Pi:",
             cp2Text: "<b>Checkpoint 2:</b> Endpoint <code>http://&lt;PI_IP&gt;:5000/api/sensor</code> accessed successfully from client browser.",
 
             step3Header: `Step 3: Implementing MQTT-Based IoT Telemetry Publisher <span class="badge">MQTT Protocol</span>`,
-            step3Intro: "In this step, Raspberry Pi acts as an MQTT Publisher sending sensor data JSON payloads to an MQTT Broker.",
+            step3Intro: "In this step, the Raspberry Pi acts as an MQTT Publisher. Temperature and status values are generated by software (no additional sensors), then sent as JSON payloads to the public HiveMQ broker. Use a unique group code in the topic to avoid collisions. Do not send personal data.",
             step3S1: "1. Create a new Python file named mqtt_pub.py:",
-            step3S2: "2. Copy the MQTT Publisher script below:",
+            step3S2: "2. Copy the MQTT Publisher example below. Replace kelompok01 with your group code. Note the unique topic and MQTT network loop:",
             step3S3: "3. Run the MQTT telemetry Publisher Python script:",
             cp3Text: "<b>Checkpoint 3:</b> MQTT payload transmitted periodically to Public HiveMQ Broker without errors.",
 
-            step4Header: `Step 4: Interactive IoT Telemetry Simulation & Data Broker <span class="badge">Interactive Module</span>`,
-            step4Intro: "Simulate sensor data variations on the Raspberry Pi node and observe MQTT message transmissions sent to the Broker:",
+            step4Header: `Step 4: IoT Telemetry Payload Simulation <span class="badge">Interactive Module</span>`,
+            step4Intro: "Use the simulator on this page to change the temperature value and inspect an example JSON payload. This browser simulator does NOT send messages to a real MQTT broker. Actual MQTT transmission is performed by the Python program in Step 3:",
             simPanelTitle: "MQTT Sensor Node Telemetry Simulation",
-            simModelText: "System Model: <strong>Raspberry Pi Node -> Paho MQTT Client -> HiveMQ Broker</strong>",
+            simModelText: "Model: <strong>Browser simulation to inspect JSON payloads (not a live MQTT connection)</strong>",
             simSliderLabel: "Adjust Temperature Telemetry Value (°C):",
             simPinsLabel: "MQTT Connection Parameters:",
             simPinsList: `
                 <li><strong>Broker:</strong> broker.hivemq.com (Port 1883)</li>
-                <li><strong>Topic:</strong> untirta/elektro/iot/sensor</li>
+                <li><strong>Topic contoh:</strong> untirta/kelompok01/iot/sensor (ganti dengan kode kelompok)</li>
             `,
             cp4Text: "<b>Checkpoint 4:</b> Student understands MQTT publish/subscribe architecture and JSON payload formatting.",
 
-            step5Header: `Step 5: Independent / Group Assignment (Smart IoT Gateway System) <span class="badge">Assignment</span>`,
-            step5Intro: "Complete the following integrated Smart IoT Gateway assignment to fulfill the Meeting 12 evaluation:",
+            step5Header: `Step 5: Group Assignment (Simulation-Based Smart IoT Gateway) <span class="badge">Assignment</span>`,
+            step5Intro: "Complete this assignment in groups. All implementation uses the Raspberry Pi and software-generated data; no sensors, relays, actuators, or additional hardware are required.",
             step5List: `
-                <li>Develop a unified Python script named <code>tugas_iot_gateway.py</code>.</li>
-                <li>Functional Program Requirements:
+                <li>Create one integrated Python program named <code>tugas_iot_gateway.py</code>.</li>
+                <li><strong>Program requirements:</strong>
                     <ul>
-                        <li><strong>MQTT Publishing:</strong> Send telemetry data (Temperature, Humidity, Alarm Status) every 3 seconds to topic <code>untirta/your_id/iot</code>.</li>
-                        <li><strong>HTTP REST API Server:</strong> Provide two Flask endpoints:
+                        <li><strong>Data simulation:</strong> Generate temperature, humidity, and alarm-status values in software (for example, random or manually defined values). Do not read physical sensors.</li>
+                        <li><strong>MQTT publishing:</strong> Send a JSON payload containing the simulated data every 3 seconds to <code>broker.hivemq.com</code> on port <code>1883</code>. Use the unique topic <code>untirta/&lt;group_code&gt;/iot</code>. Run the publishing process in a separate thread so Flask can continue serving HTTP requests.</li>
+                        <li><strong>HTTP REST API:</strong> Provide these Flask endpoints:
                             <ul>
-                                <li><code>/status</code>: Returns device status JSON and system uptime.</li>
-                                <li><code>/control?relay=on|off</code>: Controls GPIO pin state (e.g., GPIO 17) to actuate remote relays.</li>
+                                <li><code>/status</code>: Returns JSON containing application status and uptime since the program started.</li>
+                                <li><code>/api/sensor</code>: Returns JSON containing the latest simulated temperature, humidity, and alarm status.</li>
                             </ul>
                         </li>
+                        <li><strong>Testing:</strong> Demonstrate that the endpoints are accessible from a client browser and MQTT messages can be observed using an MQTT client/subscriber. No GPIO or relay control is involved.</li>
                     </ul>
                 </li>
+                <li><strong>Group deliverables:</strong> The program file, screenshots of HTTP and MQTT tests, and a brief explanation of the program workflow. Every member must understand and be able to explain the program.</li>
             `,
-            cp5Text: "<b>Checkpoint 5:</b> Integrated script <code>tugas_iot_gateway.py</code> tested successfully with valid MQTT output and HTTP relay responses."
+            cp5Text: "<b>Checkpoint 5:</b> The group program runs; <code>/status</code> and <code>/api/sensor</code> respond, and MQTT payloads are published to the correct group topic."
         }
     };
 
@@ -1026,7 +1034,7 @@ except KeyboardInterrupt:
         }
 
         document.getElementById('lcd-line-1').innerText = `[MQTT BROKER LOG]: broker.hivemq.com`;
-        document.getElementById('lcd-line-2').innerText = `[TOPIC]: untirta/elektro/iot/sensor`;
+        document.getElementById('lcd-line-2').innerText = `[TOPIC]: untirta/kelompok01/iot/sensor`;
         document.getElementById('lcd-line-3').innerText = `[PAYLOAD]: {"suhu": ${temp}, "status": "${status}"}`;
     }
 

@@ -9,15 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <script>
-        // Redirect jika dibuka langsung di luar iframe (Pencegahan Akses Langsung)
-        if (window.self === window.top) {
-            window.location.href = "index.html?page=physicode";
-        }
-    </script>
-
-    <style>
+<style>
         /* CSS Variables - Light Theme (Default) */
         :root {
             --primary: #2563eb;
@@ -538,7 +530,7 @@
             <ul>
                 <li><strong id="param-host-label">Hostname:</strong> <code>NAMA_MAHASISWA</code> (<span id="param-domain-label">Domain lokal:</span> <code>NAMA_MAHASISWA.local</code>)</li>
                 <li><strong id="param-user-label">Username:</strong> <code>apel</code></li>
-                <li><strong id="param-pass-label">Password:</strong> <code>123456</code></li>
+                <li><strong id="param-pass-label">Password:</strong> <code>password yang Anda buat di Imager</code></li>
                 <li><strong id="param-ssh-label">Perintah SSH Terminal:</strong> <code>ssh apel@NAMA_MAHASISWA.local</code></li>
             </ul>
         </div>
@@ -550,7 +542,7 @@
                 <ul id="hw-list">
                     <li><strong>Raspberry Pi Zero 2 W / Pi 4 / Pi 5</strong> (Board utama)</li>
                     <li><strong>MicroSD Card</strong> (Minimal 16 GB, Class 10) + Card Reader</li>
-                    <li><strong>Kabel Micro-USB / USB-C</strong> (Untuk daya/koneksi daya)</li>
+                    <li><strong>Catu daya sesuai model Raspberry Pi (Micro-USB untuk Zero 2 W; USB-C untuk Pi 4/5)</li>
                     <li><strong>Laptop Mahasiswa</strong> (Memiliki koneksi Wi-Fi/Hotspot)</li>
                     <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (SSID & Password sama)</li>
                 </ul>
@@ -576,13 +568,13 @@
                 <ol id="step1-list">
                     <li>Masukkan Kartu MicroSD ke Card Reader dan hubungkan ke laptop.</li>
                     <li>Buka aplikasi <strong>Raspberry Pi Imager</strong>.</li>
-                    <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
+                    <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS with Desktop (32-bit / 64-bit)</strong>.</li>
                     <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
-                    <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog kustomisasi OS (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
+                    <li>Klik tombol <strong>NEXT</strong>. Saat wizard kustomisasi OS muncul, atur hostname, username/password, Wi-Fi, dan akses jarak jauh. Nama tab/menu dapat berbeda menurut versi Raspberry Pi Imager.</li>
                     <li><strong>PENTING (Verifikasi Mandiri):</strong> Atur parameter kustomisasi sebagai berikut:
                         <ul>
-                            <li><strong>Hostname:</strong> Masukkan <strong>NAMA_MAHASISWA / NIM Anda</strong> (Contoh: <code>budi-pi</code> atau <code>nim3331001</code>). <i>Jangan gunakan nama default untuk membuktikan Anda flashing sendiri dari awal!</i></li>
-                            <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
+                            <li><strong>Hostname:</strong> Masukkan hostname unik berbasis nama/NIM, misalnya <code>nauval-pi</code> atau <code>nim3331001</code>. Gunakan hanya huruf a-z, angka, dan tanda hubung (-); tanpa spasi atau simbol. Hostname tidak boleh hanya berupa nama lengkap dengan spasi.</li>
+                            <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>buat password unik dan kuat</code></li>
                             <li><strong>Configure wireless LAN:</strong> Masukkan SSID & Password Wi-Fi/Hotspot yang sedang aktif di laptop Anda.</li>
                             <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
                             <li>Masuk ke tab <strong>SERVICES</strong> &rarr; Centang <strong>Enable SSH</strong> &rarr; Pilih <strong>Use password authentication</strong>.</li>
@@ -606,11 +598,11 @@
                 <p style="margin-bottom: 8px;"><strong id="step2-arch-title">Arsitektur Koneksi Headless:</strong></p>
                 <ul id="step2-list">
                     <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang telah di-flash ke slot Raspberry Pi.</li>
-                    <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke laptop/adaptor daya 5V.</li>
+                    <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke catu daya 5V yang sesuai dengan kebutuhan model Raspberry Pi. Hindari mengandalkan port USB laptop karena arusnya mungkin tidak mencukupi.</li>
                     <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Pi akan otomatis terhubung saat selesai booting.</li>
                 </ul>
                 <div class="checkpoint">
-                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Checkpoint 2:</b> LED hijau pada Raspberry Pi berkedip/menyala konstan menandakan booting sistem berhasil.</span></label>
+                    <label><input type="checkbox" onchange="updateProgress()"> <span id="cp2-text"><b>Checkpoint 2:</b> Tunggu proses boot selesai, lalu verifikasi perangkat dapat dijangkau melalui jaringan (misalnya dengan mencoba koneksi SSH). Pola LED berbeda menurut model.</span></label>
                 </div>
             </div>
         </div>
@@ -628,8 +620,8 @@
                 <pre><code>ssh apel@NAMA_MAHASISWA.local</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                 
                 <p style="font-size: 0.9rem;"><span id="step3-s2">2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.</span></p>
-                <p style="font-size: 0.9rem;"><span id="step3-s3">3. Masukkan password saat diminta:</span></p>
-                <pre><code>123456</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
+                <p style="font-size: 0.9rem;"><span id="step3-s3">3. Masukkan password unik yang Anda buat pada Raspberry Pi Imager saat diminta:</span></p>
+                <pre><code>PASSWORD_ANDA</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;"><i id="step3-note">Note: Karakter password tidak akan tampil di layar saat diketik (fitur keamanan Linux).</i></p>
 
                 <p style="font-size: 0.9rem;"><span id="step3-s4">4. Jika mDNS gagal, cari IP Address Raspberry Pi via scanner jaringan/Hotspot smartphone, lalu jalankan:</span></p>
@@ -655,17 +647,17 @@
 
                 <p style="font-size: 0.9rem;"><strong id="step4-s2">2. Aktifkan VNC Server:</strong></p>
                 <ul>
-                    <li>Pilih menu <strong>3 Interface Options</strong> &rarr; Tekan Enter.</li>
-                    <li>Pilih opsi <strong>I2 VNC</strong> (atau opsi <strong>VNC</strong>).</li>
+                    <li>Pilih <strong>Interface Options</strong> (nomor menu dapat berbeda menurut versi Raspberry Pi OS) &rarr; Tekan Enter.</li>
+                    <li>Pilih opsi <strong>VNC</strong>. Pada Raspberry Pi OS versi baru, server yang digunakan adalah <code>wayvnc</code>; ikuti opsi VNC yang tersedia pada versi OS Anda.</li>
                     <li>Ketika diminta mengonfirmasi *"Would you like the VNC server to be enabled?"*, pilih <strong>&lt;Yes&gt;</strong>.</li>
                     <li>Tekan Enter pada konfirmasi *"The VNC server is enabled"*.</li>
                 </ul>
 
                 <p style="font-size: 0.9rem; margin-top: 10px;"><strong id="step4-s3">3. Konfigurasi Booting ke Desktop Mode:</strong></p>
                 <ul>
-                    <li>Pilih menu <strong>1 System Options</strong> &rarr; Tekan Enter.</li>
-                    <li>Pilih opsi <strong>S5 Boot / Auto Login</strong>.</li>
-                    <li>Pilih opsi <strong>B4 Desktop Auto Login</strong> (atau <strong>B3 Desktop</strong>) agar Desktop GUI dimuat otomatis saat sistem dinyalakan.</li>
+                    <li>Jika diperlukan, pilih <strong>System Options</strong> &rarr; Tekan Enter.</li>
+                    <li>Pilih opsi <strong>Boot / Auto Login</strong> (nama/nomor menu dapat berbeda menurut versi).</li>
+                    <li>Pilih opsi yang memulai <strong>Desktop GUI</strong>. Untuk praktikum ini gunakan Raspberry Pi OS with Desktop, bukan versi Lite.</li>
                     <li>Gunakan tombol panah kanan untuk memilih <strong>&lt;Finish&gt;</strong>.</li>
                     <li>Ketika muncul dialog *"Would you like to reboot now?"*, pilih <strong>&lt;Yes&gt;</strong>. Sesi SSH akan terputus otomatis karena Pi melakukan restart.</li>
                 </ul>
@@ -693,7 +685,7 @@
                     <li>Masukkan kredensial login saat diminta:
                         <ul>
                             <li><strong>Username:</strong> <code>apel</code></li>
-                            <li><strong>Password:</strong> <code>123456</code></li>
+                            <li><strong>Password:</strong> <code>your Imager password</code></li>
                         </ul>
                     </li>
                     <li>Klik <strong>OK</strong>. Tampilan layar Desktop Raspberry Pi OS akan muncul di jendela laptop Anda.</li>
@@ -718,11 +710,11 @@
             </div>
             <div class="step-content">
                 <p id="step6-t1-title" style="font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 5px;">1. Pemecahan Masalah: Layar Abu-abu (Gray Screen) / Blank pada VNC</p>
-                <p id="step6-t1-desc" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px;">Jika koneksi VNC berhasil tetapi hanya menampilkan layar abu-abu tanpa ikon desktop, lakukan pembaruan paket sistem via SSH terminal:</p>
+                <p id="step6-t1-desc" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px;">Jika koneksi VNC berhasil tetapi hanya menampilkan layar abu-abu/blank, periksa dahulu: Raspberry Pi memakai OS with Desktop (bukan Lite), laptop dan Pi berada pada jaringan yang sama, VNC Server aktif, serta desktop sudah berjalan. Jika masih bermasalah, perbarui sistem melalui SSH lalu reboot:</p>
                 <pre><code>sudo apt update
 sudo apt upgrade -y
 sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button></pre>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;"><i id="step6-t1-note">Proses pembaruan ini akan mengunduh repositori GUI terbaru dan memperbaiki paket driver tampilan yang hilang.</i></p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;"><i id="step6-t1-note">Pembaruan dapat memperbaiki masalah paket, tetapi tidak menjamin semua masalah VNC/layar blank selesai. Catat pesan error jika masalah tetap terjadi.</i></p>
 
                 <p id="step6-t2-title" style="font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 5px;">2. Prosedur Matikan (Shutdown) Raspberry Pi yang Benar</p>
                 <p id="step6-t2-desc" style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 8px;">Jangan mencabut kabel daya secara langsung saat sistem beroperasi karena dapat merusak berkas pada kartu MicroSD. Gunakan salah satu metode berikut:</p>
@@ -776,29 +768,31 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         <!-- Tahap 8 (TUGAS MANDIRI - Screenshot SSH Imager Hostname Nama Sendiri) -->
         <div class="step-section" id="section-8">
             <div class="step-header" onclick="toggleAccordion('section-8')">
-                <span id="step8-header">Tahap 8: Tugas Mandiri — Bukti SSH Hostname Nama Sendiri Dari Imager <span class="badge">Tugas Mandiri</span></span>
+                <span id="step8-header">Tahap 8: Tugas Mandiri — Bukti SSH dengan Hostname Pribadi <span class="badge">Tugas Mandiri</span></span>
                 <span class="toggle-icon">▼</span>
             </div>
             <div class="step-content">
-                <p id="step8-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 12px;">Untuk memastikan otentisitas pengerjaan mandiri, setiap mahasiswa diwajibkan mengonfigurasi Hostname menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong> langsung dari aplikasi <strong>Raspberry Pi Imager</strong> saat proses <i>flashing</i>. Penggunaan nama host buatan orang lain atau penggantian manual setelah boot tidak diperkenankan.</p>
+                <p id="step8-intro" style="font-size: 0.9rem; color: var(--text-main); margin-bottom: 12px;">Setiap mahasiswa mengatur hostname unik berbasis nama/NIM melalui kustomisasi <strong>Raspberry Pi Imager</strong>. Screenshot SSH di bawah membuktikan hostname yang aktif dan koneksi berhasil, tetapi screenshot terminal saja tidak dapat membuktikan kapan atau melalui cara apa hostname tersebut dikonfigurasi.</p>
 
                 <p style="font-size: 0.9rem;"><strong id="step8-instructions-title">Instruksi Tugas Mandiri & Pembuktian:</strong></p>
                 <ol id="step8-list">
                     <li>Pastikan Anda telah mengisi <strong>Hostname = NAMA_MAHASISWA / NIM</strong> di Raspberry Pi Imager saat flashing MicroSD (Tahap 1).</li>
                     <li>Nyalakan Raspberry Pi dan buka Terminal/PowerShell di laptop Anda.</li>
-                    <li>Lakukan login SSH menggunakan hostname nama sendiri:
+                    <li>Lakukan login SSH menggunakan hostname pribadi:
                         <pre><code>ssh apel@NAMA_MAHASISWA.local</code></pre>
+                        Setelah berhasil masuk, jalankan <code>hostname && whoami</code> untuk menampilkan hostname dan username aktif.
                     </li>
                     <li>Ambil tangkapan layar (screenshot) jendela Terminal yang secara jelas menampilkan prompt login pertama Anda (contoh: <code>apel@budi-prasetyo:~ $</code>).</li>
-                    <li>Unggah berkas screenshot tersebut pada area di bawah ini sebagai bukti validasi pengerjaan mandiri:</li>
+                    <li>Pilih screenshot pada area di bawah ini untuk melihat pratinjau. Setelah itu, unggah berkas aslinya ke LMS sesuai instruksi dosen:</li>
                 </ol>
 
                 <!-- Area Unggah / Preview Gambar Screenshot -->
                 <div class="upload-area" onclick="document.getElementById('ssh-screenshot-input').click()">
                     <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2rem; color: var(--primary); margin-bottom: 8px;"></i>
-                    <p id="upload-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main);">Klik untuk Unggah Screenshot SSH Hostname Nama Sendiri</p>
+                    <p id="upload-title" style="font-size: 0.9rem; font-weight: 700; color: var(--text-main);">Pilih Screenshot SSH untuk Pratinjau (unggah berkas asli ke LMS)</p>
                     <p id="upload-sub" style="font-size: 0.8rem; color: var(--text-muted);">Format yang didukung: PNG, JPG, JPEG, WEBP</p>
-                    <input type="file" id="ssh-screenshot-input" accept="image/*" style="display: none;" onchange="previewScreenshot(event)">
+                    <p style="font-size:0.8rem;color:var(--warning-color);margin-top:6px;">Pratinjau ini hanya berjalan di browser; file tidak terkirim atau tersimpan di server/LMS.</p>
+                    <input type="file" id="ssh-screenshot-input" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" style="display: none;" onchange="previewScreenshot(event)">
                 </div>
 
                 <div class="preview-img-container" id="preview-container">
@@ -807,7 +801,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 </div>
 
                 <div class="checkpoint">
-                    <label><input type="checkbox" id="cp7-checkbox" onchange="updateProgress()"> <span id="cp7-text"><b>Checkpoint 7:</b> Bukti screenshot SSH dengan hostname nama sendiri dari Raspberry Pi Imager berhasil diunggah.</span></label>
+                    <label><input type="checkbox" id="cp7-checkbox" onchange="updateProgress()"> <span id="cp7-text"><b>Checkpoint 7:</b> Screenshot SSH yang menampilkan username dan hostname pribadi berhasil diunggah.</span></label>
                 </div>
             </div>
         </div>
@@ -840,7 +834,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             hwList: `
                 <li><strong>Raspberry Pi Zero 2 W / Pi 4 / Pi 5</strong> (Board utama)</li>
                 <li><strong>MicroSD Card</strong> (Minimal 16 GB, Class 10) + Card Reader</li>
-                <li><strong>Kabel Micro-USB / USB-C</strong> (Untuk daya/koneksi daya)</li>
+                <li><strong>Catu daya sesuai model Raspberry Pi (Micro-USB untuk Zero 2 W; USB-C untuk Pi 4/5)</li>
                 <li><strong>Laptop Mahasiswa</strong> (Memiliki koneksi Wi-Fi/Hotspot)</li>
                 <li><strong>Wi-Fi Router / Mobile Hotspot</strong> (SSID & Password sama)</li>
             `,
@@ -855,13 +849,13 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step1List: `
                 <li>Masukkan Kartu MicroSD ke Card Reader dan hubungkan ke laptop.</li>
                 <li>Buka aplikasi <strong>Raspberry Pi Imager</strong>.</li>
-                <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
+                <li>Klik <strong>CHOOSE OS</strong> &rarr; Pilih <strong>Raspberry Pi OS with Desktop (32-bit / 64-bit)</strong>.</li>
                 <li>Klik <strong>CHOOSE STORAGE</strong> &rarr; Pilih kartu MicroSD yang terdeteksi.</li>
-                <li>Klik tombol <strong>NEXT</strong>. Ketika muncul dialog kustomisasi OS (*Use OS customization settings*), pilih <strong>EDIT SETTINGS</strong>.</li>
+                <li>Klik tombol <strong>NEXT</strong>. Saat wizard kustomisasi OS muncul, atur hostname, username/password, Wi-Fi, dan akses jarak jauh. Nama tab/menu dapat berbeda menurut versi Raspberry Pi Imager.</li>
                 <li><strong>PENTING (Verifikasi Mandiri):</strong> Atur parameter kustomisasi sebagai berikut:
                     <ul>
-                        <li><strong>Hostname:</strong> Masukkan <strong>NAMA_MAHASISWA / NIM Anda</strong> (Contoh: <code>budi-pi</code> atau <code>nim3331001</code>). <i>Jangan gunakan nama default untuk membuktikan Anda flashing sendiri dari awal!</i></li>
-                        <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
+                        <li><strong>Hostname:</strong> Masukkan hostname unik berbasis nama/NIM, misalnya <code>nauval-pi</code> atau <code>nim3331001</code>. Gunakan hanya huruf a-z, angka, dan tanda hubung (-); tanpa spasi atau simbol. Hostname tidak boleh hanya berupa nama lengkap dengan spasi.</li>
+                        <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>create a unique strong password</code></li>
                         <li><strong>Configure wireless LAN:</strong> Masukkan SSID & Password Wi-Fi/Hotspot yang sedang aktif di laptop Anda.</li>
                         <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
                         <li>Masuk ke tab <strong>SERVICES</strong> &rarr; Centang <strong>Enable SSH</strong> &rarr; Pilih <strong>Use password authentication</strong>.</li>
@@ -874,15 +868,15 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step2ArchTitle: "Arsitektur Koneksi Headless:",
             step2List: `
                 <li><strong>MicroSD:</strong> Masukkan kartu MicroSD yang telah di-flash ke slot Raspberry Pi.</li>
-                <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke laptop/adaptor daya 5V.</li>
+                <li><strong>Sumber Daya:</strong> Tancapkan kabel daya ke port berlabel <code>PWR IN</code> (atau USB Power pada Pi 4/5), hubungkan ke catu daya 5V yang sesuai dengan kebutuhan model Raspberry Pi. Hindari mengandalkan port USB laptop karena arusnya mungkin tidak mencukupi.</li>
                 <li><strong>Koneksi Jaringan:</strong> Pastikan Raspberry Pi dan Laptop terhubung pada <strong>akses poin/Wi-Fi/Hotspot yang sama</strong>. Pi akan otomatis terhubung saat selesai booting.</li>
             `,
-            cp2Text: "<b>Checkpoint 2:</b> LED hijau pada Raspberry Pi berkedip/menyala konstan menandakan booting sistem berhasil.",
+            cp2Text: "<b>Checkpoint 2:</b> Tunggu proses boot selesai, lalu verifikasi perangkat dapat dijangkau melalui jaringan (misalnya dengan mencoba koneksi SSH). Pola LED berbeda menurut model.",
             step3Header: `Tahap 3: Remote Login via SSH Hostname Nama Sendiri <span class="badge">Terminal & SSH</span>`,
             step3Intro: "Buka <strong>Terminal</strong> (macOS/Linux) atau <strong>PowerShell / Command Prompt</strong> (Windows) di laptop Anda.",
             step3S1: "1. Jalankan perintah SSH menggunakan Hostname Nama Sendiri yang dikonfigurasi pada Pi Imager:",
             step3S2: "2. Jika muncul peringatan keamanan (Fingerprint confirmation), ketik <code>yes</code> lalu tekan Enter.",
-            step3S3: "3. Masukkan password saat diminta:",
+            step3S3: "3. Masukkan password unik yang Anda buat pada Raspberry Pi Imager saat diminta:",
             step3Note: "Note: Karakter password tidak akan tampil di layar saat diketik (fitur keamanan Linux).",
             step3S4: "4. Jika mDNS gagal, cari IP Address Raspberry Pi via scanner jaringan/Hotspot smartphone, lalu jalankan:",
             cp3Text: "<b>Checkpoint 3:</b> Tampilan prompt terminal berhasil berubah menjadi <code>apel@NAMA_MAHASISWA:~ $</code>.",
@@ -902,7 +896,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 <li>Masukkan kredensial login saat diminta:
                     <ul>
                         <li><strong>Username:</strong> <code>apel</code></li>
-                        <li><strong>Password:</strong> <code>123456</code></li>
+                        <li><strong>Password:</strong> <code>PASSWORD_ANDA</code></li>
                     </ul>
                 </li>
                 <li>Klik <strong>OK</strong>. Tampilan layar Desktop Raspberry Pi OS akan muncul di jendela laptop Anda.</li>
@@ -911,8 +905,8 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             cp5Text: "<b>Checkpoint 5:</b> Mahasiswa berhasil masuk ke tampilan GUI Desktop Raspberry Pi melalui TigerVNC.",
             step6Header: `Tahap 6: Troubleshooting VNC & Prosedur Shutdown yang Benar <span class="badge">Maintenance & Fix</span>`,
             step6T1Title: "1. Pemecahan Masalah: Layar Abu-abu (Gray Screen) / Blank pada VNC",
-            step6T1Desc: "Jika koneksi VNC berhasil tetapi hanya menampilkan layar abu-abu tanpa ikon desktop, lakukan pembaruan paket sistem via SSH terminal:",
-            step6T1Note: "Proses pembaruan ini akan mengunduh repositori GUI terbaru dan memperbaiki paket driver tampilan yang hilang.",
+            step6T1Desc: "Jika koneksi VNC berhasil tetapi hanya menampilkan layar abu-abu/blank, periksa dahulu: Raspberry Pi memakai OS with Desktop (bukan Lite), laptop dan Pi berada pada jaringan yang sama, VNC Server aktif, serta desktop sudah berjalan. Jika masih bermasalah, perbarui sistem melalui SSH lalu reboot:",
+            step6T1Note: "Pembaruan dapat memperbaiki masalah paket, tetapi tidak menjamin semua masalah VNC/layar blank selesai. Catat pesan error jika masalah tetap terjadi.",
             step6T2Title: "2. Prosedur Matikan (Shutdown) Raspberry Pi yang Benar",
             step6T2Desc: "Jangan mencabut kabel daya secara langsung saat sistem beroperasi karena dapat merusak berkas pada kartu MicroSD. Gunakan salah satu metode berikut:",
             cp6Text: "<b>Checkpoint 6:</b> Mahasiswa memahami langkah pemecahan masalah VNC dan mematikan Raspberry Pi secara aman.",
@@ -920,8 +914,8 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step7Intro: "Klik salah satu direktori pada skema pohon di sebelah kiri untuk mempelajari fungsi dan direktori Linux secara detail:",
             dirTypeLabel: "Tipe Isinya:",
             dirCmdLabel: "Contoh Perintah Terminal:",
-            step8Header: `Tahap 8: Tugas Mandiri — Bukti SSH Hostname Nama Sendiri Dari Imager <span class="badge">Tugas Mandiri</span>`,
-            step8Intro: "Untuk memastikan otentisitas pengerjaan mandiri, setiap mahasiswa diwajibkan mengonfigurasi Hostname menggunakan <strong>Nama Mahasiswa / NIM Sendiri</strong> langsung dari aplikasi <strong>Raspberry Pi Imager</strong> saat proses <i>flashing</i>. Penggunaan nama host buatan orang lain atau penggantian manual setelah boot tidak diperkenankan.",
+            step8Header: `Tahap 8: Tugas Mandiri — Bukti SSH dengan Hostname Pribadi <span class="badge">Tugas Mandiri</span>`,
+            step8Intro: "Setiap mahasiswa mengatur hostname unik berbasis nama/NIM melalui kustomisasi <strong>Raspberry Pi Imager</strong>. Screenshot SSH di bawah membuktikan hostname yang aktif dan koneksi berhasil, tetapi screenshot terminal saja tidak dapat membuktikan kapan atau melalui cara apa hostname tersebut dikonfigurasi.",
             step8InstructionsTitle: "Instruksi Tugas Mandiri & Pembuktian:",
             step8List: `
                 <li>Pastikan Anda telah mengisi <strong>Hostname = NAMA_MAHASISWA / NIM</strong> di Raspberry Pi Imager saat flashing MicroSD (Tahap 1).</li>
@@ -930,12 +924,12 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                     <pre><code>ssh apel@NAMA_MAHASISWA.local</code></pre>
                 </li>
                 <li>Ambil tangkapan layar (screenshot) jendela Terminal yang secara jelas menampilkan prompt login pertama Anda (contoh: <code>apel@budi-prasetyo:~ $</code>).</li>
-                <li>Unggah berkas screenshot tersebut pada area di bawah ini sebagai bukti validasi pengerjaan mandiri:</li>
+                <li>Pilih screenshot pada area di bawah ini untuk melihat pratinjau. Setelah itu, unggah berkas aslinya ke LMS sesuai instruksi dosen:</li>
             `,
-            uploadTitle: "Klik untuk Unggah Screenshot SSH Hostname Nama Sendiri",
+            uploadTitle: "Pilih Screenshot SSH untuk Pratinjau (unggah berkas asli ke LMS)",
             uploadSub: "Format yang didukung: PNG, JPG, JPEG, WEBP",
             previewText: "Bukti Screenshot Berhasil Dimuat:",
-            cp7Text: "<b>Checkpoint 7:</b> Bukti screenshot SSH dengan hostname nama sendiri dari Raspberry Pi Imager berhasil diunggah."
+            cp7Text: "<b>Checkpoint 7:</b> Screenshot SSH yang menampilkan username dan hostname pribadi berhasil diunggah."
         },
         en: {
             courseTag: "Course: Embedded Systems — Meeting 9",
@@ -974,13 +968,13 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step1List: `
                 <li>Insert MicroSD Card into Card Reader and connect to laptop.</li>
                 <li>Open <strong>Raspberry Pi Imager</strong> application.</li>
-                <li>Click <strong>CHOOSE OS</strong> &rarr; Select <strong>Raspberry Pi OS (32-bit / 64-bit)</strong>.</li>
+                <li>Click <strong>CHOOSE OS</strong> &rarr; Select <strong>Raspberry Pi OS with Desktop (32-bit / 64-bit)</strong>.</li>
                 <li>Click <strong>CHOOSE STORAGE</strong> &rarr; Select detected MicroSD card.</li>
-                <li>Click <strong>NEXT</strong> button. When prompted (*Use OS customization settings*), select <strong>EDIT SETTINGS</strong>.</li>
+                <li>Click <strong>NEXT</strong> button. When the OS customisation wizard appears, configure the hostname, user, Wi-Fi, and remote access settings. Labels may vary by Imager version.</li>
                 <li><strong>IMPORTANT (Independent Verification):</strong> Set customization parameters as follows:
                     <ul>
-                        <li><strong>Hostname:</strong> Enter <strong>YOUR_NAME / STUDENT_ID</strong> (e.g. <code>budi-pi</code> or <code>id3331001</code>). <i>Do not use default hostnames to prove you flashed it yourself from scratch!</i></li>
-                        <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>123456</code></li>
+                        <li><strong>Hostname:</strong> a unique hostname based on your name/student ID, e.g. <code>nauval-pi</code> or <code>id3331001</code>. Use only a-z, digits, and hyphens (-); no spaces or other symbols.</li>
+                        <li><strong>Set username and password:</strong> Username = <code>apel</code> | Password = <code>create a unique strong password</code></li>
                         <li><strong>Configure wireless LAN:</strong> Enter active SSID & Password currently used by laptop.</li>
                         <li><strong>Wireless LAN country:</strong> <code>ID</code> (Indonesia)</li>
                         <li>Go to <strong>SERVICES</strong> tab &rarr; Check <strong>Enable SSH</strong> &rarr; Choose <strong>Use password authentication</strong>.</li>
@@ -993,10 +987,10 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step2ArchTitle: "Headless Connection Architecture:",
             step2List: `
                 <li><strong>MicroSD:</strong> Insert flashed MicroSD card into Raspberry Pi slot.</li>
-                <li><strong>Power Source:</strong> Plug power cable into port labeled <code>PWR IN</code> (or USB Power on Pi 4/5), connect to laptop/5V adapter.</li>
+                <li><strong>Power Source:</strong> Plug power cable into port labeled <code>PWR IN</code> (or USB Power on Pi 4/5), connect to a suitable 5V power supply for the Raspberry Pi model. Do not rely on a laptop USB port, which may not provide sufficient current.</li>
                 <li><strong>Network Connection:</strong> Ensure both Raspberry Pi and Laptop are connected to the <strong>same Wi-Fi/Hotspot access point</strong>. Pi connects automatically on boot.</li>
             `,
-            cp2Text: "<b>Checkpoint 2:</b> Green LED on Raspberry Pi blinks/stays solid indicating successful boot.",
+            cp2Text: "<b>Checkpoint 2:</b> Wait for boot to finish, then verify the device is reachable on the network (for example, by attempting an SSH connection). LED behavior varies by model.",
             step3Header: `Step 3: Remote Login via SSH with Own Hostname <span class="badge">Terminal & SSH</span>`,
             step3Intro: "Open <strong>Terminal</strong> (macOS/Linux) or <strong>PowerShell / Command Prompt</strong> (Windows) on laptop.",
             step3S1: "1. Run SSH command using your own Hostname configured in Pi Imager:",
@@ -1021,7 +1015,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 <li>Enter login credentials when prompted:
                     <ul>
                         <li><strong>Username:</strong> <code>apel</code></li>
-                        <li><strong>Password:</strong> <code>123456</code></li>
+                        <li><strong>Password:</strong> <code>PASSWORD_ANDA</code></li>
                     </ul>
                 </li>
                 <li>Click <strong>OK</strong>. Raspberry Pi OS Desktop window will appear on your laptop screen.</li>
@@ -1039,22 +1033,23 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             step7Intro: "Click any directory in the tree diagram on the left to learn about Linux directory functions in detail:",
             dirTypeLabel: "Content Type:",
             dirCmdLabel: "Example Terminal Command:",
-            step8Header: `Step 8: Independent Task — Screenshot Proof of SSH Hostname from Imager <span class="badge">Independent Task</span>`,
-            step8Intro: "To ensure independent work authenticity, each student is required to configure Hostname using <strong>Student's Own Name / Student ID (NIM)</strong> directly inside <strong>Raspberry Pi Imager</strong> during initial flashing. Borrowing another student's Pi or manually renaming after boot is not allowed.",
+            step8Header: `Step 8: Independent Task — SSH Screenshot with Personal Hostname <span class="badge">Independent Task</span>`,
+            step8Intro: "Each student should configure a unique hostname based on their name/student ID through <strong>Raspberry Pi Imager</strong> customisation. The SSH screenshot below demonstrates the active hostname and a successful connection, but a terminal screenshot alone cannot prove when or how the hostname was configured.",
             step8InstructionsTitle: "Independent Task Instructions & Proof:",
             step8List: `
                 <li>Ensure you set <strong>Hostname = YOUR_NAME / STUDENT_ID</strong> in Raspberry Pi Imager during MicroSD flashing (Step 1).</li>
                 <li>Power on Raspberry Pi and open Terminal/PowerShell on laptop.</li>
-                <li>Connect via SSH using your own hostname:
+                <li>Connect via SSH using your personal hostname:
                     <pre><code>ssh apel@YOUR_NAME.local</code></pre>
+                    After login, run <code>hostname && whoami</code> to display the active hostname and username.
                 </li>
                 <li>Take a screenshot of Terminal window showing your first login prompt (e.g., <code>apel@budi-prasetyo:~ $</code>).</li>
-                <li>Upload the screenshot file below as proof of independent work:</li>
+                <li>Select the screenshot below to preview it. Then upload the original file to the LMS as instructed by your lecturer:</li>
             `,
-            uploadTitle: "Click to Upload SSH Screenshot with Own Hostname",
-            uploadSub: "Supported formats: PNG, JPG, JPEG, WEBP",
+            uploadTitle: "Select SSH Screenshot to Preview (upload the original file to the LMS)",
+            uploadSub: "Supported formats: PNG, JPG, JPEG, WEBP. Preview only; upload the original file to the LMS.",
             previewText: "Screenshot Proof Successfully Loaded:",
-            cp7Text: "<b>Checkpoint 7:</b> Screenshot proof of SSH connection with own hostname from Raspberry Pi Imager uploaded."
+            cp7Text: "<b>Checkpoint 7:</b> Screenshot preview selected. Check this after uploading the original file to the LMS."
         }
     };
 
@@ -1071,8 +1066,8 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         'bin': {
             title: '/bin (Essential User Binaries)',
             desc: {
-                id: 'Berisi file eksekusi (binary/command) dasar yang dibutuhkan oleh semua user (misal: ls, cd, cp, cat, mkdir).',
-                en: 'Contains essential binary commands required for all users (e.g., ls, cd, cp, cat, mkdir).'
+                id: 'Berisi file eksekusi (binary/command) dasar yang dibutuhkan oleh semua user (misal: ls, cp, cat, mkdir (perintah <code>cd</code> merupakan shell builtin)).',
+                en: 'Contains essential binary commands required for all users (e.g., ls, cp, cat, mkdir (<code>cd</code> is a shell builtin)).'
             },
             type: { id: 'Eksekusi Sistem', en: 'System Executables' },
             cmd: 'ls -l /bin'
@@ -1093,13 +1088,13 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
                 en: 'Contains files needed for system booting, such as Linux kernel (vmlinuz), DTB files, and Raspberry Pi config.txt.'
             },
             type: { id: 'Konfigurasi Boot', en: 'Boot Configuration' },
-            cmd: 'ls -l /boot'
+            cmd: 'ls -l /boot/firmware'
         },
         'dev': {
             title: '/dev (Device Files)',
             desc: {
-                id: 'Menyimpan representasi file dari perangkat keras (hardware) seperti port serial, drive storage, GPIO, dan sensor.',
-                en: 'Stores file representations of hardware devices such as serial ports, storage drives, GPIO, and sensors.'
+                id: 'Menyimpan representasi file dari perangkat keras (hardware) seperti perangkat serial, disk, dan antarmuka GPIO (misalnya <code>/dev/gpiochip*</code>).',
+                en: 'Stores file representations of hardware devices such as serial devices, disks, and GPIO interfaces (for example, <code>/dev/gpiochip*</code>).'
             },
             type: { id: 'Abstraksi Hardware', en: 'Hardware Abstraction' },
             cmd: 'ls -l /dev'
@@ -1107,8 +1102,8 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         'etc': {
             title: '/etc (System Configuration)',
             desc: {
-                id: 'Berisi seluruh berkas konfigurasi administratif dan sistem (misal: konfigurasi Wi-Fi wpa_supplicant, network settings, user account).',
-                en: 'Contains system and administrative configuration files (e.g., Wi-Fi wpa_supplicant config, network settings, user account).'
+                id: 'Berisi seluruh berkas konfigurasi administratif dan sistem (misal: konfigurasi sistem, layanan, dan jaringan (lokasi konfigurasi Wi-Fi bergantung pada versi OS)).',
+                en: 'Contains system and administrative configuration files (e.g., system, service, and network configuration (Wi-Fi configuration location depends on OS version)).'
             },
             type: { id: 'Berkas Konfigurasi', en: 'Configuration Files' },
             cmd: 'cat /etc/os-release'
@@ -1125,8 +1120,8 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         'user': {
             title: '/home/apel (User Workspace)',
             desc: {
-                id: 'Direktori kerja utama milik user "apel". Tempat terbaik untuk menyimpan project, skrip Python, dan berkas praktikum.',
-                en: 'Main workspace directory for user "apel". Best place to save projects, Python scripts, and lab files.'
+                id: 'Contoh direktori kerja untuk akun bernama <code>apel</code>. Jika username yang dipilih berbeda, nama direktori home juga akan berbeda.',
+                en: 'Example workspace for an account named <code>apel</code>. If you choose another username, the home directory name will also differ.'
             },
             type: { id: 'Area Kerja Pribadi', en: 'Personal Workspace' },
             cmd: 'cd ~ && pwd'
@@ -1200,7 +1195,8 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
 
     // Event Listener 2: Membaca Pesan dari Parent Window (Iframe Communication)
     window.addEventListener('message', (event) => {
-        if (!event.data) return;
+        if (window.parent !== window && event.origin !== window.location.origin) return;
+        if (!event.data || typeof event.data !== 'object') return;
 
         // Tangkap event pergantian bahasa
         if (event.data.type === 'setLanguage' || event.data.type === 'changeLanguage' || event.data.lang) {
@@ -1224,6 +1220,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
     }
 
     function setTheme(theme) {
+        if (theme !== 'light' && theme !== 'dark') return;
         currentTheme = theme;
         document.documentElement.setAttribute('data-theme', theme);
     }
@@ -1249,7 +1246,6 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         document.getElementById('param-user-label').innerText = t.paramUserLabel;
         document.getElementById('param-pass-label').innerText = t.paramPassLabel;
         document.getElementById('param-ssh-label').innerText = t.paramSshLabel;
-        document.getElementById('param-or-label').innerText = t.paramOrLabel;
 
         document.getElementById('hw-title').innerText = t.hwTitle;
         document.getElementById('hw-list').innerHTML = t.hwList;
@@ -1269,7 +1265,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         document.getElementById('step3-header').innerHTML = t.step3Header;
         document.getElementById('step3-intro').innerHTML = t.step3Intro;
         document.getElementById('step3-s1').innerText = t.step3S1;
-        document.getElementById('step3-s2').innerText = t.step3S2;
+        document.getElementById('step3-s2').innerHTML = t.step3S2;
         document.getElementById('step3-s3').innerText = t.step3S3;
         document.getElementById('step3-note').innerText = t.step3Note;
         document.getElementById('step3-s4').innerText = t.step3S4;
@@ -1320,15 +1316,29 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
         section.classList.toggle('active');
     }
 
-    function copyCode(button) {
-        const pre = button.parentElement;
-        const code = pre.querySelector('code').innerText;
-        navigator.clipboard.writeText(code).then(() => {
+    async function copyCode(button) {
+        const code = button.parentElement.querySelector('code').innerText;
+        const originalText = button.innerText;
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(code);
+            } else {
+                const temp = document.createElement('textarea');
+                temp.value = code;
+                temp.setAttribute('readonly', '');
+                temp.style.position = 'fixed';
+                temp.style.opacity = '0';
+                document.body.appendChild(temp);
+                temp.select();
+                const copied = document.execCommand('copy');
+                temp.remove();
+                if (!copied) throw new Error('Clipboard copy failed');
+            }
             button.innerText = 'Copied!';
-            setTimeout(() => {
-                button.innerText = 'Copy';
-            }, 2000);
-        });
+        } catch (error) {
+            button.innerText = 'Copy failed';
+        }
+        window.setTimeout(() => { button.innerText = originalText; }, 2000);
     }
 
     function updateProgress() {
@@ -1345,7 +1355,7 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
             }
         });
 
-        const percentage = Math.round((checkedCount / checkboxes.length) * 100);
+        const percentage = checkboxes.length ? Math.round((checkedCount / checkboxes.length) * 100) : 0;
         document.getElementById('progress-bar').style.width = percentage + '%';
 
         const t = translations[currentLang] || translations['id'];
@@ -1373,21 +1383,26 @@ sudo reboot</code><button class="copy-btn" onclick="copyCode(this)">Copy</button
 
     // Handlers untuk Gambar Screenshot Tugas Mandiri
     function previewScreenshot(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('ssh-preview-img').src = e.target.result;
-                document.getElementById('preview-container').style.display = 'block';
-                // Centang checkbox checkpoint 7 secara otomatis saat file berhasil dimuat
-                const cp7 = document.getElementById('cp7-checkbox');
-                if (cp7) {
-                    cp7.checked = true;
-                    updateProgress();
-                }
-            };
-            reader.readAsDataURL(file);
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/webp'];
+        if (!allowedTypes.includes(file.type)) {
+            alert('Pilih gambar PNG, JPG, atau WEBP.');
+            event.target.value = '';
+            return;
         }
+        if (file.size > 10 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 10 MB.');
+            event.target.value = '';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('ssh-preview-img').src = e.target.result;
+            document.getElementById('preview-container').style.display = 'block';
+        };
+        reader.onerror = function() { alert('Gagal membaca file gambar. Silakan coba lagi.'); };
+        reader.readAsDataURL(file);
     }
 </script>
 
